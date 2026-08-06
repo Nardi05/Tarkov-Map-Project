@@ -1,0 +1,529 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+/*
+ * Colour lives in CSS variables, never in utility classes, so the light theme is
+ * a single block of overrides rather than a `dark:` prefix on every element.
+ * Layer colours (marker hues) are deliberately theme-independent — they carry
+ * meaning and must stay recognisable in both.
+ */
+@theme {
+  --font-sans:
+    "Inter var", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+}
+
+:root {
+  --bg: #0a0d11;
+  --bg-deep: #05070a;
+  --panel: #10151b;
+  --panel-2: #161e26;
+  --panel-3: #1d262f;
+  --line: #232e3a;
+  --line-soft: #1a222b;
+  --text: #e6edf3;
+  --text-dim: #96a3b2;
+  --text-faint: #64717f;
+  --accent: #c9b287;
+  --accent-hover: #dcc79c;
+  --accent-ink: #14100a;
+  --danger: #f87171;
+  --shadow: 0 12px 40px -12px rgb(0 0 0 / 0.75);
+  --radius: 12px;
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #f4f6f8;
+  --bg-deep: #e7ebef;
+  --panel: #ffffff;
+  --panel-2: #f2f5f8;
+  --panel-3: #e6ebf1;
+  --line: #d3dae2;
+  --line-soft: #e4e9ee;
+  --text: #16202b;
+  --text-dim: #55636f;
+  --text-faint: #7c8794;
+  --accent: #8a6d33;
+  --accent-hover: #6f571f;
+  --accent-ink: #ffffff;
+  --danger: #c62f2f;
+  --shadow: 0 12px 40px -16px rgb(15 25 35 / 0.28);
+
+  color-scheme: light;
+}
+
+* {
+  min-width: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* iOS: stop the whole page bouncing behind the map. */
+  overscroll-behavior: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* --------------------------------------------------------------- primitives */
+
+.surface {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.surface-2 {
+  background: var(--panel-2);
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+}
+
+.divider {
+  border-color: var(--line);
+}
+
+.muted {
+  color: var(--text-dim);
+}
+
+.faint {
+  color: var(--text-faint);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  padding: 0.45rem 0.8rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background 0.14s ease,
+    border-color 0.14s ease,
+    color 0.14s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--panel-3);
+  border-color: var(--line);
+}
+
+.btn[aria-pressed="true"],
+.btn.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.btn-ghost:hover {
+  background: var(--panel-2);
+}
+
+.btn-icon {
+  padding: 0.45rem;
+  width: 2.15rem;
+  height: 2.15rem;
+}
+
+.input {
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 0.5rem 0.7rem;
+  color: var(--text);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+
+/* Leading-icon variant; `.input`'s padding shorthand would beat a pl-* utility. */
+.input-icon {
+  padding-left: 2rem;
+}
+
+.input::placeholder {
+  color: var(--text-faint);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.chip-accent {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* Native-feeling toggle that inherits the layer's own colour. */
+.switch {
+  position: relative;
+  flex: none;
+  width: 2rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  background: var(--panel-3);
+  border: 1px solid var(--line);
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 999px;
+  background: var(--text-faint);
+  transform: translateY(-50%);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+
+.switch[data-on="true"] {
+  background: color-mix(in srgb, var(--sw-color, var(--accent)) 32%, transparent);
+  border-color: var(--sw-color, var(--accent));
+}
+
+.switch[data-on="true"]::after {
+  transform: translate(0.82rem, -50%);
+  background: var(--sw-color, var(--accent));
+}
+
+.scroll-y {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+.scroll-y::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-y::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ leaflet */
+
+.tk-map {
+  background: var(--bg-deep);
+}
+
+.tk-map .leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-container {
+  background: var(--bg-deep);
+  outline: none;
+}
+
+.tk-base-svg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tk-base-svg .hide-place-labels text {
+  display: none;
+}
+
+/* Marker artwork: a shape, an optional trailing label, both centred. */
+.tk-marker {
+  display: grid;
+  place-items: center;
+  overflow: visible;
+}
+
+.tk-marker .marker-shape {
+  position: relative;
+  display: block;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.55));
+  /* Set by the map from how large the map itself currently renders. */
+  transform: scale(var(--tk-marker-scale, 1));
+  transition: transform 0.12s ease;
+}
+
+.tk-marker:hover .marker-shape {
+  transform: scale(calc(var(--tk-marker-scale, 1) * 1.18));
+  z-index: 1;
+}
+
+.tk-marker .marker-check {
+  position: absolute;
+  right: -22%;
+  bottom: -22%;
+}
+
+.tk-marker.is-done {
+  opacity: 0.45;
+}
+
+.tk-marker.is-done:hover {
+  opacity: 1;
+}
+
+.tk-marker .marker-label {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, 3px);
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: calc(10.5px * clamp(0.86, var(--tk-marker-scale, 1), 1));
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  /* A pill rather than a text shadow: the map runs from near-black asphalt to
+     white building interiors, and plain text can't stay legible over both. */
+  color: #f2f6fa;
+  background: rgb(8 12 17 / 0.66);
+  pointer-events: none;
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tk-spawn {
+  transition: none;
+}
+
+.tk-place-label span {
+  position: absolute;
+  display: block;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(233 240 246 / 0.82);
+  text-shadow:
+    0 0 4px rgb(4 8 12 / 0.9),
+    0 1px 2px rgb(4 8 12 / 0.85);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Ring drawn under whatever is currently selected. */
+.tk-highlight span {
+  position: absolute;
+  left: -19px;
+  top: -19px;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+  animation: tk-pulse 1.6s ease-out infinite;
+}
+
+@keyframes tk-pulse {
+  0% {
+    transform: scale(0.75);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+.leaflet-tooltip.tk-tip {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  box-shadow: var(--shadow);
+  white-space: nowrap;
+}
+
+.leaflet-tooltip.tk-tip b {
+  display: block;
+  font-weight: 600;
+}
+
+.leaflet-tooltip.tk-tip span {
+  display: block;
+  color: var(--text-dim);
+  font-size: 0.6875rem;
+}
+
+.leaflet-tooltip.tk-tip::before {
+  border-top-color: var(--line);
+}
+
+.leaflet-bar,
+.leaflet-bar a {
+  background: var(--panel);
+  border-color: var(--line);
+  color: var(--text);
+}
+
+.leaflet-bar a:hover {
+  background: var(--panel-3);
+  color: var(--text);
+}
+
+.leaflet-control-zoom {
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.leaflet-control-zoom a {
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  font-size: 1.1rem;
+}
+
+/* Leave room for the mobile action bar. */
+.leaflet-bottom.leaflet-right {
+  margin-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (max-width: 767px) {
+  .leaflet-control-zoom {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tk-highlight span {
+    animation: none;
+    opacity: 0.9;
+  }
+  .tk-marker .marker-shape {
+    transition: none;
+  }
+}
+
+/* -------------------------------------------------------------- animations */
+
+@keyframes tk-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-in {
+  animation: tk-fade-up 0.18s ease-out;
+}
+
+@keyframes tk-sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.animate-sheet {
+  animation: tk-sheet-up 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .animate-sheet {
+    animation: none;
+  }
+}
+
+/* Hidden by the label declutterer when it collides with a higher-priority one. */
+.tk-marker .marker-label.is-crowded,
+.tk-place-label span.is-crowded {
+  display: none;
+}
+
+/* Hovering the marker always reveals its own name, crowded or not. */
+.tk-marker:hover .marker-label.is-crowded {
+  display: block;
+  z-index: 2;
+}
+
+/* Map picker card. */
+.map-card {
+  transition:
+    border-color 0.16s ease,
+    transform 0.16s ease;
+}
+
+.map-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-card:hover {
+    transform: none;
+  }
+}
