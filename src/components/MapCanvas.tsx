@@ -13,7 +13,7 @@ import {
 import { buildLayer, type Selection } from "../lib/build-layers";
 import { createDeclutterer } from "../lib/declutter";
 import { LAYERS, type LayerId } from "../lib/layers";
-import type { QuestMarker } from "../types";
+import type { QuestMarker, TaskStatus } from "../types";
 import type { MapStyle } from "../store";
 
 export interface FocusRequest {
@@ -29,7 +29,8 @@ interface Props {
   floor: Floor;
   layers: Record<LayerId, boolean>;
   visibleQuests: QuestMarker[];
-  completed: Record<string, true>;
+  taskStatus: Record<string, TaskStatus>;
+  markerDone: Record<string, true>;
   markerScale: number;
   showZones: boolean;
   showMarkerLabels: boolean;
@@ -250,46 +251,69 @@ export default function MapCanvas(props: Props) {
   }, [props.showPlaceLabels, wantSvg, geo]);
 
   /* ----------------------------------------------------------------- markers */
-  const markerDeps = [
+  const buildCtx = () => ({
+    data,
+    extents: floor.extents,
+    markerScale: props.markerScale,
+    showZones: props.showZones,
+    showMarkerLabels: props.showMarkerLabels,
+    showQuestLabels: props.showQuestLabels,
+    dimCompleted: props.dimCompleted,
+    taskStatus: props.taskStatus,
+    markerDone: props.markerDone,
+    visibleQuests: props.visibleQuests,
+    renderer: rendererRef.current!,
+    onSelect,
+  });
+
+  /**
+   * Everything that changes what the non-quest layers look like. Quest state is
+   * deliberately absent: ticking a task or a single objective location happens
+   * many times per raid, and rebuilding all twelve layers each time would stall
+   * the map for no reason.
+   */
+  const baseDeps = [
     data,
     floor.id,
-    props.visibleQuests,
-    props.completed,
     props.markerScale,
     props.showZones,
     props.showMarkerLabels,
-    props.showQuestLabels,
     props.dimCompleted,
   ];
 
   useEffect(() => {
     const map = mapRef.current;
-    const renderer = rendererRef.current;
-    if (!map || !renderer) return;
+    if (!map || !rendererRef.current) return;
 
     for (const layer of markerLayersRef.current.values()) map.removeLayer(layer);
     markerLayersRef.current.clear();
 
-    const ctx = {
-      data,
-      extents: floor.extents,
-      markerScale: props.markerScale,
-      showZones: props.showZones,
-      showMarkerLabels: props.showMarkerLabels,
-      showQuestLabels: props.showQuestLabels,
-      dimCompleted: props.dimCompleted,
-      completed: props.completed,
-      visibleQuests: props.visibleQuests,
-      renderer,
-      onSelect,
-    };
-
+    const ctx = buildCtx();
     for (const def of LAYERS) {
       markerLayersRef.current.set(def.id, buildLayer(def.id, ctx));
     }
     // Adding happens in the visibility effect below, which runs straight after.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, markerDeps);
+  }, baseDeps);
+
+  /* Quest markers alone, rebuilt whenever task progress or filtering changes. */
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !rendererRef.current) return;
+    // Skip the first run: the effect above has just built every layer, quests
+    // included, from the same inputs.
+    if (!markerLayersRef.current.has("quests")) return;
+
+    const previous = markerLayersRef.current.get("quests");
+    const wasOn = !!previous && map.hasLayer(previous);
+    if (previous) map.removeLayer(previous);
+
+    const next = buildLayer("quests", buildCtx());
+    markerLayersRef.current.set("quests", next);
+    if (wasOn && layers.quests) next.addTo(map);
+    declutterRef.current?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.visibleQuests, props.taskStatus, props.markerDone, props.showQuestLabels]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -301,7 +325,7 @@ export default function MapCanvas(props: Props) {
     }
     declutterRef.current?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layers, ...markerDeps]);
+  }, [layers, ...baseDeps]);
 
   /* --------------------------------------------------------------- highlight */
   const highlightAt = useMemo(() => selectionPosition(selection), [selection]);

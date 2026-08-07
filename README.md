@@ -31,15 +31,34 @@ Beyond the layers:
 
 - **Quick views** — one tap to switch the map between learning it, questing,
   a Scav run, or threat-spotting.
-- **Task tracking** — filter by trader, by Kappa requirement or by search, tick
-  tasks off, and isolate a single task on the map. Progress is stored in your
-  browser, never uploaded.
 - **Floors** — multi-level maps (Interchange, Reserve, Streets, Labs, Icebreaker)
   filter markers by the level they are actually on.
 - **Two art styles** — a clean vector map and photographic satellite tiles,
   georeferenced identically so markers never shift between them.
 - **Configurable** — marker size, name labels, zone outlines, place names, dark
   and light themes.
+
+## Tracking tasks through a raid
+
+The task panel is built around the way you actually play. Before a raid, tick
+the tasks that are in your in-game list as **active**; the map then draws those
+objectives and nothing else, so you see every active location at once instead of
+a wall of green. During the raid you can tick off individual locations — a task
+with three mark spots remembers which one you did — and mark the whole task done
+from the map when you finish it. Everything is stored in your browser only.
+
+A task is in one of three states you set yourself: not started, active, or done.
+Everything else is worked out from the prerequisite graph:
+
+- **Available** — every prerequisite is met and you are high enough level, so
+  you could pick it up from the trader now.
+- **Locked** — something is still in the way, and the panel names what.
+
+That inference needs to know what you have already finished. Rather than ticking
+off two hundred tasks by hand, find your most recent task under **All** and use
+the "I've already done this" link on it — that records the whole chain behind it
+in one go. Set your PMC level and faction in Settings so level-gated and
+faction-specific tasks are judged correctly.
 
 ## Running it
 
@@ -62,7 +81,7 @@ static host, including a subpath, with no rewrite rules.
 
 ```
 scripts/build-data.mjs   fetches tarkov.dev's JSON feeds, resolves translations,
-                         and writes one small payload per map
+                         and writes one small payload per map plus the task graph
 src/data/geo.json        vendored georeferencing (transform, bounds, rotation,
                          floors, place labels) for each map
 src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
@@ -70,6 +89,7 @@ src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
 src/lib/layers.ts        the layer taxonomy: colour, shape, and the plain-English
                          explanation shown in the UI
 src/lib/build-layers.ts  data -> Leaflet layers, one builder per layer
+src/lib/progression.ts   task graph -> what is available, locked or blocked
 src/components/          map canvas, layer panel, task panel, detail panel
 ```
 
@@ -77,13 +97,24 @@ Data is baked at build time rather than fetched at runtime: opening a map is one
 request for a 25–225KB JSON file (well under 50KB gzipped for most maps), and
 the site keeps working if the upstream API is down.
 
-Two rendering details worth knowing if you touch the map code:
+A few details worth knowing if you touch this code:
 
 - Spawn points are canvas `circleMarker`s, not div icons — some maps have 400+
   of them and that is the difference between smooth panning and a stutter.
 - The base artwork lives in its own Leaflet pane below the overlay pane, because
   Leaflet's stylesheet stacks `<svg>` above `<canvas>` within a pane and would
   otherwise bury the spawn dots under the map.
+- `progression.json` is separate from the per-map payloads on purpose. Roughly
+  half of all prerequisite edges point at tasks that never appear on a map, so a
+  per-map file physically cannot describe whether a task is unlocked.
+- Prerequisites carry a status, not just "done" — a few dozen require an earlier
+  task to be *active* or *failed*. Treating them all as "completed" gets those
+  wrong.
+- Quest marker ids are derived from their ground position rather than an array
+  index, because they are persisted when you tick a location off. An index would
+  silently move your ticks if the upstream feed reordered a spawn list.
+- Quest layers rebuild independently of the other eleven, since ticking
+  locations happens constantly during a raid.
 
 To refresh game data after a wipe or patch, re-run `npm run data` and commit the
 regenerated `public/data`.
