@@ -126,12 +126,52 @@ export interface QuestMarker {
   objective: string;
   kind: QuestKind;
   optional: boolean;
+  /**
+   * How many the objective asks for ("plant 3"), not how many markers it has —
+   * several markers are often alternative spots for a single action.
+   */
+  count: number | null;
   description: string;
   position: Vec3;
   outline: Ring | null;
   top: number | null;
   bottom: number | null;
   item: { id: string; name: string; icon: string | null } | null;
+}
+
+/** What the player has told us about a task. Absent means "not started". */
+export type TaskStatus = "active" | "completed" | "failed";
+
+/** Derived from the graph plus the player's own status. Never stored. */
+export type TaskAvailability = "locked" | "available" | "active" | "completed" | "failed";
+
+/** One requirement: a prior task that must be in one of these states. */
+export interface TaskRequirement {
+  task: string;
+  status: string[];
+}
+
+export interface ProgressionTask {
+  name: string;
+  trader: string | null;
+  minPlayerLevel: number;
+  factionName: string | null;
+  kappaRequired: boolean;
+  lightkeeperRequired: boolean;
+  /** Alternative requirement sets — satisfied when any one set is fully met. */
+  requires: TaskRequirement[][];
+  /** Maps this task has markers on; empty for tasks handled purely at a trader. */
+  maps: string[];
+}
+
+/**
+ * The complete task graph, including tasks that never appear on a map. Roughly
+ * half of all prerequisite edges point at those, so availability can't be
+ * worked out from the per-map payloads alone.
+ */
+export interface Progression {
+  generated: string;
+  tasks: Record<string, ProgressionTask>;
 }
 
 export interface Task {

@@ -230,58 +230,117 @@ function mapNamesForId(id) {
   return out;
 }
 
-for (const task of tasks) {
-  const trader = traderIndex[task.trader];
-  let used = false;
+/**
+ * Marker ids are persisted — the user ticks individual locations off and we
+ * remember that across rebuilds. So they are derived from the ground position
+ * rather than an array index: if the feed reorders a quest item's spawn list,
+ * an index-based id would silently move somebody's ticks to a different spot.
+ */
+function markerId(objectiveId, mapName, position) {
+  return `${objectiveId}-${mapName}-${position[0]}_${position[2]}`;
+}
 
+/** Task ids that have at least one objective anchored to a playable map. */
+const anchoredTaskIds = new Set();
+
+for (const task of tasks) {
   for (const obj of task.objectives ?? []) {
     const kind = OBJECTIVE_KIND[obj.type] ?? "objective";
     const item = obj.questItem ? questItems[obj.questItem] : null;
+    const shared = {
+      task: task.id,
+      objective: obj.id,
+      optional: !!obj.optional,
+      // How many of the thing the objective wants ("plant 3"), not how many
+      // pins it has — several pins are often alternative spots for one action.
+      count: obj.count ?? null,
+      description: obj.description,
+      item: item ? { id: item.id, name: item.name, icon: item.iconLink ?? null } : null,
+    };
 
     // Objective zones (visit/mark/plant/shoot areas) carry their own geometry.
     for (const zone of obj.zones ?? []) {
       for (const mapName of mapNamesForId(zone.map)) {
+        const position = vec(zone.position);
         pushQuest(mapName, {
-          id: `${obj.id}-${zone.id}-${mapName}`,
-          task: task.id,
-          objective: obj.id,
+          ...shared,
+          id: markerId(obj.id, mapName, position),
           kind,
-          optional: !!obj.optional,
-          description: obj.description,
-          position: vec(zone.position),
+          position,
           outline: ring(zone.outline),
           top: r1(zone.top),
           bottom: r1(zone.bottom),
-          item: item ? { id: item.id, name: item.name, icon: item.iconLink ?? null } : null,
         });
-        used = true;
+        anchoredTaskIds.add(task.id);
       }
     }
 
     // Quest items with known world spawns (each is a possible location).
     for (const loc of obj.possibleLocations ?? []) {
       for (const mapName of mapNamesForId(loc.map)) {
-        (loc.positions ?? []).forEach((p, i) => {
+        for (const p of loc.positions ?? []) {
+          const position = vec(p);
           pushQuest(mapName, {
-            id: `${obj.id}-${mapName}-${i}`,
-            task: task.id,
-            objective: obj.id,
+            ...shared,
+            id: markerId(obj.id, mapName, position),
             kind: "pickup",
-            optional: !!obj.optional,
-            description: obj.description,
-            position: vec(p),
+            position,
             outline: null,
             top: null,
             bottom: null,
-            item: item ? { id: item.id, name: item.name, icon: item.iconLink ?? null } : null,
           });
-        });
-        used = true;
+        }
+        anchoredTaskIds.add(task.id);
       }
     }
   }
+}
 
-  if (!used) continue;
+/*
+ * The game ships some tasks more than once under different ids: same name, same
+ * trader, same objectives at the same coordinates. Some are faction variants
+ * (Drip-Out BEAR vs USEC), others are mutually exclusive branches of the same
+ * quest reached by different prerequisites (the three "Make Amends" variants,
+ * whose objectives sit on identical coordinates).
+ *
+ * Drawing them all would stack pins and list the row several times, so they
+ * collapse onto one canonical id. Faction is part of the identity because
+ * merging a BEAR variant with a USEC one would lose the faction gate. Their
+ * differing prerequisites are preserved as alternatives — see the graph below.
+ */
+const canonicalTaskId = new Map();
+const groupMembers = new Map();
+{
+  const byIdentity = new Map();
+  // Anchored tasks are considered first so a canonical id is always one the
+  // per-map payloads actually contain.
+  const ordered = [...tasks].sort((a, b) => {
+    const anchorDelta = Number(anchoredTaskIds.has(b.id)) - Number(anchoredTaskIds.has(a.id));
+    return anchorDelta || a.id.localeCompare(b.id);
+  });
+  for (const task of ordered) {
+    const identity = [
+      task.name,
+      traderIndex[task.trader]?.name ?? "",
+      task.minPlayerLevel ?? 0,
+      task.factionName ?? "Any",
+    ].join("|");
+    const canonical = byIdentity.get(identity);
+    if (canonical) {
+      canonicalTaskId.set(task.id, canonical);
+      groupMembers.get(canonical).push(task);
+    } else {
+      byIdentity.set(identity, task.id);
+      groupMembers.set(task.id, [task]);
+    }
+  }
+}
+
+const canonicalOf = (id) => canonicalTaskId.get(id) ?? id;
+
+for (const task of tasks) {
+  if (!anchoredTaskIds.has(task.id) || canonicalTaskId.has(task.id)) continue;
+  const trader = traderIndex[task.trader];
   taskIndex.set(task.id, {
     id: task.id,
     name: task.name,
@@ -293,31 +352,17 @@ for (const task of tasks) {
     lightkeeperRequired: !!task.lightkeeperRequired,
     factionName: task.factionName && task.factionName !== "Any" ? task.factionName : null,
     wiki: task.wikiLink ?? null,
-    requires: (task.taskRequirements ?? []).map((r) => r.task).filter(Boolean),
+    // Only prerequisites that are themselves on a map can be named by the
+    // per-map payload. The complete graph lives in progression.json.
+    requires: [
+      ...new Set(
+        (groupMembers.get(task.id) ?? [task]).flatMap((m) =>
+          (m.taskRequirements ?? []).map((r) => canonicalOf(r.task)).filter(Boolean),
+        ),
+      ),
+    ].filter((id) => anchoredTaskIds.has(id)),
     keys: [...new Set((task.neededKeys ?? []).flatMap((k) => k.keys ?? []))].filter((id) => keyIndex[id]),
   });
-}
-
-/*
- * The game ships some tasks twice under different ids — same name, same trader,
- * same objectives at the same coordinates (the BTR courier tasks, for example).
- * Left alone they draw stacked markers and list a duplicate row per task, so
- * collapse each set onto one canonical id and drop the redundant markers.
- */
-const canonicalTaskId = new Map();
-const byIdentity = new Map();
-for (const task of [...taskIndex.values()].sort((a, b) => a.id.localeCompare(b.id))) {
-  const identity = `${task.name}|${task.trader?.name ?? ""}|${task.minPlayerLevel}`;
-  const canonical = byIdentity.get(identity);
-  if (canonical) canonicalTaskId.set(task.id, canonical);
-  else byIdentity.set(identity, task.id);
-}
-
-for (const id of canonicalTaskId.keys()) taskIndex.delete(id);
-for (const task of taskIndex.values()) {
-  task.requires = [...new Set(task.requires.map((id) => canonicalTaskId.get(id) ?? id))].filter((id) =>
-    taskIndex.has(id),
-  );
 }
 
 /*
@@ -342,6 +387,65 @@ for (const [mapName, markers] of questMarkers) {
   questMarkers.set(mapName, deduped);
 }
 console.log(`  merged ${canonicalTaskId.size} duplicate tasks, dropped ${droppedMarkers} duplicate markers`);
+
+/* --------------------------------------------------------------- progression */
+
+/**
+ * The complete prerequisite graph, covering every task in the game rather than
+ * only the ones with map markers.
+ *
+ * This has to be separate from the per-map payloads: roughly half of all
+ * prerequisite edges point at tasks that never appear on a map (hand the item
+ * back to the trader, reach a loyalty level), and a per-map file has no way to
+ * carry them. Without those links you cannot tell whether a task is unlocked.
+ *
+ * `requires` is a disjunction of conjunctions — a list of alternative
+ * requirement sets, satisfied when *any one* set is fully met. Single-variant
+ * tasks have exactly one set; the merged branch variants (three "Make Amends"
+ * reached from three different quests) contribute one set each, which is
+ * precisely right: doing any one branch unlocks it.
+ */
+const mapsByTask = new Map();
+for (const [mapName, markers] of questMarkers) {
+  for (const marker of markers) {
+    if (!mapsByTask.has(marker.task)) mapsByTask.set(marker.task, new Set());
+    mapsByTask.get(marker.task).add(mapName);
+  }
+}
+
+const progression = {};
+for (const [canonicalId, members] of groupMembers) {
+  const primary = members[0];
+  const requires = [];
+  for (const member of members) {
+    const set = (member.taskRequirements ?? [])
+      .filter((r) => r.task)
+      .map((r) => ({ task: canonicalOf(r.task), status: r.status ?? ["complete"] }));
+    // Identical requirement sets across variants would just be redundant work
+    // for the solver, so keep one of each.
+    const signature = JSON.stringify(set);
+    if (!requires.some((existing) => JSON.stringify(existing) === signature)) requires.push(set);
+  }
+
+  progression[canonicalId] = {
+    name: primary.name,
+    trader: traderIndex[primary.trader]?.name ?? null,
+    minPlayerLevel: primary.minPlayerLevel ?? 0,
+    factionName: primary.factionName && primary.factionName !== "Any" ? primary.factionName : null,
+    kappaRequired: !!primary.kappaRequired,
+    lightkeeperRequired: !!primary.lightkeeperRequired,
+    requires,
+    maps: [...(mapsByTask.get(canonicalId) ?? [])].sort(),
+  };
+}
+
+{
+  const edges = Object.values(progression).reduce((n, t) => n + t.requires.flat().length, 0);
+  const onMap = Object.values(progression).filter((t) => t.maps.length).length;
+  console.log(
+    `  progression graph: ${Object.keys(progression).length} tasks (${onMap} on a map), ${edges} prerequisite edges`,
+  );
+}
 
 /* -------------------------------------------------------------------- spawns */
 
@@ -579,4 +683,11 @@ await fs.writeFile(
   JSON.stringify({ generated: new Date().toISOString(), gameMode: GAME_MODE, maps: index }, null, 1),
 );
 
-console.log(`\nWrote ${index.length} maps to public/data`);
+const progressionFile = path.join(OUT, "progression.json");
+await fs.writeFile(
+  progressionFile,
+  JSON.stringify({ generated: new Date().toISOString(), tasks: progression }),
+);
+const progressionKb = ((await fs.stat(progressionFile)).size / 1024).toFixed(0);
+
+console.log(`\nWrote ${index.length} maps and a ${progressionKb}KB progression graph to public/data`);

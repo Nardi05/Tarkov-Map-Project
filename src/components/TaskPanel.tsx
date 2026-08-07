@@ -1,34 +1,80 @@
-import { useMemo } from "react";
-import { filterQuests, groupQuests, type QuestGroup } from "../lib/build-layers";
-import { useStore } from "../store";
-import type { MapData, Vec3 } from "../types";
+import { useMemo, useState } from "react";
+import { groupQuests, type QuestGroup } from "../lib/build-layers";
+import { lockReasons, prerequisiteClosure } from "../lib/progression";
+import { useStore, type QuestScope } from "../store";
+import type { KeyItem, MapData, Progression, TaskAvailability, Vec3 } from "../types";
+import TaskStatusControl from "./TaskStatusControl";
 import { EmptyState, Icon, icons } from "./ui";
+
+const SCOPES: { id: QuestScope; label: string; hint: string }[] = [
+  { id: "active", label: "Active", hint: "Only tasks you have ticked as active in game" },
+  { id: "available", label: "Available", hint: "Active tasks plus everything you could pick up now" },
+  { id: "all", label: "All", hint: "Every task with objectives on this map" },
+];
+
+/** Order the sections appear in, and what each one is called. */
+const SECTIONS: { key: TaskAvailability; label: string; startsOpen: boolean }[] = [
+  { key: "active", label: "Active", startsOpen: true },
+  { key: "available", label: "Available now", startsOpen: true },
+  { key: "locked", label: "Locked", startsOpen: false },
+  { key: "completed", label: "Done", startsOpen: false },
+  { key: "failed", label: "Failed", startsOpen: false },
+];
 
 export default function TaskPanel({
   data,
+  progression,
+  availability,
   onFocus,
 }: {
   data: MapData;
+  progression: Progression | null;
+  availability: Record<string, TaskAvailability>;
   onFocus: (position: Vec3) => void;
 }) {
   const quest = useStore((s) => s.quest);
   const setQuestFilter = useStore((s) => s.setQuestFilter);
   const clearQuestFilters = useStore((s) => s.clearQuestFilters);
-  const completed = useStore((s) => s.completed);
-  const toggleCompleted = useStore((s) => s.toggleCompleted);
+  const taskStatus = useStore((s) => s.taskStatus);
+  const markerDone = useStore((s) => s.markerDone);
+  const profile = useStore((s) => s.profile);
+  const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
+  const setTaskStatus = useStore((s) => s.setTaskStatus);
+  const markTasksCompleted = useStore((s) => s.markTasksCompleted);
+  const toggleMarkerDone = useStore((s) => s.toggleMarkerDone);
   const layers = useStore((s) => s.layers);
   const setLayer = useStore((s) => s.setLayer);
 
-  /** Every task on this map, ignoring filters — the denominator for progress. */
-  const allGroups = useMemo(
-    () => groupQuests(data, data.markers.quests),
-    [data],
-  );
+  const [expanded, setExpanded] = useState<string | null>(null);
 
-  const groups = useMemo(
-    () => groupQuests(data, filterQuests(data, quest, completed)),
-    [data, quest, completed],
-  );
+  /** Every task with objectives on this map, before any filtering. */
+  const allGroups = useMemo(() => groupQuests(data, data.markers.quests), [data]);
+
+  const stateOf = (taskId: string): TaskAvailability => availability[taskId] ?? "available";
+
+  /** Search / trader / Kappa narrowing. Scope is handled by the sections. */
+  const matching = useMemo(() => {
+    const needle = quest.search.trim().toLowerCase();
+    return allGroups.filter((g) => {
+      if (quest.kappaOnly && !g.task.kappaRequired) return false;
+      if (quest.trader && g.task.trader?.name !== quest.trader) return false;
+      if (!needle) return true;
+      const haystack = `${g.task.name} ${g.markers.map((m) => m.description).join(" ")}`.toLowerCase();
+      return haystack.includes(needle);
+    });
+  }, [allGroups, quest.search, quest.trader, quest.kappaOnly]);
+
+  const buckets = useMemo(() => {
+    const out = new Map<TaskAvailability, QuestGroup[]>();
+    for (const g of matching) {
+      const key = stateOf(g.task.id);
+      const bucket = out.get(key);
+      if (bucket) bucket.push(g);
+      else out.set(key, [g]);
+    }
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matching, availability]);
 
   const traders = useMemo(() => {
     const names = new Set<string>();
@@ -36,9 +82,28 @@ export default function TaskPanel({
     return [...names].sort();
   }, [allGroups]);
 
-  const doneCount = allGroups.filter((g) => completed[g.task.id]).length;
-  const filtersActive =
-    !!quest.search || !!quest.trader || quest.kappaOnly || quest.hideCompleted || !!quest.focusTask;
+  const counts = useMemo(() => {
+    let active = 0;
+    let available = 0;
+    let done = 0;
+    for (const g of allGroups) {
+      const s = stateOf(g.task.id);
+      if (s === "active") active++;
+      else if (s === "available") available++;
+      else if (s === "completed") done++;
+    }
+    return { active, available, done };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allGroups, availability]);
+
+  const filtersActive = !!quest.search || !!quest.trader || quest.kappaOnly || !!quest.focusTask;
+
+  // Which sections the current scope shows. "all" also reveals locked/done.
+  const visibleSections = SECTIONS.filter((section) => {
+    if (quest.scope === "active") return section.key === "active";
+    if (quest.scope === "available") return section.key === "active" || section.key === "available";
+    return true;
+  });
 
   if (allGroups.length === 0) {
     return (
@@ -64,8 +129,27 @@ export default function TaskPanel({
           </button>
         )}
 
+        <div className="mb-2 flex gap-1" role="group" aria-label="Which tasks to show">
+          {SCOPES.map((scope) => (
+            <button
+              key={scope.id}
+              type="button"
+              className="btn flex-1 text-[0.72rem]"
+              style={{ padding: "0.3rem 0.4rem" }}
+              aria-pressed={quest.scope === scope.id}
+              title={scope.hint}
+              onClick={() => setQuestFilter("scope", scope.id)}
+            >
+              {scope.label}
+            </button>
+          ))}
+        </div>
+
         <div className="relative">
-          <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2" style={{ color: "var(--text-faint)" }}>
+          <span
+            className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2"
+            style={{ color: "var(--text-faint)" }}
+          >
             <Icon path={icons.search} size={15} />
           </span>
           <input
@@ -88,15 +172,18 @@ export default function TaskPanel({
           >
             Kappa only
           </button>
-          <button
-            type="button"
-            className="btn text-[0.7rem]"
-            style={{ padding: "0.22rem 0.5rem" }}
-            aria-pressed={quest.hideCompleted}
-            onClick={() => setQuestFilter("hideCompleted", !quest.hideCompleted)}
-          >
-            Hide done
-          </button>
+          {traders.map((name) => (
+            <button
+              key={name}
+              type="button"
+              className="btn text-[0.7rem]"
+              style={{ padding: "0.22rem 0.5rem" }}
+              aria-pressed={quest.trader === name}
+              onClick={() => setQuestFilter("trader", quest.trader === name ? null : name)}
+            >
+              {name}
+            </button>
+          ))}
           {filtersActive && (
             <button
               type="button"
@@ -109,116 +196,225 @@ export default function TaskPanel({
           )}
         </div>
 
-        {traders.length > 1 && (
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {traders.map((name) => (
-              <button
-                key={name}
-                type="button"
-                className="btn text-[0.7rem]"
-                style={{ padding: "0.22rem 0.5rem" }}
-                aria-pressed={quest.trader === name}
-                onClick={() => setQuestFilter("trader", quest.trader === name ? null : name)}
-              >
-                {name}
-              </button>
-            ))}
-          </div>
-        )}
-
         <p className="mt-2.5 text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-          {doneCount} of {allGroups.length} tasks marked done on {data.name}
-          {groups.length !== allGroups.length && ` · showing ${groups.length}`}
+          <b style={{ color: "var(--accent)" }}>{counts.active} active</b> · {counts.available} available ·{" "}
+          {counts.done} done on {data.name}
         </p>
         <div className="mt-1.5 h-1 overflow-hidden rounded-full" style={{ background: "var(--panel-3)" }}>
           <div
             className="h-full rounded-full transition-[width] duration-300"
             style={{
-              width: `${allGroups.length ? (doneCount / allGroups.length) * 100 : 0}%`,
+              width: `${allGroups.length ? (counts.done / allGroups.length) * 100 : 0}%`,
               background: "#22c55e",
             }}
           />
         </div>
       </div>
 
-      <ul className="scroll-y mt-2 min-h-0 flex-1 px-2 pb-3">
-        {groups.length === 0 && (
-          <EmptyState title="Nothing matches" hint="Loosen the filters above to see more tasks." />
-        )}
-        {groups.map((group) => (
-          <TaskRow
-            key={group.id}
-            group={group}
-            done={!!completed[group.task.id]}
-            focused={quest.focusTask === group.task.id}
-            keys={group.task.keys.map((id) => data.keys[id]).filter(Boolean)}
-            onToggleDone={() => toggleCompleted(group.task.id)}
-            onFocus={() => onFocus(group.centre)}
-            onIsolate={() =>
-              setQuestFilter("focusTask", quest.focusTask === group.task.id ? null : group.task.id)
+      <div className="scroll-y mt-2 min-h-0 flex-1 px-2 pb-3">
+        {visibleSections.every((s) => !buckets.get(s.key)?.length) && (
+          <EmptyState
+            title={
+              quest.scope === "active"
+                ? "No active tasks here"
+                : quest.scope === "available"
+                  ? "Nothing available here yet"
+                  : "Nothing matches"
+            }
+            hint={
+              quest.scope === "active"
+                ? "Tick the tasks you have accepted in game and they will appear on the map."
+                : quest.scope === "available"
+                  ? // The honest explanation: availability is inferred from the
+                    // prerequisite chain, and it can't infer anything until the
+                    // site knows what you have already finished.
+                    "Availability is worked out from what you have finished. Switch to All, find your most recent task, and use the tick-off link on it to fill in your history."
+                  : "Loosen the filters above to see more tasks."
             }
           />
-        ))}
-      </ul>
+        )}
+
+        {visibleSections.map((section) => {
+          const groups = buckets.get(section.key) ?? [];
+          if (groups.length === 0) return null;
+          // Never collapse the only section with anything in it — on a fresh
+          // profile everything is Locked, and a collapsed panel reads as broken.
+          const onlyContent = visibleSections.every(
+            (other) => other.key === section.key || !buckets.get(other.key)?.length,
+          );
+          return (
+            <Section
+              key={`${quest.scope}-${section.key}`}
+              label={section.label}
+              count={groups.length}
+              startsOpen={section.startsOpen || onlyContent}
+            >
+              {groups.map((group) => (
+                <TaskRow
+                  key={group.id}
+                  group={group}
+                  state={stateOf(group.task.id)}
+                  status={taskStatus[group.task.id]}
+                  markerDone={markerDone}
+                  keys={group.task.keys.map((id) => data.keys[id]).filter(Boolean)}
+                  blockers={
+                    section.key === "locked"
+                      ? lockReasons(progression, group.task.id, taskStatus, profile).map((r) => r.label)
+                      : []
+                  }
+                  expanded={expanded === group.id}
+                  focused={quest.focusTask === group.task.id}
+                  onToggleExpand={() => setExpanded(expanded === group.id ? null : group.id)}
+                  onCycle={() => cycleTaskStatus(group.task.id)}
+                  onComplete={() => setTaskStatus(group.task.id, "completed")}
+                  priorCount={prerequisiteClosure(progression, group.task.id).length}
+                  onBackfill={() =>
+                    markTasksCompleted([
+                      ...prerequisiteClosure(progression, group.task.id),
+                      group.task.id,
+                    ])
+                  }
+                  onToggleMarker={toggleMarkerDone}
+                  onFocus={onFocus}
+                  onIsolate={() =>
+                    setQuestFilter("focusTask", quest.focusTask === group.task.id ? null : group.task.id)
+                  }
+                />
+              ))}
+            </Section>
+          );
+        })}
+      </div>
     </div>
+  );
+}
+
+function Section({
+  label,
+  count,
+  startsOpen,
+  children,
+}: {
+  label: string;
+  count: number;
+  startsOpen: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(startsOpen);
+  return (
+    <section className="mb-2">
+      <button
+        type="button"
+        className="mb-1 flex w-full items-center gap-1.5 px-1 py-1 text-left"
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+      >
+        <span
+          className="transition-transform"
+          style={{ color: "var(--text-faint)", transform: open ? undefined : "rotate(-90deg)" }}
+        >
+          <Icon path={icons.chevron} size={13} />
+        </span>
+        <span
+          className="text-[0.68rem] font-semibold uppercase tracking-[0.09em]"
+          style={{ color: "var(--text-dim)" }}
+        >
+          {label}
+        </span>
+        <span className="text-[0.65rem] tabular-nums" style={{ color: "var(--text-faint)" }}>
+          {count}
+        </span>
+      </button>
+      {open && <ul>{children}</ul>}
+    </section>
   );
 }
 
 function TaskRow({
   group,
-  done,
-  focused,
+  state,
+  status,
+  markerDone,
   keys,
-  onToggleDone,
+  blockers,
+  expanded,
+  focused,
+  priorCount,
+  onToggleExpand,
+  onCycle,
+  onComplete,
+  onBackfill,
+  onToggleMarker,
   onFocus,
   onIsolate,
 }: {
   group: QuestGroup;
-  done: boolean;
+  state: TaskAvailability;
+  status: ReturnType<typeof useStore.getState>["taskStatus"][string] | undefined;
+  markerDone: Record<string, true>;
+  keys: KeyItem[];
+  blockers: string[];
+  expanded: boolean;
   focused: boolean;
-  keys: { id: string; name: string; shortName: string; icon: string | null }[];
-  onToggleDone: () => void;
-  onFocus: () => void;
+  priorCount: number;
+  onToggleExpand: () => void;
+  onCycle: () => void;
+  onComplete: () => void;
+  onBackfill: () => void;
+  onToggleMarker: (markerId: string) => void;
+  onFocus: (position: Vec3) => void;
   onIsolate: () => void;
 }) {
   const { task, markers } = group;
+  const doneHere = markers.filter((m) => markerDone[m.id]).length;
+  const allLocationsDone = markers.length > 0 && doneHere === markers.length;
+  const sharedDescription =
+    markers.length > 1 && markers.every((m) => m.description === markers[0].description)
+      ? markers[0].description
+      : null;
+  // Pickup markers are alternative spawns for one item, not a checklist.
+  const alternatives = markers.length > 1 && markers.every((m) => m.kind === "pickup");
 
   return (
     <li
       className="surface-2 mb-1.5 px-2.5 py-2"
       style={{
-        opacity: done ? 0.6 : 1,
+        opacity: state === "completed" || state === "locked" ? 0.62 : 1,
         borderColor: focused ? "var(--accent)" : undefined,
       }}
     >
       <div className="flex items-start gap-2.5">
-        <button
-          type="button"
-          role="checkbox"
-          aria-checked={done}
-          aria-label={done ? `Mark ${task.name} not done` : `Mark ${task.name} done`}
-          onClick={onToggleDone}
-          className="mt-0.5 grid h-[1.15rem] w-[1.15rem] flex-none place-items-center rounded-md border transition-colors"
-          style={{
-            borderColor: done ? "#22c55e" : "var(--line)",
-            background: done ? "#22c55e" : "transparent",
-            color: done ? "#062b16" : "transparent",
-          }}
-        >
-          <Icon path={icons.check} size={12} />
-        </button>
+        <span className="mt-0.5">
+          <TaskStatusControl status={status} name={task.name} onCycle={onCycle} />
+        </span>
 
         <div className="min-w-0 flex-1">
-          <button type="button" onClick={onFocus} className="block w-full text-left">
+          <button type="button" onClick={() => onFocus(group.centre)} className="block w-full text-left">
             <span className="block truncate text-[0.8125rem] font-medium leading-tight">{task.name}</span>
-            <span className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
+            <span
+              className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[0.68rem]"
+              style={{ color: "var(--text-faint)" }}
+            >
               {task.trader && <span>{task.trader.name}</span>}
               {task.minPlayerLevel > 0 && <span>· Lv {task.minPlayerLevel}</span>}
-              <span>· {markers.length} marker{markers.length === 1 ? "" : "s"}</span>
+              {markers.length > 1 ? (
+                <span>
+                  · {doneHere}/{markers.length} locations
+                </span>
+              ) : (
+                <span>· 1 location</span>
+              )}
               {task.kappaRequired && <span className="chip chip-accent">Kappa</span>}
               {task.factionName && <span className="chip">{task.factionName}</span>}
             </span>
           </button>
+
+          {blockers.length > 0 && (
+            <p className="mt-1 text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
+              Needs {blockers.slice(0, 2).join(", ")}
+              {blockers.length > 2 && ` +${blockers.length - 2}`}
+            </p>
+          )}
 
           {keys.length > 0 && (
             <p className="mt-1 flex flex-wrap items-center gap-1 text-[0.68rem]" style={{ color: "var(--text-dim)" }}>
@@ -230,9 +426,106 @@ function TaskRow({
               ))}
             </p>
           )}
+
+          {/* Backfill is for history you never recorded. A task you have already
+              ticked active isn't one you've "already done". */}
+          {state !== "completed" && state !== "active" && priorCount > 0 && (
+            <button
+              type="button"
+              className="mt-1.5 text-left text-[0.68rem] underline decoration-dotted underline-offset-2"
+              style={{ color: "var(--text-faint)" }}
+              title="Records this task and everything leading up to it as done, so the site can work out what you have available"
+              onClick={() => {
+                if (confirm(`Mark "${task.name}" and the ${priorCount} tasks leading up to it as done?`)) {
+                  onBackfill();
+                }
+              }}
+            >
+              I've already done this — tick off the {priorCount} before it too
+            </button>
+          )}
+
+          {expanded && (
+            <div className="mt-1.5">
+              {/* When every location shares one description — the usual case for
+                  an item that can spawn in several places — say it once. */}
+              {sharedDescription && (
+                <p className="mb-1 px-1 text-[0.68rem] leading-snug" style={{ color: "var(--text-dim)" }}>
+                  {sharedDescription}
+                  {alternatives && (
+                    <span style={{ color: "var(--text-faint)" }}> — it is at one of these spots.</span>
+                  )}
+                </p>
+              )}
+              <ul className="flex flex-col gap-1">
+                {markers.map((marker, i) => {
+                  const done = !!markerDone[marker.id];
+                  return (
+                    <li
+                      key={marker.id}
+                      className="flex items-start gap-2 rounded-lg px-1.5 py-1"
+                      style={{ background: "var(--panel)" }}
+                    >
+                      <button
+                        type="button"
+                        role="checkbox"
+                        aria-checked={done}
+                        aria-label={`Location ${i + 1}${done ? " done" : ""}`}
+                        onClick={() => onToggleMarker(marker.id)}
+                        className="mt-px grid h-4 w-4 flex-none place-items-center rounded border"
+                        style={{
+                          borderColor: done ? "#22c55e" : "var(--line)",
+                          background: done ? "#22c55e" : "transparent",
+                          color: done ? "#062b16" : "transparent",
+                        }}
+                      >
+                        <Icon path={icons.check} size={10} />
+                      </button>
+                      <button
+                        type="button"
+                        className="min-w-0 flex-1 text-left text-[0.68rem] leading-snug"
+                        style={{ color: done ? "var(--text-faint)" : "var(--text-dim)" }}
+                        onClick={() => onFocus(marker.position)}
+                      >
+                        {sharedDescription ? `Location ${i + 1}` : marker.description}
+                        {marker.count && marker.count > 1 ? ` (needs ${marker.count})` : ""}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+
+          {allLocationsDone && state !== "completed" && (
+            <button
+              type="button"
+              className="mt-1.5 w-full rounded-lg px-2 py-1.5 text-left text-[0.7rem]"
+              style={{ background: "color-mix(in srgb, #22c55e 14%, transparent)", color: "#7ee2a8" }}
+              onClick={onComplete}
+            >
+              {alternatives
+                ? "All spots checked — mark the whole task done?"
+                : "All locations ticked — mark the whole task done?"}
+            </button>
+          )}
         </div>
 
         <div className="flex flex-none items-center gap-1">
+          {markers.length > 1 && (
+            <button
+              type="button"
+              className="btn btn-icon"
+              style={{ width: "1.7rem", height: "1.7rem", padding: 0 }}
+              aria-expanded={expanded}
+              title={expanded ? "Hide locations" : "Show each location"}
+              onClick={onToggleExpand}
+            >
+              <span style={{ transform: expanded ? undefined : "rotate(-90deg)", display: "block" }}>
+                <Icon path={icons.chevron} size={13} />
+              </span>
+            </button>
+          )}
           <button
             type="button"
             className="btn btn-icon"
