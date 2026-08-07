@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import HomePage from "./components/HomePage";
 import MapPage from "./components/MapPage";
-import { useMapData, useMapIndex } from "./lib/data";
+import { useMapData, useMapIndex, useProgression } from "./lib/data";
 import { href, navigate, useRoute } from "./lib/router";
 import { useStore } from "./store";
 
@@ -11,6 +11,10 @@ export default function App() {
   const setLastMap = useStore((s) => s.setLastMap);
 
   const index = useMapIndex();
+  // The task graph is small and shared by every map, so it loads alongside the
+  // index rather than per map. A failure here degrades task availability
+  // without blocking the map itself.
+  const progression = useProgression();
   const mapName = route.name === "map" ? route.map : null;
   const map = useMapData(mapName);
 
@@ -64,7 +68,14 @@ export default function App() {
 
   if (!map.data || !index.data) return <Loading label="Loading map" />;
 
-  return <MapPage data={map.data} maps={index.data.maps} deepLinkTask={route.task} />;
+  return (
+    <MapPage
+      data={map.data}
+      maps={index.data.maps}
+      progression={progression.data}
+      deepLinkTask={route.task}
+    />
+  );
 }
 
 function Loading({ label }: { label: string }) {

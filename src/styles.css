@@ -360,30 +360,42 @@ body {
   pointer-events: none;
 }
 
-/* Ring drawn under whatever is currently selected. */
-.tk-highlight span {
+/*
+ * Ring drawn under whatever is currently selected: a solid ring that is always
+ * legible, plus a pulse on top. A pulse alone spends most of its cycle nearly
+ * transparent, which is exactly when you glance at it.
+ */
+.tk-highlight span,
+.tk-highlight span::after {
   position: absolute;
-  left: -19px;
-  top: -19px;
-  width: 38px;
-  height: 38px;
+  left: -21px;
+  top: -21px;
+  width: 42px;
+  height: 42px;
   border-radius: 999px;
   border: 2px solid var(--accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
-  animation: tk-pulse 1.6s ease-out infinite;
+}
+
+.tk-highlight span {
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent) 24%, transparent),
+    0 0 10px 2px rgb(0 0 0 / 0.55);
+}
+
+.tk-highlight span::after {
+  content: "";
+  left: -2px;
+  top: -2px;
+  animation: tk-pulse 1.8s ease-out infinite;
 }
 
 @keyframes tk-pulse {
   0% {
-    transform: scale(0.75);
-    opacity: 1;
-  }
-  70% {
-    transform: scale(1.15);
-    opacity: 0.35;
+    transform: scale(1);
+    opacity: 0.9;
   }
   100% {
-    transform: scale(1.25);
+    transform: scale(1.7);
     opacity: 0;
   }
 }

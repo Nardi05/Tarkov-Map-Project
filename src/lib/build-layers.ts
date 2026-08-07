@@ -10,6 +10,8 @@ import type {
   QuestMarker,
   Spawn,
   Task,
+  TaskAvailability,
+  TaskStatus,
   Transit,
   Vec3,
 } from "../types";
@@ -57,7 +59,10 @@ export interface BuildContext {
   showMarkerLabels: boolean;
   showQuestLabels: boolean;
   dimCompleted: boolean;
-  completed: Record<string, true>;
+  /** What the player said about each task; absent means not started. */
+  taskStatus: Record<string, TaskStatus>;
+  /** Individual objective locations already ticked off. */
+  markerDone: Record<string, true>;
   /** Quest markers already narrowed by the quest filter panel. */
   visibleQuests: QuestMarker[];
   renderer: L.Renderer;
@@ -127,12 +132,17 @@ function symbol(
   return marker;
 }
 
-/** Ground footprint of an extract / quest zone / hazard. */
+/**
+ * Ground footprint of an extract / quest zone / hazard. `fade` dims the whole
+ * shape so a finished objective's outline doesn't stay bright under a dimmed
+ * pin.
+ */
 function outlinePolygon(
   outline: [number, number][],
   color: string,
   ctx: BuildContext,
   interactive = false,
+  fade = 1,
 ): L.Polygon {
   return L.polygon(
     outline.map(([x, z]) => L.latLng(z, x)),
@@ -140,9 +150,9 @@ function outlinePolygon(
       renderer: ctx.renderer,
       color,
       weight: 1.5,
-      opacity: 0.85,
+      opacity: 0.85 * fade,
       fillColor: color,
-      fillOpacity: 0.16,
+      fillOpacity: 0.16 * fade,
       interactive,
     },
   );
@@ -321,24 +331,44 @@ function buildQuests(ctx: BuildContext): L.Layer[] {
   const def = LAYER_BY_ID["quests"];
   const out: L.Layer[] = [];
 
+  // How many markers each task has here, so a pin can say "location 2 of 3".
+  const positions = new Map<string, QuestMarker[]>();
+  for (const marker of ctx.visibleQuests) {
+    const bucket = positions.get(marker.task);
+    if (bucket) bucket.push(marker);
+    else positions.set(marker.task, [marker]);
+  }
+
   for (const marker of ctx.visibleQuests) {
     if (!withinExtents(marker, ctx.extents)) continue;
     const task = ctx.data.tasks[marker.task];
     if (!task) continue;
-    const done = !!ctx.completed[task.id];
+
+    // A location counts as handled either because the player ticked this exact
+    // spot off, or because the whole task is behind them.
+    const done = !!ctx.markerDone[marker.id] || ctx.taskStatus[task.id] === "completed";
+    const dim = ctx.dimCompleted && done;
 
     if (ctx.showZones && marker.outline) {
-      out.push(outlinePolygon(marker.outline, def.color, ctx));
+      out.push(outlinePolygon(marker.outline, def.color, ctx, false, dim ? 0.35 : 1));
     }
+
+    const siblings = positions.get(marker.task) ?? [marker];
+    const detail: string[] = [];
+    if (siblings.length > 1) {
+      detail.push(`Location ${siblings.indexOf(marker) + 1} of ${siblings.length}`);
+    }
+    if (marker.count && marker.count > 1) detail.push(`Needs ${marker.count}`);
+
     out.push(
       symbol(
         marker.position,
         def,
         ctx,
         task.name,
-        marker.description,
+        [marker.description, ...detail].filter(Boolean).join(" · "),
         { kind: "quest", marker, task },
-        { label: ctx.showQuestLabels ? task.name : null, done: ctx.dimCompleted && done },
+        { label: ctx.showQuestLabels ? task.name : null, done: dim },
       ),
     );
   }
@@ -453,23 +483,34 @@ export interface QuestFilterInput {
   search: string;
   trader: string | null;
   kappaOnly: boolean;
-  hideCompleted: boolean;
+  /** "active" draws only what the player ticked; "all" draws everything. */
+  scope: "active" | "available" | "all";
   focusTask: string | null;
 }
+
+/** Which task states each scope lets through. */
+const SCOPE_ALLOWS: Record<QuestFilterInput["scope"], TaskAvailability[]> = {
+  active: ["active"],
+  available: ["active", "available"],
+  all: ["active", "available", "locked", "completed", "failed"],
+};
 
 export function filterQuests(
   data: MapData,
   filters: QuestFilterInput,
-  completed: Record<string, true>,
+  availability: Record<string, TaskAvailability>,
 ): QuestMarker[] {
   const needle = filters.search.trim().toLowerCase();
+  const allowed = new Set(SCOPE_ALLOWS[filters.scope] ?? SCOPE_ALLOWS.all);
 
   return data.markers.quests.filter((marker) => {
     const task = data.tasks[marker.task];
     if (!task) return false;
     if (filters.focusTask) return task.id === filters.focusTask;
+    // A task the graph doesn't know about (data skew between files) is treated
+    // as available rather than vanishing.
+    if (!allowed.has(availability[task.id] ?? "available")) return false;
     if (filters.kappaOnly && !task.kappaRequired) return false;
-    if (filters.hideCompleted && completed[task.id]) return false;
     if (filters.trader && task.trader?.name !== filters.trader) return false;
     if (needle) {
       const haystack = `${task.name} ${marker.description} ${marker.item?.name ?? ""}`.toLowerCase();
