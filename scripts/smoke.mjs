@@ -70,7 +70,12 @@ for (const map of maps) {
   await page.getByRole("button", { name: "Settings", exact: true }).first().click();
   await page.waitForTimeout(200);
 
-  const levelButtons = page.locator("aside section", { hasText: "LEVEL" }).locator("button");
+  // Exact match: `hasText` is case-insensitive, and the Profile section's
+  // "PMC level" field would otherwise be mistaken for the floor switcher.
+  const levelButtons = page
+    .locator("aside section")
+    .filter({ has: page.getByText("Level", { exact: true }) })
+    .locator("button");
   const floors = await levelButtons.count();
   for (let i = 0; i < floors; i++) {
     await levelButtons.nth(i).click();

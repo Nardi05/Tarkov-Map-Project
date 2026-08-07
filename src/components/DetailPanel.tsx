@@ -2,8 +2,10 @@ import type { ReactNode } from "react";
 import { pct, type Selection } from "../lib/build-layers";
 import { LAYER_BY_ID } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
+import { lockReasons } from "../lib/progression";
 import { useStore } from "../store";
-import type { MapData } from "../types";
+import type { MapData, Progression, TaskAvailability, TaskStatus } from "../types";
+import TaskStatusControl from "./TaskStatusControl";
 import { Icon, icons } from "./ui";
 
 /**
@@ -13,18 +15,34 @@ import { Icon, icons } from "./ui";
  */
 export default function DetailPanel({
   data,
+  progression,
+  availability,
   selection,
   onClose,
   onOpenTask,
 }: {
   data: MapData;
+  progression: Progression | null;
+  availability: Record<string, TaskAvailability>;
   selection: Selection;
   onClose: () => void;
   onOpenTask: (taskId: string) => void;
 }) {
-  const completed = useStore((s) => s.completed);
-  const toggleCompleted = useStore((s) => s.toggleCompleted);
-  const view = describe(selection, data, { completed, toggleCompleted, onOpenTask });
+  const taskStatus = useStore((s) => s.taskStatus);
+  const markerDone = useStore((s) => s.markerDone);
+  const profile = useStore((s) => s.profile);
+  const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
+  const toggleMarkerDone = useStore((s) => s.toggleMarkerDone);
+  const view = describe(selection, data, {
+    progression,
+    availability,
+    taskStatus,
+    markerDone,
+    profile,
+    cycleTaskStatus,
+    toggleMarkerDone,
+    onOpenTask,
+  });
 
   return (
     <div className="animate-in flex flex-col">
@@ -96,15 +114,18 @@ function Note({ children, tone = "info" }: { children: ReactNode; tone?: "info" 
   );
 }
 
-function describe(
-  selection: Selection,
-  data: MapData,
-  ctx: {
-    completed: Record<string, true>;
-    toggleCompleted: (id: string) => void;
-    onOpenTask: (id: string) => void;
-  },
-): View {
+interface DescribeContext {
+  progression: Progression | null;
+  availability: Record<string, TaskAvailability>;
+  taskStatus: Record<string, TaskStatus>;
+  markerDone: Record<string, true>;
+  profile: { level: number; faction: string };
+  cycleTaskStatus: (id: string) => void;
+  toggleMarkerDone: (markerId: string) => void;
+  onOpenTask: (id: string) => void;
+}
+
+function describe(selection: Selection, data: MapData, ctx: DescribeContext): View {
   switch (selection.kind) {
     case "spawn": {
       const { spawn } = selection;
@@ -248,9 +269,38 @@ function describe(
     case "quest": {
       const { marker, task } = selection;
       const layer = LAYER_BY_ID.quests;
-      const done = !!ctx.completed[task.id];
+      const status = ctx.taskStatus[task.id];
+      const state = ctx.availability[task.id] ?? "available";
       const keys = task.keys.map((id) => data.keys[id]).filter(Boolean);
-      const prerequisites = task.requires.map((id) => data.tasks[id]?.name).filter(Boolean);
+      const hereDone = !!ctx.markerDone[marker.id];
+
+      // Every marker this task has on this map, so the panel can say where you
+      // are in a multi-location objective.
+      const siblings = data.markers.quests.filter((m) => m.task === task.id);
+      const doneCount = siblings.filter((m) => ctx.markerDone[m.id]).length;
+      const position = siblings.findIndex((m) => m.id === marker.id) + 1;
+
+      // Prerequisites come from the full graph, not the per-map task table —
+      // most of them are tasks that never appear on a map at all.
+      const graphTask = ctx.progression?.tasks[task.id];
+      const prerequisites = (graphTask?.requires ?? [])
+        .map((set) =>
+          set.map((req) => ctx.progression?.tasks[req.task]?.name ?? "another task").join(" + "),
+        )
+        .filter(Boolean);
+      const blockers =
+        state === "locked" ? lockReasons(ctx.progression, task.id, ctx.taskStatus, ctx.profile) : [];
+
+      const stateLabel =
+        state === "active"
+          ? "Active"
+          : state === "completed"
+            ? "Done"
+            : state === "failed"
+              ? "Failed"
+              : state === "locked"
+                ? "Locked"
+                : "Available";
 
       return {
         title: task.name,
@@ -259,11 +309,18 @@ function describe(
         color: layer.color,
         lead: marker.description,
         facts: [
+          { label: "Status", value: stateLabel },
           task.trader ? { label: "Trader", value: task.trader.name } : null,
           task.minPlayerLevel > 0 ? { label: "Unlocks at", value: `Level ${task.minPlayerLevel}` } : null,
+          marker.count && marker.count > 1 ? { label: "Needs", value: `${marker.count}×` } : null,
+          siblings.length > 1
+            ? { label: "Locations", value: `${position} of ${siblings.length} · ${doneCount} done` }
+            : null,
           task.experience ? { label: "Reward", value: `${task.experience.toLocaleString()} XP` } : null,
           task.kappaRequired ? { label: "Kappa", value: "Required" } : null,
-          prerequisites.length ? { label: "After", value: prerequisites.join(", ") } : null,
+          // Alternatives are joined with "or" — merged branch variants of the
+          // same quest each unlock it on their own.
+          prerequisites.length ? { label: "After", value: prerequisites.join(" or ") } : null,
         ].filter(Boolean) as View["facts"],
         body: (
           <div className="flex flex-col gap-2">
@@ -279,22 +336,37 @@ function describe(
               </div>
             )}
 
-            {keys.length > 0 && (
-              <Note>
-                Bring {keys.map((k) => k.name).join(", ")} for this task.
-              </Note>
+            {blockers.length > 0 && (
+              <Note tone="warn">Locked until: {blockers.map((b) => b.label).join(", ")}.</Note>
             )}
 
+            {keys.length > 0 && <Note>Bring {keys.map((k) => k.name).join(", ")} for this task.</Note>}
+
+            <div className="surface-2 flex items-center gap-2.5 px-2.5 py-2">
+              <TaskStatusControl
+                status={status}
+                name={task.name}
+                onCycle={() => ctx.cycleTaskStatus(task.id)}
+              />
+              <div className="min-w-0 flex-1">
+                <p className="text-[0.75rem] font-medium">{stateLabel}</p>
+                <p className="text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
+                  Tap to move between not started, active and done
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="btn w-full justify-start"
+              aria-pressed={hereDone}
+              onClick={() => ctx.toggleMarkerDone(marker.id)}
+            >
+              <Icon path={icons.check} size={14} />
+              {hereDone ? "Done here" : "Mark this location done"}
+            </button>
+
             <div className="flex flex-wrap gap-1.5">
-              <button
-                type="button"
-                className="btn"
-                aria-pressed={done}
-                onClick={() => ctx.toggleCompleted(task.id)}
-              >
-                <Icon path={icons.check} size={14} />
-                {done ? "Marked done" : "Mark done"}
-              </button>
               <button type="button" className="btn" onClick={() => ctx.onOpenTask(task.id)}>
                 <Icon path={icons.target} size={14} /> Only this task
               </button>

@@ -1,7 +1,7 @@
 import { availableStyles, type Floor } from "../lib/base-layer";
 import { LAYERS } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
-import { useStore, type Theme } from "../store";
+import { useStore, type Faction, type Theme } from "../store";
 import type { MapData } from "../types";
 import { Section, Toggle } from "./ui";
 
@@ -25,8 +25,12 @@ export default function SettingsPanel({
   const settings = useStore((s) => s.settings);
   const setSetting = useStore((s) => s.setSetting);
   const resetLayers = useStore((s) => s.resetLayers);
-  const clearCompleted = useStore((s) => s.clearCompleted);
-  const completedCount = useStore((s) => Object.keys(s.completed).length);
+  const profile = useStore((s) => s.profile);
+  const setProfile = useStore((s) => s.setProfile);
+  const clearProgress = useStore((s) => s.clearProgress);
+  const trackedCount = useStore(
+    (s) => Object.keys(s.taskStatus).length + Object.keys(s.markerDone).length,
+  );
 
   const styles = availableStyles(data.geo);
 
@@ -118,10 +122,49 @@ export default function SettingsPanel({
         />
         <SettingRow
           label="Dim finished tasks"
-          hint="Keep completed task markers visible but faded, instead of hiding them."
+          hint="Keep finished task markers and locations visible but faded."
           checked={settings.dimCompleted}
           onChange={(v) => setSetting("dimCompleted", v)}
         />
+      </Section>
+
+      <Section
+        title="Profile"
+        hint="Only used to work out which tasks you could have picked up. Nothing else reads it."
+      >
+        <div className="flex flex-wrap items-end gap-3">
+          <label className="flex-1" style={{ minWidth: "7rem" }}>
+            <span className="mb-1 block text-[0.75rem]">PMC level</span>
+            <input
+              className="input"
+              type="number"
+              min={1}
+              max={79}
+              value={profile.level}
+              onChange={(e) => {
+                const level = Number(e.target.value);
+                if (Number.isFinite(level)) setProfile({ level: Math.min(79, Math.max(1, level)) });
+              }}
+            />
+          </label>
+          <div className="flex-1" style={{ minWidth: "10rem" }}>
+            <span className="mb-1 block text-[0.75rem]">Faction</span>
+            <div className="flex gap-1">
+              {(["Any", "USEC", "BEAR"] as Faction[]).map((faction) => (
+                <button
+                  key={faction}
+                  type="button"
+                  className="btn flex-1 text-[0.72rem]"
+                  style={{ padding: "0.3rem 0.4rem" }}
+                  aria-pressed={profile.faction === faction}
+                  onClick={() => setProfile({ faction })}
+                >
+                  {faction}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </Section>
 
       <Section title="Appearance">
@@ -163,13 +206,15 @@ export default function SettingsPanel({
           <button
             type="button"
             className="btn"
-            style={{ color: completedCount ? "var(--danger)" : undefined }}
-            disabled={!completedCount}
+            style={{ color: trackedCount ? "var(--danger)" : undefined }}
+            disabled={!trackedCount}
             onClick={() => {
-              if (confirm(`Clear your progress on all ${completedCount} tasks marked done?`)) clearCompleted();
+              if (confirm("Clear every task status and ticked location? This cannot be undone.")) {
+                clearProgress();
+              }
             }}
           >
-            Clear task progress{completedCount ? ` (${completedCount})` : ""}
+            Clear task progress{trackedCount ? ` (${trackedCount})` : ""}
           </button>
         </div>
         <p className="mt-2 text-[0.68rem] leading-relaxed" style={{ color: "var(--text-faint)" }}>
