@@ -77,6 +77,26 @@ npm run smoke     # opens every map in a browser and checks for errors
 `dist/` is a plain static site — the app uses hash routing, so it drops onto any
 static host, including a subpath, with no rewrite rules.
 
+## Deploying a private preview
+
+The repo is set up for Vercel: connect it as a project and every push to the
+production branch redeploys automatically (`vercel.json` sets the build command
+to `npm run data && npm run build`, so each deploy fetches current game data
+rather than a stale snapshot).
+
+While the site isn't ready to be public, `middleware.ts` puts a password in
+front of every request — including static assets, not just the page — using
+[Vercel Routing Middleware](https://vercel.com/docs/routing-middleware). Set
+these in the project's Environment Variables:
+
+- `SITE_PASSWORD` — the shared password. Required; the site fails closed
+  (503) if it's missing, rather than opening up by accident.
+- `SITE_PRIVATE` — set to `false` when it's time to go public. Anything else
+  (including leaving it unset) keeps the gate on.
+
+No custom domain or extra setup needed beyond that — share the Vercel-assigned
+URL and password with whoever's testing.
+
 ## How it fits together
 
 ```
