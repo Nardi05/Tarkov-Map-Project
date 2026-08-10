@@ -165,10 +165,12 @@ export const useStore = create<Store>()(
       name: "tarkov-maps",
       version: 3,
       storage: createJSONStorage(() => localStorage),
-      // Quest filters are per-session; everything else is worth remembering.
-      partialize: ({ layers, settings, taskStatus, markerDone, lastMap }) => ({
+      // Search, trader and Kappa narrowing are momentary and reset on reload;
+      // show-all is a view preference, so it sticks like the layer toggles do.
+      partialize: ({ layers, settings, quest, taskStatus, markerDone, lastMap }) => ({
         layers,
         settings,
+        quest: { showAll: quest.showAll },
         taskStatus,
         markerDone,
         lastMap,
@@ -213,7 +215,7 @@ export const useStore = create<Store>()(
           settings: { ...DEFAULT_SETTINGS, ...(p.settings ?? {}) },
           taskStatus: p.taskStatus ?? {},
           markerDone: p.markerDone ?? {},
-          quest: { ...DEFAULT_QUEST },
+          quest: { ...DEFAULT_QUEST, showAll: p.quest?.showAll ?? DEFAULT_QUEST.showAll },
         };
       },
     },

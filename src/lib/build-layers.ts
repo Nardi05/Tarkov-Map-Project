@@ -14,9 +14,10 @@ import type {
   Transit,
   Vec3,
 } from "../types";
-import { LAYER_BY_ID, type LayerDef, type LayerId } from "./layers";
+import { LAYER_BY_ID, QUEST_KIND_META, type LayerDef, type LayerId, type MarkerShape } from "./layers";
 import { markerIcon } from "./marker-icons";
 import { toLatLng, withinExtents, type Extent } from "./leaflet-crs";
+import { clusterRadius, clusterSpawns, type SpawnCluster } from "./spawn-clusters";
 
 /** A boss's positions inside one spawn zone, collapsed into a single pin. */
 export interface BossGroup {
@@ -39,8 +40,10 @@ export interface QuestGroup {
   centre: Vec3;
 }
 
+export type { SpawnCluster };
+
 export type Selection =
-  | { kind: "spawn"; spawn: Spawn }
+  | { kind: "spawn"; cluster: SpawnCluster }
   | { kind: "boss"; boss: BossGroup }
   | { kind: "extract"; extract: Extract }
   | { kind: "transit"; transit: Transit }
@@ -106,11 +109,13 @@ function symbol(
   title: string,
   sub: string | null,
   select: Selection,
-  opts: { label?: string | null; done?: boolean } = {},
+  opts: { label?: string | null; done?: boolean; shape?: MarkerShape } = {},
 ): L.Marker {
   const marker = L.marker(toLatLng(position), {
     icon: markerIcon({
-      shape: def.shape,
+      // Quest objectives override this per marker so the glyph says what the
+      // objective actually wants; every other layer uses its one shape.
+      shape: opts.shape ?? def.shape,
       color: def.color,
       scale: ctx.markerScale,
       label: ctx.showMarkerLabels ? opts.label : null,
@@ -175,14 +180,27 @@ function buildSpawns(ctx: BuildContext, layerId: LayerId): L.Layer[] {
   const out: L.Layer[] = [];
   const radius = 4.5 * ctx.markerScale;
 
-  for (const spawn of ctx.data.markers.spawns) {
-    if (SPAWN_LAYER[spawn.group] !== layerId) continue;
-    if (!withinExtents(spawn, ctx.extents)) continue;
+  // Cluster after the floor filter, never before: two points on different
+  // levels of Interchange are not one spot, whatever the map says.
+  const onThisLayer = ctx.data.markers.spawns.filter(
+    (s) => SPAWN_LAYER[s.group] === layerId && withinExtents(s, ctx.extents),
+  );
 
-    const aiOnly = !spawn.categories.includes("player");
+  for (const cluster of clusterSpawns(onThisLayer, clusterRadius(ctx.data))) {
+    const aiOnly = !cluster.spawns.some((s) => s.categories.includes("player"));
+    const zones = [...new Set(cluster.spawns.map((s) => s.zone).filter(Boolean))] as string[];
+    const label = zones.length ? `${def.label.replace(" spawns", "")} — ${zones[0]}` : def.label;
+
+    const detail = [
+      cluster.spawns.length > 1 ? `${cluster.spawns.length} spawn points here` : null,
+      aiOnly ? "AI only, not a player start" : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+
     // Canvas circles, not div icons: spawn points run into the hundreds and
     // this is the difference between a smooth pan and a stuttering one.
-    const dot = L.circleMarker(toLatLng(spawn.position), {
+    const dot = L.circleMarker(toLatLng(cluster.centre), {
       renderer: ctx.renderer,
       radius,
       color: "rgba(6,10,15,.75)",
@@ -191,12 +209,8 @@ function buildSpawns(ctx: BuildContext, layerId: LayerId): L.Layer[] {
       fillOpacity: aiOnly ? 0.55 : 0.95,
       className: "tk-spawn",
     });
-    const label = spawn.zone ? `${def.label.replace(" spawns", "")} — ${spawn.zone}` : def.label;
-    dot.bindTooltip(tooltip(label, aiOnly ? "AI only, not a player start" : null), {
-      direction: "top",
-      className: "tk-tip",
-    });
-    dot.on("click", () => ctx.onSelect({ kind: "spawn", spawn }));
+    dot.bindTooltip(tooltip(label, detail || null), { direction: "top", className: "tk-tip" });
+    dot.on("click", () => ctx.onSelect({ kind: "spawn", cluster }));
     out.push(dot);
   }
   return out;
@@ -358,6 +372,7 @@ function buildQuests(ctx: BuildContext): L.Layer[] {
       detail.push(`Location ${siblings.indexOf(marker) + 1} of ${siblings.length}`);
     }
     if (marker.count && marker.count > 1) detail.push(`Needs ${marker.count}`);
+    const kindLabel = QUEST_KIND_META[marker.kind]?.label;
 
     out.push(
       symbol(
@@ -365,9 +380,13 @@ function buildQuests(ctx: BuildContext): L.Layer[] {
         def,
         ctx,
         task.name,
-        [marker.description, ...detail].filter(Boolean).join(" · "),
+        [marker.description || kindLabel, ...detail].filter(Boolean).join(" · "),
         { kind: "quest", marker, task },
-        { label: ctx.showQuestLabels ? task.name : null, done: dim },
+        {
+          label: ctx.showQuestLabels ? task.name : null,
+          done: dim,
+          shape: QUEST_KIND_META[marker.kind]?.shape ?? def.shape,
+        },
       ),
     );
   }
@@ -443,14 +462,11 @@ function buildSniperSpawns(ctx: BuildContext): L.Layer[] {
   return ctx.data.markers.spawns
     .filter((s) => s.group === "sniper" && withinExtents(s, ctx.extents))
     .map((spawn) =>
-      symbol(
-        spawn.position,
-        def,
-        ctx,
-        "Sniper Scav",
-        spawn.zone,
-        { kind: "spawn", spawn },
-      ),
+      symbol(spawn.position, def, ctx, "Sniper Scav", spawn.zone, {
+        kind: "spawn",
+        // Sniper nests are few and far apart, so each stays its own marker.
+        cluster: { id: spawn.id, group: spawn.group, centre: spawn.position, spawns: [spawn] },
+      }),
     );
 }
 

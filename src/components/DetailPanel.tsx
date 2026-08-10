@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { pct, type Selection } from "../lib/build-layers";
-import { LAYER_BY_ID } from "../lib/layers";
+import { LAYER_BY_ID, QUEST_KIND_META } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
 import { useStore } from "../store";
 import type { MapData, TaskStatus } from "../types";
@@ -116,7 +116,10 @@ interface DescribeContext {
 function describe(selection: Selection, data: MapData, ctx: DescribeContext): View {
   switch (selection.kind) {
     case "spawn": {
-      const { spawn } = selection;
+      const { cluster } = selection;
+      // Every spawn in a cluster shares a group and a role, so the first one
+      // speaks for all of them; only the counts and zones need collecting.
+      const spawn = cluster.spawns[0];
       const isSniper = spawn.group === "sniper";
       const isPmcBot = spawn.group === "pmc-ai";
       const layer = LAYER_BY_ID[
@@ -128,7 +131,9 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
               ? "scav-spawns"
               : "pmc-spawns"
       ];
-      const playerStart = spawn.categories.includes("player");
+      const playerStart = cluster.spawns.some((s) => s.categories.includes("player"));
+      const zones = [...new Set(cluster.spawns.map((s) => s.zone).filter(Boolean))] as string[];
+      const sides = [...new Set(cluster.spawns.flatMap((s) => s.sides))];
       return {
         title: isSniper
           ? "Sniper Scav position"
@@ -148,9 +153,12 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
               ? "A raid can start here. Anyone spawning nearby is somewhere close to you in the first minute."
               : "AI spawns here during the raid. It is not a possible player start.",
         facts: [
-          spawn.zone ? { label: "Zone", value: spawn.zone } : null,
-          spawn.sides.length ? { label: "Used by", value: spawn.sides.join(", ") } : null,
-          { label: "Elevation", value: `${spawn.position[1].toFixed(1)} m` },
+          cluster.spawns.length > 1
+            ? { label: "Spawn points here", value: cluster.spawns.length }
+            : null,
+          zones.length ? { label: zones.length > 1 ? "Zones" : "Zone", value: zones.join(", ") } : null,
+          sides.length ? { label: "Used by", value: sides.join(", ") } : null,
+          { label: "Elevation", value: `${cluster.centre[1].toFixed(1)} m` },
         ].filter(Boolean) as View["facts"],
       };
     }
@@ -269,15 +277,18 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
 
       const stateLabel =
         status === "active" ? "Active" : status === "completed" ? "Done" : "Not started";
+      const kindMeta = QUEST_KIND_META[marker.kind];
 
       return {
         title: task.name,
-        kind: `Task objective${marker.optional ? " (optional)" : ""}`,
-        shape: layer.shape,
+        kind: `${kindMeta?.label ?? "Task objective"}${marker.optional ? " (optional)" : ""}`,
+        // Matches the glyph actually drawn on the map for this objective kind.
+        shape: kindMeta?.shape ?? layer.shape,
         color: layer.color,
         lead: marker.description,
         facts: [
           { label: "Status", value: stateLabel },
+          kindMeta ? { label: "Objective", value: kindMeta.hint } : null,
           task.trader ? { label: "Trader", value: task.trader.name } : null,
           task.minPlayerLevel > 0 ? { label: "Unlocks at", value: `Level ${task.minPlayerLevel}` } : null,
           marker.count && marker.count > 1 ? { label: "Needs", value: `${marker.count}×` } : null,
