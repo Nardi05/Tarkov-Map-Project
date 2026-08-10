@@ -36,6 +36,11 @@ further and vary the glyph by what the objective actually asks of you:
 | Reticle | Kills that count for the task |
 | Runner | Just reach the spot |
 
+A quest item that can spawn in eleven places gets one pin, not eleven — the
+game only puts it in one of them, so the pin sits at the middle of the spread
+and the panel says how many spots it covers. Objectives you must genuinely
+repeat (mark three spots, plant three jammers) keep a pin each.
+
 Spawn points are drawn one dot per place, not one per spawn. The game scatters
 several spawn points a few metres apart inside a single spot, which rendered as
 an unreadable clump; those collapse into one dot at their centre, and the detail
@@ -74,6 +79,11 @@ picked up or hides one behind a prerequisite it thinks you haven't met, so the
 panel can't disagree with what the game is telling you. If you just want to
 study a map you haven't started, tick **Show every task on the map**.
 
+Where the wiki has screenshots for a task, the detail panel shows them as a
+carousel — arrows to step through, click to blow one up full screen, Escape or
+another click to come back. That is usually the fastest way to turn "somewhere
+in this building" into "that shelf".
+
 Everything is stored in your browser only. It survives a reload and switching
 maps, so dying on Customs and running a Woods raid before coming back does not
 cost you your ticked list.
@@ -87,6 +97,7 @@ npm run dev
 ```
 
 ```bash
+npm run images    # refresh the wiki screenshot cache (optional, slow)
 npm run build     # type-check + production bundle into dist/
 npm run preview
 npm run smoke     # opens every map in a browser and checks for errors
@@ -120,6 +131,9 @@ URL and password with whoever's testing.
 ```
 scripts/build-data.mjs   fetches tarkov.dev's JSON feeds, resolves translations,
                          and writes one small payload per map
+scripts/fetch-task-images.mjs
+                         caches the wiki's task screenshots into
+                         data/task-images.json (committed; not run on deploy)
 src/data/geo.json        vendored georeferencing (transform, bounds, rotation,
                          floors, place labels) for each map
 src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
@@ -149,6 +163,12 @@ A few details worth knowing if you touch this code:
 - Spawn clustering runs at render time, after the floor filter, never at build
   time. Two points on different levels of Interchange are not one place however
   close they look from above, and the raw positions stay in the payload.
+- Task screenshots are fetched by `npm run images`, never by `npm run data`.
+  A deploy must not depend on the wiki being up, so the cache is committed and
+  the build just copies it in; if it is missing, galleries silently vanish.
+- Wiki images are hotlinked and always requested through the CDN's
+  `scale-to-width-down` transform. The originals are full game captures — one
+  Streets overview is a 3.9MB PNG, versus 99KB at 640px.
 - Spawn clusters ignore the game's zone names. Zones overlap heavily in space,
   so one visible clump routinely carries three or four of them and grouping by
   name left the clump on screen.
@@ -160,6 +180,9 @@ regenerated `public/data`.
 
 Map artwork and game data come from [tarkov.dev](https://tarkov.dev) and the
 [the-hideout SVG map project](https://github.com/the-hideout/tarkov-dev-svg-maps).
+Task screenshots are served from the
+[Escape from Tarkov Wiki](https://escapefromtarkov.fandom.com), whose text and
+images are licensed CC BY-SA.
 
 Escape from Tarkov is a trademark of Battlestate Games. This is an unofficial
 fan project with no affiliation.

@@ -80,6 +80,7 @@ export const icons = {
   chevron: "m6 9 6 6 6-6",
   reset: "M3 12a9 9 0 1 0 3-6.7M3 4v5h5",
   stack: "M4 7h16M4 12h16M4 17h16",
+  expand: "M9 3H3v6M3 3l7 7M15 21h6v-6M21 21l-7-7",
 };
 
 export function EmptyState({ title, hint }: { title: string; hint?: string }) {

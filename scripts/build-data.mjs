@@ -625,4 +625,20 @@ await fs.writeFile(
   JSON.stringify({ generated: new Date().toISOString(), gameMode: GAME_MODE, maps: index }, null, 1),
 );
 
-console.log(`\nWrote ${index.length} maps to public/data`);
+/*
+ * Task screenshots are gathered by `npm run images` and committed to
+ * data/task-images.json. Copied rather than refetched so a deploy never
+ * depends on the wiki; if it is missing the gallery simply doesn't appear.
+ */
+const imagesSrc = path.join(ROOT, "data", "task-images.json");
+let imageNote = "no task photos (run `npm run images`)";
+try {
+  await fs.copyFile(imagesSrc, path.join(OUT, "task-images.json"));
+  const cached = JSON.parse(await fs.readFile(imagesSrc, "utf8"));
+  const n = Object.values(cached.tasks ?? {}).reduce((a, l) => a + l.length, 0);
+  imageNote = `${n} task photos`;
+} catch {
+  /* optional */
+}
+
+console.log(`\nWrote ${index.length} maps and ${imageNote} to public/data`);

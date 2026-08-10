@@ -147,6 +147,21 @@ export interface QuestMarker {
  */
 export type TaskStatus = "active" | "completed";
 
+/** One wiki screenshot for a task, hotlinked from the wiki's own CDN. */
+export interface TaskImage {
+  url: string;
+  width: number;
+  height: number;
+  title: string;
+}
+
+/** taskId -> its screenshots. Fetched lazily; absent means "none known". */
+export interface TaskImages {
+  generated: string;
+  source: string;
+  tasks: Record<string, TaskImage[]>;
+}
+
 export interface Task {
   id: string;
   name: string;
