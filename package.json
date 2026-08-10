@@ -10,7 +10,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "images": "node scripts/fetch-task-images.mjs"
   },
   "dependencies": {
     "@vercel/functions": "^3.9.1",

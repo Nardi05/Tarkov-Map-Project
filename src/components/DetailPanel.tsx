@@ -3,7 +3,9 @@ import { pct, type Selection } from "../lib/build-layers";
 import { LAYER_BY_ID, QUEST_KIND_META } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
 import { useStore } from "../store";
-import type { MapData, TaskStatus } from "../types";
+import { useTaskImages } from "../lib/data";
+import type { MapData, TaskImage, TaskStatus } from "../types";
+import TaskGallery from "./TaskGallery";
 import TaskStatusControl from "./TaskStatusControl";
 import { Icon, icons } from "./ui";
 
@@ -27,11 +29,16 @@ export default function DetailPanel({
   const markerDone = useStore((s) => s.markerDone);
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const toggleMarkerDone = useStore((s) => s.toggleMarkerDone);
+  const setMarkersDone = useStore((s) => s.setMarkersDone);
+  // Only quest selections have a task, and only they show a gallery.
+  const images = useTaskImages(selection.kind === "quest" ? selection.task.id : null);
   const view = describe(selection, data, {
     taskStatus,
     markerDone,
     cycleTaskStatus,
     toggleMarkerDone,
+    setMarkersDone,
+    images,
     onOpenTask,
   });
 
@@ -110,6 +117,8 @@ interface DescribeContext {
   markerDone: Record<string, true>;
   cycleTaskStatus: (id: string) => void;
   toggleMarkerDone: (markerId: string) => void;
+  setMarkersDone: (markerIds: string[], done: boolean) => void;
+  images: TaskImage[];
   onOpenTask: (id: string) => void;
 }
 
@@ -263,11 +272,18 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
     }
 
     case "quest": {
-      const { marker, task } = selection;
+      const { marker, task, alternatives } = selection;
       const layer = LAYER_BY_ID.quests;
       const status = ctx.taskStatus[task.id];
       const keys = task.keys.map((id) => data.keys[id]).filter(Boolean);
-      const hereDone = !!ctx.markerDone[marker.id];
+
+      // When this pin stands for several possible spawns of one item, finding
+      // it once settles all of them — so they tick together.
+      const spawns = alternatives.length;
+      const collapsed = spawns > 1;
+      const hereDone = collapsed
+        ? alternatives.every((m) => !!ctx.markerDone[m.id])
+        : !!ctx.markerDone[marker.id];
 
       // Every marker this task has on this map, so the panel can say where you
       // are in a multi-location objective.
@@ -292,7 +308,8 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
           task.trader ? { label: "Trader", value: task.trader.name } : null,
           task.minPlayerLevel > 0 ? { label: "Unlocks at", value: `Level ${task.minPlayerLevel}` } : null,
           marker.count && marker.count > 1 ? { label: "Needs", value: `${marker.count}×` } : null,
-          siblings.length > 1
+          collapsed ? { label: "Possible spawns", value: `${spawns} — it is at one of them` } : null,
+          !collapsed && siblings.length > 1
             ? { label: "Locations", value: `${position} of ${siblings.length} · ${doneCount} done` }
             : null,
           task.experience ? { label: "Reward", value: `${task.experience.toLocaleString()} XP` } : null,
@@ -306,11 +323,15 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
                 <div className="min-w-0">
                   <p className="truncate text-[0.75rem] font-medium">{marker.item.name}</p>
                   <p className="text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
-                    Quest item — one of its possible spawns
+                    {collapsed
+                      ? `Quest item — ${spawns} possible spawns in this area`
+                      : "Quest item — one of its possible spawns"}
                   </p>
                 </div>
               </div>
             )}
+
+            {ctx.images.length > 0 && <TaskGallery images={ctx.images} taskName={task.name} />}
 
             {keys.length > 0 && <Note>Bring {keys.map((k) => k.name).join(", ")} for this task.</Note>}
 
@@ -332,10 +353,23 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
               type="button"
               className="btn w-full justify-start"
               aria-pressed={hereDone}
-              onClick={() => ctx.toggleMarkerDone(marker.id)}
+              onClick={() =>
+                collapsed
+                  ? ctx.setMarkersDone(
+                      alternatives.map((m) => m.id),
+                      !hereDone,
+                    )
+                  : ctx.toggleMarkerDone(marker.id)
+              }
             >
               <Icon path={icons.check} size={14} />
-              {hereDone ? "Done here" : "Mark this location done"}
+              {hereDone
+                ? collapsed
+                  ? "Found — tap to undo"
+                  : "Done here"
+                : collapsed
+                  ? "I found the item"
+                  : "Mark this location done"}
             </button>
 
             <div className="flex flex-wrap gap-1.5">

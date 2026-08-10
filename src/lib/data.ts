@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { MapData, MapIndex } from "../types";
+import type { MapData, MapIndex, TaskImage, TaskImages } from "../types";
 
 /**
  * Data lives as static JSON next to the bundle (see scripts/build-data.mjs).
@@ -10,6 +10,7 @@ const BASE = `${import.meta.env.BASE_URL}data`;
 
 const mapCache = new Map<string, Promise<MapData>>();
 let indexPromise: Promise<MapIndex> | null = null;
+let imagesPromise: Promise<TaskImages> | null = null;
 
 async function getJson<T>(url: string): Promise<T> {
   const res = await fetch(url);
@@ -25,6 +26,37 @@ export function loadIndex(): Promise<MapIndex> {
   return indexPromise;
 }
 
+
+/**
+ * Task screenshots. Loaded on demand the first time a task panel wants one —
+ * it is a quarter of a megabyte and most of a session never opens a photo, so
+ * it has no business on the critical path.
+ *
+ * A failure here is not worth surfacing: the gallery just doesn't appear.
+ */
+export function loadTaskImages(): Promise<TaskImages> {
+  imagesPromise ??= getJson<TaskImages>(`${BASE}/task-images.json`).catch((err) => {
+    imagesPromise = null;
+    throw err;
+  });
+  return imagesPromise;
+}
+
+export function useTaskImages(taskId: string | null) {
+  const [images, setImages] = useState<TaskImage[]>([]);
+  useEffect(() => {
+    if (!taskId) return setImages([]);
+    let live = true;
+    loadTaskImages().then(
+      (all) => live && setImages(all.tasks[taskId] ?? []),
+      () => live && setImages([]),
+    );
+    return () => {
+      live = false;
+    };
+  }, [taskId]);
+  return images;
+}
 
 export function loadMap(name: string): Promise<MapData> {
   let promise = mapCache.get(name);
