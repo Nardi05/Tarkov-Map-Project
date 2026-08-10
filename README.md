@@ -169,6 +169,11 @@ A few details worth knowing if you touch this code:
 - Wiki images are hotlinked and always requested through the CDN's
   `scale-to-width-down` transform. The originals are full game captures — one
   Streets overview is a 3.9MB PNG, versus 99KB at 640px.
+- Those `<img>` tags must keep `referrerPolicy="no-referrer"`. The wiki's CDN
+  blocks hotlinks by Referer and answers with a 404 carrying a 300x171
+  "image not available" JPEG — a perfectly valid image, so `onError` never
+  fires and you get a grey box instead of a screenshot. Sending no referrer is
+  served the real file.
 - Spawn clusters ignore the game's zone names. Zones overlap heavily in space,
   so one visible clump routinely carries three or four of them and grouping by
   name left the clump on screen.

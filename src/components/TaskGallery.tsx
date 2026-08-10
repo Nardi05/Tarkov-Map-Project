@@ -3,18 +3,6 @@ import type { TaskImage } from "../types";
 import { Icon, icons } from "./ui";
 
 /**
- * Wiki screenshots for one task, as a single-photo carousel.
- *
- * The point is finding a quest item that can spawn in a dozen places: the map
- * gets you to the building, and these get you to the shelf. Small by default
- * because the detail panel is narrow, and expandable to a full-screen overlay
- * because a 300px-wide screenshot of a dark room is useless.
- *
- * Images are hotlinked from the wiki's CDN rather than copied into the repo —
- * they are the wiki's to host, and this keeps the deploy free of a few hundred
- * megabytes of screenshots.
- */
-/**
  * The wiki serves full-resolution captures — one Streets overview is a 3.9MB
  * PNG — so always ask its CDN for a scaled copy instead. 640px fills the panel
  * for ~100KB; 1600px is plenty for the expanded view at ~470KB.
@@ -30,6 +18,31 @@ function scaled(url: string, width: number): string {
   }`;
 }
 
+/**
+ * The wiki's CDN refuses hotlinks by *Referer*, and it refuses them politely: a
+ * request carrying one comes back 404 with a 300x171 "image not available"
+ * JPEG. That is still a valid image, so `onError` never fires and the panel
+ * quietly shows a grey placeholder where the screenshot should be.
+ *
+ * Sending no referrer at all is served the real file, so every <img> here sets
+ * referrerPolicy="no-referrer". This threshold is the belt-and-braces half:
+ * every cached image was at least this wide to begin with, so anything
+ * narrower that arrives is the placeholder, and is reported as a failure.
+ */
+const MIN_REAL_WIDTH = 400;
+
+/**
+ * Wiki screenshots for one task, as a single-photo carousel.
+ *
+ * The point is finding a quest item that can spawn in a dozen places: the map
+ * gets you to the building, and these get you to the shelf. Small by default
+ * because the detail panel is narrow, and expandable to a full-screen overlay
+ * because a 300px-wide screenshot of a dark room is useless.
+ *
+ * Images are hotlinked from the wiki's CDN rather than copied into the repo —
+ * they are the wiki's to host, and this keeps the deploy free of a few hundred
+ * megabytes of screenshots.
+ */
 export default function TaskGallery({ images, taskName }: { images: TaskImage[]; taskName: string }) {
   const [index, setIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
@@ -134,9 +147,15 @@ export default function TaskGallery({ images, taskName }: { images: TaskImage[];
             src={scaled(current.url, 640)}
             alt={current.title}
             loading="lazy"
+            referrerPolicy="no-referrer"
             className="block w-full"
             style={{ aspectRatio: "16 / 9", objectFit: "cover" }}
             onError={() => setBroken((b) => ({ ...b, [index]: true }))}
+            onLoad={(e) => {
+              if (e.currentTarget.naturalWidth < MIN_REAL_WIDTH) {
+                setBroken((b) => ({ ...b, [index]: true }));
+              }
+            }}
           />
         )}
         {count > 1 && arrows(26)}
@@ -188,6 +207,7 @@ export default function TaskGallery({ images, taskName }: { images: TaskImage[];
             <img
               src={scaled(current.url, 1600)}
               alt={current.title}
+              referrerPolicy="no-referrer"
               className="absolute inset-0 h-full w-full"
               style={{ objectFit: "contain" }}
             />
