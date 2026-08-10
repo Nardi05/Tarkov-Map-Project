@@ -40,25 +40,27 @@ Beyond the layers:
 
 ## Tracking tasks through a raid
 
-The task panel is built around the way you actually play. Before a raid, tick
-the tasks that are in your in-game list as **active**; the map then draws those
-objectives and nothing else, so you see every active location at once instead of
-a wall of green. During the raid you can tick off individual locations — a task
-with three mark spots remembers which one you did — and mark the whole task done
-from the map when you finish it. Everything is stored in your browser only.
+The task panel is built around the way you actually play. Before a raid, open
+the map's task list and tick the tasks that are in your in-game list as
+**active**; the map then draws those objectives and nothing else, so you see
+every active location at once instead of a wall of green. During the raid you
+can tick off individual locations — a task with three mark spots remembers which
+one you did — and mark the whole task done when you finish it.
 
-A task is in one of three states you set yourself: not started, active, or done.
-Everything else is worked out from the prerequisite graph:
+A task is in one of three states, and you set all of them yourself:
 
-- **Available** — every prerequisite is met and you are high enough level, so
-  you could pick it up from the trader now.
-- **Locked** — something is still in the way, and the panel names what.
+- **Not started** — the default.
+- **Active** — it is in your in-game task list right now. These are what the
+  map draws.
+- **Done** — finished. Tick every location off and the panel offers to mark the
+  whole task done in one go.
 
-That inference needs to know what you have already finished. Rather than ticking
-off two hundred tasks by hand, find your most recent task under **All** and use
-the "I've already done this" link on it — that records the whole chain behind it
-in one go. Set your PMC level and faction in Settings so level-gated and
-faction-specific tasks are judged correctly.
+Nothing here is inferred. The site never guesses which tasks you could have
+picked up or hides one behind a prerequisite it thinks you haven't met, so the
+panel can't disagree with what the game is telling you. If you just want to
+study a map you haven't started, tick **Show every task on the map**.
+
+Everything is stored in your browser only, and survives a reload.
 
 ## Running it
 
@@ -101,7 +103,7 @@ URL and password with whoever's testing.
 
 ```
 scripts/build-data.mjs   fetches tarkov.dev's JSON feeds, resolves translations,
-                         and writes one small payload per map plus the task graph
+                         and writes one small payload per map
 src/data/geo.json        vendored georeferencing (transform, bounds, rotation,
                          floors, place labels) for each map
 src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
@@ -109,7 +111,6 @@ src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
 src/lib/layers.ts        the layer taxonomy: colour, shape, and the plain-English
                          explanation shown in the UI
 src/lib/build-layers.ts  data -> Leaflet layers, one builder per layer
-src/lib/progression.ts   task graph -> what is available, locked or blocked
 src/components/          map canvas, layer panel, task panel, detail panel
 ```
 
@@ -124,12 +125,6 @@ A few details worth knowing if you touch this code:
 - The base artwork lives in its own Leaflet pane below the overlay pane, because
   Leaflet's stylesheet stacks `<svg>` above `<canvas>` within a pane and would
   otherwise bury the spawn dots under the map.
-- `progression.json` is separate from the per-map payloads on purpose. Roughly
-  half of all prerequisite edges point at tasks that never appear on a map, so a
-  per-map file physically cannot describe whether a task is unlocked.
-- Prerequisites carry a status, not just "done" — a few dozen require an earlier
-  task to be *active* or *failed*. Treating them all as "completed" gets those
-  wrong.
 - Quest marker ids are derived from their ground position rather than an array
   index, because they are persisted when you tick a location off. An index would
   silently move your ticks if the upstream feed reordered a spawn list.

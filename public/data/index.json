@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-07T07:10:43.108Z",
+ "generated": "2026-08-10T04:19:49.750Z",
  "gameMode": "regular",
  "maps": [
   {
@@ -240,10 +240,10 @@
    "bosses": [
     "Black Div.",
     "AF",
+    "Sanitar",
     "Glukhar",
     "Killa",
     "Reshala",
-    "Sanitar",
     "Tagilla"
    ],
    "styles": [

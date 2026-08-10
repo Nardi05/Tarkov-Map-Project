@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { MapData, MapIndex, Progression } from "../types";
+import type { MapData, MapIndex } from "../types";
 
 /**
  * Data lives as static JSON next to the bundle (see scripts/build-data.mjs).
@@ -10,7 +10,6 @@ const BASE = `${import.meta.env.BASE_URL}data`;
 
 const mapCache = new Map<string, Promise<MapData>>();
 let indexPromise: Promise<MapIndex> | null = null;
-let progressionPromise: Promise<Progression> | null = null;
 
 async function getJson<T>(url: string): Promise<T> {
   const res = await fetch(url);
@@ -26,18 +25,6 @@ export function loadIndex(): Promise<MapIndex> {
   return indexPromise;
 }
 
-/**
- * The full task graph. Loaded once and shared by every map — it covers tasks
- * that never appear on a map, which is exactly what makes it possible to tell
- * whether a task is unlocked.
- */
-export function loadProgression(): Promise<Progression> {
-  progressionPromise ??= getJson<Progression>(`${BASE}/progression.json`).catch((err) => {
-    progressionPromise = null;
-    throw err;
-  });
-  return progressionPromise;
-}
 
 export function loadMap(name: string): Promise<MapData> {
   let promise = mapCache.get(name);
@@ -85,9 +72,6 @@ export function useMapIndex() {
   return useAsync(loadIndex, []);
 }
 
-export function useProgression() {
-  return useAsync(loadProgression, []);
-}
 
 export function useMapData(name: string | null) {
   return useAsync(

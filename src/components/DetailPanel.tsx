@@ -2,9 +2,8 @@ import type { ReactNode } from "react";
 import { pct, type Selection } from "../lib/build-layers";
 import { LAYER_BY_ID } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
-import { lockReasons } from "../lib/progression";
 import { useStore } from "../store";
-import type { MapData, Progression, TaskAvailability, TaskStatus } from "../types";
+import type { MapData, TaskStatus } from "../types";
 import TaskStatusControl from "./TaskStatusControl";
 import { Icon, icons } from "./ui";
 
@@ -15,30 +14,22 @@ import { Icon, icons } from "./ui";
  */
 export default function DetailPanel({
   data,
-  progression,
-  availability,
   selection,
   onClose,
   onOpenTask,
 }: {
   data: MapData;
-  progression: Progression | null;
-  availability: Record<string, TaskAvailability>;
   selection: Selection;
   onClose: () => void;
   onOpenTask: (taskId: string) => void;
 }) {
   const taskStatus = useStore((s) => s.taskStatus);
   const markerDone = useStore((s) => s.markerDone);
-  const profile = useStore((s) => s.profile);
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const toggleMarkerDone = useStore((s) => s.toggleMarkerDone);
   const view = describe(selection, data, {
-    progression,
-    availability,
     taskStatus,
     markerDone,
-    profile,
     cycleTaskStatus,
     toggleMarkerDone,
     onOpenTask,
@@ -115,11 +106,8 @@ function Note({ children, tone = "info" }: { children: ReactNode; tone?: "info" 
 }
 
 interface DescribeContext {
-  progression: Progression | null;
-  availability: Record<string, TaskAvailability>;
   taskStatus: Record<string, TaskStatus>;
   markerDone: Record<string, true>;
-  profile: { level: number; faction: string };
   cycleTaskStatus: (id: string) => void;
   toggleMarkerDone: (markerId: string) => void;
   onOpenTask: (id: string) => void;
@@ -270,7 +258,6 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
       const { marker, task } = selection;
       const layer = LAYER_BY_ID.quests;
       const status = ctx.taskStatus[task.id];
-      const state = ctx.availability[task.id] ?? "available";
       const keys = task.keys.map((id) => data.keys[id]).filter(Boolean);
       const hereDone = !!ctx.markerDone[marker.id];
 
@@ -280,27 +267,8 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
       const doneCount = siblings.filter((m) => ctx.markerDone[m.id]).length;
       const position = siblings.findIndex((m) => m.id === marker.id) + 1;
 
-      // Prerequisites come from the full graph, not the per-map task table —
-      // most of them are tasks that never appear on a map at all.
-      const graphTask = ctx.progression?.tasks[task.id];
-      const prerequisites = (graphTask?.requires ?? [])
-        .map((set) =>
-          set.map((req) => ctx.progression?.tasks[req.task]?.name ?? "another task").join(" + "),
-        )
-        .filter(Boolean);
-      const blockers =
-        state === "locked" ? lockReasons(ctx.progression, task.id, ctx.taskStatus, ctx.profile) : [];
-
       const stateLabel =
-        state === "active"
-          ? "Active"
-          : state === "completed"
-            ? "Done"
-            : state === "failed"
-              ? "Failed"
-              : state === "locked"
-                ? "Locked"
-                : "Available";
+        status === "active" ? "Active" : status === "completed" ? "Done" : "Not started";
 
       return {
         title: task.name,
@@ -318,9 +286,6 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
             : null,
           task.experience ? { label: "Reward", value: `${task.experience.toLocaleString()} XP` } : null,
           task.kappaRequired ? { label: "Kappa", value: "Required" } : null,
-          // Alternatives are joined with "or" — merged branch variants of the
-          // same quest each unlock it on their own.
-          prerequisites.length ? { label: "After", value: prerequisites.join(" or ") } : null,
         ].filter(Boolean) as View["facts"],
         body: (
           <div className="flex flex-col gap-2">
@@ -334,10 +299,6 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
                   </p>
                 </div>
               </div>
-            )}
-
-            {blockers.length > 0 && (
-              <Note tone="warn">Locked until: {blockers.map((b) => b.label).join(", ")}.</Note>
             )}
 
             {keys.length > 0 && <Note>Bring {keys.map((k) => k.name).join(", ")} for this task.</Note>}

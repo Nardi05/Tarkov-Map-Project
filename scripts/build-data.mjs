@@ -352,8 +352,9 @@ for (const task of tasks) {
     lightkeeperRequired: !!task.lightkeeperRequired,
     factionName: task.factionName && task.factionName !== "Any" ? task.factionName : null,
     wiki: task.wikiLink ?? null,
-    // Only prerequisites that are themselves on a map can be named by the
-    // per-map payload. The complete graph lives in progression.json.
+    // Only prerequisites that are themselves anchored to this map survive —
+    // the rest have no marker to point at. Nothing gates on this; it is here
+    // so the detail panel can say what a task follows on from.
     requires: [
       ...new Set(
         (groupMembers.get(task.id) ?? [task]).flatMap((m) =>
@@ -387,65 +388,6 @@ for (const [mapName, markers] of questMarkers) {
   questMarkers.set(mapName, deduped);
 }
 console.log(`  merged ${canonicalTaskId.size} duplicate tasks, dropped ${droppedMarkers} duplicate markers`);
-
-/* --------------------------------------------------------------- progression */
-
-/**
- * The complete prerequisite graph, covering every task in the game rather than
- * only the ones with map markers.
- *
- * This has to be separate from the per-map payloads: roughly half of all
- * prerequisite edges point at tasks that never appear on a map (hand the item
- * back to the trader, reach a loyalty level), and a per-map file has no way to
- * carry them. Without those links you cannot tell whether a task is unlocked.
- *
- * `requires` is a disjunction of conjunctions — a list of alternative
- * requirement sets, satisfied when *any one* set is fully met. Single-variant
- * tasks have exactly one set; the merged branch variants (three "Make Amends"
- * reached from three different quests) contribute one set each, which is
- * precisely right: doing any one branch unlocks it.
- */
-const mapsByTask = new Map();
-for (const [mapName, markers] of questMarkers) {
-  for (const marker of markers) {
-    if (!mapsByTask.has(marker.task)) mapsByTask.set(marker.task, new Set());
-    mapsByTask.get(marker.task).add(mapName);
-  }
-}
-
-const progression = {};
-for (const [canonicalId, members] of groupMembers) {
-  const primary = members[0];
-  const requires = [];
-  for (const member of members) {
-    const set = (member.taskRequirements ?? [])
-      .filter((r) => r.task)
-      .map((r) => ({ task: canonicalOf(r.task), status: r.status ?? ["complete"] }));
-    // Identical requirement sets across variants would just be redundant work
-    // for the solver, so keep one of each.
-    const signature = JSON.stringify(set);
-    if (!requires.some((existing) => JSON.stringify(existing) === signature)) requires.push(set);
-  }
-
-  progression[canonicalId] = {
-    name: primary.name,
-    trader: traderIndex[primary.trader]?.name ?? null,
-    minPlayerLevel: primary.minPlayerLevel ?? 0,
-    factionName: primary.factionName && primary.factionName !== "Any" ? primary.factionName : null,
-    kappaRequired: !!primary.kappaRequired,
-    lightkeeperRequired: !!primary.lightkeeperRequired,
-    requires,
-    maps: [...(mapsByTask.get(canonicalId) ?? [])].sort(),
-  };
-}
-
-{
-  const edges = Object.values(progression).reduce((n, t) => n + t.requires.flat().length, 0);
-  const onMap = Object.values(progression).filter((t) => t.maps.length).length;
-  console.log(
-    `  progression graph: ${Object.keys(progression).length} tasks (${onMap} on a map), ${edges} prerequisite edges`,
-  );
-}
 
 /* -------------------------------------------------------------------- spawns */
 
@@ -683,11 +625,4 @@ await fs.writeFile(
   JSON.stringify({ generated: new Date().toISOString(), gameMode: GAME_MODE, maps: index }, null, 1),
 );
 
-const progressionFile = path.join(OUT, "progression.json");
-await fs.writeFile(
-  progressionFile,
-  JSON.stringify({ generated: new Date().toISOString(), tasks: progression }),
-);
-const progressionKb = ((await fs.stat(progressionFile)).size / 1024).toFixed(0);
-
-console.log(`\nWrote ${index.length} maps and a ${progressionKb}KB progression graph to public/data`);
+console.log(`\nWrote ${index.length} maps to public/data`);
