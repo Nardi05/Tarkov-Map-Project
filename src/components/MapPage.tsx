@@ -11,8 +11,7 @@ import { filterQuests, type Selection } from "../lib/build-layers";
 import { withinExtents } from "../lib/leaflet-crs";
 import { useStore } from "../store";
 import { href, navigate } from "../lib/router";
-import { computeAvailability } from "../lib/progression";
-import type { MapData, MapIndexEntry, Progression, Vec3 } from "../types";
+import type { MapData, MapIndexEntry, Vec3 } from "../types";
 
 type Tab = "layers" | "tasks" | "settings";
 
@@ -25,12 +24,10 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
 export default function MapPage({
   data,
   maps,
-  progression,
   deepLinkTask,
 }: {
   data: MapData;
   maps: MapIndexEntry[];
-  progression: Progression | null;
   deepLinkTask: string | null;
 }) {
   const layers = useStore((s) => s.layers);
@@ -39,7 +36,6 @@ export default function MapPage({
   const setQuestFilter = useStore((s) => s.setQuestFilter);
   const taskStatus = useStore((s) => s.taskStatus);
   const markerDone = useStore((s) => s.markerDone);
-  const profile = useStore((s) => s.profile);
   const setSetting = useStore((s) => s.setSetting);
 
   const [tab, setTab] = useState<Tab>("layers");
@@ -56,15 +52,9 @@ export default function MapPage({
   // Fall back gracefully when a map only ships one of the two artwork styles.
   const style = styles.includes(settings.style) ? settings.style : (styles[0] ?? "clean");
 
-  /** What state every task in the game is in, given the player's progress. */
-  const availability = useMemo(
-    () => computeAvailability(progression, taskStatus, profile),
-    [progression, taskStatus, profile],
-  );
-
   const visibleQuests = useMemo(
-    () => filterQuests(data, quest, availability),
-    [data, quest, availability],
+    () => filterQuests(data, quest, taskStatus),
+    [data, quest, taskStatus],
   );
 
   /*
@@ -129,12 +119,7 @@ export default function MapPage({
     <>
       {tab === "layers" && <LayerPanel data={data} visibleQuestCount={visibleQuests.length} />}
       {tab === "tasks" && (
-        <TaskPanel
-          data={data}
-          progression={progression}
-          availability={availability}
-          onFocus={focusOn}
-        />
+        <TaskPanel data={data} onFocus={focusOn} />
       )}
       {tab === "settings" && (
         <SettingsPanel data={data} floors={floors} floorId={floorId} onFloorChange={setFloorId} />
@@ -264,8 +249,6 @@ export default function MapPage({
             >
               <DetailPanel
               data={data}
-              progression={progression}
-              availability={availability}
               selection={selection}
               onClose={() => setSelection(null)}
               onOpenTask={openTask}
@@ -342,8 +325,6 @@ export default function MapPage({
         >
           <DetailPanel
             data={data}
-            progression={progression}
-            availability={availability}
             selection={selection}
             onClose={() => setSelection(null)}
             onOpenTask={openTask}

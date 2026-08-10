@@ -10,7 +10,6 @@ import type {
   QuestMarker,
   Spawn,
   Task,
-  TaskAvailability,
   TaskStatus,
   Transit,
   Vec3,
@@ -483,33 +482,26 @@ export interface QuestFilterInput {
   search: string;
   trader: string | null;
   kappaOnly: boolean;
-  /** "active" draws only what the player ticked; "all" draws everything. */
-  scope: "active" | "available" | "all";
+  /** Off draws only the tasks ticked active; on draws every task on the map. */
+  showAll: boolean;
   focusTask: string | null;
 }
-
-/** Which task states each scope lets through. */
-const SCOPE_ALLOWS: Record<QuestFilterInput["scope"], TaskAvailability[]> = {
-  active: ["active"],
-  available: ["active", "available"],
-  all: ["active", "available", "locked", "completed", "failed"],
-};
 
 export function filterQuests(
   data: MapData,
   filters: QuestFilterInput,
-  availability: Record<string, TaskAvailability>,
+  taskStatus: Record<string, TaskStatus>,
 ): QuestMarker[] {
   const needle = filters.search.trim().toLowerCase();
-  const allowed = new Set(SCOPE_ALLOWS[filters.scope] ?? SCOPE_ALLOWS.all);
 
   return data.markers.quests.filter((marker) => {
     const task = data.tasks[marker.task];
     if (!task) return false;
     if (filters.focusTask) return task.id === filters.focusTask;
-    // A task the graph doesn't know about (data skew between files) is treated
-    // as available rather than vanishing.
-    if (!allowed.has(availability[task.id] ?? "available")) return false;
+    // The default view is "what am I doing this raid", so only tasks the
+    // player ticked active reach the map. Show-all is the browse mode and
+    // deliberately keeps finished tasks in, faded by the dimCompleted setting.
+    if (!filters.showAll && taskStatus[task.id] !== "active") return false;
     if (filters.kappaOnly && !task.kappaRequired) return false;
     if (filters.trader && task.trader?.name !== filters.trader) return false;
     if (needle) {
