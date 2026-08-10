@@ -25,7 +25,21 @@ static site with no backend.
 | Hazards | Minefields and restricted zones |
 
 Colour says *who* something belongs to, shape says *what* it is — so a blue
-square is a PMC exit wherever you see it.
+square is a PMC exit wherever you see it. Task objectives take that one step
+further and vary the glyph by what the objective actually asks of you:
+
+| Glyph | Objective |
+| --- | --- |
+| Diamond | Find a quest item |
+| Signal | Place a marker or jammer |
+| Crate | Stash or plant an item |
+| Reticle | Kills that count for the task |
+| Runner | Just reach the spot |
+
+Spawn points are drawn one dot per place, not one per spawn. The game scatters
+several spawn points a few metres apart inside a single spot, which rendered as
+an unreadable clump; those collapse into one dot at their centre, and the detail
+panel says how many points are behind it.
 
 Beyond the layers:
 
@@ -60,7 +74,9 @@ picked up or hides one behind a prerequisite it thinks you haven't met, so the
 panel can't disagree with what the game is telling you. If you just want to
 study a map you haven't started, tick **Show every task on the map**.
 
-Everything is stored in your browser only, and survives a reload.
+Everything is stored in your browser only. It survives a reload and switching
+maps, so dying on Customs and running a Woods raid before coming back does not
+cost you your ticked list.
 
 ## Running it
 
@@ -130,6 +146,12 @@ A few details worth knowing if you touch this code:
   silently move your ticks if the upstream feed reordered a spawn list.
 - Quest layers rebuild independently of the other eleven, since ticking
   locations happens constantly during a raid.
+- Spawn clustering runs at render time, after the floor filter, never at build
+  time. Two points on different levels of Interchange are not one place however
+  close they look from above, and the raw positions stay in the payload.
+- Spawn clusters ignore the game's zone names. Zones overlap heavily in space,
+  so one visible clump routinely carries three or four of them and grouping by
+  name left the clump on screen.
 
 To refresh game data after a wipe or patch, re-run `npm run data` and commit the
 regenerated `public/data`.

@@ -47,7 +47,7 @@ function selectionPosition(selection: Selection | null): Vec3 | null {
   if (!selection) return null;
   switch (selection.kind) {
     case "spawn":
-      return selection.spawn.position;
+      return selection.cluster.centre;
     case "boss":
       return selection.boss.centre;
     case "extract":
