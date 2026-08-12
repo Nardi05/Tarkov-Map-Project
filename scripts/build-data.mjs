@@ -153,6 +153,53 @@ const traders = tradersData; // the traders feed's `data` is the trader map itse
 const tasks = Object.values(tasksData.tasks ?? {});
 const questItems = tasksData.questItems ?? {};
 
+/*
+ * Refuse to ship a visibly broken upstream feed.
+ *
+ * This runs on every deploy, so whatever the feed says at that moment goes
+ * straight onto the site. That is normally the point — it keeps quest data
+ * current without anyone re-running anything. But it also means an upstream
+ * hiccup silently replaces a good site with a worse one, and the failure is
+ * quiet: `minPlayerLevel: 0` just makes the level chip disappear, and
+ * `kappaRequired: false` drops the Kappa flag, with nothing looking broken.
+ *
+ * Seen in practice: the feed briefly served 516 tasks with kappa on 16 of them
+ * and no level on 54%, hours after the same endpoint reported 257 and 15%.
+ *
+ * Exiting non-zero here fails the Vercel build, which leaves the previous
+ * deployment up — keeping yesterday's correct data beats publishing today's
+ * broken data. Set TK_ALLOW_SPARSE_TASKS=1 to override when the game really
+ * has changed this much.
+ */
+{
+  const total = tasks.length;
+  const withKappa = tasks.filter((t) => t.kappaRequired).length;
+  const withoutLevel = tasks.filter((t) => !t.minPlayerLevel).length;
+  const kappaShare = total ? withKappa / total : 0;
+  const noLevelShare = total ? withoutLevel / total : 0;
+
+  console.log(
+    `  ${total} tasks — ${withKappa} Kappa-required (${(kappaShare * 100).toFixed(0)}%), ` +
+      `${withoutLevel} with no level gate (${(noLevelShare * 100).toFixed(0)}%)`,
+  );
+
+  // Healthy feeds sit near 50% Kappa and 15% ungated; these bounds are wide
+  // enough not to trip on ordinary wipe-to-wipe drift.
+  const problems = [];
+  if (total < 300) problems.push(`only ${total} tasks (expected 450+)`);
+  if (kappaShare < 0.2) problems.push(`only ${(kappaShare * 100).toFixed(0)}% Kappa-required (expected ~50%)`);
+  if (noLevelShare > 0.35) problems.push(`${(noLevelShare * 100).toFixed(0)}% have no level gate (expected ~15%)`);
+
+  if (problems.length && !process.env.TK_ALLOW_SPARSE_TASKS) {
+    console.error(
+      `\nUpstream task data looks incomplete:\n  - ${problems.join("\n  - ")}\n\n` +
+        `Refusing to overwrite good data with this. Re-run later, or set\n` +
+        `TK_ALLOW_SPARSE_TASKS=1 if the game really did change this much.`,
+    );
+    process.exit(1);
+  }
+}
+
 /** Every id a map is known by, so task/objective map references resolve. */
 const mapIdsByName = new Map();
 for (const m of apiMaps) {

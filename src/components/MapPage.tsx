@@ -43,6 +43,14 @@ export default function MapPage({
   const [selection, setSelection] = useState<Selection | null>(null);
   const [focus, setFocus] = useState<FocusRequest | null>(null);
   const focusToken = useRef(0);
+  /*
+   * Both panels collapse rather than unmount, so the tab you were on and how
+   * far you had scrolled survive the round trip. Kept as local state, not in
+   * the store: this is a "get out of the way for a second" gesture, not a
+   * setting somebody wants remembered next time they open the site.
+   */
+  const [railCollapsed, setRailCollapsed] = useState(false);
+  const [detailCollapsed, setDetailCollapsed] = useState(false);
 
   const floors = useMemo(() => floorsFor(data.geo), [data.geo]);
   const [floorId, setFloorId] = useState(floors[0]?.id ?? "ground");
@@ -101,7 +109,12 @@ export default function MapPage({
 
   const handleSelect = useCallback((next: Selection | null) => {
     setSelection(next);
-    if (next) setSheetOpen(false);
+    // Clicking a marker is a request to see it, so a card left collapsed from
+    // the last one must not swallow the new selection silently.
+    if (next) {
+      setSheetOpen(false);
+      setDetailCollapsed(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -181,8 +194,16 @@ export default function MapPage({
       <div className="flex min-h-0 flex-1">
         {/* ---------------------------------------------------- desktop rail */}
         <aside
-          className="hidden w-[21rem] flex-none flex-col border-r md:flex lg:w-[23rem]"
-          style={{ borderColor: "var(--line)", background: "var(--panel)" }}
+          className="hidden w-[21rem] flex-none flex-col overflow-hidden border-r transition-[width] duration-200 md:flex lg:w-[23rem]"
+          // Inline width only kicks in while collapsed; expanded keeps the
+          // responsive Tailwind widths above.
+          style={{
+            borderColor: "var(--line)",
+            background: "var(--panel)",
+            // Border goes too, or a 1px sliver of panel stays on screen.
+            ...(railCollapsed ? { width: 0, borderRightWidth: 0 } : null),
+          }}
+          aria-hidden={railCollapsed}
         >
           <nav
             className="flex flex-none gap-1 border-b p-2"
@@ -227,6 +248,27 @@ export default function MapPage({
             focus={focus}
           />
 
+          {/* Rail handle. Lives in the canvas, not the rail, so it stays
+              reachable once the rail itself has no width left. */}
+          <button
+            type="button"
+            className="btn absolute left-0 top-1/2 z-[500] hidden -translate-y-1/2 md:flex"
+            style={{
+              boxShadow: "var(--shadow)",
+              padding: "0.9rem 0.1rem",
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+            }}
+            aria-expanded={!railCollapsed}
+            title={railCollapsed ? "Show the panel" : "Hide the panel"}
+            aria-label={railCollapsed ? "Show the panel" : "Hide the panel"}
+            onClick={() => setRailCollapsed((v) => !v)}
+          >
+            <span style={{ transform: `rotate(${railCollapsed ? -90 : 90}deg)`, display: "block" }}>
+              <Icon path={icons.chevron} size={15} />
+            </span>
+          </button>
+
           {quest.focusTask && data.tasks[quest.focusTask] && (
             <button
               type="button"
@@ -243,17 +285,45 @@ export default function MapPage({
 
           {/* Detail card floats over the map on desktop, bottom sheet on phones. */}
           {selection && (
-            <div
-              className="surface absolute right-3 top-3 z-[600] hidden max-h-[calc(100%-1.5rem)] w-[21rem] overflow-y-auto md:block"
-              style={{ boxShadow: "var(--shadow)" }}
-            >
-              <DetailPanel
-              data={data}
-              selection={selection}
-              onClose={() => setSelection(null)}
-              onOpenTask={openTask}
-            />
-            </div>
+            <>
+              {/* Distinct from the card's X: that clears the selection and you
+                  have to find the marker again, this only slides the same card
+                  out of the way so it can come straight back. */}
+              <button
+                type="button"
+                className="btn absolute right-0 top-1/2 z-[601] hidden -translate-y-1/2 md:flex"
+                style={{
+                  boxShadow: "var(--shadow)",
+                  padding: "0.9rem 0.1rem",
+                  borderTopRightRadius: 0,
+                  borderBottomRightRadius: 0,
+                }}
+                aria-expanded={!detailCollapsed}
+                title={detailCollapsed ? "Show the details" : "Hide the details"}
+                aria-label={detailCollapsed ? "Show the details" : "Hide the details"}
+                onClick={() => setDetailCollapsed((v) => !v)}
+              >
+                <span
+                  style={{ transform: `rotate(${detailCollapsed ? 90 : -90}deg)`, display: "block" }}
+                >
+                  <Icon path={icons.chevron} size={15} />
+                </span>
+              </button>
+
+              {!detailCollapsed && (
+                <div
+                  className="surface animate-in absolute right-8 top-3 z-[600] hidden max-h-[calc(100%-1.5rem)] w-[21rem] overflow-y-auto md:block"
+                  style={{ boxShadow: "var(--shadow)" }}
+                >
+                  <DetailPanel
+                    data={data}
+                    selection={selection}
+                    onClose={() => setSelection(null)}
+                    onOpenTask={openTask}
+                  />
+                </div>
+              )}
+            </>
           )}
         </main>
       </div>
