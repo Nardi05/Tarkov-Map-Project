@@ -25,7 +25,26 @@ static site with no backend.
 | Hazards | Minefields and restricted zones |
 
 Colour says *who* something belongs to, shape says *what* it is — so a blue
-square is a PMC exit wherever you see it.
+square is a PMC exit wherever you see it. Task objectives take that one step
+further and vary the glyph by what the objective actually asks of you:
+
+| Glyph | Objective |
+| --- | --- |
+| Diamond | Find a quest item |
+| Signal | Place a marker or jammer |
+| Crate | Stash or plant an item |
+| Reticle | Kills that count for the task |
+| Runner | Just reach the spot |
+
+A quest item that can spawn in eleven places gets one pin, not eleven — the
+game only puts it in one of them, so the pin sits at the middle of the spread
+and the panel says how many spots it covers. Objectives you must genuinely
+repeat (mark three spots, plant three jammers) keep a pin each.
+
+Spawn points are drawn one dot per place, not one per spawn. The game scatters
+several spawn points a few metres apart inside a single spot, which rendered as
+an unreadable clump; those collapse into one dot at their centre, and the detail
+panel says how many points are behind it.
 
 Beyond the layers:
 
@@ -40,25 +59,34 @@ Beyond the layers:
 
 ## Tracking tasks through a raid
 
-The task panel is built around the way you actually play. Before a raid, tick
-the tasks that are in your in-game list as **active**; the map then draws those
-objectives and nothing else, so you see every active location at once instead of
-a wall of green. During the raid you can tick off individual locations — a task
-with three mark spots remembers which one you did — and mark the whole task done
-from the map when you finish it. Everything is stored in your browser only.
+The task panel is built around the way you actually play. Before a raid, open
+the map's task list and tick the tasks that are in your in-game list as
+**active**; the map then draws those objectives and nothing else, so you see
+every active location at once instead of a wall of green. During the raid you
+can tick off individual locations — a task with three mark spots remembers which
+one you did — and mark the whole task done when you finish it.
 
-A task is in one of three states you set yourself: not started, active, or done.
-Everything else is worked out from the prerequisite graph:
+A task is in one of three states, and you set all of them yourself:
 
-- **Available** — every prerequisite is met and you are high enough level, so
-  you could pick it up from the trader now.
-- **Locked** — something is still in the way, and the panel names what.
+- **Not started** — the default.
+- **Active** — it is in your in-game task list right now. These are what the
+  map draws.
+- **Done** — finished. Tick every location off and the panel offers to mark the
+  whole task done in one go.
 
-That inference needs to know what you have already finished. Rather than ticking
-off two hundred tasks by hand, find your most recent task under **All** and use
-the "I've already done this" link on it — that records the whole chain behind it
-in one go. Set your PMC level and faction in Settings so level-gated and
-faction-specific tasks are judged correctly.
+Nothing here is inferred. The site never guesses which tasks you could have
+picked up or hides one behind a prerequisite it thinks you haven't met, so the
+panel can't disagree with what the game is telling you. If you just want to
+study a map you haven't started, tick **Show every task on the map**.
+
+Where the wiki has screenshots for a task, the detail panel shows them as a
+carousel — arrows to step through, click to blow one up full screen, Escape or
+another click to come back. That is usually the fastest way to turn "somewhere
+in this building" into "that shelf".
+
+Everything is stored in your browser only. It survives a reload and switching
+maps, so dying on Customs and running a Woods raid before coming back does not
+cost you your ticked list.
 
 ## Running it
 
@@ -69,6 +97,7 @@ npm run dev
 ```
 
 ```bash
+npm run images    # refresh the wiki screenshot cache (optional, slow)
 npm run build     # type-check + production bundle into dist/
 npm run preview
 npm run smoke     # opens every map in a browser and checks for errors
@@ -101,7 +130,10 @@ URL and password with whoever's testing.
 
 ```
 scripts/build-data.mjs   fetches tarkov.dev's JSON feeds, resolves translations,
-                         and writes one small payload per map plus the task graph
+                         and writes one small payload per map
+scripts/fetch-task-images.mjs
+                         caches the wiki's task screenshots into
+                         data/task-images.json (committed; not run on deploy)
 src/data/geo.json        vendored georeferencing (transform, bounds, rotation,
                          floors, place labels) for each map
 src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
@@ -109,7 +141,6 @@ src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
 src/lib/layers.ts        the layer taxonomy: colour, shape, and the plain-English
                          explanation shown in the UI
 src/lib/build-layers.ts  data -> Leaflet layers, one builder per layer
-src/lib/progression.ts   task graph -> what is available, locked or blocked
 src/components/          map canvas, layer panel, task panel, detail panel
 ```
 
@@ -124,17 +155,28 @@ A few details worth knowing if you touch this code:
 - The base artwork lives in its own Leaflet pane below the overlay pane, because
   Leaflet's stylesheet stacks `<svg>` above `<canvas>` within a pane and would
   otherwise bury the spawn dots under the map.
-- `progression.json` is separate from the per-map payloads on purpose. Roughly
-  half of all prerequisite edges point at tasks that never appear on a map, so a
-  per-map file physically cannot describe whether a task is unlocked.
-- Prerequisites carry a status, not just "done" — a few dozen require an earlier
-  task to be *active* or *failed*. Treating them all as "completed" gets those
-  wrong.
 - Quest marker ids are derived from their ground position rather than an array
   index, because they are persisted when you tick a location off. An index would
   silently move your ticks if the upstream feed reordered a spawn list.
 - Quest layers rebuild independently of the other eleven, since ticking
   locations happens constantly during a raid.
+- Spawn clustering runs at render time, after the floor filter, never at build
+  time. Two points on different levels of Interchange are not one place however
+  close they look from above, and the raw positions stay in the payload.
+- Task screenshots are fetched by `npm run images`, never by `npm run data`.
+  A deploy must not depend on the wiki being up, so the cache is committed and
+  the build just copies it in; if it is missing, galleries silently vanish.
+- Wiki images are hotlinked and always requested through the CDN's
+  `scale-to-width-down` transform. The originals are full game captures — one
+  Streets overview is a 3.9MB PNG, versus 99KB at 640px.
+- Those `<img>` tags must keep `referrerPolicy="no-referrer"`. The wiki's CDN
+  blocks hotlinks by Referer and answers with a 404 carrying a 300x171
+  "image not available" JPEG — a perfectly valid image, so `onError` never
+  fires and you get a grey box instead of a screenshot. Sending no referrer is
+  served the real file.
+- Spawn clusters ignore the game's zone names. Zones overlap heavily in space,
+  so one visible clump routinely carries three or four of them and grouping by
+  name left the clump on screen.
 
 To refresh game data after a wipe or patch, re-run `npm run data` and commit the
 regenerated `public/data`.
@@ -143,6 +185,9 @@ regenerated `public/data`.
 
 Map artwork and game data come from [tarkov.dev](https://tarkov.dev) and the
 [the-hideout SVG map project](https://github.com/the-hideout/tarkov-dev-svg-maps).
+Task screenshots are served from the
+[Escape from Tarkov Wiki](https://escapefromtarkov.fandom.com), whose text and
+images are licensed CC BY-SA.
 
 Escape from Tarkov is a trademark of Battlestate Games. This is an unofficial
 fan project with no affiliation.

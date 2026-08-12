@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 import { pct, type Selection } from "../lib/build-layers";
-import { LAYER_BY_ID } from "../lib/layers";
+import { LAYER_BY_ID, QUEST_KIND_META } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
-import { lockReasons } from "../lib/progression";
 import { useStore } from "../store";
-import type { MapData, Progression, TaskAvailability, TaskStatus } from "../types";
+import { useTaskImages } from "../lib/data";
+import type { MapData, TaskImage, TaskStatus } from "../types";
+import TaskGallery from "./TaskGallery";
 import TaskStatusControl from "./TaskStatusControl";
 import { Icon, icons } from "./ui";
 
@@ -15,32 +16,29 @@ import { Icon, icons } from "./ui";
  */
 export default function DetailPanel({
   data,
-  progression,
-  availability,
   selection,
   onClose,
   onOpenTask,
 }: {
   data: MapData;
-  progression: Progression | null;
-  availability: Record<string, TaskAvailability>;
   selection: Selection;
   onClose: () => void;
   onOpenTask: (taskId: string) => void;
 }) {
   const taskStatus = useStore((s) => s.taskStatus);
   const markerDone = useStore((s) => s.markerDone);
-  const profile = useStore((s) => s.profile);
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const toggleMarkerDone = useStore((s) => s.toggleMarkerDone);
+  const setMarkersDone = useStore((s) => s.setMarkersDone);
+  // Only quest selections have a task, and only they show a gallery.
+  const images = useTaskImages(selection.kind === "quest" ? selection.task.id : null);
   const view = describe(selection, data, {
-    progression,
-    availability,
     taskStatus,
     markerDone,
-    profile,
     cycleTaskStatus,
     toggleMarkerDone,
+    setMarkersDone,
+    images,
     onOpenTask,
   });
 
@@ -115,20 +113,22 @@ function Note({ children, tone = "info" }: { children: ReactNode; tone?: "info" 
 }
 
 interface DescribeContext {
-  progression: Progression | null;
-  availability: Record<string, TaskAvailability>;
   taskStatus: Record<string, TaskStatus>;
   markerDone: Record<string, true>;
-  profile: { level: number; faction: string };
   cycleTaskStatus: (id: string) => void;
   toggleMarkerDone: (markerId: string) => void;
+  setMarkersDone: (markerIds: string[], done: boolean) => void;
+  images: TaskImage[];
   onOpenTask: (id: string) => void;
 }
 
 function describe(selection: Selection, data: MapData, ctx: DescribeContext): View {
   switch (selection.kind) {
     case "spawn": {
-      const { spawn } = selection;
+      const { cluster } = selection;
+      // Every spawn in a cluster shares a group and a role, so the first one
+      // speaks for all of them; only the counts and zones need collecting.
+      const spawn = cluster.spawns[0];
       const isSniper = spawn.group === "sniper";
       const isPmcBot = spawn.group === "pmc-ai";
       const layer = LAYER_BY_ID[
@@ -140,7 +140,9 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
               ? "scav-spawns"
               : "pmc-spawns"
       ];
-      const playerStart = spawn.categories.includes("player");
+      const playerStart = cluster.spawns.some((s) => s.categories.includes("player"));
+      const zones = [...new Set(cluster.spawns.map((s) => s.zone).filter(Boolean))] as string[];
+      const sides = [...new Set(cluster.spawns.flatMap((s) => s.sides))];
       return {
         title: isSniper
           ? "Sniper Scav position"
@@ -160,9 +162,12 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
               ? "A raid can start here. Anyone spawning nearby is somewhere close to you in the first minute."
               : "AI spawns here during the raid. It is not a possible player start.",
         facts: [
-          spawn.zone ? { label: "Zone", value: spawn.zone } : null,
-          spawn.sides.length ? { label: "Used by", value: spawn.sides.join(", ") } : null,
-          { label: "Elevation", value: `${spawn.position[1].toFixed(1)} m` },
+          cluster.spawns.length > 1
+            ? { label: "Spawn points here", value: cluster.spawns.length }
+            : null,
+          zones.length ? { label: zones.length > 1 ? "Zones" : "Zone", value: zones.join(", ") } : null,
+          sides.length ? { label: "Used by", value: sides.join(", ") } : null,
+          { label: "Elevation", value: `${cluster.centre[1].toFixed(1)} m` },
         ].filter(Boolean) as View["facts"],
       };
     }
@@ -267,12 +272,18 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
     }
 
     case "quest": {
-      const { marker, task } = selection;
+      const { marker, task, alternatives } = selection;
       const layer = LAYER_BY_ID.quests;
       const status = ctx.taskStatus[task.id];
-      const state = ctx.availability[task.id] ?? "available";
       const keys = task.keys.map((id) => data.keys[id]).filter(Boolean);
-      const hereDone = !!ctx.markerDone[marker.id];
+
+      // When this pin stands for several possible spawns of one item, finding
+      // it once settles all of them — so they tick together.
+      const spawns = alternatives.length;
+      const collapsed = spawns > 1;
+      const hereDone = collapsed
+        ? alternatives.every((m) => !!ctx.markerDone[m.id])
+        : !!ctx.markerDone[marker.id];
 
       // Every marker this task has on this map, so the panel can say where you
       // are in a multi-location objective.
@@ -280,47 +291,29 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
       const doneCount = siblings.filter((m) => ctx.markerDone[m.id]).length;
       const position = siblings.findIndex((m) => m.id === marker.id) + 1;
 
-      // Prerequisites come from the full graph, not the per-map task table —
-      // most of them are tasks that never appear on a map at all.
-      const graphTask = ctx.progression?.tasks[task.id];
-      const prerequisites = (graphTask?.requires ?? [])
-        .map((set) =>
-          set.map((req) => ctx.progression?.tasks[req.task]?.name ?? "another task").join(" + "),
-        )
-        .filter(Boolean);
-      const blockers =
-        state === "locked" ? lockReasons(ctx.progression, task.id, ctx.taskStatus, ctx.profile) : [];
-
       const stateLabel =
-        state === "active"
-          ? "Active"
-          : state === "completed"
-            ? "Done"
-            : state === "failed"
-              ? "Failed"
-              : state === "locked"
-                ? "Locked"
-                : "Available";
+        status === "active" ? "Active" : status === "completed" ? "Done" : "Not started";
+      const kindMeta = QUEST_KIND_META[marker.kind];
 
       return {
         title: task.name,
-        kind: `Task objective${marker.optional ? " (optional)" : ""}`,
-        shape: layer.shape,
+        kind: `${kindMeta?.label ?? "Task objective"}${marker.optional ? " (optional)" : ""}`,
+        // Matches the glyph actually drawn on the map for this objective kind.
+        shape: kindMeta?.shape ?? layer.shape,
         color: layer.color,
         lead: marker.description,
         facts: [
           { label: "Status", value: stateLabel },
+          kindMeta ? { label: "Objective", value: kindMeta.hint } : null,
           task.trader ? { label: "Trader", value: task.trader.name } : null,
           task.minPlayerLevel > 0 ? { label: "Unlocks at", value: `Level ${task.minPlayerLevel}` } : null,
           marker.count && marker.count > 1 ? { label: "Needs", value: `${marker.count}×` } : null,
-          siblings.length > 1
+          collapsed ? { label: "Possible spawns", value: `${spawns} — it is at one of them` } : null,
+          !collapsed && siblings.length > 1
             ? { label: "Locations", value: `${position} of ${siblings.length} · ${doneCount} done` }
             : null,
           task.experience ? { label: "Reward", value: `${task.experience.toLocaleString()} XP` } : null,
           task.kappaRequired ? { label: "Kappa", value: "Required" } : null,
-          // Alternatives are joined with "or" — merged branch variants of the
-          // same quest each unlock it on their own.
-          prerequisites.length ? { label: "After", value: prerequisites.join(" or ") } : null,
         ].filter(Boolean) as View["facts"],
         body: (
           <div className="flex flex-col gap-2">
@@ -330,15 +323,15 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
                 <div className="min-w-0">
                   <p className="truncate text-[0.75rem] font-medium">{marker.item.name}</p>
                   <p className="text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
-                    Quest item — one of its possible spawns
+                    {collapsed
+                      ? `Quest item — ${spawns} possible spawns in this area`
+                      : "Quest item — one of its possible spawns"}
                   </p>
                 </div>
               </div>
             )}
 
-            {blockers.length > 0 && (
-              <Note tone="warn">Locked until: {blockers.map((b) => b.label).join(", ")}.</Note>
-            )}
+            {ctx.images.length > 0 && <TaskGallery images={ctx.images} taskName={task.name} />}
 
             {keys.length > 0 && <Note>Bring {keys.map((k) => k.name).join(", ")} for this task.</Note>}
 
@@ -360,10 +353,23 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
               type="button"
               className="btn w-full justify-start"
               aria-pressed={hereDone}
-              onClick={() => ctx.toggleMarkerDone(marker.id)}
+              onClick={() =>
+                collapsed
+                  ? ctx.setMarkersDone(
+                      alternatives.map((m) => m.id),
+                      !hereDone,
+                    )
+                  : ctx.toggleMarkerDone(marker.id)
+              }
             >
               <Icon path={icons.check} size={14} />
-              {hereDone ? "Done here" : "Mark this location done"}
+              {hereDone
+                ? collapsed
+                  ? "Found — tap to undo"
+                  : "Done here"
+                : collapsed
+                  ? "I found the item"
+                  : "Mark this location done"}
             </button>
 
             <div className="flex flex-wrap gap-1.5">
