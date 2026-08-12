@@ -38,10 +38,43 @@ const GLYPHS: Record<MarkerShape, string> = {
         <circle cx="9.4" cy="9.6" r="3.1" fill="none" stroke="#1a1205" stroke-width="2"/>
         <path d="m11.6 11.8 5 5m-2.2-.6 1.5 1.5m-3.4-3.4 1.5 1.5" fill="none" stroke="#1a1205" stroke-width="2" stroke-linecap="round"/>`,
 
-  // Quest: a diamond, the one shape nothing else uses.
+  // Quest: a diamond, the one shape nothing else uses. Kept for item pickups,
+  // which is the marker players already read as "quest item here".
   quest: `<path d="M12 1.6 22.4 12 12 22.4 1.6 12Z" fill="var(--mc)" stroke="rgba(6,10,15,.75)" stroke-width="2"/>
           <path d="M12 7.2v6" stroke="#0b2415" stroke-width="2.2" stroke-linecap="round"/>
           <circle cx="12" cy="16.4" r="1.3" fill="#0b2415"/>`,
+
+  /*
+   * The other objective kinds share one badge silhouette so they still read as
+   * a family in quest green, and differ only in the glyph inside. See
+   * QUEST_KIND_META for which objective type maps to which.
+   */
+
+  // Mark: a transmitter putting out a signal — markers and jammers both.
+  beacon: `<circle cx="12" cy="12" r="9.6" fill="var(--mc)" stroke="rgba(6,10,15,.75)" stroke-width="2"/>
+           <circle cx="12" cy="15" r="2" fill="#0b2415"/>
+           <path d="M8.7 11.7a4.6 4.6 0 0 1 6.6 0" fill="none" stroke="#0b2415" stroke-width="1.9" stroke-linecap="round"/>
+           <path d="M6.3 9a8 8 0 0 1 11.4 0" fill="none" stroke="#0b2415" stroke-width="1.9" stroke-linecap="round"/>`,
+
+  // Place: something going down into a container.
+  stash: `<circle cx="12" cy="12" r="9.6" fill="var(--mc)" stroke="rgba(6,10,15,.75)" stroke-width="2"/>
+          <path d="M6.8 13.2h10.4v4.6H6.8z" fill="#0b2415"/>
+          <path d="M12 5v5.2m-2.3-2.3L12 10.4l2.3-2.5" fill="none" stroke="#0b2415" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`,
+
+  // Shoot: a reticle. Same idea as the sniper crosshair but quest-coloured, and
+  // the two never share a layer.
+  target: `<circle cx="12" cy="12" r="9.6" fill="var(--mc)" stroke="rgba(6,10,15,.75)" stroke-width="2"/>
+           <circle cx="12" cy="12" r="4.3" fill="none" stroke="#0b2415" stroke-width="1.9"/>
+           <path d="M12 4.6v3M12 16.4v3M4.6 12h3M16.4 12h3" stroke="#0b2415" stroke-width="1.9" stroke-linecap="round"/>
+           <circle cx="12" cy="12" r="1.2" fill="#0b2415"/>`,
+
+  // Visit / extract: a figure on the move — "just get to this spot".
+  runner: `<circle cx="12" cy="12" r="9.6" fill="var(--mc)" stroke="rgba(6,10,15,.75)" stroke-width="2"/>
+           <circle cx="13.5" cy="6.9" r="2" fill="#0b2415"/>
+           <path d="M13.7 9.6 11.2 12.5" fill="none" stroke="#0b2415" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+           <path d="M11.2 12.5 13.1 15.1 12.1 18.3" fill="none" stroke="#0b2415" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+           <path d="M11.2 12.5 8.2 15.9" fill="none" stroke="#0b2415" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+           <path d="M12.5 10.7 16 11.9" fill="none" stroke="#0b2415" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`,
 
   switch: `<rect x="2.4" y="2.4" width="19.2" height="19.2" rx="5" fill="var(--mc)" stroke="rgba(6,10,15,.75)" stroke-width="2"/>
            <rect x="6" y="13.4" width="12" height="4.4" rx="2.2" fill="#062033"/>
@@ -62,6 +95,10 @@ const BASE_SIZE: Record<MarkerShape, number> = {
   transit: 26,
   key: 22,
   quest: 24,
+  beacon: 24,
+  stash: 24,
+  target: 24,
+  runner: 24,
   switch: 22,
   hazard: 24,
 };

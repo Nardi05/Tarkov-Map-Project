@@ -7,11 +7,6 @@ export type MapStyle = "clean" | "satellite";
 
 export type Theme = "dark" | "light" | "system";
 
-export type Faction = "Any" | "USEC" | "BEAR";
-
-/** Which slice of the task list the map and panel show. */
-export type QuestScope = "active" | "available" | "all";
-
 interface Settings {
   theme: Theme;
   style: MapStyle;
@@ -32,25 +27,19 @@ interface QuestFilters {
   search: string;
   trader: string | null;
   kappaOnly: boolean;
-  scope: QuestScope;
+  /**
+   * Off (the default) means the map draws only the tasks you ticked active —
+   * the whole point of the panel. On is for browsing a map you haven't started.
+   */
+  showAll: boolean;
   /** When set, only this task's markers render. */
   focusTask: string | null;
-}
-
-/**
- * What the player tells us about themselves. Only used to decide which tasks
- * could plausibly be available — nothing else reads it.
- */
-interface Profile {
-  level: number;
-  faction: Faction;
 }
 
 interface Store {
   layers: Record<LayerId, boolean>;
   settings: Settings;
   quest: QuestFilters;
-  profile: Profile;
   /**
    * The player's task progress. Absent key means "not started"; the site never
    * writes a status it wasn't told, so this stays a record of what they said.
@@ -70,15 +59,12 @@ interface Store {
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setQuestFilter: <K extends keyof QuestFilters>(key: K, value: QuestFilters[K]) => void;
   clearQuestFilters: () => void;
-  setProfile: (patch: Partial<Profile>) => void;
 
   setTaskStatus: (taskId: string, status: TaskStatus | null) => void;
   /** Steps a task through not started -> active -> done -> not started. */
   cycleTaskStatus: (taskId: string) => void;
   toggleMarkerDone: (markerId: string) => void;
   setMarkersDone: (markerIds: string[], done: boolean) => void;
-  /** Backfill: record a batch of tasks as completed in one go. */
-  markTasksCompleted: (taskIds: string[]) => void;
   clearProgress: () => void;
 
   setLastMap: (map: string) => void;
@@ -99,11 +85,9 @@ const DEFAULT_QUEST: QuestFilters = {
   search: "",
   trader: null,
   kappaOnly: false,
-  scope: "active",
+  showAll: false,
   focusTask: null,
 };
-
-const DEFAULT_PROFILE: Profile = { level: 15, faction: "Any" };
 
 export const useStore = create<Store>()(
   persist(
@@ -111,7 +95,6 @@ export const useStore = create<Store>()(
       layers: { ...DEFAULT_LAYER_STATE },
       settings: { ...DEFAULT_SETTINGS },
       quest: { ...DEFAULT_QUEST },
-      profile: { ...DEFAULT_PROFILE },
       taskStatus: {},
       markerDone: {},
       lastMap: null,
@@ -134,8 +117,9 @@ export const useStore = create<Store>()(
 
       setSetting: (key, value) => set((s) => ({ settings: { ...s.settings, [key]: value } })),
       setQuestFilter: (key, value) => set((s) => ({ quest: { ...s.quest, [key]: value } })),
-      clearQuestFilters: () => set((s) => ({ quest: { ...DEFAULT_QUEST, scope: s.quest.scope } })),
-      setProfile: (patch) => set((s) => ({ profile: { ...s.profile, ...patch } })),
+      // "Show everything" is a view mode, not a filter — clearing the search
+      // and trader chips shouldn't yank the map back to selected-only.
+      clearQuestFilters: () => set((s) => ({ quest: { ...DEFAULT_QUEST, showAll: s.quest.showAll } })),
 
       setTaskStatus: (taskId, status) =>
         set((s) => {
@@ -173,45 +157,52 @@ export const useStore = create<Store>()(
           return { markerDone: next };
         }),
 
-      markTasksCompleted: (taskIds) =>
-        set((s) => {
-          const next = { ...s.taskStatus };
-          for (const id of taskIds) next[id] = "completed";
-          return { taskStatus: next };
-        }),
-
       clearProgress: () => set({ taskStatus: {}, markerDone: {} }),
 
       setLastMap: (map) => set({ lastMap: map }),
     }),
     {
       name: "tarkov-maps",
-      version: 2,
+      version: 3,
       storage: createJSONStorage(() => localStorage),
-      // Quest filters are per-session; everything else is worth remembering.
-      partialize: ({ layers, settings, profile, taskStatus, markerDone, lastMap }) => ({
+      // Search, trader and Kappa narrowing are momentary and reset on reload;
+      // show-all is a view preference, so it sticks like the layer toggles do.
+      partialize: ({ layers, settings, quest, taskStatus, markerDone, lastMap }) => ({
         layers,
         settings,
-        profile,
+        quest: { showAll: quest.showAll },
         taskStatus,
         markerDone,
         lastMap,
       }),
       /**
-       * v1 stored a single `completed: Record<string, true>` flag per task.
-       * Those are real hours of somebody's raid progress, so carry them over as
-       * completed statuses rather than letting the rename wipe them.
+       * Two shapes have to survive here, and both hold real hours of somebody's
+       * raid progress, so neither migration is allowed to drop a task:
+       *
+       * v1 kept a single `completed: Record<string, true>` flag per task.
+       * v2 added a `profile` and a "failed" status, both of which belonged to
+       * the availability inference that no longer exists. Dropping the profile
+       * is a clean delete; a "failed" task becomes "not started", since the
+       * remaining model has nowhere to put it and guessing "done" would be a
+       * lie about their progress.
        */
       migrate: (persisted, version) => {
         const state = (persisted ?? {}) as Record<string, unknown>;
-        if (version >= 2) return state;
-        const completed = (state.completed ?? {}) as Record<string, true>;
-        return {
-          ...state,
-          taskStatus: Object.fromEntries(Object.keys(completed).map((id) => [id, "completed"])),
-          markerDone: {},
-          profile: { ...DEFAULT_PROFILE },
-        };
+
+        if (version < 2) {
+          const completed = (state.completed ?? {}) as Record<string, true>;
+          state.taskStatus = Object.fromEntries(
+            Object.keys(completed).map((id) => [id, "completed"]),
+          );
+          state.markerDone = {};
+        }
+
+        delete state.profile;
+        const status = (state.taskStatus ?? {}) as Record<string, string>;
+        state.taskStatus = Object.fromEntries(
+          Object.entries(status).filter(([, v]) => v === "active" || v === "completed"),
+        );
+        return state;
       },
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<Store>;
@@ -222,10 +213,9 @@ export const useStore = create<Store>()(
           // still get their defaults rather than coming back undefined.
           layers: { ...DEFAULT_LAYER_STATE, ...(p.layers ?? {}) },
           settings: { ...DEFAULT_SETTINGS, ...(p.settings ?? {}) },
-          profile: { ...DEFAULT_PROFILE, ...(p.profile ?? {}) },
           taskStatus: p.taskStatus ?? {},
           markerDone: p.markerDone ?? {},
-          quest: { ...DEFAULT_QUEST },
+          quest: { ...DEFAULT_QUEST, showAll: p.quest?.showAll ?? DEFAULT_QUEST.showAll },
         };
       },
     },

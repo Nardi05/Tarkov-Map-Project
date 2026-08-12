@@ -10,14 +10,14 @@ import type {
   QuestMarker,
   Spawn,
   Task,
-  TaskAvailability,
   TaskStatus,
   Transit,
   Vec3,
 } from "../types";
-import { LAYER_BY_ID, type LayerDef, type LayerId } from "./layers";
+import { LAYER_BY_ID, QUEST_KIND_META, type LayerDef, type LayerId, type MarkerShape } from "./layers";
 import { markerIcon } from "./marker-icons";
 import { toLatLng, withinExtents, type Extent } from "./leaflet-crs";
+import { clusterRadius, clusterSpawns, type SpawnCluster } from "./spawn-clusters";
 
 /** A boss's positions inside one spawn zone, collapsed into a single pin. */
 export interface BossGroup {
@@ -40,13 +40,15 @@ export interface QuestGroup {
   centre: Vec3;
 }
 
+export type { SpawnCluster };
+
 export type Selection =
-  | { kind: "spawn"; spawn: Spawn }
+  | { kind: "spawn"; cluster: SpawnCluster }
   | { kind: "boss"; boss: BossGroup }
   | { kind: "extract"; extract: Extract }
   | { kind: "transit"; transit: Transit }
   | { kind: "lock"; lock: Lock; key: KeyItem | null }
-  | { kind: "quest"; marker: QuestMarker; task: Task }
+  | { kind: "quest"; marker: QuestMarker; task: Task; alternatives: QuestMarker[] }
   | { kind: "switch"; sw: MapSwitch }
   | { kind: "hazard"; hazard: Hazard };
 
@@ -107,11 +109,13 @@ function symbol(
   title: string,
   sub: string | null,
   select: Selection,
-  opts: { label?: string | null; done?: boolean } = {},
+  opts: { label?: string | null; done?: boolean; shape?: MarkerShape } = {},
 ): L.Marker {
   const marker = L.marker(toLatLng(position), {
     icon: markerIcon({
-      shape: def.shape,
+      // Quest objectives override this per marker so the glyph says what the
+      // objective actually wants; every other layer uses its one shape.
+      shape: opts.shape ?? def.shape,
       color: def.color,
       scale: ctx.markerScale,
       label: ctx.showMarkerLabels ? opts.label : null,
@@ -176,14 +180,27 @@ function buildSpawns(ctx: BuildContext, layerId: LayerId): L.Layer[] {
   const out: L.Layer[] = [];
   const radius = 4.5 * ctx.markerScale;
 
-  for (const spawn of ctx.data.markers.spawns) {
-    if (SPAWN_LAYER[spawn.group] !== layerId) continue;
-    if (!withinExtents(spawn, ctx.extents)) continue;
+  // Cluster after the floor filter, never before: two points on different
+  // levels of Interchange are not one spot, whatever the map says.
+  const onThisLayer = ctx.data.markers.spawns.filter(
+    (s) => SPAWN_LAYER[s.group] === layerId && withinExtents(s, ctx.extents),
+  );
 
-    const aiOnly = !spawn.categories.includes("player");
+  for (const cluster of clusterSpawns(onThisLayer, clusterRadius(ctx.data))) {
+    const aiOnly = !cluster.spawns.some((s) => s.categories.includes("player"));
+    const zones = [...new Set(cluster.spawns.map((s) => s.zone).filter(Boolean))] as string[];
+    const label = zones.length ? `${def.label.replace(" spawns", "")} — ${zones[0]}` : def.label;
+
+    const detail = [
+      cluster.spawns.length > 1 ? `${cluster.spawns.length} spawn points here` : null,
+      aiOnly ? "AI only, not a player start" : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+
     // Canvas circles, not div icons: spawn points run into the hundreds and
     // this is the difference between a smooth pan and a stuttering one.
-    const dot = L.circleMarker(toLatLng(spawn.position), {
+    const dot = L.circleMarker(toLatLng(cluster.centre), {
       renderer: ctx.renderer,
       radius,
       color: "rgba(6,10,15,.75)",
@@ -192,12 +209,8 @@ function buildSpawns(ctx: BuildContext, layerId: LayerId): L.Layer[] {
       fillOpacity: aiOnly ? 0.55 : 0.95,
       className: "tk-spawn",
     });
-    const label = spawn.zone ? `${def.label.replace(" spawns", "")} — ${spawn.zone}` : def.label;
-    dot.bindTooltip(tooltip(label, aiOnly ? "AI only, not a player start" : null), {
-      direction: "top",
-      className: "tk-tip",
-    });
-    dot.on("click", () => ctx.onSelect({ kind: "spawn", spawn }));
+    dot.bindTooltip(tooltip(label, detail || null), { direction: "top", className: "tk-tip" });
+    dot.on("click", () => ctx.onSelect({ kind: "spawn", cluster }));
     out.push(dot);
   }
   return out;
@@ -327,48 +340,104 @@ function buildTransits(ctx: BuildContext): L.Layer[] {
 
 /* ------------------------------------------------------------ tasks & keys */
 
+/**
+ * One thing drawn on the map for one quest objective.
+ *
+ * A quest item that can spawn in eleven places is still one thing to find —
+ * the game rolls one of them — so those collapse to a single pin at their
+ * centre rather than papering the building in identical diamonds. Objectives
+ * you must actually repeat (mark three spots, plant three jammers) stay as
+ * separate pins, because each one is its own piece of work.
+ */
+interface QuestUnit {
+  primary: QuestMarker;
+  /** Every marker this pin stands for; length 1 unless spawns were collapsed. */
+  markers: QuestMarker[];
+  position: Vec3;
+}
+
+function questUnits(markers: QuestMarker[]): QuestUnit[] {
+  const units: QuestUnit[] = [];
+  const alternatives = new Map<string, QuestMarker[]>();
+
+  for (const marker of markers) {
+    // Keyed by objective, not by task: a task can ask for two different items,
+    // and those are two separate finds even though they share a name.
+    if (marker.kind === "pickup") {
+      const bucket = alternatives.get(marker.objective);
+      if (bucket) bucket.push(marker);
+      else alternatives.set(marker.objective, [marker]);
+    } else {
+      units.push({ primary: marker, markers: [marker], position: marker.position });
+    }
+  }
+
+  for (const group of alternatives.values()) {
+    units.push({
+      primary: group[0],
+      markers: group,
+      position: group.length > 1 ? centroid(group.map((m) => m.position)) : group[0].position,
+    });
+  }
+  return units;
+}
+
 function buildQuests(ctx: BuildContext): L.Layer[] {
   const def = LAYER_BY_ID["quests"];
   const out: L.Layer[] = [];
 
-  // How many markers each task has here, so a pin can say "location 2 of 3".
-  const positions = new Map<string, QuestMarker[]>();
-  for (const marker of ctx.visibleQuests) {
-    const bucket = positions.get(marker.task);
-    if (bucket) bucket.push(marker);
-    else positions.set(marker.task, [marker]);
+  // Collapse only within the visible floor — an item that can spawn on two
+  // levels of Streets is not one pin hanging between them.
+  const visible = ctx.visibleQuests.filter((m) => withinExtents(m, ctx.extents));
+  const units = questUnits(visible);
+
+  // How many pins each task has here, so one can say "location 2 of 3".
+  const byTask = new Map<string, QuestUnit[]>();
+  for (const unit of units) {
+    const bucket = byTask.get(unit.primary.task);
+    if (bucket) bucket.push(unit);
+    else byTask.set(unit.primary.task, [unit]);
   }
 
-  for (const marker of ctx.visibleQuests) {
-    if (!withinExtents(marker, ctx.extents)) continue;
+  for (const unit of units) {
+    const marker = unit.primary;
     const task = ctx.data.tasks[marker.task];
     if (!task) continue;
 
-    // A location counts as handled either because the player ticked this exact
-    // spot off, or because the whole task is behind them.
-    const done = !!ctx.markerDone[marker.id] || ctx.taskStatus[task.id] === "completed";
+    // A pin is handled when everything it stands for is: one ticked spawn out
+    // of eleven has not found the item.
+    const done =
+      ctx.taskStatus[task.id] === "completed" || unit.markers.every((m) => ctx.markerDone[m.id]);
     const dim = ctx.dimCompleted && done;
 
-    if (ctx.showZones && marker.outline) {
+    // A collapsed pin sits between its spawns, so its outlines would be wrong.
+    if (ctx.showZones && marker.outline && unit.markers.length === 1) {
       out.push(outlinePolygon(marker.outline, def.color, ctx, false, dim ? 0.35 : 1));
     }
 
-    const siblings = positions.get(marker.task) ?? [marker];
+    const siblings = byTask.get(marker.task) ?? [unit];
     const detail: string[] = [];
-    if (siblings.length > 1) {
-      detail.push(`Location ${siblings.indexOf(marker) + 1} of ${siblings.length}`);
+    if (unit.markers.length > 1) {
+      detail.push(`${unit.markers.length} possible spawns`);
+    } else if (siblings.length > 1) {
+      detail.push(`Location ${siblings.indexOf(unit) + 1} of ${siblings.length}`);
     }
     if (marker.count && marker.count > 1) detail.push(`Needs ${marker.count}`);
+    const kindLabel = QUEST_KIND_META[marker.kind]?.label;
 
     out.push(
       symbol(
-        marker.position,
+        unit.position,
         def,
         ctx,
         task.name,
-        [marker.description, ...detail].filter(Boolean).join(" · "),
-        { kind: "quest", marker, task },
-        { label: ctx.showQuestLabels ? task.name : null, done: dim },
+        [marker.description || kindLabel, ...detail].filter(Boolean).join(" · "),
+        { kind: "quest", marker, task, alternatives: unit.markers },
+        {
+          label: ctx.showQuestLabels ? task.name : null,
+          done: dim,
+          shape: QUEST_KIND_META[marker.kind]?.shape ?? def.shape,
+        },
       ),
     );
   }
@@ -444,14 +513,11 @@ function buildSniperSpawns(ctx: BuildContext): L.Layer[] {
   return ctx.data.markers.spawns
     .filter((s) => s.group === "sniper" && withinExtents(s, ctx.extents))
     .map((spawn) =>
-      symbol(
-        spawn.position,
-        def,
-        ctx,
-        "Sniper Scav",
-        spawn.zone,
-        { kind: "spawn", spawn },
-      ),
+      symbol(spawn.position, def, ctx, "Sniper Scav", spawn.zone, {
+        kind: "spawn",
+        // Sniper nests are few and far apart, so each stays its own marker.
+        cluster: { id: spawn.id, group: spawn.group, centre: spawn.position, spawns: [spawn] },
+      }),
     );
 }
 
@@ -483,33 +549,26 @@ export interface QuestFilterInput {
   search: string;
   trader: string | null;
   kappaOnly: boolean;
-  /** "active" draws only what the player ticked; "all" draws everything. */
-  scope: "active" | "available" | "all";
+  /** Off draws only the tasks ticked active; on draws every task on the map. */
+  showAll: boolean;
   focusTask: string | null;
 }
-
-/** Which task states each scope lets through. */
-const SCOPE_ALLOWS: Record<QuestFilterInput["scope"], TaskAvailability[]> = {
-  active: ["active"],
-  available: ["active", "available"],
-  all: ["active", "available", "locked", "completed", "failed"],
-};
 
 export function filterQuests(
   data: MapData,
   filters: QuestFilterInput,
-  availability: Record<string, TaskAvailability>,
+  taskStatus: Record<string, TaskStatus>,
 ): QuestMarker[] {
   const needle = filters.search.trim().toLowerCase();
-  const allowed = new Set(SCOPE_ALLOWS[filters.scope] ?? SCOPE_ALLOWS.all);
 
   return data.markers.quests.filter((marker) => {
     const task = data.tasks[marker.task];
     if (!task) return false;
     if (filters.focusTask) return task.id === filters.focusTask;
-    // A task the graph doesn't know about (data skew between files) is treated
-    // as available rather than vanishing.
-    if (!allowed.has(availability[task.id] ?? "available")) return false;
+    // The default view is "what am I doing this raid", so only tasks the
+    // player ticked active reach the map. Show-all is the browse mode and
+    // deliberately keeps finished tasks in, faded by the dimCompleted setting.
+    if (!filters.showAll && taskStatus[task.id] !== "active") return false;
     if (filters.kappaOnly && !task.kappaRequired) return false;
     if (filters.trader && task.trader?.name !== filters.trader) return false;
     if (needle) {

@@ -9,6 +9,7 @@
  * panel and the legend, so a new player can learn the map's vocabulary without
  * leaving the site.
  */
+import type { QuestKind } from "../types";
 
 export type LayerId =
   | "pmc-spawns"
@@ -53,8 +54,30 @@ export type MarkerShape =
   | "transit"
   | "key"
   | "quest"
+  | "beacon"
+  | "stash"
+  | "target"
+  | "runner"
   | "switch"
   | "hazard";
+
+/**
+ * What each kind of task objective looks like on the map.
+ *
+ * Quest green already says "this is a task"; the glyph says what the task
+ * actually wants from you, so a screen full of objectives can be read at a
+ * glance instead of clicking each pin. Item pickups keep the plain diamond —
+ * it is the marker people already associate with a quest item.
+ */
+export const QUEST_KIND_META: Record<QuestKind, { shape: MarkerShape; label: string; hint: string }> = {
+  mark: { shape: "beacon", label: "Place a marker", hint: "Plant a marker or jammer at this spot." },
+  place: { shape: "stash", label: "Stash an item", hint: "Leave or plant the item at this spot." },
+  shoot: { shape: "target", label: "Eliminate targets", hint: "Kills for this task count in this area." },
+  visit: { shape: "runner", label: "Go here", hint: "Reaching this spot is the objective." },
+  extract: { shape: "runner", label: "Extract here", hint: "Leave the raid from this exit." },
+  pickup: { shape: "quest", label: "Find an item", hint: "A quest item can be picked up here." },
+  objective: { shape: "quest", label: "Objective", hint: "A task objective anchored to this spot." },
+};
 
 export const LAYER_GROUPS: LayerGroupDef[] = [
   { id: "spawns", label: "Spawns", hint: "Where players and AI start the raid." },
