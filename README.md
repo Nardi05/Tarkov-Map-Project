@@ -81,8 +81,9 @@ study a map you haven't started, tick **Show every task on the map**.
 
 Where the wiki has screenshots for a task, the detail panel shows them as a
 carousel — arrows to step through, click to blow one up full screen, Escape or
-another click to come back. That is usually the fastest way to turn "somewhere
-in this building" into "that shelf".
+another click to come back. Neighbouring photos and the full-size copy are
+fetched while you look at the current one, so only the first costs a wait. It is
+usually the fastest way to turn "somewhere in this building" into "that shelf".
 
 Everything is stored in your browser only. It survives a reload and switching
 maps, so dying on Customs and running a Woods raid before coming back does not
@@ -97,10 +98,11 @@ npm run dev
 ```
 
 ```bash
-npm run images    # refresh the wiki screenshot cache (optional, slow)
-npm run build     # type-check + production bundle into dist/
+npm run images        # refresh the wiki screenshot cache (optional, slow)
+npm run check-quests  # cross-check quest data against the wiki (optional, slow)
+npm run build         # type-check + production bundle into dist/
 npm run preview
-npm run smoke     # opens every map in a browser and checks for errors
+npm run smoke         # opens every map in a browser and checks for errors
 ```
 
 `dist/` is a plain static site — the app uses hash routing, so it drops onto any
@@ -134,6 +136,8 @@ scripts/build-data.mjs   fetches tarkov.dev's JSON feeds, resolves translations,
 scripts/fetch-task-images.mjs
                          caches the wiki's task screenshots into
                          data/task-images.json (committed; not run on deploy)
+scripts/check-quests.mjs cross-checks trader/level/Kappa against the wiki and
+                         prints disagreements; changes nothing
 src/data/geo.json        vendored georeferencing (transform, bounds, rotation,
                          floors, place labels) for each map
 src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
@@ -163,6 +167,12 @@ A few details worth knowing if you touch this code:
 - Spawn clustering runs at render time, after the floor filter, never at build
   time. Two points on different levels of Interchange are not one place however
   close they look from above, and the raw positions stay in the payload.
+- `npm run data` refuses to write if the upstream task feed looks gutted —
+  too few tasks, almost no Kappa flags, or most tasks missing their level gate.
+  The feed has served exactly that shape mid-update, and because the site
+  re-fetches on every deploy the damage is silent: a missing `minPlayerLevel`
+  just hides the level chip. Failing the build leaves the previous deployment
+  serving good data. `TK_ALLOW_SPARSE_TASKS=1` overrides it.
 - Task screenshots are fetched by `npm run images`, never by `npm run data`.
   A deploy must not depend on the wiki being up, so the cache is committed and
   the build just copies it in; if it is missing, galleries silently vanish.
