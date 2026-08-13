@@ -5,6 +5,7 @@ import TaskPanel from "./TaskPanel";
 import SettingsPanel from "./SettingsPanel";
 import DetailPanel from "./DetailPanel";
 import MapSwitcher from "./MapSwitcher";
+import RaidClock from "./RaidClock";
 import { Icon, icons } from "./ui";
 import { availableStyles, floorsFor } from "../lib/base-layer";
 import { filterQuests, type Selection } from "../lib/build-layers";
@@ -148,6 +149,8 @@ export default function MapPage({
         <MapSwitcher maps={maps} current={data.normalizedName} onPick={(name) => navigate(href.map(name))} />
 
         <div className="ml-auto flex items-center gap-1.5">
+          <RaidClock mapName={data.normalizedName} />
+
           {styles.length > 1 && (
             <div className="hidden items-center gap-1 rounded-lg p-0.5 sm:flex" style={{ background: "var(--panel-2)" }}>
               {styles.map((s) => (

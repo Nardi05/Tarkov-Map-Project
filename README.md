@@ -49,7 +49,12 @@ panel says how many points are behind it.
 Beyond the layers:
 
 - **Quick views** — one tap to switch the map between learning it, questing,
-  a Scav run, or threat-spotting.
+  a Scav run, or threat-spotting. Save your own layer combinations alongside
+  the built-in ones; re-saving under the same name updates it.
+- **Raid clock** — the two in-game times you can queue into, side by side, day
+  and night. Tarkov time runs 7x real time and the two raids are always 12
+  hours apart. Factory's clocks are fixed and Labs has no day/night, so both
+  say so instead of showing a clock that would be wrong.
 - **Floors** — multi-level maps (Interchange, Reserve, Streets, Labs, Icebreaker)
   filter markers by the level they are actually on.
 - **Two art styles** — a clean vector map and photographic satellite tiles,
@@ -145,6 +150,7 @@ src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
 src/lib/layers.ts        the layer taxonomy: colour, shape, and the plain-English
                          explanation shown in the UI
 src/lib/build-layers.ts  data -> Leaflet layers, one builder per layer
+src/lib/tarkov-time.ts   the in-game clock: 7x real time, anchored at UTC+3
 src/components/          map canvas, layer panel, task panel, detail panel
 ```
 
