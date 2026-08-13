@@ -266,8 +266,16 @@ export default function MapCanvas(props: Props) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    // The vector artwork carries its own labels; only the tile style needs ours.
-    const wanted = props.showPlaceLabels && !wantSvg && geo.labels.length > 0;
+    /*
+     * Both styles get these. The vector artwork was assumed to carry its own
+     * place names, so this used to skip it — but the SVGs contain no text at
+     * all, which left the clean style with no street or area names anywhere.
+     *
+     * They are positioned through the CRS from game coordinates, the same as
+     * every marker, so they land identically whichever artwork is underneath
+     * rather than being tied to one image.
+     */
+    const wanted = props.showPlaceLabels && geo.labels.length > 0;
     if (wanted && !labelsRef.current) {
       labelsRef.current = createPlaceLabels(geo).addTo(map);
     } else if (!wanted && labelsRef.current) {
@@ -275,7 +283,7 @@ export default function MapCanvas(props: Props) {
       labelsRef.current = null;
     }
     declutterRef.current?.();
-  }, [props.showPlaceLabels, wantSvg, geo]);
+  }, [props.showPlaceLabels, geo]);
 
   /* ----------------------------------------------------------------- markers */
   const buildCtx = () => ({
