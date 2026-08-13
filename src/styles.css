@@ -281,7 +281,10 @@ body {
   display: block;
 }
 
-.tk-base-svg .hide-place-labels text {
+/* Both classes sit on the same <svg>, so this must not be a descendant
+   selector. Kept in case artwork ever ships its own text; today none does and
+   the place names come from the geo data instead. */
+.tk-base-svg.hide-place-labels text {
   display: none;
 }
 

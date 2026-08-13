@@ -58,7 +58,8 @@ Beyond the layers:
 - **Floors** — multi-level maps (Interchange, Reserve, Streets, Labs, Icebreaker)
   filter markers by the level they are actually on.
 - **Two art styles** — a clean vector map and photographic satellite tiles,
-  georeferenced identically so markers never shift between them.
+  georeferenced identically so markers never shift between them. Place names
+  (Dorms, Big Red, Main Bridge…) show on both.
 - **Configurable** — marker size, name labels, zone outlines, place names, dark
   and light themes.
 
