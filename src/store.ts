@@ -36,8 +36,17 @@ interface QuestFilters {
   focusTask: string | null;
 }
 
+/** A layer combination the player saved themselves, alongside the built-ins. */
+export interface CustomView {
+  id: string;
+  label: string;
+  layers: LayerId[];
+}
+
 interface Store {
   layers: Record<LayerId, boolean>;
+  /** The player's own quick views. Built-in PRESETS are not stored. */
+  customViews: CustomView[];
   settings: Settings;
   quest: QuestFilters;
   /**
@@ -55,6 +64,9 @@ interface Store {
   setGroupLayers: (ids: LayerId[], on: boolean) => void;
   applyPreset: (presetId: string) => void;
   resetLayers: () => void;
+  /** Saves whatever is currently switched on as a named quick view. */
+  saveCustomView: (label: string) => void;
+  removeCustomView: (id: string) => void;
 
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setQuestFilter: <K extends keyof QuestFilters>(key: K, value: QuestFilters[K]) => void;
@@ -93,6 +105,7 @@ export const useStore = create<Store>()(
   persist(
     (set) => ({
       layers: { ...DEFAULT_LAYER_STATE },
+      customViews: [],
       settings: { ...DEFAULT_SETTINGS },
       quest: { ...DEFAULT_QUEST },
       taskStatus: {},
@@ -105,15 +118,39 @@ export const useStore = create<Store>()(
         set((s) => ({
           layers: { ...s.layers, ...Object.fromEntries(ids.map((id) => [id, on])) },
         })),
-      applyPreset: (presetId) => {
-        const preset = PRESETS.find((p) => p.id === presetId);
-        if (!preset) return;
-        const next = Object.fromEntries(
-          LAYERS.map((l) => [l.id, preset.layers.includes(l.id)]),
-        ) as Record<LayerId, boolean>;
-        set({ layers: next });
-      },
+      applyPreset: (presetId) =>
+        set((s) => {
+          const chosen =
+            PRESETS.find((p) => p.id === presetId) ?? s.customViews.find((v) => v.id === presetId);
+          if (!chosen) return {};
+          const next = Object.fromEntries(
+            LAYERS.map((l) => [l.id, chosen.layers.includes(l.id)]),
+          ) as Record<LayerId, boolean>;
+          return { layers: next };
+        }),
       resetLayers: () => set({ layers: { ...DEFAULT_LAYER_STATE } }),
+
+      saveCustomView: (label) =>
+        set((s) => {
+          const name = label.trim().slice(0, 32);
+          if (!name) return {};
+          const on = LAYERS.filter((l) => s.layers[l.id]).map((l) => l.id);
+          // Saving under an existing name overwrites it, which is what someone
+          // adjusting a view and re-saving expects.
+          const existing = s.customViews.find((v) => v.label.toLowerCase() === name.toLowerCase());
+          if (existing) {
+            return {
+              customViews: s.customViews.map((v) =>
+                v.id === existing.id ? { ...v, layers: on } : v,
+              ),
+            };
+          }
+          const id = `custom-${Date.now().toString(36)}`;
+          return { customViews: [...s.customViews, { id, label: name, layers: on }] };
+        }),
+
+      removeCustomView: (id) =>
+        set((s) => ({ customViews: s.customViews.filter((v) => v.id !== id) })),
 
       setSetting: (key, value) => set((s) => ({ settings: { ...s.settings, [key]: value } })),
       setQuestFilter: (key, value) => set((s) => ({ quest: { ...s.quest, [key]: value } })),
@@ -167,8 +204,9 @@ export const useStore = create<Store>()(
       storage: createJSONStorage(() => localStorage),
       // Search, trader and Kappa narrowing are momentary and reset on reload;
       // show-all is a view preference, so it sticks like the layer toggles do.
-      partialize: ({ layers, settings, quest, taskStatus, markerDone, lastMap }) => ({
+      partialize: ({ layers, customViews, settings, quest, taskStatus, markerDone, lastMap }) => ({
         layers,
+        customViews,
         settings,
         quest: { showAll: quest.showAll },
         taskStatus,
@@ -212,6 +250,7 @@ export const useStore = create<Store>()(
           // New layers and settings shipped after a user's last visit must
           // still get their defaults rather than coming back undefined.
           layers: { ...DEFAULT_LAYER_STATE, ...(p.layers ?? {}) },
+          customViews: p.customViews ?? [],
           settings: { ...DEFAULT_SETTINGS, ...(p.settings ?? {}) },
           taskStatus: p.taskStatus ?? {},
           markerDone: p.markerDone ?? {},
