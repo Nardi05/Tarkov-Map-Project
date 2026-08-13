@@ -1,0 +1,1415 @@
+{
+ "generated": "2026-08-13T02:26:39.930Z",
+ "tasks": {
+  "5936da9e86f7742d65037edf": {
+   "name": "Background Check",
+   "minPlayerLevel": 2,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5d25e44386f77409453bce7b": {
+   "name": "The Huntsman Path - Evil Watchman",
+   "minPlayerLevel": 2,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "66b38e144f2ab7cc530c3fe7": {
+   "name": "Every Hunter Knows This",
+   "minPlayerLevel": 2,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "675c1cf4a757ddd00404f0a3": {
+   "name": "Work Smarter",
+   "minPlayerLevel": 2,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "675c1ec7a46173572a0bf20a": {
+   "name": "Rite of Passage",
+   "minPlayerLevel": 2,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "59674eb386f774539f14813a": {
+   "name": "Delivery From the Past",
+   "minPlayerLevel": 5,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "59c124d686f774189b3c843f": {
+   "name": "BP Depot",
+   "minPlayerLevel": 5,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "59689fbd86f7740d137ebfc4": {
+   "name": "Operation Aquarius - Part 1",
+   "minPlayerLevel": 6,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5967530a86f77462ba22226b": {
+   "name": "Bad Rep Evidence",
+   "minPlayerLevel": 6,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "596b43fb86f77457ca186186": {
+   "name": "The Extortionist",
+   "minPlayerLevel": 7,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5979eee086f774311955e614": {
+   "name": "Golden Swag",
+   "minPlayerLevel": 8,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5967725e86f774601a446662": {
+   "name": "Shaking Up the Teller",
+   "minPlayerLevel": 9,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "66058cb22cee99303f1ba067": {
+   "name": "Easy Money - Part 1 [PVP ZONE]",
+   "minPlayerLevel": 10,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5969f9e986f7741dde183a50": {
+   "name": "Pharmacist",
+   "minPlayerLevel": 10,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5979f9ba86f7740f6c3fe9f2": {
+   "name": "Chemical - Part 1",
+   "minPlayerLevel": 10,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "597a0b2986f77426d66c0633": {
+   "name": "Chemical - Part 2",
+   "minPlayerLevel": 10,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27b7a786f774579c3eb376": {
+   "name": "Tigr Safari",
+   "minPlayerLevel": 10,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "675c15fbf7da9792a4059871": {
+   "name": "Provide Viewership",
+   "minPlayerLevel": 10,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "66058ccf06ef1d50a60c1f48": {
+   "name": "Between Two Fires [PVP ZONE]",
+   "minPlayerLevel": 10,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "66058cd19f59e625462acc90": {
+   "name": "Decisions, Decisions [PVP ZONE]",
+   "minPlayerLevel": 10,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "66058ccbc7f3584787181478": {
+   "name": "Against the Conscience - Part 1 [PVP ZONE]",
+   "minPlayerLevel": 10,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "597a0f5686f774273b74f676": {
+   "name": "Chemical - Part 4",
+   "minPlayerLevel": 11,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "597a160786f77477531d39d2": {
+   "name": "Out of Curiosity",
+   "minPlayerLevel": 11,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "597a171586f77405ba6887d3": {
+   "name": "Big Customer",
+   "minPlayerLevel": 11,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "66aa74571e5e199ecd094f18": {
+   "name": "Secrets of Polikhim",
+   "minPlayerLevel": 12,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "675c1570526ff496850895d9": {
+   "name": "Passion for Ergonomics",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5ac3462b86f7741d6118b983": {
+   "name": "Farming - Part 3",
+   "minPlayerLevel": 14,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "665eec4a4dfc83b0ed0a9dca": {
+   "name": "Thirsty - Delivery",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "675c085d59b0575973005f52": {
+   "name": "Break the Deal",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "675c03d1f7da9792a405549a": {
+   "name": "Abandoned Cargo",
+   "minPlayerLevel": 17,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "675c047fa46173572a0bd878": {
+   "name": "Shipment Tracking",
+   "minPlayerLevel": 17,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "675c04f4db8807b75d0f38e8": {
+   "name": "Closer to the People",
+   "minPlayerLevel": 17,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27ba1c86f77461ea5a3c56": {
+   "name": "The Cult - Part 2",
+   "minPlayerLevel": 18,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5b47926a86f7747ccc057c15": {
+   "name": "Informed Means Armed",
+   "minPlayerLevel": 24,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5b4795fb86f7745876267770": {
+   "name": "Chumming",
+   "minPlayerLevel": 24,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5c0bbaa886f7746941031d82": {
+   "name": "Bullshit",
+   "minPlayerLevel": 24,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "675c3582f6ddc329a90f9c6d": {
+   "name": "Private Club",
+   "minPlayerLevel": 24,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "66d9cbb67b491f9d5304f6e6": {
+   "name": "Is This a Reference?",
+   "minPlayerLevel": 25,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "67e993b1ac26bf29380a320b": {
+   "name": "Surprise Gift [PVP ZONE]",
+   "minPlayerLevel": 35,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "60e71b9bbd90872cb85440f3": {
+   "name": "Capturing Outposts",
+   "minPlayerLevel": 42,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "684009026ceedc792c09b2a7": {
+   "name": "Hobby Club",
+   "minPlayerLevel": 44,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "60e71d6d7fcf9c556f325055": {
+   "name": "The Courier",
+   "minPlayerLevel": 52,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6744af0969a58fceba101fed": {
+   "name": "The Price of Independence",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "669fa3979b0ce3feae01a130": {
+   "name": "Claustrophobia",
+   "minPlayerLevel": 2,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5d25e2b486f77409de05bba0": {
+   "name": "The Huntsman Path - Secured Perimeter",
+   "minPlayerLevel": 2,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "59675ea386f77414b32bded2": {
+   "name": "Postman Pat - Part 1",
+   "minPlayerLevel": 10,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "669fa399033a3ce9870338a8": {
+   "name": "Possessor",
+   "minPlayerLevel": 10,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "597a0e5786f77426d66c0636": {
+   "name": "Chemical - Part 3",
+   "minPlayerLevel": 11,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5ac345dc86f774288030817f": {
+   "name": "Farming - Part 1",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5ac3477486f7741d651d6885": {
+   "name": "Scout",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "669fa394e0c9f9fafa082897": {
+   "name": "Forklift Certified",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "669fa39b91b0a8c9680fc467": {
+   "name": "Black Swan",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "669fa39c64ea11e84c0642a6": {
+   "name": "The Walls Have Eyes",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "669fa39ee749756c920d02c8": {
+   "name": "All Is Revealed",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "669fa3a1c26f13bd04030f37": {
+   "name": "Capacity Check",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "669fa38fad7f1eac2607ed46": {
+   "name": "One Less Loose End",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "669fa3a08b4a64b332041ff7": {
+   "name": "Dragnet",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a68669a86f774255929b4d4": {
+   "name": "Health Care Privacy - Part 5",
+   "minPlayerLevel": 20,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "669fa3a3ad7f1eac2607ed48": {
+   "name": "Health Care Privacy - Part 6",
+   "minPlayerLevel": 20,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "666314bd920800278d0f6748": {
+   "name": "Viewer",
+   "minPlayerLevel": 27,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "666314c3acf8442f8b0531a3": {
+   "name": "Proper Comeback",
+   "minPlayerLevel": 27,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "657315ddab5a49b71f098853": {
+   "name": "First in Line",
+   "minPlayerLevel": 1,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "657315df034d76585f032e01": {
+   "name": "Shooting Cans",
+   "minPlayerLevel": 1,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "657315e4a6af4ab4b50f3459": {
+   "name": "Saving the Mole",
+   "minPlayerLevel": 1,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "657315e1dccd301f1301416a": {
+   "name": "Luxurious Life",
+   "minPlayerLevel": 1,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "66b38c7bf85b8bf7250f9cb6": {
+   "name": "Rough Tarkov",
+   "minPlayerLevel": 2,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "66058cbd9f59e625462acc8e": {
+   "name": "Create a Distraction - Part 1 [PVP ZONE]",
+   "minPlayerLevel": 10,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "67a09636b8725511260bc421": {
+   "name": "Shady Contractor",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "67a0964e972c11a3f507731b": {
+   "name": "Needle in a Haystack",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "66aa58245ab22944110db6e9": {
+   "name": "New Day, New Paths",
+   "minPlayerLevel": 17,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5ae448e586f7744dcf0c2a67": {
+   "name": "Big Sale",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5ae4493d86f7744b8e15aa8f": {
+   "name": "Database - Part 2",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5ae448f286f77448d73c0131": {
+   "name": "The Blood of War - Part 1",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5ae4493486f7744efa289417": {
+   "name": "Database - Part 1",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5b478eca86f7744642012254": {
+   "name": "Vitamins - Part 1",
+   "minPlayerLevel": 22,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5b478d0f86f7744d190d91b5": {
+   "name": "Minibus",
+   "minPlayerLevel": 24,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5ae4498786f7744bde357695": {
+   "name": "The Key to Success",
+   "minPlayerLevel": 26,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "666314bc1d3ec95634095e77": {
+   "name": "Minute of Fame",
+   "minPlayerLevel": 27,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5b478b1886f7744d1b23c57d": {
+   "name": "Hot Delivery",
+   "minPlayerLevel": 29,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "671a49f77d49aea42c029b5f": {
+   "name": "Irresistible",
+   "minPlayerLevel": 35,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "60e71dc0a94be721b065bbfc": {
+   "name": "Long Line",
+   "minPlayerLevel": 45,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "63966ff54c3ef01b6f3ffad8": {
+   "name": "Provocation",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "61958c366726521dd96828ec": {
+   "name": "Cargo X - Part 4",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "626bd75e47ea7f506e5493c5": {
+   "name": "Broadcast - Part 1",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6179b4d1bca27a099552e04e": {
+   "name": "Revision - Lighthouse",
+   "minPlayerLevel": 14,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6179aff8f57fb279792c60a1": {
+   "name": "Overpopulation",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6179b3bdc7560e13d23eeb8d": {
+   "name": "Corporate Secrets",
+   "minPlayerLevel": 17,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6179ad56c760af5ad2053587": {
+   "name": "Seaside Vacation",
+   "minPlayerLevel": 17,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6179ac7511973d018217d0b9": {
+   "name": "Easy Job - Part 1",
+   "minPlayerLevel": 18,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6179acbdc760af5ad2053585": {
+   "name": "Easy Job - Part 2",
+   "minPlayerLevel": 18,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "626bd75c71bd851e971b82a5": {
+   "name": "Reconnaissance",
+   "minPlayerLevel": 18,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "61904daa7d0d857927447b9c": {
+   "name": "The Hermit",
+   "minPlayerLevel": 20,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6193850f60b34236ee0483de": {
+   "name": "Long Road",
+   "minPlayerLevel": 20,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6179b3a12153c15e937d52bc": {
+   "name": "Energy Crisis",
+   "minPlayerLevel": 25,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6179afd0bca27a099552e040": {
+   "name": "Lost Contact",
+   "minPlayerLevel": 26,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "626bd75b05f287031503c7f6": {
+   "name": "Drug Trafficking",
+   "minPlayerLevel": 26,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6179b4f16e9dd54ac275e407": {
+   "name": "Missing Cargo",
+   "minPlayerLevel": 30,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "626bd75d5bef5d7d590bd415": {
+   "name": "Top Secret",
+   "minPlayerLevel": 30,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "625d6ffaf7308432be1d44c5": {
+   "name": "Network Provider - Part 2",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "625d6ffcaa168e51321d69d7": {
+   "name": "Assessment - Part 1",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "625d70031ed3bb5bcc5bd9e5": {
+   "name": "Key to the Tower",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "625d7005a4eb80027c4f2e09": {
+   "name": "Knock-Knock",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "625d700cc48e6c62a440fab5": {
+   "name": "Getting Acquainted",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6391d90f4ed9512be67647df": {
+   "name": "Make Amends",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "63966fccac6f8f3c677b9d89": {
+   "name": "Snatch",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "674492b6909d2013670a347a": {
+   "name": "Ask for Directions",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "626148334149f1149b5b12ca": {
+   "name": "Make Amends - Security",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5ede55112c95834b583f052a": {
+   "name": "The Bunker - Part 1",
+   "minPlayerLevel": 10,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6086c852c945025d41566124": {
+   "name": "Revision - Reserve",
+   "minPlayerLevel": 14,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6089736efa70fc097863b8f6": {
+   "name": "Back Door",
+   "minPlayerLevel": 14,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "60896888e4a85c72ef3fa300": {
+   "name": "Classified Technologies",
+   "minPlayerLevel": 14,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6089732b59b92115597ad789": {
+   "name": "Surplus Goods",
+   "minPlayerLevel": 14,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5ede567cfa6dc072ce15d6e3": {
+   "name": "The Bunker - Part 2",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "60896e28e4a85c72ef3fa301": {
+   "name": "Disease History",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6089743983426423753cd58a": {
+   "name": "Safe Corridor",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "608974af4b05530f55550c21": {
+   "name": "Inventory Check",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "608974d01a66564e74191fc0": {
+   "name": "A Fuel Matter",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "60896bca6ee58f38c417d4f2": {
+   "name": "No Place for Renegades",
+   "minPlayerLevel": 17,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "60896b7bfa70fc097863b8f5": {
+   "name": "Documents",
+   "minPlayerLevel": 19,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "66ab970848ddbe9d4a0c49a8": {
+   "name": "Special Comms",
+   "minPlayerLevel": 19,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5d25e4d586f77443e625e388": {
+   "name": "Reserve",
+   "minPlayerLevel": 20,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "608a768d82e40b3c727fd17d": {
+   "name": "Pest Control",
+   "minPlayerLevel": 20,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "63966fd9ea19ac7ed845db30": {
+   "name": "Payback",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "673f4e956f1b89c7bc0f56ef": {
+   "name": "Hot Wheels",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "673f5a4976553f78350bdac1": {
+   "name": "Hot Wheels - Let's Try Again",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "673f61a066e6a521aa04b62b": {
+   "name": "Order From Outside",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6745fdddd3346c216702e0bf": {
+   "name": "Simple Side Job",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5a27b75b86f7742e97191958": {
+   "name": "Fishing Gear",
+   "minPlayerLevel": 10,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27b7d686f77460d847e6a6": {
+   "name": "Scrap Metal",
+   "minPlayerLevel": 10,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27b80086f774429a5d7e20": {
+   "name": "Eagle Eye",
+   "minPlayerLevel": 11,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27b87686f77460de0252a8": {
+   "name": "Humanitarian Supplies",
+   "minPlayerLevel": 11,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5ac3467986f7741d6224abc2": {
+   "name": "Signal - Part 1",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27b9de86f77464e5044585": {
+   "name": "The Cult - Part 1",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a03173786f77451cb427172": {
+   "name": "Spa Tour - Part 2",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a03296886f774569778596a": {
+   "name": "Spa Tour - Part 4",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a0449d586f77474e66227b7": {
+   "name": "Spa Tour - Part 5",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27bb1e86f7741f27621b7e": {
+   "name": "Cargo X - Part 1",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27bb3d86f77411ea361a21": {
+   "name": "Cargo X - Part 2",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27bb5986f7741dfb660900": {
+   "name": "Cargo X - Part 3",
+   "minPlayerLevel": 12,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27bbf886f774333a418eeb": {
+   "name": "Wet Job - Part 2",
+   "minPlayerLevel": 14,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27bc1586f7741f6d40fa2f": {
+   "name": "Wet Job - Part 3",
+   "minPlayerLevel": 14,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27bc3686f7741c73584026": {
+   "name": "Wet Job - Part 4",
+   "minPlayerLevel": 14,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a27bc6986f7741c7358402b": {
+   "name": "Wet Job - Part 5",
+   "minPlayerLevel": 14,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5ac346cf86f7741d63233a02": {
+   "name": "Signal - Part 3",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "65802b627b44fa5e14638899": {
+   "name": "Nothing Fishy About This",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "665eeca45d86b6c8aa03c79d": {
+   "name": "Thirsty - Echo",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "67a096577e86e067eb045733": {
+   "name": "Hidden Layer",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5d25e48186f77443e625e386": {
+   "name": "Courtesy Visit",
+   "minPlayerLevel": 20,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a68661a86f774500f48afb0": {
+   "name": "Health Care Privacy - Part 1",
+   "minPlayerLevel": 20,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a68663e86f774501078f78a": {
+   "name": "Health Care Privacy - Part 2",
+   "minPlayerLevel": 20,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5eda19f0edce541157209cee": {
+   "name": "Anesthesia",
+   "minPlayerLevel": 21,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5edab736cc183c769d778bc2": {
+   "name": "Colleagues - Part 1",
+   "minPlayerLevel": 21,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5edaba7c0c502106f869bc02": {
+   "name": "Colleagues - Part 2",
+   "minPlayerLevel": 21,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5edabd13218d181e29451442": {
+   "name": "Rigged Game",
+   "minPlayerLevel": 21,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5f04886a3937dc337a6b8238": {
+   "name": "Chemistry Closet",
+   "minPlayerLevel": 22,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "658027799634223183395339": {
+   "name": "No Swiping",
+   "minPlayerLevel": 24,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5b4794cb86f774598100d5d4": {
+   "name": "Lend-Lease - Part 1",
+   "minPlayerLevel": 25,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "666314bf1cd52e3d040a2e78": {
+   "name": "Serious Allegations",
+   "minPlayerLevel": 27,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5d25e4ad86f77443e625e387": {
+   "name": "Nostalgia",
+   "minPlayerLevel": 28,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "66631493312343839d032d22": {
+   "name": "Small Business - Part 3",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6740a02a69a58fceba0ff399": {
+   "name": "Natural Exchange",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6740a15566e6a521aa051b15": {
+   "name": "Forge a Friendship",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "63a88045abf76d719f42d715": {
+   "name": "The Delicious Sausage",
+   "minPlayerLevel": 5,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "639135d89444fb141f4e6eea": {
+   "name": "Population Census",
+   "minPlayerLevel": 12,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "64f731ab83cfca080a361e42": {
+   "name": "Pets Won't Need It - Part 1",
+   "minPlayerLevel": 12,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6573387d0b26ed4fde798de3": {
+   "name": "Pets Won't Need It - Part 2",
+   "minPlayerLevel": 12,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6391359b9444fb141f4e6ee6": {
+   "name": "You've Got Mail",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "63913715f8e5dd32bf4e3aaa": {
+   "name": "Broadcast - Part 2",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "64ee9df4496db64f9b7a4432": {
+   "name": "The Door",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639135e0fa894f0a866afde6": {
+   "name": "Urban Medicine",
+   "minPlayerLevel": 17,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639135f286e646067c176a87": {
+   "name": "Revision - Streets of Tarkov",
+   "minPlayerLevel": 17,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "638fcd23dc65553116701d33": {
+   "name": "Audit",
+   "minPlayerLevel": 17,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639135b04ed9512be67647d7": {
+   "name": "Glory to CPSU - Part 1",
+   "minPlayerLevel": 17,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "64f3176921045e77405d63b5": {
+   "name": "Ambulances Again",
+   "minPlayerLevel": 17,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639136d68ba6894d155e77cf": {
+   "name": "Green Corridor",
+   "minPlayerLevel": 20,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639282134ed9512be67647ed": {
+   "name": "Road Closed",
+   "minPlayerLevel": 20,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639136fa9444fb141f4e6eee": {
+   "name": "Watching You",
+   "minPlayerLevel": 20,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "63a511ea30d85e10e375b045": {
+   "name": "Broadcast - Part 3",
+   "minPlayerLevel": 20,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639135a7e705511c8a4a1b78": {
+   "name": "Ballet Lover",
+   "minPlayerLevel": 20,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "64e7b99017ab941a6f7bf9d7": {
+   "name": "Gendarmerie - Mall Cop",
+   "minPlayerLevel": 20,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "64e7b9a4aac4cd0a726562cb": {
+   "name": "Gendarmerie - Tickets, Please",
+   "minPlayerLevel": 20,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "64e7b9bffd30422ed03dad38": {
+   "name": "Gendarmerie - District Patrol",
+   "minPlayerLevel": 20,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "64f5aac4b63b74469b6c14c2": {
+   "name": "Glory to CPSU - Part 2",
+   "minPlayerLevel": 22,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "64f5e20652fc01298e2c61e3": {
+   "name": "Beyond the Red Meat - Part 1",
+   "minPlayerLevel": 22,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "64f6aafd67e11a7c6206e0d0": {
+   "name": "Beyond the Red Meat - Part 2",
+   "minPlayerLevel": 22,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6573397ef3f8344c4575cd87": {
+   "name": "Properties All Around",
+   "minPlayerLevel": 22,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639136df4b15ca31f76bc31f": {
+   "name": "The Huntsman Path - Administrator",
+   "minPlayerLevel": 23,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "65733403eefc2c312a759ddb": {
+   "name": "Developer's Secrets - Part 1",
+   "minPlayerLevel": 25,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6573382e557ff128bf3da536": {
+   "name": "Developer's Secrets - Part 2",
+   "minPlayerLevel": 25,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639135e8c115f907b14700aa": {
+   "name": "Surveillance",
+   "minPlayerLevel": 25,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639135bbc115f907b14700a6": {
+   "name": "Audiophile",
+   "minPlayerLevel": 25,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6391372c8ba6894d155e77d7": {
+   "name": "Broadcast - Part 4",
+   "minPlayerLevel": 27,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "64ee99639878a0569d6ec8c9": {
+   "name": "Broadcast - Part 5",
+   "minPlayerLevel": 27,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "666314c5a9290f9e0806cca5": {
+   "name": "Key to the City",
+   "minPlayerLevel": 27,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6572e876dc0d635f633a5714": {
+   "name": "Pyramid Scheme",
+   "minPlayerLevel": 28,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639dbaf17c898a131e1cffff": {
+   "name": "Debtor",
+   "minPlayerLevel": 31,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "65734c186dc1e402c80dc19e": {
+   "name": "Dandies",
+   "minPlayerLevel": 33,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639135c3744e452011470807": {
+   "name": "House Arrest - Part 1",
+   "minPlayerLevel": 33,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639135cd8ba6894d155e77cb": {
+   "name": "House Arrest - Part 2",
+   "minPlayerLevel": 33,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639135534b15ca31f76bc317": {
+   "name": "Your Car Needs a Service",
+   "minPlayerLevel": 35,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "63966faeea19ac7ed845db2c": {
+   "name": "Information Source",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "63966fbeea19ac7ed845db2e": {
+   "name": "Missing Informant",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6396700fea19ac7ed845db32": {
+   "name": "Spotter",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "63967028c4a91c5cb76abd81": {
+   "name": "Trouble in the Big City",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "674600a366e6a521aa05eb66": {
+   "name": "Route Deviation",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "66aba85403e0ee3101042877": {
+   "name": "Beneath The Streets",
+   "minPlayerLevel": 12,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5edac63b930f5454f51e128b": {
+   "name": "TerraGroup Employee",
+   "minPlayerLevel": 23,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "666314b696a9349baa021bac": {
+   "name": "Quality Standard",
+   "minPlayerLevel": 27,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "639670029113f06a7c3b2377": {
+   "name": "Following the Bread Crumbs",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6261483dc4874104f230c0cd": {
+   "name": "Make Amends - Quarantine",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "67a0970744893b9f3f0d9b68": {
+   "name": "Offensive Reconnaissance",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "67a0970f05d1611ed90be75d": {
+   "name": "Hypotheses Testing",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "67a09724972c11a3f5077324": {
+   "name": "Confidential Info",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "67a0972e77dd677f600804bd": {
+   "name": "This Tape Sucks",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "67a09761e720611a6a01f288": {
+   "name": "Keeper's Word",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5d2495a886f77425cd51e403": {
+   "name": "Introduction",
+   "minPlayerLevel": 2,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5d25b6be86f77444001e1b89": {
+   "name": "The Survivalist Path - Thrifty",
+   "minPlayerLevel": 2,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5fd9fad9c1ce6b1a3b486d00": {
+   "name": "Search Mission",
+   "minPlayerLevel": 5,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "59675d6c86f7740a842fc482": {
+   "name": "Ice Cream Cones",
+   "minPlayerLevel": 9,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "596a0e1686f7741ddf17dbee": {
+   "name": "Supply Plans",
+   "minPlayerLevel": 13,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "6578ec473dbd035d04531a8d": {
+   "name": "Steady Signal",
+   "minPlayerLevel": 15,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5ae449b386f77446d8741719": {
+   "name": "Gratitude",
+   "minPlayerLevel": 15,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "5a68665c86f774255929b4c7": {
+   "name": "Health Care Privacy - Part 3",
+   "minPlayerLevel": 20,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "666314b8312343839d032d24": {
+   "name": "Airmail",
+   "minPlayerLevel": 27,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "5c10f94386f774227172c572": {
+   "name": "The Blood of War - Part 3",
+   "minPlayerLevel": 30,
+   "kappaRequired": true,
+   "source": "snapshot"
+  },
+  "68400953506db3b4db0700e7": {
+   "name": "Fair Price - Part 2",
+   "minPlayerLevel": 44,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "625d6fff4149f1149b5b12c9": {
+   "name": "Assessment - Part 2",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "63966fe7ea74a47c2d3fc0e6": {
+   "name": "Return the Favor",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "673f2cd5d3346c2167020484": {
+   "name": "Shipping Delay - Part 2",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6740b60c60a98cad1b0e0aa0": {
+   "name": "Another Shipping Delay",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6744ab1def61d56e020b5c56": {
+   "name": "Protect the Sky",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6744aca8d3346c216702c583": {
+   "name": "Discombobulate",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "674602307e3818d5bb069489": {
+   "name": "Hindsight 20/20",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "674605df60a98cad1b0ec799": {
+   "name": "Killer Argument",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  },
+  "6752f6d83038f7df520c83e8": {
+   "name": "A Helping Hand",
+   "minPlayerLevel": 0,
+   "kappaRequired": false,
+   "source": "snapshot"
+  }
+ }
+}

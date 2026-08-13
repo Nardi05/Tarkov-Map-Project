@@ -190,13 +190,66 @@ const questItems = tasksData.questItems ?? {};
   if (kappaShare < 0.2) problems.push(`only ${(kappaShare * 100).toFixed(0)}% Kappa-required (expected ~50%)`);
   if (noLevelShare > 0.35) problems.push(`${(noLevelShare * 100).toFixed(0)}% have no level gate (expected ~15%)`);
 
-  if (problems.length && !process.env.TK_ALLOW_SPARSE_TASKS) {
-    console.error(
-      `\nUpstream task data looks incomplete:\n  - ${problems.join("\n  - ")}\n\n` +
-        `Refusing to overwrite good data with this. Re-run later, or set\n` +
-        `TK_ALLOW_SPARSE_TASKS=1 if the game really did change this much.`,
-    );
-    process.exit(1);
+  if (problems.length) {
+    console.warn(`\nUpstream task data looks incomplete:\n  - ${problems.join("\n  - ")}`);
+
+    /*
+     * Patch the two fields that go sparse from the vendored fallback rather
+     * than shipping blanks. Only while the feed is degraded — once it is
+     * healthy again this branch never runs, so the fallback cannot quietly
+     * override a real change upstream (a task genuinely leaving Kappa, say).
+     *
+     * Fill-only, never overwrite: a live value that exists is always kept,
+     * because the feed is still the source of truth for everything it
+     * actually answers.
+     */
+    let patchedLevel = 0;
+    let patchedKappa = 0;
+    const fallbackIds = new Set();
+    try {
+      const raw = await fs.readFile(path.join(ROOT, "data", "task-facts.json"), "utf8");
+      const fallback = JSON.parse(raw).tasks ?? {};
+      for (const id of Object.keys(fallback)) fallbackIds.add(id);
+      for (const task of tasks) {
+        const known = fallback[task.id];
+        if (!known) continue;
+        if (!task.minPlayerLevel && known.minPlayerLevel) {
+          task.minPlayerLevel = known.minPlayerLevel;
+          patchedLevel++;
+        }
+        if (!task.kappaRequired && known.kappaRequired) {
+          task.kappaRequired = true;
+          patchedKappa++;
+        }
+      }
+      console.warn(
+        `  patched from data/task-facts.json: ${patchedLevel} level gates, ${patchedKappa} Kappa flags`,
+      );
+    } catch {
+      console.warn("  no data/task-facts.json to fall back on (run `npm run task-facts`)");
+    }
+
+    /*
+     * Judge the result over the tasks the fallback actually covers, not the
+     * whole feed. Those are the map-anchored ones, which is exactly what ends
+     * up on the site — measuring against all 500-odd would let a healthy,
+     * fully-patched build look thin purely because trader-only tasks it never
+     * displays are still missing fields.
+     */
+    const covered = patchedLevel + patchedKappa > 0 ? tasks.filter((t) => fallbackIds.has(t.id)) : tasks;
+    const n = covered.length || 1;
+    const stillSparse =
+      covered.filter((t) => t.kappaRequired).length / n < 0.2 ||
+      covered.filter((t) => !t.minPlayerLevel).length / n > 0.35;
+
+    if (stillSparse && !process.env.TK_ALLOW_SPARSE_TASKS) {
+      console.error(
+        `\nStill incomplete after the fallback. Refusing to overwrite good data.\n` +
+          `Re-run later, refresh the fallback with \`npm run task-facts\`, or set\n` +
+          `TK_ALLOW_SPARSE_TASKS=1 if the game really did change this much.`,
+      );
+      process.exit(1);
+    }
   }
 }
 
@@ -472,6 +525,33 @@ function spawnGroup(spawn) {
 
 /* --------------------------------------------------------------------- build */
 
+/*
+ * Count what the last good build produced before wiping it.
+ *
+ * The level/Kappa check above only looks at two fields, and a feed can be
+ * broken in ways those never notice: a run during one bad spell kept every
+ * spawn but dropped 218 quest objectives — 27% of them — because the
+ * objectives had lost their map positions upstream. Markers vanishing is the
+ * most visible damage this site can do to itself, and nothing else was
+ * watching for it.
+ *
+ * Comparing against the previous build rather than a fixed number means this
+ * keeps working across wipes, when the real totals move.
+ */
+const previousQuests = await (async () => {
+  try {
+    const files = await fs.readdir(path.join(OUT, "maps"));
+    let total = 0;
+    for (const file of files) {
+      const data = JSON.parse(await fs.readFile(path.join(OUT, "maps", file), "utf8"));
+      total += data.markers?.quests?.length ?? 0;
+    }
+    return total;
+  } catch {
+    return 0; // first build, nothing to compare against
+  }
+})();
+
 await fs.rm(OUT, { recursive: true, force: true });
 await fs.mkdir(path.join(OUT, "maps"), { recursive: true });
 
@@ -671,6 +751,28 @@ await fs.writeFile(
   path.join(OUT, "index.json"),
   JSON.stringify({ generated: new Date().toISOString(), gameMode: GAME_MODE, maps: index }, null, 1),
 );
+
+// See the note by `previousQuests`: markers quietly disappearing is the worst
+// way this can fail, so refuse the build rather than publish a thinner map.
+// A wipe adding or removing content moves this by a few percent; a fifth of
+// the objectives going missing is upstream being broken.
+{
+  const nowQuests = index.reduce((n, m) => n + m.counts.quests, 0);
+  if (previousQuests > 0) {
+    const drop = 1 - nowQuests / previousQuests;
+    console.log(`\n  quest markers: ${previousQuests} -> ${nowQuests} (${(drop * -100).toFixed(1)}%)`);
+    if (drop > 0.15 && !process.env.TK_ALLOW_SPARSE_TASKS) {
+      console.error(
+        `\nThis build lost ${(drop * 100).toFixed(0)}% of its quest markers ` +
+          `(${previousQuests} -> ${nowQuests}).\n` +
+          `That is upstream dropping objective positions, not a wipe. Refusing to\n` +
+          `publish a thinner map — the previous data is still in git. Re-run later,\n` +
+          `or set TK_ALLOW_SPARSE_TASKS=1 if the game really did lose this much.`,
+      );
+      process.exit(1);
+    }
+  }
+}
 
 /*
  * Task screenshots are gathered by `npm run images` and committed to

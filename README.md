@@ -105,6 +105,7 @@ npm run dev
 ```bash
 npm run images        # refresh the wiki screenshot cache (optional, slow)
 npm run check-quests  # cross-check quest data against the wiki (optional, slow)
+npm run task-facts    # refresh the level/Kappa fallback from known-good data
 npm run build         # type-check + production bundle into dist/
 npm run preview
 npm run smoke         # opens every map in a browser and checks for errors
@@ -143,6 +144,9 @@ scripts/fetch-task-images.mjs
                          data/task-images.json (committed; not run on deploy)
 scripts/check-quests.mjs cross-checks trader/level/Kappa against the wiki and
                          prints disagreements; changes nothing
+scripts/build-task-facts.mjs
+                         vendors a known-good level/Kappa fallback into
+                         data/task-facts.json for build-data to fall back on
 src/data/geo.json        vendored georeferencing (transform, bounds, rotation,
                          floors, place labels) for each map
 src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
@@ -173,12 +177,21 @@ A few details worth knowing if you touch this code:
 - Spawn clustering runs at render time, after the floor filter, never at build
   time. Two points on different levels of Interchange are not one place however
   close they look from above, and the raw positions stay in the payload.
-- `npm run data` refuses to write if the upstream task feed looks gutted —
-  too few tasks, almost no Kappa flags, or most tasks missing their level gate.
-  The feed has served exactly that shape mid-update, and because the site
-  re-fetches on every deploy the damage is silent: a missing `minPlayerLevel`
-  just hides the level chip. Failing the build leaves the previous deployment
-  serving good data. `TK_ALLOW_SPARSE_TASKS=1` overrides it.
+- `npm run data` will not publish a visibly worse build than the last one. Two
+  separate things go wrong upstream and only one is obvious:
+  - Level gates and Kappa flags go sparse. Those are patched from
+    `data/task-facts.json`, but only while the feed looks degraded, so once it
+    recovers the live values win and the fallback can't go stale behind it.
+    The patch is fill-only — a live value that exists is never overwritten.
+  - Quest objectives lose their map positions. Seen for real: a build kept
+    every spawn but dropped 218 of 817 quest markers. Nothing about the task
+    fields catches that, so the build also compares its marker count against
+    the previous one and refuses on a big drop.
+  Either refusal fails the Vercel build, which leaves the previous deployment
+  serving good data. `TK_ALLOW_SPARSE_TASKS=1` overrides both.
+- The wiki cannot substitute for tarkov.dev here. It has no map coordinates at
+  all, and while its Kappa flag is reliable it states a player level on only
+  about a quarter of pages. It is a cross-check and a gap-filler, not a source.
 - Task screenshots are fetched by `npm run images`, never by `npm run data`.
   A deploy must not depend on the wiki being up, so the cache is committed and
   the build just copies it in; if it is missing, galleries silently vanish.
