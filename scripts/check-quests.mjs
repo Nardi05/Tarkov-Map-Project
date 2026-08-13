@@ -131,7 +131,13 @@ function parseWikitext(wt) {
   const kappaRequired = kappaRaw.includes("yes") ? true : kappaRaw.includes("no") ? false : null;
 
   const requirements = (wt.match(/==\s*Requirements\s*==([\s\S]*?)(?:\n==|$)/i) ?? [])[1] ?? "";
-  const levelMatch = requirements.match(/level\s+(\d+)/i);
+  /*
+   * "Must be level 6 to start this quest" is the player gate. "Obtain level 2
+   * loyalty with Prapor" is trader standing and has nothing to do with it —
+   * matching a bare /level (\d+)/ here reads the loyalty number and invents
+   * disagreements for most of the questlist.
+   */
+  const levelMatch = requirements.match(/must be level\s+(\d+)/i);
   const minPlayerLevel = levelMatch ? Number(levelMatch[1]) : null;
 
   return { trader, kappaRequired, minPlayerLevel };
