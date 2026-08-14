@@ -223,6 +223,7 @@ export default function TaskPanel({
                   focused={quest.focusTask === group.task.id}
                   onToggleExpand={() => setExpanded(expanded === group.id ? null : group.id)}
                   onCycle={() => cycleTaskStatus(group.task.id)}
+                  onClear={() => setTaskStatus(group.task.id, null)}
                   onComplete={() => setTaskStatus(group.task.id, "completed")}
                   onToggleMarker={toggleMarkerDone}
                   onFocus={onFocus}
@@ -289,6 +290,7 @@ function TaskRow({
   focused,
   onToggleExpand,
   onCycle,
+  onClear,
   onComplete,
   onToggleMarker,
   onFocus,
@@ -302,6 +304,7 @@ function TaskRow({
   focused: boolean;
   onToggleExpand: () => void;
   onCycle: () => void;
+  onClear: () => void;
   onComplete: () => void;
   onToggleMarker: (markerId: string) => void;
   onFocus: (position: Vec3) => void;
@@ -429,6 +432,21 @@ function TaskRow({
         </div>
 
         <div className="flex flex-none items-center gap-1">
+          {/* Straight back to not started. The status control is a cycle, so
+              undoing a mis-tap otherwise means passing through "done" and
+              writing progress the player never made. */}
+          {status && (
+            <button
+              type="button"
+              className="btn btn-icon"
+              style={{ width: "1.7rem", height: "1.7rem", padding: 0 }}
+              title={`Move "${task.name}" back to not started`}
+              aria-label={`Move ${task.name} back to not started`}
+              onClick={onClear}
+            >
+              <Icon path={icons.reset} size={13} />
+            </button>
+          )}
           {markers.length > 1 && (
             <button
               type="button"
