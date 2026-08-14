@@ -192,8 +192,10 @@ A few details worth knowing if you touch this code:
     every spawn but dropped 218 of 817 quest markers. Nothing about the task
     fields catches that, so the build also compares its marker count against
     the previous one and refuses on a big drop.
-  Either refusal fails the Vercel build, which leaves the previous deployment
-  serving good data. `TK_ALLOW_SPARSE_TASKS=1` overrides both.
+  On a big marker drop the build restores the committed `public/data` and
+  carries on, so a deploy ships current code against the last complete map
+  rather than failing or publishing a thinner one. `TK_ALLOW_SPARSE_TASKS=1`
+  overrides both checks.
 - The wiki cannot substitute for tarkov.dev here. It has no map coordinates at
   all, and while its Kappa flag is reliable it states a player level on only
   about a quarter of pages. It is a cross-check and a gap-filler, not a source.
