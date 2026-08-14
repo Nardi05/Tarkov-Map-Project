@@ -30,6 +30,7 @@ export default function DetailPanel({
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const toggleMarkerDone = useStore((s) => s.toggleMarkerDone);
   const setMarkersDone = useStore((s) => s.setMarkersDone);
+  const setTaskStatus = useStore((s) => s.setTaskStatus);
   // Only quest selections have a task, and only they show a gallery.
   const images = useTaskImages(selection.kind === "quest" ? selection.task.id : null);
   const view = describe(selection, data, {
@@ -38,6 +39,7 @@ export default function DetailPanel({
     cycleTaskStatus,
     toggleMarkerDone,
     setMarkersDone,
+    setTaskStatus,
     images,
     onOpenTask,
   });
@@ -118,6 +120,7 @@ interface DescribeContext {
   cycleTaskStatus: (id: string) => void;
   toggleMarkerDone: (markerId: string) => void;
   setMarkersDone: (markerIds: string[], done: boolean) => void;
+  setTaskStatus: (taskId: string, status: TaskStatus | null) => void;
   images: TaskImage[];
   onOpenTask: (id: string) => void;
 }
@@ -347,6 +350,20 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
                   Tap to move between not started, active and done
                 </p>
               </div>
+              {/* The control is a cycle, so without this an accidental tap can
+                  only be undone by passing through "done". */}
+              {status && (
+                <button
+                  type="button"
+                  className="btn btn-icon flex-none"
+                  style={{ width: "1.7rem", height: "1.7rem", padding: 0 }}
+                  title="Move back to not started"
+                  aria-label="Move back to not started"
+                  onClick={() => ctx.setTaskStatus(task.id, null)}
+                >
+                  <Icon path={icons.reset} size={13} />
+                </button>
+              )}
             </div>
 
             <button

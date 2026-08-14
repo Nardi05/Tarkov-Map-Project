@@ -80,6 +80,10 @@ A task is in one of three states, and you set all of them yourself:
 - **Done** — finished. Tick every location off and the panel offers to mark the
   whole task done in one go.
 
+The control cycles forward, so a task carrying any status also gets an undo
+button that puts it straight back to not started — a mis-tap shouldn't have to
+be walked through "done", inventing progress you never made.
+
 Nothing here is inferred. The site never guesses which tasks you could have
 picked up or hides one behind a prerequisite it thinks you haven't met, so the
 panel can't disagree with what the game is telling you. If you just want to
