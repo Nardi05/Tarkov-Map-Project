@@ -1,9 +1,9 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { LAYER_GROUPS, LAYERS, PRESETS, type LayerId } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
 import { useStore } from "../store";
 import type { MapData } from "../types";
-import { Section, Toggle } from "./ui";
+import { Icon, icons, Section, Toggle } from "./ui";
 
 /** How many of a layer's markers this map actually has, for the count badges. */
 function useCounts(data: MapData, visibleQuestCount: number): Record<LayerId, number> {
@@ -41,14 +41,27 @@ export default function LayerPanel({
   const toggleLayer = useStore((s) => s.toggleLayer);
   const setGroupLayers = useStore((s) => s.setGroupLayers);
   const applyPreset = useStore((s) => s.applyPreset);
+  const customViews = useStore((s) => s.customViews);
+  const saveCustomView = useStore((s) => s.saveCustomView);
+  const removeCustomView = useStore((s) => s.removeCustomView);
   const counts = useCounts(data, visibleQuestCount);
+  const [naming, setNaming] = useState(false);
+  const [draftName, setDraftName] = useState("");
 
   const activePreset = useMemo(() => {
     const on = LAYERS.filter((l) => layers[l.id]).map((l) => l.id).sort();
-    return PRESETS.find(
-      (p) => p.layers.length === on.length && [...p.layers].sort().every((id, i) => id === on[i]),
-    )?.id;
-  }, [layers]);
+    const matches = (ids: LayerId[]) =>
+      ids.length === on.length && [...ids].sort().every((id, i) => id === on[i]);
+    return (
+      PRESETS.find((p) => matches(p.layers))?.id ?? customViews.find((v) => matches(v.layers))?.id
+    );
+  }, [layers, customViews]);
+
+  const commitName = () => {
+    saveCustomView(draftName);
+    setDraftName("");
+    setNaming(false);
+  };
 
   return (
     <div>
@@ -66,7 +79,79 @@ export default function LayerPanel({
               {preset.label}
             </button>
           ))}
+
+          {/* Saved views sit with the built-ins — they do the same job — but
+              carry a remove control, which the built-ins can't have. */}
+          {customViews.map((view) => (
+            <span
+              key={view.id}
+              className="btn"
+              style={{ gap: "0.35rem", paddingRight: "0.3rem" }}
+              aria-pressed={activePreset === view.id}
+            >
+              <button
+                type="button"
+                className="bg-transparent p-0 text-inherit"
+                title={`${view.layers.length} layers, saved by you`}
+                onClick={() => applyPreset(view.id)}
+              >
+                {view.label}
+              </button>
+              <button
+                type="button"
+                className="grid place-items-center rounded bg-transparent p-0"
+                style={{ width: "1rem", height: "1rem", color: "var(--text-faint)" }}
+                title={`Delete "${view.label}"`}
+                aria-label={`Delete quick view ${view.label}`}
+                onClick={() => removeCustomView(view.id)}
+              >
+                <Icon path={icons.close} size={11} />
+              </button>
+            </span>
+          ))}
         </div>
+
+        {naming ? (
+          <div className="mt-2 flex gap-1.5">
+            <input
+              className="input"
+              autoFocus
+              maxLength={32}
+              placeholder="Name this view…"
+              value={draftName}
+              onChange={(e) => setDraftName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") commitName();
+                if (e.key === "Escape") {
+                  setNaming(false);
+                  setDraftName("");
+                }
+              }}
+            />
+            <button type="button" className="btn" disabled={!draftName.trim()} onClick={commitName}>
+              Save
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => {
+                setNaming(false);
+                setDraftName("");
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-ghost mt-2 text-[0.7rem]"
+            style={{ padding: "0.22rem 0.5rem", color: "var(--text-dim)" }}
+            onClick={() => setNaming(true)}
+          >
+            + Save these layers as a quick view
+          </button>
+        )}
       </Section>
 
       <div className="h-px" style={{ background: "var(--line-soft)" }} />

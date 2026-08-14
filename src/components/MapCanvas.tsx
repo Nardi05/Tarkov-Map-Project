@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import type { MapData, Vec3 } from "../types";
 import { createCRS, paddedBounds, toBounds, toLatLng } from "../lib/leaflet-crs";
@@ -15,6 +15,7 @@ import { createDeclutterer } from "../lib/declutter";
 import { LAYERS, type LayerId } from "../lib/layers";
 import type { QuestMarker, TaskStatus } from "../types";
 import type { MapStyle } from "../store";
+import { icons } from "./ui";
 
 export interface FocusRequest {
   position: Vec3;
@@ -67,6 +68,7 @@ function selectionPosition(selection: Selection | null): Vec3 | null {
 
 export default function MapCanvas(props: Props) {
   const { data, style, floor, layers, selection, onSelect, focus } = props;
+  const shellRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const rendererRef = useRef<L.Renderer | null>(null);
@@ -79,8 +81,30 @@ export default function MapCanvas(props: Props) {
   const refitRef = useRef<(() => void) | null>(null);
   const fitRef = useRef<(() => void) | null>(null);
   const [baseError, setBaseError] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const geo = data.geo;
+
+  /*
+   * Fullscreen puts the map shell — not the whole document — into the
+   * browser's fullscreen mode, so the floating detail card and the map
+   * controls come along with it. The map's ResizeObserver below picks up the
+   * size change on its own, so nothing has to tell Leaflet about it.
+   */
+  const toggleFullscreen = useCallback(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+    if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+    else void shell.requestFullscreen().catch(() => {});
+  }, []);
+
+  // Tracked by event rather than by the click, because Escape and the browser's
+  // own chrome can leave fullscreen without going through the button.
+  useEffect(() => {
+    const sync = () => setIsFullscreen(document.fullscreenElement === shellRef.current);
+    document.addEventListener("fullscreenchange", sync);
+    return () => document.removeEventListener("fullscreenchange", sync);
+  }, []);
 
   /* ------------------------------------------------------------ map instance */
   useEffect(() => {
@@ -92,8 +116,11 @@ export default function MapCanvas(props: Props) {
       attributionControl: false,
       zoomControl: false,
       // Fractional zoom keeps pinch and wheel gestures feeling continuous.
-      zoomSnap: 0.25,
-      zoomDelta: 0.5,
+      // The steps are deliberately small: a map's whole usable range is only
+      // four or five levels (see geo.json), so half a level per button press
+      // threw away a tenth of the range at a time.
+      zoomSnap: 0.1,
+      zoomDelta: 0.25,
       wheelPxPerZoomLevel: 110,
       minZoom: geo.minZoom,
       maxZoom: Math.max(7, geo.maxZoom),
@@ -239,8 +266,16 @@ export default function MapCanvas(props: Props) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    // The vector artwork carries its own labels; only the tile style needs ours.
-    const wanted = props.showPlaceLabels && !wantSvg && geo.labels.length > 0;
+    /*
+     * Both styles get these. The vector artwork was assumed to carry its own
+     * place names, so this used to skip it — but the SVGs contain no text at
+     * all, which left the clean style with no street or area names anywhere.
+     *
+     * They are positioned through the CRS from game coordinates, the same as
+     * every marker, so they land identically whichever artwork is underneath
+     * rather than being tied to one image.
+     */
+    const wanted = props.showPlaceLabels && geo.labels.length > 0;
     if (wanted && !labelsRef.current) {
       labelsRef.current = createPlaceLabels(geo).addTo(map);
     } else if (!wanted && labelsRef.current) {
@@ -248,7 +283,7 @@ export default function MapCanvas(props: Props) {
       labelsRef.current = null;
     }
     declutterRef.current?.();
-  }, [props.showPlaceLabels, wantSvg, geo]);
+  }, [props.showPlaceLabels, geo]);
 
   /* ----------------------------------------------------------------- markers */
   const buildCtx = () => ({
@@ -370,8 +405,27 @@ export default function MapCanvas(props: Props) {
   }, []);
 
   return (
-    <div className="relative h-full w-full">
+    <div ref={shellRef} className="relative h-full w-full" style={{ background: "var(--bg)" }}>
       <div ref={containerRef} className="tk-map h-full w-full" role="application" aria-label={`${data.name} map`} />
+
+      {/* Stacked above the fit button, which sits above Leaflet's zoom control. */}
+      <button
+        type="button"
+        className="btn btn-icon absolute bottom-[3.5rem] right-3 z-[500] md:bottom-[10rem]"
+        style={{ boxShadow: "var(--shadow)" }}
+        aria-pressed={isFullscreen}
+        title={isFullscreen ? "Leave fullscreen" : "Fill the screen with the map"}
+        aria-label={isFullscreen ? "Leave fullscreen" : "Fill the screen with the map"}
+        onClick={toggleFullscreen}
+      >
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          {isFullscreen ? (
+            <path d="M9 3v6H3M21 9h-6V3M15 21v-6h6M3 15h6v6" />
+          ) : (
+            <path d={icons.expand} />
+          )}
+        </svg>
+      </button>
 
       <button
         type="button"

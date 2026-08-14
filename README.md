@@ -49,11 +49,17 @@ panel says how many points are behind it.
 Beyond the layers:
 
 - **Quick views** — one tap to switch the map between learning it, questing,
-  a Scav run, or threat-spotting.
+  a Scav run, or threat-spotting. Save your own layer combinations alongside
+  the built-in ones; re-saving under the same name updates it.
+- **Raid clock** — the two in-game times you can queue into, side by side, day
+  and night. Tarkov time runs 7x real time and the two raids are always 12
+  hours apart. Factory's clocks are fixed and Labs has no day/night, so both
+  say so instead of showing a clock that would be wrong.
 - **Floors** — multi-level maps (Interchange, Reserve, Streets, Labs, Icebreaker)
   filter markers by the level they are actually on.
 - **Two art styles** — a clean vector map and photographic satellite tiles,
-  georeferenced identically so markers never shift between them.
+  georeferenced identically so markers never shift between them. Place names
+  (Dorms, Big Red, Main Bridge…) show on both.
 - **Configurable** — marker size, name labels, zone outlines, place names, dark
   and light themes.
 
@@ -74,6 +80,10 @@ A task is in one of three states, and you set all of them yourself:
 - **Done** — finished. Tick every location off and the panel offers to mark the
   whole task done in one go.
 
+The control cycles forward, so a task carrying any status also gets an undo
+button that puts it straight back to not started — a mis-tap shouldn't have to
+be walked through "done", inventing progress you never made.
+
 Nothing here is inferred. The site never guesses which tasks you could have
 picked up or hides one behind a prerequisite it thinks you haven't met, so the
 panel can't disagree with what the game is telling you. If you just want to
@@ -81,8 +91,9 @@ study a map you haven't started, tick **Show every task on the map**.
 
 Where the wiki has screenshots for a task, the detail panel shows them as a
 carousel — arrows to step through, click to blow one up full screen, Escape or
-another click to come back. That is usually the fastest way to turn "somewhere
-in this building" into "that shelf".
+another click to come back. Neighbouring photos and the full-size copy are
+fetched while you look at the current one, so only the first costs a wait. It is
+usually the fastest way to turn "somewhere in this building" into "that shelf".
 
 Everything is stored in your browser only. It survives a reload and switching
 maps, so dying on Customs and running a Woods raid before coming back does not
@@ -97,10 +108,12 @@ npm run dev
 ```
 
 ```bash
-npm run images    # refresh the wiki screenshot cache (optional, slow)
-npm run build     # type-check + production bundle into dist/
+npm run images        # refresh the wiki screenshot cache (optional, slow)
+npm run check-quests  # cross-check quest data against the wiki (optional, slow)
+npm run task-facts    # refresh the level/Kappa fallback from known-good data
+npm run build         # type-check + production bundle into dist/
 npm run preview
-npm run smoke     # opens every map in a browser and checks for errors
+npm run smoke         # opens every map in a browser and checks for errors
 ```
 
 `dist/` is a plain static site — the app uses hash routing, so it drops onto any
@@ -134,6 +147,11 @@ scripts/build-data.mjs   fetches tarkov.dev's JSON feeds, resolves translations,
 scripts/fetch-task-images.mjs
                          caches the wiki's task screenshots into
                          data/task-images.json (committed; not run on deploy)
+scripts/check-quests.mjs cross-checks trader/level/Kappa against the wiki and
+                         prints disagreements; changes nothing
+scripts/build-task-facts.mjs
+                         vendors a known-good level/Kappa fallback into
+                         data/task-facts.json for build-data to fall back on
 src/data/geo.json        vendored georeferencing (transform, bounds, rotation,
                          floors, place labels) for each map
 src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
@@ -141,6 +159,7 @@ src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
 src/lib/layers.ts        the layer taxonomy: colour, shape, and the plain-English
                          explanation shown in the UI
 src/lib/build-layers.ts  data -> Leaflet layers, one builder per layer
+src/lib/tarkov-time.ts   the in-game clock: 7x real time, anchored at UTC+3
 src/components/          map canvas, layer panel, task panel, detail panel
 ```
 
@@ -163,6 +182,23 @@ A few details worth knowing if you touch this code:
 - Spawn clustering runs at render time, after the floor filter, never at build
   time. Two points on different levels of Interchange are not one place however
   close they look from above, and the raw positions stay in the payload.
+- `npm run data` will not publish a visibly worse build than the last one. Two
+  separate things go wrong upstream and only one is obvious:
+  - Level gates and Kappa flags go sparse. Those are patched from
+    `data/task-facts.json`, but only while the feed looks degraded, so once it
+    recovers the live values win and the fallback can't go stale behind it.
+    The patch is fill-only — a live value that exists is never overwritten.
+  - Quest objectives lose their map positions. Seen for real: a build kept
+    every spawn but dropped 218 of 817 quest markers. Nothing about the task
+    fields catches that, so the build also compares its marker count against
+    the previous one and refuses on a big drop.
+  On a big marker drop the build restores the committed `public/data` and
+  carries on, so a deploy ships current code against the last complete map
+  rather than failing or publishing a thinner one. `TK_ALLOW_SPARSE_TASKS=1`
+  overrides both checks.
+- The wiki cannot substitute for tarkov.dev here. It has no map coordinates at
+  all, and while its Kappa flag is reliable it states a player level on only
+  about a quarter of pages. It is a cross-check and a gap-filler, not a source.
 - Task screenshots are fetched by `npm run images`, never by `npm run data`.
   A deploy must not depend on the wiki being up, so the cache is committed and
   the build just copies it in; if it is missing, galleries silently vanish.

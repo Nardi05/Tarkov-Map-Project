@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "smoke": "node scripts/smoke.mjs",
-    "images": "node scripts/fetch-task-images.mjs"
+    "images": "node scripts/fetch-task-images.mjs",
+    "check-quests": "node scripts/check-quests.mjs",
+    "task-facts": "node scripts/build-task-facts.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
