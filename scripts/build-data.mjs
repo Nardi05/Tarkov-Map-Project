@@ -538,6 +538,9 @@ function spawnGroup(spawn) {
  * Comparing against the previous build rather than a fixed number means this
  * keeps working across wipes, when the real totals move.
  */
+const KEEP = path.join(ROOT, ".tk-previous-data");
+let keptPrevious = false;
+
 const previousQuests = await (async () => {
   try {
     const files = await fs.readdir(path.join(OUT, "maps"));
@@ -546,6 +549,13 @@ const previousQuests = await (async () => {
       const data = JSON.parse(await fs.readFile(path.join(OUT, "maps", file), "utf8"));
       total += data.markers?.quests?.length ?? 0;
     }
+    // public/data is committed, so this copy is the last good build rather
+    // than whatever a previous run happened to leave behind. If the fresh
+    // fetch turns out worse, it gets put back and the deploy carries on with
+    // the new code and known-good data — better than failing outright and
+    // shipping neither.
+    await fs.rm(KEEP, { recursive: true, force: true });
+    await fs.cp(OUT, KEEP, { recursive: true });
     return total;
   } catch {
     return 0; // first build, nothing to compare against
@@ -762,14 +772,19 @@ await fs.writeFile(
     const drop = 1 - nowQuests / previousQuests;
     console.log(`\n  quest markers: ${previousQuests} -> ${nowQuests} (${(drop * -100).toFixed(1)}%)`);
     if (drop > 0.15 && !process.env.TK_ALLOW_SPARSE_TASKS) {
-      console.error(
+      console.warn(
         `\nThis build lost ${(drop * 100).toFixed(0)}% of its quest markers ` +
           `(${previousQuests} -> ${nowQuests}).\n` +
-          `That is upstream dropping objective positions, not a wipe. Refusing to\n` +
-          `publish a thinner map — the previous data is still in git. Re-run later,\n` +
-          `or set TK_ALLOW_SPARSE_TASKS=1 if the game really did lose this much.`,
+          `That is upstream dropping objective positions, not a wipe.`,
       );
-      process.exit(1);
+      // Put the good data back and let the build finish. A deploy that ships
+      // current code against yesterday's complete map beats one that either
+      // fails entirely or publishes a map with a fifth of the objectives
+      // missing. The next run picks up fresh data the moment upstream is well.
+      await fs.rm(OUT, { recursive: true, force: true });
+      await fs.cp(KEEP, OUT, { recursive: true });
+      keptPrevious = true;
+      console.warn("Kept the previous data instead. Set TK_ALLOW_SPARSE_TASKS=1 to override.");
     }
   }
 }
@@ -790,4 +805,10 @@ try {
   /* optional */
 }
 
-console.log(`\nWrote ${index.length} maps and ${imageNote} to public/data`);
+await fs.rm(KEEP, { recursive: true, force: true });
+
+console.log(
+  keptPrevious
+    ? `\nKept the previous public/data (${imageNote}) — this fetch was worse than it.`
+    : `\nWrote ${index.length} maps and ${imageNote} to public/data`,
+);
