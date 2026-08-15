@@ -100,6 +100,27 @@ export interface Lock {
   bottom: number | null;
 }
 
+/**
+ * A Kord Breach battle-pass document spawn, from the wiki.
+ *
+ * `position` is null more often than not, and that is not a data bug — the
+ * wiki describes these in prose ("in room 304 on the nightstand") and there is
+ * no coordinate source for them anywhere. A spawn with a position was matched
+ * to one of the map's named places, so the pin means "somewhere in Dorms", not
+ * a surveyed point; `place` names the label it was matched to. The rest are
+ * listed in the panel with their description and screenshot and drawn nowhere.
+ */
+export interface DocumentSpawn {
+  id: string;
+  document: string;
+  note: string;
+  image: string | null;
+  imageWidth: number;
+  imageHeight: number;
+  position: Vec3 | null;
+  place: string | null;
+}
+
 export interface Hazard {
   id: string;
   name: string;
@@ -212,6 +233,7 @@ export interface MapData {
     hazards: Hazard[];
     switches: MapSwitch[];
     quests: QuestMarker[];
+    documents: DocumentSpawn[];
   };
   tasks: Record<string, Task>;
   keys: Record<string, KeyItem>;

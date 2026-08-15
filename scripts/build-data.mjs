@@ -22,6 +22,21 @@ const LANG = "en";
 
 const geo = JSON.parse(await fs.readFile(path.join(ROOT, "src/data/geo.json"), "utf8"));
 
+/**
+ * Kord Breach battle-pass document spawns, gathered by `npm run kord-docs` and
+ * committed to data/kord-documents.json. Copied in rather than refetched for
+ * the same reason as the task screenshots: a deploy must not depend on the
+ * wiki. Missing file just means the layer has nothing to draw.
+ */
+const kordDocuments = await (async () => {
+  try {
+    const raw = await fs.readFile(path.join(ROOT, "data", "kord-documents.json"), "utf8");
+    return JSON.parse(raw).maps ?? {};
+  } catch {
+    return {};
+  }
+})();
+
 /* ------------------------------------------------------------------ fetching */
 
 async function getJson(feed) {
@@ -94,6 +109,12 @@ async function getLocalised(feed) {
 }
 
 /* ------------------------------------------------------------------- helpers */
+
+const slug = (s) =>
+  (s ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 const r1 = (n) => (typeof n === "number" ? Math.round(n * 10) / 10 : n);
 /** Positions are only ever consumed as [x, y, z]; the tuple halves the payload. */
@@ -342,11 +363,30 @@ function markerId(objectiveId, mapName, position) {
 
 /** Task ids that have at least one objective anchored to a playable map. */
 const anchoredTaskIds = new Set();
+/**
+ * mapName -> task ids whose objectives name that map, coordinates or not.
+ *
+ * Only about a third of objectives carry geometry. "Eliminate Scavs on
+ * Customs", "Survive and extract from Woods" and most of the Survivalist Path
+ * name their map and stop there, so keying a map's task list off its markers
+ * hid roughly 150 real tasks — the panel simply had no row for them. These are
+ * listed on the map they belong to and drawn nowhere, which is the truth about
+ * them: the task is here, the feed just cannot say where.
+ */
+const mapTaskIds = new Map();
 
 for (const task of tasks) {
   for (const obj of task.objectives ?? []) {
     const kind = OBJECTIVE_KIND[obj.type] ?? "objective";
     const item = obj.questItem ? questItems[obj.questItem] : null;
+
+    for (const id of obj.maps ?? []) {
+      for (const mapName of mapNamesForId(id)) {
+        if (!mapTaskIds.has(mapName)) mapTaskIds.set(mapName, new Set());
+        mapTaskIds.get(mapName).add(task.id);
+      }
+    }
+
     const shared = {
       task: task.id,
       objective: obj.id,
@@ -438,8 +478,18 @@ const groupMembers = new Map();
 
 const canonicalOf = (id) => canonicalTaskId.get(id) ?? id;
 
+/**
+ * Everything that appears on at least one map, pinned or merely named, keyed by
+ * canonical id. Canonicalising here matters: a faction variant can be the one
+ * that names the map while the id the group collapsed onto is not, and testing
+ * the raw ids would drop the row that survives.
+ */
+const listedTaskIds = new Set();
+for (const id of anchoredTaskIds) listedTaskIds.add(canonicalOf(id));
+for (const ids of mapTaskIds.values()) for (const id of ids) listedTaskIds.add(canonicalOf(id));
+
 for (const task of tasks) {
-  if (!anchoredTaskIds.has(task.id) || canonicalTaskId.has(task.id)) continue;
+  if (!listedTaskIds.has(task.id) || canonicalTaskId.has(task.id)) continue;
   const trader = traderIndex[task.trader];
   taskIndex.set(task.id, {
     id: task.id,
@@ -452,16 +502,16 @@ for (const task of tasks) {
     lightkeeperRequired: !!task.lightkeeperRequired,
     factionName: task.factionName && task.factionName !== "Any" ? task.factionName : null,
     wiki: task.wikiLink ?? null,
-    // Only prerequisites that are themselves anchored to this map survive —
-    // the rest have no marker to point at. Nothing gates on this; it is here
-    // so the detail panel can say what a task follows on from.
+    // Only prerequisites that appear on a map themselves survive — the rest
+    // have no row to point at. Nothing gates on this; it is here so the detail
+    // panel can say what a task follows on from.
     requires: [
       ...new Set(
         (groupMembers.get(task.id) ?? [task]).flatMap((m) =>
           (m.taskRequirements ?? []).map((r) => canonicalOf(r.task)).filter(Boolean),
         ),
       ),
-    ].filter((id) => anchoredTaskIds.has(id)),
+    ].filter((id) => listedTaskIds.has(id)),
     keys: [...new Set((task.neededKeys ?? []).flatMap((k) => k.keys ?? []))].filter((id) => keyIndex[id]),
   });
 }
@@ -486,6 +536,11 @@ for (const [mapName, markers] of questMarkers) {
     deduped.push(marker);
   }
   questMarkers.set(mapName, deduped);
+}
+
+/* Same collapse for the map -> task lists, so a merged variant keeps its row. */
+for (const [mapName, ids] of mapTaskIds) {
+  mapTaskIds.set(mapName, new Set([...ids].map(canonicalOf).filter((id) => taskIndex.has(id))));
 }
 console.log(`  merged ${canonicalTaskId.size} duplicate tasks, dropped ${droppedMarkers} duplicate markers`);
 
@@ -538,29 +593,22 @@ function spawnGroup(spawn) {
  * Comparing against the previous build rather than a fixed number means this
  * keeps working across wipes, when the real totals move.
  */
-const KEEP = path.join(ROOT, ".tk-previous-data");
-let keptPrevious = false;
-
-const previousQuests = await (async () => {
+const previousByMap = await (async () => {
+  const out = new Map();
   try {
-    const files = await fs.readdir(path.join(OUT, "maps"));
-    let total = 0;
-    for (const file of files) {
+    for (const file of await fs.readdir(path.join(OUT, "maps"))) {
       const data = JSON.parse(await fs.readFile(path.join(OUT, "maps", file), "utf8"));
-      total += data.markers?.quests?.length ?? 0;
+      out.set(file.replace(/\.json$/, ""), {
+        quests: data.markers?.quests ?? [],
+        tasks: data.tasks ?? {},
+      });
     }
-    // public/data is committed, so this copy is the last good build rather
-    // than whatever a previous run happened to leave behind. If the fresh
-    // fetch turns out worse, it gets put back and the deploy carries on with
-    // the new code and known-good data — better than failing outright and
-    // shipping neither.
-    await fs.rm(KEEP, { recursive: true, force: true });
-    await fs.cp(OUT, KEEP, { recursive: true });
-    return total;
   } catch {
-    return 0; // first build, nothing to compare against
+    /* first build, nothing to compare against */
   }
+  return out;
 })();
+const previousQuests = [...previousByMap.values()].reduce((n, m) => n + m.quests.length, 0);
 
 await fs.rm(OUT, { recursive: true, force: true });
 await fs.mkdir(path.join(OUT, "maps"), { recursive: true });
@@ -705,8 +753,30 @@ for (const [name, cfg] of Object.entries(geo)) {
     });
   }
 
+  /*
+   * Battle-pass documents. Ids are derived from the document and its
+   * description rather than the array index, on the same reasoning as quest
+   * marker ids: the wiki reorders its galleries freely, and an index would
+   * quietly repoint anything keyed on it.
+   */
+  const documents = (kordDocuments[name] ?? []).map((spawn) => ({
+    id: `doc-${slug(spawn.document)}-${slug(spawn.note).slice(0, 40)}`,
+    document: spawn.document,
+    note: spawn.note,
+    image: spawn.image ?? null,
+    imageWidth: spawn.imageWidth ?? 0,
+    imageHeight: spawn.imageHeight ?? 0,
+    // Place labels are ground coordinates [x, z]; markers are [x, y, z]
+    // everywhere else, so widen here and let the rest of the app stay uniform.
+    position: spawn.position ? [r1(spawn.position[0]), 0, r1(spawn.position[1])] : null,
+    place: spawn.place ?? null,
+  }));
+
   const quests = questMarkers.get(name) ?? [];
-  const usedTaskIds = new Set(quests.map((q) => q.task));
+  // Tasks with a pin here, plus tasks that name this map without coordinates.
+  // The client tells the two apart by looking for markers, so nothing extra
+  // ships per task.
+  const usedTaskIds = new Set([...quests.map((q) => q.task), ...(mapTaskIds.get(name) ?? [])]);
   const usedKeyIds = new Set(locks.map((l) => l.key).filter(Boolean));
   for (const id of usedTaskIds) for (const k of taskIndex.get(id)?.keys ?? []) usedKeyIds.add(k);
 
@@ -721,7 +791,7 @@ for (const [name, cfg] of Object.entries(geo)) {
     enemies: api.enemies ?? [],
     bosses: bossSummary,
     geo: cfg,
-    markers: { spawns, bossSpawns, extracts, transits, locks, hazards, switches, quests },
+    markers: { spawns, bossSpawns, extracts, transits, locks, hazards, switches, quests, documents },
     tasks: Object.fromEntries([...usedTaskIds].map((id) => [id, taskIndex.get(id)]).filter(([, t]) => t)),
     keys: Object.fromEntries([...usedKeyIds].map((id) => [id, keyIndex[id]]).filter(([, k]) => k)),
     generated: new Date().toISOString(),
@@ -738,6 +808,7 @@ for (const [name, cfg] of Object.entries(geo)) {
     transits: transits.length,
     keys: locks.length,
     quests: quests.length,
+    docs: documents.length,
   };
   index.push({
     id: api.id,
@@ -762,30 +833,70 @@ await fs.writeFile(
   JSON.stringify({ generated: new Date().toISOString(), gameMode: GAME_MODE, maps: index }, null, 1),
 );
 
-// See the note by `previousQuests`: markers quietly disappearing is the worst
-// way this can fail, so refuse the build rather than publish a thinner map.
-// A wipe adding or removing content moves this by a few percent; a fifth of
-// the objectives going missing is upstream being broken.
+/*
+ * See the note by `previousByMap`: markers quietly disappearing is the worst
+ * way this can fail. A wipe adding or removing content moves the total by a
+ * few percent; a fifth of the objectives going missing is upstream being
+ * broken.
+ *
+ * The first version of this refused the build outright. That was the wrong
+ * trade twice over. It fails the Vercel deploy, so nothing else ships either —
+ * a fix to how tasks are listed, or a new layer, is held hostage by a feed
+ * nobody here controls. And because the deploy fails after `public/data` has
+ * already been rewritten, the tree is left holding the thin data anyway.
+ *
+ * So instead of choosing between the two builds, take both: keep everything
+ * this build produced and put back the markers it lost. Positions do not move
+ * without a patch, so a marker the feed dropped this morning is still where it
+ * was yesterday. Task records come back with them, otherwise a restored marker
+ * would point at a row that no longer exists.
+ *
+ * Only runs while the feed looks broken. Under the threshold the fresh build
+ * stands on its own, so content genuinely removed in a wipe does disappear.
+ */
 {
   const nowQuests = index.reduce((n, m) => n + m.counts.quests, 0);
+  const drop = previousQuests > 0 ? 1 - nowQuests / previousQuests : 0;
   if (previousQuests > 0) {
-    const drop = 1 - nowQuests / previousQuests;
     console.log(`\n  quest markers: ${previousQuests} -> ${nowQuests} (${(drop * -100).toFixed(1)}%)`);
-    if (drop > 0.15 && !process.env.TK_ALLOW_SPARSE_TASKS) {
-      console.warn(
-        `\nThis build lost ${(drop * 100).toFixed(0)}% of its quest markers ` +
-          `(${previousQuests} -> ${nowQuests}).\n` +
-          `That is upstream dropping objective positions, not a wipe.`,
-      );
-      // Put the good data back and let the build finish. A deploy that ships
-      // current code against yesterday's complete map beats one that either
-      // fails entirely or publishes a map with a fifth of the objectives
-      // missing. The next run picks up fresh data the moment upstream is well.
-      await fs.rm(OUT, { recursive: true, force: true });
-      await fs.cp(KEEP, OUT, { recursive: true });
-      keptPrevious = true;
-      console.warn("Kept the previous data instead. Set TK_ALLOW_SPARSE_TASKS=1 to override.");
+  }
+
+  if (drop > 0.15 && !process.env.TK_ALLOW_SPARSE_TASKS) {
+    console.warn(
+      `\n  upstream dropped ${(drop * 100).toFixed(0)}% of the quest markers — ` +
+        `restoring the missing ones from the last good build.`,
+    );
+    let restoredMarkers = 0;
+    let restoredTasks = 0;
+
+    for (const entry of index) {
+      const previous = previousByMap.get(entry.normalizedName);
+      if (!previous?.quests.length) continue;
+
+      const file = path.join(OUT, "maps", `${entry.normalizedName}.json`);
+      const payload = JSON.parse(await fs.readFile(file, "utf8"));
+      const seen = new Set(payload.markers.quests.map((q) => q.id));
+
+      for (const marker of previous.quests) {
+        if (seen.has(marker.id)) continue;
+        seen.add(marker.id);
+        payload.markers.quests.push(marker);
+        restoredMarkers++;
+        if (!payload.tasks[marker.task] && previous.tasks[marker.task]) {
+          payload.tasks[marker.task] = previous.tasks[marker.task];
+          restoredTasks++;
+        }
+      }
+
+      await fs.writeFile(file, JSON.stringify(payload));
+      entry.counts.quests = payload.markers.quests.length;
     }
+
+    console.warn(`  restored ${restoredMarkers} marker(s) and ${restoredTasks} task record(s)`);
+    await fs.writeFile(
+      path.join(OUT, "index.json"),
+      JSON.stringify({ generated: new Date().toISOString(), gameMode: GAME_MODE, maps: index }, null, 1),
+    );
   }
 }
 
@@ -805,10 +916,4 @@ try {
   /* optional */
 }
 
-await fs.rm(KEEP, { recursive: true, force: true });
-
-console.log(
-  keptPrevious
-    ? `\nKept the previous public/data (${imageNote}) — this fetch was worse than it.`
-    : `\nWrote ${index.length} maps and ${imageNote} to public/data`,
-);
+console.log(`\nWrote ${index.length} maps and ${imageNote} to public/data`);
