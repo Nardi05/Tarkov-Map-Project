@@ -42,7 +42,7 @@ export default function TaskPanel({
   const [expanded, setExpanded] = useState<string | null>(null);
 
   /** Every task with objectives on this map, before any filtering. */
-  const allGroups = useMemo(() => groupQuests(data, data.markers.quests), [data]);
+  const allGroups = useMemo(() => groupQuests(data, data.markers.quests, true), [data]);
 
   /** Search / trader / Kappa narrowing. Status is handled by the sections. */
   const matching = useMemo(() => {
@@ -334,7 +334,11 @@ function TaskRow({
         </span>
 
         <div className="min-w-0 flex-1">
-          <button type="button" onClick={() => onFocus(group.centre)} className="block w-full text-left">
+          <button
+            type="button"
+            onClick={() => group.centre && onFocus(group.centre)}
+            className="block w-full text-left"
+          >
             <span className="block truncate text-[0.8125rem] font-medium leading-tight">{task.name}</span>
             <span
               className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[0.68rem]"
@@ -342,7 +346,11 @@ function TaskRow({
             >
               {task.trader && <span>{task.trader.name}</span>}
               {task.minPlayerLevel > 0 && <span>· Lv {task.minPlayerLevel}</span>}
-              {markers.length > 1 ? (
+              {markers.length === 0 ? (
+                <span title="This task is on this map, but the game data carries no position for its objectives — kill counts, extract-from-here and survival tasks usually have none.">
+                  · not pinned
+                </span>
+              ) : markers.length > 1 ? (
                 <span>
                   · {doneHere}/{markers.length} locations
                 </span>
