@@ -8,6 +8,13 @@ open.
 Covers all 13 playable maps, works from a phone up to a desktop, and ships as a
 static site with no backend.
 
+## Live
+
+Both are behind the same site password.
+
+- **Production** (`main`) — the stable build: https://tarkov-map-project.vercel.app
+- **Dev preview** (`claude/tarkov-maps-v2`) — in-progress work, ahead of production: https://tarkov-map-project-git-claude-tarkov-maps-v2-nardi05s-projects.vercel.app
+
 ## What's on the map
 
 | Layer | What it tells you |
