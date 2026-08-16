@@ -239,17 +239,26 @@ A few details worth knowing if you touch this code:
   "image not available" JPEG — a perfectly valid image, so `onError` never
   fires and you get a grey box instead of a screenshot. Sending no referrer is
   served the real file.
-- Battle pass document pins are anchored, not surveyed. No feed carries these:
-  tarkov.dev doesn't model them, and the community editor at
+- Battle pass document pins are anchored, not surveyed, and **the list is the
+  feature — the pins are the bonus.** No feed carries these: tarkov.dev doesn't
+  model them, and the community editor at
   [KordMap](https://github.com/KalleLeskinen/KordMap) keeps its markers in a
   database, committing only a list of which document types appear per map. The
   wiki documents each spawn, but as a sentence and a screenshot — "inside 3
   story dorms, in room 304 on the nightstand". So a spawn whose description
-  names one of the map's place labels is pinned at that label, and the rest
-  ship with no position at all rather than a guessed one. A pin means "the wiki
-  says this spawns somewhere in Dorms"; the photo says which shelf. They are
-  also exempt from floor filtering, because a place label has no elevation and
+  names one of the map's place labels is pinned at that label, and the rest ship
+  with no position rather than a guessed one. That is most of them: 109 of 265.
+  Expanding the layer's row in the panel lists every spawn on the map with its
+  description and photo, grouped by building, which is the only surface the
+  unplaced ones have — Icebreaker and the Labyrinth have no pins at all. Pins
+  are exempt from floor filtering, because a place label has no elevation and
   filtering on an invented `y` would hide them.
+- Anchoring prefers the place the sentence puts the document *in* over one it
+  steers by. "Inside the TTS store in front of EMERCOM medical unit key zone"
+  names two labelled places and longest-match alone picked the wrong one. Bare
+  interior nouns are refused outright: Streets labels a building "Office", which
+  matched three descriptions of *other* buildings' offices. Proper nouns and
+  distinctive landmarks are untouched — Shoreline's "Pier" means the pier.
 - Spawn clusters ignore the game's zone names. Zones overlap heavily in space,
   so one visible clump routinely carries three or four of them and grouping by
   name left the clump on screen.

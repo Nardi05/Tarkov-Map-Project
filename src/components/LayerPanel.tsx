@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
-import { LAYER_GROUPS, LAYERS, PRESETS, type LayerId } from "../lib/layers";
+import { useId, useMemo, useState } from "react";
+import { LAYER_GROUPS, LAYERS, PRESETS, type LayerDef, type LayerId } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
 import { useStore } from "../store";
-import type { MapData } from "../types";
+import type { DocumentSpawn, MapData } from "../types";
+import DocumentList from "./DocumentList";
 import { Icon, icons, Section, Toggle } from "./ui";
 
 /** How many of a layer's markers this map actually has, for the count badges. */
@@ -36,6 +37,99 @@ function useCounts(data: MapData, visibleQuestCount: number): Record<LayerId, nu
   }, [data, visibleQuestCount]);
 }
 
+/**
+ * One layer's row.
+ *
+ * `count` is what the map will draw, which for documents is fewer than the map
+ * knows about — most spawns have no position. A row with nothing to draw still
+ * toggles: it used to render `checked={checked && !empty}` over an `onChange`
+ * that did nothing when empty, so on the Labyrinth and Icebreaker the Battle
+ * pass documents row sat greyed out and unclickable while the payload carried
+ * 29 spawns with photos. A count of zero is worth saying; it is not a reason to
+ * take the control away.
+ */
+function LayerRow({
+  layer,
+  count,
+  checked,
+  onToggle,
+  detail,
+}: {
+  layer: LayerDef;
+  count: number;
+  checked: boolean;
+  onToggle: () => void;
+  detail: DocumentSpawn[] | null;
+}) {
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+  const expandable = !!detail?.length;
+
+  const body = (
+    <>
+      <span
+        className="mt-px flex-none"
+        aria-hidden="true"
+        dangerouslySetInnerHTML={{ __html: swatchSvg(layer.shape, layer.color, 17) }}
+      />
+      <span className="min-w-0 flex-1">
+        <span className="flex items-baseline gap-1.5">
+          <span className="truncate text-[0.8125rem] font-medium">{layer.label}</span>
+          <span className="text-[0.65rem] tabular-nums" style={{ color: "var(--text-faint)" }}>
+            {expandable && detail
+              ? `${count} pinned of ${detail.length}`
+              : count === 0
+                ? "none here"
+                : count}
+          </span>
+        </span>
+        <span className="mt-0.5 block text-[0.7rem] leading-snug" style={{ color: "var(--text-faint)" }}>
+          {layer.hint}
+        </span>
+      </span>
+    </>
+  );
+
+  return (
+    <>
+      {expandable ? (
+        /* A disclosure button can't live inside a <label> — the label would
+           forward clicks to whichever control it found first. */
+        <div className="flex items-start gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-[var(--panel-2)]">
+          <button
+            type="button"
+            className="flex min-w-0 flex-1 items-start gap-2.5 text-left"
+            aria-expanded={open}
+            aria-controls={panelId}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {body}
+            <span
+              className="mt-0.5 flex-none transition-transform"
+              style={{ color: "var(--text-faint)", transform: open ? "rotate(180deg)" : undefined }}
+              aria-hidden="true"
+            >
+              <Icon path={icons.chevron} size={14} />
+            </span>
+          </button>
+          <Toggle checked={checked} onChange={onToggle} color={layer.color} label={layer.label} />
+        </div>
+      ) : (
+        <label className="flex cursor-pointer items-start gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-[var(--panel-2)]">
+          {body}
+          <Toggle checked={checked} onChange={onToggle} color={layer.color} label={layer.label} />
+        </label>
+      )}
+
+      {expandable && open && detail && (
+        <div id={panelId} role="region" aria-label={`${layer.label} on this map`} className="mt-1">
+          <DocumentList spawns={detail} />
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function LayerPanel({
   data,
   visibleQuestCount,
@@ -51,6 +145,7 @@ export default function LayerPanel({
   const saveCustomView = useStore((s) => s.saveCustomView);
   const removeCustomView = useStore((s) => s.removeCustomView);
   const counts = useCounts(data, visibleQuestCount);
+  const documents = data.markers.documents ?? [];
   const [naming, setNaming] = useState(false);
   const [draftName, setDraftName] = useState("");
 
@@ -184,44 +279,20 @@ export default function LayerPanel({
             }
           >
             <ul className="flex flex-col gap-0.5">
-              {groupLayers.map((layer) => {
-                const count = counts[layer.id];
-                const empty = count === 0;
-                return (
-                  <li key={layer.id}>
-                    <label
-                      className="flex cursor-pointer items-start gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-[var(--panel-2)]"
-                      style={{ opacity: empty ? 0.45 : 1 }}
-                    >
-                      <span
-                        className="mt-px flex-none"
-                        aria-hidden="true"
-                        dangerouslySetInnerHTML={{ __html: swatchSvg(layer.shape, layer.color, 17) }}
-                      />
-                      <span className="min-w-0 flex-1">
-                        <span className="flex items-baseline gap-1.5">
-                          <span className="truncate text-[0.8125rem] font-medium">{layer.label}</span>
-                          <span className="text-[0.65rem] tabular-nums" style={{ color: "var(--text-faint)" }}>
-                            {empty ? "none here" : count}
-                          </span>
-                        </span>
-                        <span
-                          className="mt-0.5 block text-[0.7rem] leading-snug"
-                          style={{ color: "var(--text-faint)" }}
-                        >
-                          {layer.hint}
-                        </span>
-                      </span>
-                      <Toggle
-                        checked={!!layers[layer.id] && !empty}
-                        onChange={() => !empty && toggleLayer(layer.id)}
-                        color={layer.color}
-                        label={layer.label}
-                      />
-                    </label>
-                  </li>
-                );
-              })}
+              {groupLayers.map((layer) => (
+                <li key={layer.id}>
+                  <LayerRow
+                    layer={layer}
+                    count={counts[layer.id]}
+                    checked={!!layers[layer.id]}
+                    onToggle={() => toggleLayer(layer.id)}
+                    /* Only documents have anything to expand today. The prop
+                       leaves room for others without inventing an abstraction
+                       for a single caller. */
+                    detail={layer.id === "documents" ? documents : null}
+                  />
+                </li>
+              ))}
             </ul>
           </Section>
         );
