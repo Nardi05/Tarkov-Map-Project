@@ -27,6 +27,7 @@ Both are behind the same site password.
 | PMC / Scav / shared extracts | Who can use each exit, and what it needs first |
 | Transits | Move into the next map keeping your gear and timer |
 | Quest objectives | Every task objective anchored to the map |
+| Battle pass documents | Where Kord Breach documents can spawn |
 | Locked doors & keys | Which key opens what |
 | Switches | Levers that unlock extracts and doors |
 | Hazards | Minefields and restricted zones |
@@ -96,6 +97,12 @@ picked up or hides one behind a prerequisite it thinks you haven't met, so the
 panel can't disagree with what the game is telling you. If you just want to
 study a map you haven't started, tick **Show every task on the map**.
 
+Some rows say **not pinned**. Only about a third of objectives in the game data
+carry coordinates; the rest name their map and stop there — kill counts,
+"survive and extract from here", most of the Survivalist Path. Those tasks are
+still yours to do on that map, so they are listed and simply have nowhere to
+point. Leaving them out was hiding roughly 150 real tasks.
+
 Where the wiki has screenshots for a task, the detail panel shows them as a
 carousel — arrows to step through, click to blow one up full screen, Escape or
 another click to come back. Neighbouring photos and the full-size copy are
@@ -116,6 +123,7 @@ npm run dev
 
 ```bash
 npm run images        # refresh the wiki screenshot cache (optional, slow)
+npm run kord-docs     # refresh the battle-pass document spawns from the wiki
 npm run check-quests  # cross-check quest data against the wiki (optional, slow)
 npm run task-facts    # refresh the level/Kappa fallback from known-good data
 npm run build         # type-check + production bundle into dist/
@@ -154,6 +162,9 @@ scripts/build-data.mjs   fetches tarkov.dev's JSON feeds, resolves translations,
 scripts/fetch-task-images.mjs
                          caches the wiki's task screenshots into
                          data/task-images.json (committed; not run on deploy)
+scripts/fetch-kord-documents.mjs
+                         caches the battle-pass document spawns into
+                         data/kord-documents.json (committed; not run on deploy)
 scripts/check-quests.mjs cross-checks trader/level/Kappa against the wiki and
                          prints disagreements; changes nothing
 scripts/build-task-facts.mjs
@@ -195,14 +206,25 @@ A few details worth knowing if you touch this code:
     `data/task-facts.json`, but only while the feed looks degraded, so once it
     recovers the live values win and the fallback can't go stale behind it.
     The patch is fill-only — a live value that exists is never overwritten.
-  - Quest objectives lose their map positions. Seen for real: a build kept
-    every spawn but dropped 218 of 817 quest markers. Nothing about the task
-    fields catches that, so the build also compares its marker count against
-    the previous one and refuses on a big drop.
-  On a big marker drop the build restores the committed `public/data` and
-  carries on, so a deploy ships current code against the last complete map
-  rather than failing or publishing a thinner one. `TK_ALLOW_SPARSE_TASKS=1`
-  overrides both checks.
+  - Quest objectives lose their map positions. Seen for real, twice: a build
+    kept every spawn but dropped 218 of 817 quest markers. Nothing about the
+    task fields catches that, so the build also compares its marker count
+    against the previous one.
+  On a big drop the build keeps everything it just produced and puts back only
+  the markers it lost, from the committed `public/data`. Positions don't move
+  without a patch, so a marker upstream dropped this morning is still where it
+  was yesterday. Below the threshold the fresh build stands on its own, so
+  content genuinely removed in a wipe does disappear.
+  `TK_ALLOW_SPARSE_TASKS=1` skips the backfill and ships the thin build as-is.
+
+  This has been through two worse designs, both worth not repeating. Refusing
+  the build outright fails the whole deploy, so unrelated work can't ship while
+  upstream is broken — and it refuses *after* `public/data` has been rewritten,
+  leaving the thin data on disk anyway. Swapping the entire previous directory
+  back in fixes the deploy but throws away the build that just ran, so any
+  change to how data is derived — a new layer, a fix to which tasks get listed
+  — silently never reaches the site. Merging is what actually holds both: new
+  code, complete map.
 - The wiki cannot substitute for tarkov.dev here. It has no map coordinates at
   all, and while its Kappa flag is reliable it states a player level on only
   about a quarter of pages. It is a cross-check and a gap-filler, not a source.
@@ -217,6 +239,17 @@ A few details worth knowing if you touch this code:
   "image not available" JPEG — a perfectly valid image, so `onError` never
   fires and you get a grey box instead of a screenshot. Sending no referrer is
   served the real file.
+- Battle pass document pins are anchored, not surveyed. No feed carries these:
+  tarkov.dev doesn't model them, and the community editor at
+  [KordMap](https://github.com/KalleLeskinen/KordMap) keeps its markers in a
+  database, committing only a list of which document types appear per map. The
+  wiki documents each spawn, but as a sentence and a screenshot — "inside 3
+  story dorms, in room 304 on the nightstand". So a spawn whose description
+  names one of the map's place labels is pinned at that label, and the rest
+  ship with no position at all rather than a guessed one. A pin means "the wiki
+  says this spawns somewhere in Dorms"; the photo says which shelf. They are
+  also exempt from floor filtering, because a place label has no elevation and
+  filtering on an invented `y` would hide them.
 - Spawn clusters ignore the game's zone names. Zones overlap heavily in space,
   so one visible clump routinely carries three or four of them and grouping by
   name left the clump on screen.
