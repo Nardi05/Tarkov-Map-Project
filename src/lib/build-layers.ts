@@ -127,7 +127,11 @@ function symbol(
       shape: opts.shape ?? def.shape,
       color: def.color,
       scale: ctx.markerScale,
-      label: ctx.showMarkerLabels ? opts.label : null,
+      // Callers decide whether they have a label to give; the setting that
+      // governs it differs per layer (quest markers have their own), so this
+      // must not second-guess them. Gating on showMarkerLabels here as well
+      // meant turning off "Marker names" silently killed task name labels too.
+      label: opts.label,
       labelPriority: LABEL_PRIORITY[def.id] ?? 0,
       done: opts.done,
     }),
@@ -137,10 +141,14 @@ function symbol(
   });
   marker.bindTooltip(tooltip(title, sub), { direction: "top", offset: [0, -10], className: "tk-tip" });
   marker.on("click", () => ctx.onSelect(select));
-  marker.on("keypress", (e) => {
-    if ((e as unknown as { originalEvent: KeyboardEvent }).originalEvent.key === "Enter") {
-      ctx.onSelect(select);
-    }
+  // Leaflet gives the icon tabIndex=0 and role="button", so Space has to work
+  // as well as Enter. keydown, not keypress: keypress never fires for Space in
+  // some browsers, and preventDefault stops the page scrolling underneath.
+  marker.on("keydown", (e) => {
+    const ev = (e as unknown as { originalEvent: KeyboardEvent }).originalEvent;
+    if (ev.key !== "Enter" && ev.key !== " " && ev.key !== "Spacebar") return;
+    ev.preventDefault();
+    ctx.onSelect(select);
   });
   return marker;
 }
@@ -316,7 +324,7 @@ function buildExtracts(ctx: BuildContext, layerId: LayerId): L.Layer[] {
         extract.name,
         [def.label, needs].filter(Boolean).join(" · "),
         { kind: "extract", extract },
-        { label: extract.name },
+        { label: ctx.showMarkerLabels ? extract.name : null },
       ),
     );
   }
@@ -340,7 +348,7 @@ function buildTransits(ctx: BuildContext): L.Layer[] {
         transit.name,
         transit.description ?? "Continue into the next map with your gear",
         { kind: "transit", transit },
-        { label: transit.target ?? transit.name },
+        { label: ctx.showMarkerLabels ? transit.target ?? transit.name : null },
       ),
     );
   }
@@ -469,7 +477,7 @@ function buildLocks(ctx: BuildContext): L.Layer[] {
       .join(" · ");
     out.push(
       symbol(lock.position, def, ctx, title, sub, { kind: "lock", lock, key }, {
-        label: key?.shortName ?? null,
+        label: ctx.showMarkerLabels ? (key?.shortName ?? null) : null,
       }),
     );
   }
@@ -490,7 +498,7 @@ function buildSwitches(ctx: BuildContext): L.Layer[] {
         sw.name,
         sw.activates[0] ?? "Switch",
         { kind: "switch", sw },
-        { label: sw.name },
+        { label: ctx.showMarkerLabels ? sw.name : null },
       ),
     );
 }

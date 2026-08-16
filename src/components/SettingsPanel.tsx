@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { availableStyles, type Floor } from "../lib/base-layer";
 import { LAYERS } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
@@ -24,6 +25,37 @@ export default function SettingsPanel({
 }) {
   const settings = useStore((s) => s.settings);
   const setSetting = useStore((s) => s.setSetting);
+
+  /*
+   * Marker size is held locally while the slider is moving and written to the
+   * store once, on release.
+   *
+   * Writing on every `input` event meant every pointer-move rebuilt all
+   * thirteen marker layers — up to ~2,500 canvas circles on Streets — because
+   * `markerScale` is baked into each icon's pixel size and sits in MapCanvas's
+   * rebuild deps. One drag did that thirty times.
+   *
+   * The drag still previews, via a CSS variable the markers already multiply
+   * into their transform. That covers the div-icon pins; canvas spawn dots take
+   * their radius in JS and only catch up on release, which is a fair trade for
+   * a settings slider nobody drags mid-raid.
+   */
+  const [draft, setDraft] = useState<number | null>(null);
+  const markerScale = draft ?? settings.markerScale;
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (draft === null) root.style.removeProperty("--tk-marker-draft");
+    else root.style.setProperty("--tk-marker-draft", (draft / settings.markerScale).toFixed(3));
+    return () => {
+      root.style.removeProperty("--tk-marker-draft");
+    };
+  }, [draft, settings.markerScale]);
+
+  const commitScale = () => {
+    if (draft !== null && draft !== settings.markerScale) setSetting("markerScale", draft);
+    setDraft(null);
+  };
   const resetLayers = useStore((s) => s.resetLayers);
   const clearProgress = useStore((s) => s.clearProgress);
   const trackedCount = useStore(
@@ -79,7 +111,7 @@ export default function SettingsPanel({
           <span className="mb-1 flex items-baseline justify-between text-[0.75rem]">
             Marker size
             <span className="tabular-nums" style={{ color: "var(--text-faint)" }}>
-              {Math.round(settings.markerScale * 100)}%
+              {Math.round(markerScale * 100)}%
             </span>
           </span>
           <input
@@ -87,8 +119,12 @@ export default function SettingsPanel({
             min={0.6}
             max={1.8}
             step={0.1}
-            value={settings.markerScale}
-            onChange={(e) => setSetting("markerScale", Number(e.target.value))}
+            value={markerScale}
+            onChange={(e) => setDraft(Number(e.target.value))}
+            onPointerUp={commitScale}
+            onPointerCancel={commitScale}
+            onKeyUp={commitScale}
+            onBlur={commitScale}
             className="w-full accent-[var(--accent)]"
             aria-label="Marker size"
           />
