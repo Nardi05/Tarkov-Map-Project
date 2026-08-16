@@ -447,7 +447,7 @@ function TaskRow({
                         aria-checked={done}
                         aria-label={`Location ${i + 1}${done ? " done" : ""}`}
                         onClick={() => onToggleMarker(marker.id)}
-                        className="mt-px grid h-4 w-4 flex-none place-items-center rounded border"
+                        className="tap-target mt-px grid h-4 w-4 flex-none place-items-center rounded border"
                         style={{
                           borderColor: done ? "#22c55e" : "var(--line)",
                           background: done ? "#22c55e" : "transparent",

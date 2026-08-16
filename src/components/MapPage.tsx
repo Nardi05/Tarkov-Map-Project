@@ -200,7 +200,13 @@ export default function MapPage({
             // Border goes too, or a 1px sliver of panel stays on screen.
             ...(railCollapsed ? { width: 0, borderRightWidth: 0 } : null),
           }}
-          aria-hidden={railCollapsed}
+          /* `inert`, not `aria-hidden`: the rail is hidden with width:0 and
+             overflow-hidden so it can animate, which leaves every control in it
+             still tabbable. aria-hidden only told assistive tech to ignore them,
+             so a keyboard user tabbed through dozens of invisible buttons.
+             `inert` removes them from the tab order and the a11y tree, and
+             unlike display:none it does not kill the width transition. */
+          inert={railCollapsed}
         >
           <nav
             className="flex flex-none gap-1 border-b p-2"
