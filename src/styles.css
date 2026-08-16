@@ -24,7 +24,9 @@
   --line-soft: #1a222b;
   --text: #e6edf3;
   --text-dim: #96a3b2;
-  --text-faint: #64717f;
+  /* 5.56:1 on --panel, 5.10 on --panel-2, 4.64 on --panel-3, 5.90 on --bg.
+     Was #64717f, which measured 3.68 and failed AA on 10-11px text. */
+  --text-faint: #828f9d;
   --accent: #c9b287;
   --accent-hover: #dcc79c;
   --accent-ink: #14100a;
@@ -45,7 +47,9 @@
   --line-soft: #e4e9ee;
   --text: #16202b;
   --text-dim: #55636f;
-  --text-faint: #7c8794;
+  /* 5.17 / 4.73 / 4.78 against --panel / --panel-2 / --bg. Was #7c8794
+     at 3.65, below AA for the small text this is used on. */
+  --text-faint: #646e7b;
   --accent: #8a6d33;
   --accent-hover: #6f571f;
   --accent-ink: #ffffff;
@@ -548,5 +552,28 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .map-card:hover {
     transform: none;
+  }
+}
+
+/*
+ * Controls that must stay visually small but be tappable on a phone.
+ *
+ * The task panel's two primary controls are its smallest — a 16px location
+ * checkbox and a 20px status button — which is exactly backwards for touch.
+ * The visible box stays on the element itself; this only grows the hit area,
+ * and only where a finger is doing the pointing.
+ *
+ * Deliberately not a 44px ::before overlay: the location rows are ~26px tall
+ * and 4px apart, so neighbouring overlays would cover each other and swallow
+ * taps meant for the row above. A mis-tap on a progress checklist is worse
+ * than a small target. Growing the element's own box keeps each one inside
+ * its own row.
+ */
+@media (pointer: coarse) {
+  .tap-target {
+    min-width: 44px;
+    min-height: 44px;
+    /* Spend the card's existing padding rather than pushing the layout out. */
+    margin-block: -0.5rem;
   }
 }
