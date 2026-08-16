@@ -116,6 +116,20 @@ const slug = (s) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+/**
+ * Short, stable digest of a string, for ids that must survive the source
+ * reordering itself. Not security-sensitive — it only has to separate a few
+ * hundred sentences per map, which 32 bits does comfortably.
+ */
+const hash = (s) => {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < (s ?? "").length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(36);
+};
+
 const r1 = (n) => (typeof n === "number" ? Math.round(n * 10) / 10 : n);
 /** Positions are only ever consumed as [x, y, z]; the tuple halves the payload. */
 const vec = (p) => (p ? [r1(p.x), r1(p.y), r1(p.z)] : null);
@@ -601,6 +615,7 @@ const previousByMap = await (async () => {
       out.set(file.replace(/\.json$/, ""), {
         quests: data.markers?.quests ?? [],
         tasks: data.tasks ?? {},
+        keys: data.keys ?? {},
       });
     }
   } catch {
@@ -758,9 +773,15 @@ for (const [name, cfg] of Object.entries(geo)) {
    * description rather than the array index, on the same reasoning as quest
    * marker ids: the wiki reorders its galleries freely, and an index would
    * quietly repoint anything keyed on it.
+   *
+   * The description is hashed rather than truncated. An earlier version cut the
+   * slug at 40 characters, which collided for five real pairs — two Ground Zero
+   * spawns both beginning "inside the room next to terragroup scien…" landed on
+   * one id, and because they also share a position they end up in the same
+   * panel list, rendering two <li> with the same React key.
    */
   const documents = (kordDocuments[name] ?? []).map((spawn) => ({
-    id: `doc-${slug(spawn.document)}-${slug(spawn.note).slice(0, 40)}`,
+    id: `doc-${slug(spawn.document)}-${hash(spawn.note)}`,
     document: spawn.document,
     note: spawn.note,
     image: spawn.image ?? null,
@@ -868,6 +889,7 @@ await fs.writeFile(
     );
     let restoredMarkers = 0;
     let restoredTasks = 0;
+    let restoredKeys = 0;
 
     for (const entry of index) {
       const previous = previousByMap.get(entry.normalizedName);
@@ -883,8 +905,30 @@ await fs.writeFile(
         payload.markers.quests.push(marker);
         restoredMarkers++;
         if (!payload.tasks[marker.task] && previous.tasks[marker.task]) {
-          payload.tasks[marker.task] = previous.tasks[marker.task];
+          const task = previous.tasks[marker.task];
+          payload.tasks[marker.task] = task;
           restoredTasks++;
+          /*
+           * A task carries key ids, and `usedKeyIds` was computed long before
+           * this loop ran — so a task restored here arrives with a `keys` array
+           * pointing at records the payload does not have. The panel filters
+           * dangling ids out (TaskPanel resolves via `data.keys[id]`), so the
+           * failure is silent: the door you need a key for simply stops saying
+           * which key.
+           *
+           * Taken from the live `keyIndex`, not from the previous payload. The
+           * previous build had this same gap, so copying from it restores
+           * nothing and the hole persists build after build — which is exactly
+           * what six tasks were doing, among them Factory's "Delivery From the
+           * Past" and its Tarcone Director's office key.
+           */
+          for (const keyId of task.keys ?? []) {
+            if (payload.keys[keyId]) continue;
+            const record = keyIndex[keyId] ?? previous.keys[keyId];
+            if (!record) continue;
+            payload.keys[keyId] = record;
+            restoredKeys++;
+          }
         }
       }
 
@@ -892,7 +936,10 @@ await fs.writeFile(
       entry.counts.quests = payload.markers.quests.length;
     }
 
-    console.warn(`  restored ${restoredMarkers} marker(s) and ${restoredTasks} task record(s)`);
+    console.warn(
+      `  restored ${restoredMarkers} marker(s), ${restoredTasks} task record(s)` +
+        `${restoredKeys ? ` and ${restoredKeys} key record(s)` : ""}`,
+    );
     await fs.writeFile(
       path.join(OUT, "index.json"),
       JSON.stringify({ generated: new Date().toISOString(), gameMode: GAME_MODE, maps: index }, null, 1),

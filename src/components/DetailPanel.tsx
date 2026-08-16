@@ -5,6 +5,7 @@ import { swatchSvg } from "../lib/marker-icons";
 import { useStore } from "../store";
 import { useTaskImages } from "../lib/data";
 import type { MapData, TaskImage, TaskStatus } from "../types";
+import { documentImages } from "./DocumentList";
 import TaskGallery from "./TaskGallery";
 import TaskStatusControl from "./TaskStatusControl";
 import { Icon, icons } from "./ui";
@@ -432,14 +433,7 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
       const { spawn, siblings } = selection;
       const layer = LAYER_BY_ID.documents;
       const documents = [...new Set(siblings.map((s) => s.document))];
-      const images = siblings
-        .filter((s) => s.image)
-        .map((s) => ({
-          url: s.image as string,
-          width: s.imageWidth,
-          height: s.imageHeight,
-          title: s.note,
-        }));
+      const images = documentImages(siblings);
       return {
         title: spawn.place ?? spawn.document,
         kind: "Battle pass documents",

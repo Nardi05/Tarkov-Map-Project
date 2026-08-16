@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-15T17:35:27.375Z",
+ "generated": "2026-08-16T04:59:17.350Z",
  "gameMode": "regular",
  "maps": [
   {
@@ -75,7 +75,7 @@
     "transits": 1,
     "keys": 6,
     "quests": 32,
-    "docs": 31
+    "docs": 30
    }
   },
   {
@@ -129,7 +129,7 @@
     "transits": 2,
     "keys": 101,
     "quests": 48,
-    "docs": 8
+    "docs": 30
    }
   },
   {
@@ -236,7 +236,7 @@
     "transits": 3,
     "keys": 58,
     "quests": 166,
-    "docs": 18
+    "docs": 20
    }
   },
   {
@@ -290,7 +290,7 @@
     "transits": 1,
     "keys": 14,
     "quests": 18,
-    "docs": 31
+    "docs": 32
    }
   },
   {
@@ -314,7 +314,7 @@
     "transits": 0,
     "keys": 11,
     "quests": 18,
-    "docs": 17
+    "docs": 29
    }
   },
   {
