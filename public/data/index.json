@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-15T17:35:27.375Z",
+ "generated": "2026-08-10T09:30:34.911Z",
  "gameMode": "regular",
  "maps": [
   {
@@ -26,8 +26,7 @@
     "extracts": 27,
     "transits": 4,
     "keys": 34,
-    "quests": 121,
-    "docs": 20
+    "quests": 121
    }
   },
   {
@@ -51,8 +50,7 @@
     "extracts": 9,
     "transits": 3,
     "keys": 4,
-    "quests": 66,
-    "docs": 30
+    "quests": 67
    }
   },
   {
@@ -74,8 +72,7 @@
     "extracts": 6,
     "transits": 1,
     "keys": 6,
-    "quests": 32,
-    "docs": 31
+    "quests": 29
    }
   },
   {
@@ -102,8 +99,7 @@
     "extracts": 0,
     "transits": 0,
     "keys": 0,
-    "quests": 0,
-    "docs": 12
+    "quests": 0
    }
   },
   {
@@ -128,8 +124,7 @@
     "extracts": 6,
     "transits": 2,
     "keys": 101,
-    "quests": 48,
-    "docs": 8
+    "quests": 47
    }
   },
   {
@@ -155,8 +150,7 @@
     "extracts": 13,
     "transits": 3,
     "keys": 26,
-    "quests": 121,
-    "docs": 18
+    "quests": 119
    }
   },
   {
@@ -181,8 +175,7 @@
     "extracts": 11,
     "transits": 3,
     "keys": 33,
-    "quests": 66,
-    "docs": 15
+    "quests": 61
    }
   },
   {
@@ -210,8 +203,7 @@
     "extracts": 14,
     "transits": 3,
     "keys": 38,
-    "quests": 99,
-    "docs": 9
+    "quests": 98
    }
   },
   {
@@ -235,8 +227,7 @@
     "extracts": 17,
     "transits": 3,
     "keys": 58,
-    "quests": 166,
-    "docs": 18
+    "quests": 160
    }
   },
   {
@@ -249,10 +240,10 @@
    "bosses": [
     "Black Div.",
     "AF",
+    "Sanitar",
     "Glukhar",
     "Killa",
     "Reshala",
-    "Sanitar",
     "Tagilla"
    ],
    "styles": [
@@ -265,8 +256,7 @@
     "extracts": 0,
     "transits": 0,
     "keys": 0,
-    "quests": 0,
-    "docs": 0
+    "quests": 0
    }
   },
   {
@@ -287,10 +277,9 @@
     "spawns": 134,
     "bosses": 152,
     "extracts": 7,
-    "transits": 1,
+    "transits": 0,
     "keys": 14,
-    "quests": 18,
-    "docs": 31
+    "quests": 18
    }
   },
   {
@@ -313,8 +302,7 @@
     "extracts": 2,
     "transits": 0,
     "keys": 11,
-    "quests": 18,
-    "docs": 17
+    "quests": 18
    }
   },
   {
@@ -341,8 +329,7 @@
     "extracts": 20,
     "transits": 4,
     "keys": 4,
-    "quests": 79,
-    "docs": 20
+    "quests": 79
    }
   }
  ]
