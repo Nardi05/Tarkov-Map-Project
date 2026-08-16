@@ -428,52 +428,6 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
       };
     }
 
-    case "document": {
-      const { spawn, siblings } = selection;
-      const layer = LAYER_BY_ID.documents;
-      const documents = [...new Set(siblings.map((s) => s.document))];
-      const images = siblings
-        .filter((s) => s.image)
-        .map((s) => ({
-          url: s.image as string,
-          width: s.imageWidth,
-          height: s.imageHeight,
-          title: s.note,
-        }));
-      return {
-        title: spawn.place ?? spawn.document,
-        kind: "Battle pass documents",
-        shape: layer.shape,
-        color: layer.color,
-        lead:
-          siblings.length === 1
-            ? "A Kord Breach document can spawn here. It is not guaranteed every raid, and picking one up does not remove it for anyone else."
-            : `${siblings.length} document spawns sit in this building. None are guaranteed in a given raid, so check the ones you pass.`,
-        facts: [
-          { label: documents.length === 1 ? "Document" : "Documents", value: documents.join(", ") },
-          { label: "Spawn points", value: String(siblings.length) },
-        ],
-        body: (
-          <div className="flex flex-col gap-3">
-            <ul className="flex flex-col gap-1">
-              {siblings.map((s) => (
-                <li key={s.id} className="surface-2 px-2.5 py-1.5 text-[0.75rem]">
-                  <span className="opacity-60">{s.document}</span>
-                  <br />
-                  {s.note}
-                </li>
-              ))}
-            </ul>
-            {images.length > 0 && <TaskGallery images={images} taskName={spawn.place ?? spawn.document} />}
-            <p className="text-[0.7rem] opacity-60">
-              Pinned to {spawn.place ?? "this map"} from the wiki's description — the building is right, the
-              exact shelf is in the photo.
-            </p>
-          </div>
-        ),
-      };
-    }
-
     case "hazard": {
       const { hazard } = selection;
       const layer = LAYER_BY_ID.hazards;

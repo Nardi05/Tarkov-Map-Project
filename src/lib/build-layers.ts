@@ -1,7 +1,6 @@
 import L from "leaflet";
 import type {
   BossSpawn,
-  DocumentSpawn,
   Extract,
   Hazard,
   KeyItem,
@@ -33,19 +32,12 @@ export interface BossGroup {
   positions: Vec3[];
 }
 
-/**
- * Every objective of one task that lands on this map, shown as one entry.
- *
- * `markers` is empty and `centre` null for a task the feed places on this map
- * without giving coordinates for any of its objectives — "eliminate Scavs on
- * Customs" and most of the Survivalist Path. They belong in the list because
- * you do them here; there is simply nowhere to point.
- */
+/** Every objective of one task that lands on this map, shown as one entry. */
 export interface QuestGroup {
   id: string;
   task: Task;
   markers: QuestMarker[];
-  centre: Vec3 | null;
+  centre: Vec3;
 }
 
 export type { SpawnCluster };
@@ -58,7 +50,6 @@ export type Selection =
   | { kind: "lock"; lock: Lock; key: KeyItem | null }
   | { kind: "quest"; marker: QuestMarker; task: Task; alternatives: QuestMarker[] }
   | { kind: "switch"; sw: MapSwitch }
-  | { kind: "document"; spawn: DocumentSpawn; siblings: DocumentSpawn[] }
   | { kind: "hazard"; hazard: Hazard };
 
 export interface BuildContext {
@@ -495,59 +486,6 @@ function buildSwitches(ctx: BuildContext): L.Layer[] {
     );
 }
 
-/**
- * Battle-pass document spawns.
- *
- * Positions come from matching the wiki's prose to a named place, so every
- * spawn the wiki puts in Dorms lands on Dorms' label — exactly on top of each
- * other. Drawing them raw would stack a dozen identical pins on one point, so
- * they collapse per place and the panel lists what is behind the pin.
- *
- * Spawns the wiki describes without naming a place we recognise have no
- * position at all and are skipped here; they are still in the payload for the
- * panel to list, because "somewhere on this map" is worth knowing and is not
- * something a pin can honestly say.
- */
-function buildDocuments(ctx: BuildContext): L.Layer[] {
-  const def = LAYER_BY_ID["documents"];
-  const byPlace = new Map<string, DocumentSpawn[]>();
-
-  for (const spawn of ctx.data.markers.documents ?? []) {
-    if (!spawn.position) continue;
-    /*
-     * Deliberately not floor-filtered. A place label is a ground position with
-     * no elevation, so every document would sit at y=0 and vanish the moment
-     * you picked a floor on Interchange or Labs — filtered out by a height we
-     * invented rather than one we know. The wiki's description says which floor
-     * it is on ("offices 3rd floor"), so the panel can answer that honestly
-     * where the geometry cannot.
-     */
-    const key = `${spawn.position[0]},${spawn.position[2]}`;
-    const group = byPlace.get(key);
-    if (group) group.push(spawn);
-    else byPlace.set(key, [spawn]);
-  }
-
-  const out: L.Layer[] = [];
-  for (const group of byPlace.values()) {
-    const [first] = group;
-    const documents = [...new Set(group.map((s) => s.document))];
-    const label = first.place ?? first.document;
-    const subtitle =
-      group.length === 1
-        ? first.document
-        : `${group.length} document spawns — ${documents.length === 1 ? documents[0] : `${documents.length} types`}`;
-    out.push(
-      symbol(first.position as Vec3, def, ctx, label, subtitle, {
-        kind: "document",
-        spawn: first,
-        siblings: group,
-      }),
-    );
-  }
-  return out;
-}
-
 function buildHazards(ctx: BuildContext): L.Layer[] {
   const def = LAYER_BY_ID["hazards"];
   const out: L.Layer[] = [];
@@ -596,7 +534,6 @@ const BUILDERS: Record<LayerId, (ctx: BuildContext) => L.Layer[]> = {
   "shared-extracts": (ctx) => buildExtracts(ctx, "shared-extracts"),
   transits: buildTransits,
   quests: buildQuests,
-  documents: buildDocuments,
   keys: buildLocks,
   switches: buildSwitches,
   hazards: buildHazards,
@@ -643,16 +580,7 @@ export function filterQuests(
 }
 
 /** Tasks on this map, grouped for the task list panel. */
-/**
- * `includeUnmapped` folds in the map's tasks that have no marker at all. The
- * task panel wants them — they are real tasks for this map. The map renderer
- * does not, and passes a filtered marker list, so it leaves them out.
- */
-export function groupQuests(
-  data: MapData,
-  markers: QuestMarker[],
-  includeUnmapped = false,
-): QuestGroup[] {
+export function groupQuests(data: MapData, markers: QuestMarker[]): QuestGroup[] {
   const byTask = new Map<string, QuestMarker[]>();
   for (const marker of markers) {
     const bucket = byTask.get(marker.task);
@@ -671,15 +599,6 @@ export function groupQuests(
       centre: centroid(taskMarkers.map((m) => m.position)),
     });
   }
-
-  /* Then the tasks this map carries with no drawable objective. */
-  if (includeUnmapped) {
-    for (const [taskId, task] of Object.entries(data.tasks)) {
-      if (byTask.has(taskId)) continue;
-      groups.push({ id: taskId, task, markers: [], centre: null });
-    }
-  }
-
   return groups.sort(
     (a, b) => a.task.minPlayerLevel - b.task.minPlayerLevel || a.task.name.localeCompare(b.task.name),
   );

@@ -23,12 +23,6 @@ function useCounts(data: MapData, visibleQuestCount: number): Record<LayerId, nu
       "shared-extracts": m.extracts.filter((e) => e.faction === "shared").length,
       transits: m.transits.length,
       quests: visibleQuestCount,
-      // Document spawns collapse onto their building, and the ones the wiki
-      // never places have no pin at all, so count the pins the map will
-      // actually draw rather than the raw spawn list.
-      documents: new Set(
-        (m.documents ?? []).filter((d) => d.position).map((d) => `${d.position![0]},${d.position![2]}`),
-      ).size,
       keys: m.locks.length,
       switches: m.switches.length,
       hazards: m.hazards.length,

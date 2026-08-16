@@ -22,7 +22,6 @@ export type LayerId =
   | "shared-extracts"
   | "transits"
   | "quests"
-  | "documents"
   | "keys"
   | "switches"
   | "hazards";
@@ -60,7 +59,6 @@ export type MarkerShape =
   | "target"
   | "runner"
   | "switch"
-  | "document"
   | "hazard";
 
 /**
@@ -180,15 +178,6 @@ export const LAYERS: LayerDef[] = [
     // Off on a first visit: a busy map carries 150+ objectives and the green
     // would bury the spawns and exits a new player needs to see first. The
     // Tasks panel offers to switch it on the moment they go looking.
-    defaultOn: false,
-  },
-  {
-    id: "documents",
-    group: "tasks",
-    label: "Battle pass documents",
-    hint: "Kord Breach document spawns. Pins mark the building the wiki names, not an exact shelf — open one for the description and a screenshot.",
-    color: "#e879f9",
-    shape: "document",
     defaultOn: false,
   },
   {

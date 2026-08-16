@@ -61,8 +61,6 @@ function selectionPosition(selection: Selection | null): Vec3 | null {
       return selection.marker.position;
     case "switch":
       return selection.sw.position;
-    case "document":
-      return selection.spawn.position;
     case "hazard":
       return selection.hazard.position;
   }

@@ -81,14 +81,6 @@ const GLYPHS: Record<MarkerShape, string> = {
            <circle cx="15.8" cy="15.6" r="1.5" fill="var(--mc)"/>
            <path d="M12 6.2v5" stroke="#062033" stroke-width="2.2" stroke-linecap="round"/>`,
 
-  // Battle-pass document: a sheet with a turned corner and a line of writing.
-  // Deliberately a page rather than a folder — these are loose papers you pick
-  // up off a desk, and the silhouette should not read as a quest item.
-  document: `<rect x="2.4" y="2.4" width="19.2" height="19.2" rx="5" fill="var(--mc)" stroke="rgba(6,10,15,.75)" stroke-width="2"/>
-             <path d="M8.6 6.1h4.7l4 4v8a1.1 1.1 0 0 1-1.1 1.1H8.6a1.1 1.1 0 0 1-1.1-1.1V7.2a1.1 1.1 0 0 1 1.1-1.1Z" fill="#fff"/>
-             <path d="M13.3 6.1v4h4" fill="none" stroke="var(--mc)" stroke-width="1.4" stroke-linejoin="round"/>
-             <path d="M9.7 12.6h4.6M9.7 15h4.6M9.7 17.3h2.9" stroke="var(--mc)" stroke-width="1.4" stroke-linecap="round"/>`,
-
   hazard: `<path d="M12 2.2 22.6 20.6H1.4Z" fill="var(--mc)" stroke="rgba(6,10,15,.75)" stroke-width="2" stroke-linejoin="round"/>
            <path d="M12 9v5" stroke="#2b0710" stroke-width="2.2" stroke-linecap="round"/>
            <circle cx="12" cy="17.5" r="1.3" fill="#2b0710"/>`,
@@ -108,7 +100,6 @@ const BASE_SIZE: Record<MarkerShape, number> = {
   target: 24,
   runner: 24,
   switch: 22,
-  document: 23,
   hazard: 24,
 };
 
