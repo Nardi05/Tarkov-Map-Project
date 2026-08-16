@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-15T17:23:40.673Z",
+ "generated": "2026-08-16T04:57:38.838Z",
  "source": "https://escapefromtarkov.fandom.com",
  "note": "Positions are anchored to named place labels, not surveyed coordinates. A spawn with no recognisable place keeps its description and screenshot and ships without a position.",
  "maps": {
@@ -758,9 +758,9 @@
    {
     "document": "User documentation",
     "note": "On a table in room no.3 on the 2nd floor of the TerraGroup building.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/3a/User_documentation_ground_zero_spawn_5.png/revision/latest?cb=20260805223752",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/3a/User_documentation_ground_zero_spawn_5.png/revision/latest?cb=20260814194408",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -50,
      0
@@ -859,15 +859,12 @@
    },
    {
     "document": "User documentation",
-    "note": "On a table in room no.3 on the 2nd floor of the TerraGroup building.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/a4/User_documentation_ground_zero_spawn_14.png/revision/latest?cb=20260814194408",
+    "note": "On a bench next to the car showcase building under a umbrella.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/a4/User_documentation_ground_zero_spawn_14.png/revision/latest?cb=20260814194525",
     "imageWidth": 1920,
     "imageHeight": 1080,
-    "position": [
-     -50,
-     0
-    ],
-    "place": "TerraGroup"
+    "position": null,
+    "place": null
    },
    {
     "document": "User documentation",
@@ -880,15 +877,6 @@
      0
     ],
     "place": "TerraGroup"
-   },
-   {
-    "document": "User documentation",
-    "note": "On a bench next to the car showcase building under a umbrella.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/42/User_documentation_ground_zero_spawn_16.png/revision/latest?cb=20260814194525",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
-    "position": null,
-    "place": null
    }
   ],
   "icebreaker": [
@@ -1005,9 +993,9 @@
    {
     "document": "Blueprints and technical documentation",
     "note": "In the PC cubicle in the back of OLI.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e9/Blueprints_and_technical_documentation_interchange_spawn_1.png/revision/latest?cb=20260806192658",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e9/Blueprints_and_technical_documentation_interchange_spawn_1.png/revision/latest?cb=20260815230632",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -28,
      140
@@ -1016,8 +1004,8 @@
    },
    {
     "document": "Blueprints and technical documentation",
-    "note": "Inside GOSHAN north offices.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/17/Blueprints_and_technical_documentation_interchange_spawn_2.png/revision/latest?cb=20260806192708",
+    "note": "Inside Goshan north offices.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/17/Blueprints_and_technical_documentation_interchange_spawn_2.png/revision/latest?cb=20260815230533",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": [
@@ -1029,9 +1017,9 @@
    {
     "document": "Blueprints and technical documentation",
     "note": "Inside the back offices of OLI.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/7c/Blueprints_and_technical_documentation_interchange_spawn_3.png/revision/latest?cb=20260806192717",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/7c/Blueprints_and_technical_documentation_interchange_spawn_3.png/revision/latest?cb=20260815230717",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -28,
      140
@@ -1041,7 +1029,7 @@
    {
     "document": "Blueprints and technical documentation",
     "note": "Inside IDEA in the southern part of the store on the floor.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b2/Blueprints_and_technical_documentation_interchange_spawn_4.png/revision/latest?cb=20260806192723",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b2/Blueprints_and_technical_documentation_interchange_spawn_4.png/revision/latest?cb=20260815230859",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": [
@@ -1052,10 +1040,118 @@
    },
    {
     "document": "Blueprints and technical documentation",
-    "note": "In the office between GOSHAN and OLI.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/39/Blueprints_and_technical_documentation_interchange_spawn_5.png/revision/latest?cb=20260806192730",
-    "imageWidth": 2100,
-    "imageHeight": 1174,
+    "note": "In the office between Goshan and OLI.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/39/Blueprints_and_technical_documentation_interchange_spawn_5.png/revision/latest?cb=20260815232903",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -115,
+     -45
+    ],
+    "place": "Goshan"
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Inside GOSHAN north offices",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/7f/Blueprints_and_technical_documentation_interchange_spawn_6.png/revision/latest?cb=20260815232123",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -115,
+     -45
+    ],
+    "place": "Goshan"
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Inside The National store on a filling cabinet.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/65/Blueprints_and_technical_documentation_interchange_spawn_7.png/revision/latest?cb=20260815230514",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     57,
+     -32
+    ],
+    "place": "The National"
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Inside Bizarro store near Goshan.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/15/Blueprints_and_technical_documentation_interchange_spawn_8.png/revision/latest?cb=20260815230520",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -65,
+     -103
+    ],
+    "place": "Bizarro"
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Inside IDEA office.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/26/Blueprints_and_technical_documentation_interchange_spawn_9.png/revision/latest?cb=20260815230527",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -34,
+     -235
+    ],
+    "place": "IDEA"
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Behind OLI administration office key door on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/82/Blueprints_and_technical_documentation_interchange_spawn_10.png/revision/latest?cb=20260815231802",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -28,
+     140
+    ],
+    "place": "OLI"
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Inside an office between Goshan and OLI.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/54/Blueprints_and_technical_documentation_interchange_spawn_11.png/revision/latest?cb=20260815230539",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -115,
+     -45
+    ],
+    "place": "Goshan"
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Inside an office between OLI and Goshan",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/f8/Blueprints_and_technical_documentation_interchange_spawn_12.png/revision/latest?cb=20260815230617",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -115,
+     -45
+    ],
+    "place": "Goshan"
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Inside the SPIEL store within the front store.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/1f/Blueprints_and_technical_documentation_interchange_spawn_13.png/revision/latest?cb=20260815231254",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     92,
+     -87
+    ],
+    "place": "Spiel"
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Inside goshan south offices.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/ba/Blueprints_and_technical_documentation_interchange_spawn_14.png/revision/latest?cb=20260815234354",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -115,
      -45
@@ -1065,9 +1161,9 @@
    {
     "document": "Financial documents",
     "note": "On desks inside idea office.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2d/Financial_documents_interchange_spawn_1.png/revision/latest?cb=20260805204210",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2d/Financial_documents_interchange_spawn_1.png/revision/latest?cb=20260816001137",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -34,
      -235
@@ -1077,9 +1173,9 @@
    {
     "document": "Financial documents",
     "note": "Inside an office between Goshan and IDEA.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/38/Financial_documents_interchange_spawn_2.png/revision/latest?cb=20260805204217",
-    "imageWidth": 2559,
-    "imageHeight": 1439,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/38/Financial_documents_interchange_spawn_2.png/revision/latest?cb=20260816001205",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -115,
      -45
@@ -1089,11 +1185,158 @@
    {
     "document": "Financial documents",
     "note": "At the smuggler base on a rounded table below a green container.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ee/Financial_documents_interchange_spawn_3.png/revision/latest?cb=20260805204305",
-    "imageWidth": 1918,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ee/Financial_documents_interchange_spawn_3.png/revision/latest?cb=20260816001218",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Behind OLI administration office key door.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/14/Financial_documents_interchange_spawn_4.png/revision/latest?cb=20260816001324",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -28,
+     140
+    ],
+    "place": "OLI"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the power station on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9c/Financial_documents_interchange_spawn_5.png/revision/latest?cb=20260816001336",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -186.4,
+     -318.7
+    ],
+    "place": "Power Station"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Next to the kid park on a bench in front of IDEA.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/37/Financial_documents_interchange_spawn_6.png/revision/latest?cb=20260816001346",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -34,
+     -235
+    ],
+    "place": "IDEA"
+   },
+   {
+    "document": "Financial documents",
+    "note": "On the 2nd floor next to the north rounded hole in a store on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/51/Financial_documents_interchange_spawn_7.png/revision/latest?cb=20260816001353",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside burger spot on 2nd floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/44/Financial_documents_interchange_spawn_8.png/revision/latest?cb=20260816001401",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -27,
+     -103
+    ],
+    "place": "Burger Spot"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the KORD 14-4 Station on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/7a/Financial_documents_interchange_spawn_9.png/revision/latest?cb=20260816001413",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Behind the Object 21WS keycard door on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/fa/Financial_documents_interchange_spawn_10.png/revision/latest?cb=20260816001420",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the TTS store in front of EMERCOM medical unit key zone.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9e/Financial_documents_interchange_spawn_11.png/revision/latest?cb=20260816001428",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     19,
+     -129
+    ],
+    "place": "TTS"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside an office between Goshan and OLI in the small room.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/ac/Financial_documents_interchange_spawn_12.png/revision/latest?cb=20260816001437",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -115,
+     -45
+    ],
+    "place": "Goshan"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside an office between Goshan and OLI on a desk.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/21/Financial_documents_interchange_spawn_13.png/revision/latest?cb=20260816001453",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -115,
+     -45
+    ],
+    "place": "Goshan"
+   },
+   {
+    "document": "Financial documents",
+    "note": "In front of Goshan under the military net on a table at the restaurant.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/14/Financial_documents_interchange_spawn_14.png/revision/latest?cb=20260816001459",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -115,
+     -45
+    ],
+    "place": "Goshan"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the men WC of IDEA.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/cc/Financial_documents_interchange_spawn_15.png/revision/latest?cb=20260816001505",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -34,
+     -235
+    ],
+    "place": "IDEA"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside an office between Goshan and OLI.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/fc/Financial_documents_interchange_spawn_16.png/revision/latest?cb=20260816001510",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -115,
+     -45
+    ],
+    "place": "Goshan"
    }
   ],
   "lighthouse": [
@@ -1130,11 +1373,8 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e5/PMC_personnel_files_lighthouse_spawn_4.png/revision/latest?cb=20260805205717",
     "imageWidth": 2559,
     "imageHeight": 1439,
-    "position": [
-     -133,
-     100
-    ],
-    "place": "Grand Chalet"
+    "position": null,
+    "place": null
    },
    {
     "document": "PMC personnel files",
@@ -1142,11 +1382,8 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/60/PMC_personnel_files_lighthouse_spawn_5.png/revision/latest?cb=20260810183131",
     "imageWidth": 1920,
     "imageHeight": 1080,
-    "position": [
-     -133,
-     100
-    ],
-    "place": "Grand Chalet"
+    "position": null,
+    "place": null
    },
    {
     "document": "PMC personnel files",
@@ -1154,11 +1391,8 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/a5/PMC_personnel_files_lighthouse_spawn_6.png/revision/latest?cb=20260810183139",
     "imageWidth": 2560,
     "imageHeight": 1440,
-    "position": [
-     -133,
-     100
-    ],
-    "place": "Grand Chalet"
+    "position": null,
+    "place": null
    },
    {
     "document": "Technical documentation",
@@ -1214,11 +1448,8 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/05/Technical_documentation_lighthouse_spawn_6.png/revision/latest?cb=20260815073830",
     "imageWidth": 2560,
     "imageHeight": 1440,
-    "position": [
-     -133,
-     100
-    ],
-    "place": "Grand Chalet"
+    "position": null,
+    "place": null
    },
    {
     "document": "Technical documentation",
@@ -1226,11 +1457,8 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/8c/Technical_documentation_lighthouse_spawn_7.png/revision/latest?cb=20260815073847",
     "imageWidth": 2560,
     "imageHeight": 1440,
-    "position": [
-     -133,
-     100
-    ],
-    "place": "Grand Chalet"
+    "position": null,
+    "place": null
    },
    {
     "document": "Technical documentation",
@@ -1256,11 +1484,8 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/03/Technical_documentation_lighthouse_spawn_10.png/revision/latest?cb=20260815075539",
     "imageWidth": 1680,
     "imageHeight": 1050,
-    "position": [
-     -133,
-     100
-    ],
-    "place": "Grand Chalet"
+    "position": null,
+    "place": null
    },
    {
     "document": "Technical documentation",
@@ -1268,11 +1493,8 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0e/Technical_documentation_lighthouse_spawn_11.png/revision/latest?cb=20260815073926",
     "imageWidth": 2560,
     "imageHeight": 1440,
-    "position": [
-     -133,
-     100
-    ],
-    "place": "Grand Chalet"
+    "position": null,
+    "place": null
    },
    {
     "document": "Technical documentation",
@@ -1563,6 +1785,24 @@
     "place": null
    },
    {
+    "document": "Financial documents",
+    "note": "Next to TerraGroup security armory key door on the bookshelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/84/Financial_documents_streets_of_tarkov_spawn_4.png/revision/latest?cb=20260816001115",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the TerraGroup corporate apartment key room on the floor next to a pile of book.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/30/Financial_documents_streets_of_tarkov_spawn_5.png/revision/latest?cb=20260816001121",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
     "document": "User documentation",
     "note": "Behind Cardinal apartment key door on a table.",
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d1/User_documentation_streets_of_tarkov_spawn_1.png/revision/latest?cb=20260815105704",
@@ -1586,11 +1826,8 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/56/User_documentation_streets_of_tarkov_spawn_3.png/revision/latest?cb=20260815105748",
     "imageWidth": 1920,
     "imageHeight": 1080,
-    "position": [
-     -173,
-     226
-    ],
-    "place": "Office"
+    "position": null,
+    "place": null
    },
    {
     "document": "User documentation",
@@ -1598,11 +1835,8 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/56/User_documentation_streets_of_tarkov_spawn_4.png/revision/latest?cb=20260815105831",
     "imageWidth": 1920,
     "imageHeight": 1080,
-    "position": [
-     -173,
-     226
-    ],
-    "place": "Office"
+    "position": null,
+    "place": null
    },
    {
     "document": "User documentation",
@@ -1628,11 +1862,8 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ed/User_documentation_streets_of_tarkov_spawn_7.png/revision/latest?cb=20260815105540",
     "imageWidth": 1920,
     "imageHeight": 1080,
-    "position": [
-     -173,
-     226
-    ],
-    "place": "Office"
+    "position": null,
+    "place": null
    },
    {
     "document": "User documentation",
@@ -1877,6 +2108,15 @@
     "place": null
    },
    {
+    "document": "Medical documents",
+    "note": "On a document stand in front of a medical bed in the infirmary, first floor (G21)",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/06/Medical_documents_the_lab_spawn_17.png/revision/latest?cb=20260815192101",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
     "document": "User documentation",
     "note": "Inside office O22.",
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/90/User_documentation_the_lab_spawn_1.png/revision/latest?cb=20260814204836",
@@ -2024,19 +2264,136 @@
   "the-labyrinth": [
    {
     "document": "Blueprints and technical documentation",
-    "note": "On top of a wooden box.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/8f/Blueprints_and_technical_documentation_the_labyrinth_spawn_1.png/revision/latest?cb=20260806192909",
-    "imageWidth": 2559,
-    "imageHeight": 1439,
+    "note": "On top of a wooden box near the fire hazard room.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/8f/Blueprints_and_technical_documentation_the_labyrinth_spawn_1.png/revision/latest?cb=20260815230205",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Blueprints and technical documentation",
     "note": "Behind Observation room key door on table.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/94/Blueprints_and_technical_documentation_the_labyrinth_spawn_2.png/revision/latest?cb=20260808203943",
-    "imageWidth": 2305,
-    "imageHeight": 1284,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/94/Blueprints_and_technical_documentation_the_labyrinth_spawn_2.png/revision/latest?cb=20260815230217",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Behind bags at the dead scientist no. 4.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/95/Blueprints_and_technical_documentation_the_labyrinth_spawn_3.png/revision/latest?cb=20260815230242",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "In the assembly room on top of a box.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c2/Blueprints_and_technical_documentation_the_labyrinth_spawn_4.png/revision/latest?cb=20260815230249",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "In the assembly room on top of a pallet of boxes.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/62/Blueprints_and_technical_documentation_the_labyrinth_spawn_5.png/revision/latest?cb=20260815230255",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "In the assembly room on a dead worker body.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/f3/Blueprints_and_technical_documentation_the_labyrinth_spawn_6.png/revision/latest?cb=20260815230303",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Next to the body of the PMC at the ariadne path.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/a8/Blueprints_and_technical_documentation_the_labyrinth_spawn_7.png/revision/latest?cb=20260815230309",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Behind Observation room key door on the servers rack.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/5c/Blueprints_and_technical_documentation_the_labyrinth_spawn_8.png/revision/latest?cb=20260815230316",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "On a pile of boxes in front of the assembly room in the central area.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b3/Blueprints_and_technical_documentation_the_labyrinth_spawn_9.png/revision/latest?cb=20260815230322",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Under the door to the Corpse room key.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/fd/Blueprints_and_technical_documentation_the_labyrinth_spawn_10.png/revision/latest?cb=20260815230332",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Inside the package where the Corpse room key spawns between toxic puddle and shotgun trap rooms.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/cc/Blueprints_and_technical_documentation_the_labyrinth_spawn_11.png/revision/latest?cb=20260815230340",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Next to the scientist corpse no. 3 on the pallet.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2e/Blueprints_and_technical_documentation_the_labyrinth_spawn_12.png/revision/latest?cb=20260815230347",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "On a pallet near the exit of the fire hazard room.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/68/Blueprints_and_technical_documentation_the_labyrinth_spawn_13.png/revision/latest?cb=20260815230353",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Under the dead scientist corpse no. 5.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/cd/Blueprints_and_technical_documentation_the_labyrinth_spawn_14.png/revision/latest?cb=20260815230400",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Behind the torture room. The document can't be picked up.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c8/Blueprints_and_technical_documentation_the_labyrinth_spawn_15.png/revision/latest?cb=20260815230443",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
@@ -2125,15 +2482,6 @@
     "document": "Medical documents",
     "note": "On top of a box inside the assembly room.",
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c8/Medical_documents_the_labyrinth_spawn_10.png/revision/latest?cb=20260815082101",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
-    "position": null,
-    "place": null
-   },
-   {
-    "document": "Medical documents",
-    "note": "On top of a box inside the assembly room.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/af/Medical_documents_the_labyrinth_spawn_11.png/revision/latest?cb=20260815082123",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,

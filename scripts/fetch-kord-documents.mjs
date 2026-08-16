@@ -169,7 +169,10 @@ const PLACE_ALIASES = {
     "black pawn building": "Black Pawn",
   },
   lighthouse: {
-    chalet: "Grand Chalet",
+    // No `chalet` alias. Lighthouse has several — the wiki names a blue one, a
+    // black one, a north one and a south one — and we label only Grand Chalet,
+    // so aliasing the bare word put seven spawns from four different buildings
+    // on one pin.
     "water treatment plant": "Water Treatment",
   },
   "ground-zero": {
@@ -179,12 +182,59 @@ const PLACE_ALIASES = {
 };
 
 /**
+ * Words that name a kind of room rather than a place, and so cannot locate
+ * anything on their own.
+ *
+ * Streets labels one building "Office", which matched "inside the TerraGroup
+ * building in a office", "in the FINANCE building… first office" and "inside
+ * the terragroup office" — three pins in the wrong building, since neither
+ * TerraGroup nor Finance is a Streets label.
+ *
+ * This list is deliberately short. Most single-word labels are proper nouns
+ * (Goshan, Beluga, Crackhouse, Fortress) and the common-noun ones in use are
+ * right: Shoreline's "Pier" matches "at the pier", and Cafeteria, Checkpoint
+ * and Sawmill all match their real places. Blocking those would destroy good
+ * pins. Only `office` has evidence against it; the rest are here because they
+ * describe interiors and currently match nothing, so they cost nothing.
+ *
+ * Applies to single-word matches only — "Warehouse 17", "Science Office" and
+ * "Office Building" are specific and stay eligible.
+ */
+const GENERIC_LABELS = new Set([
+  "office",
+  "reception",
+  "parking",
+  "garage",
+  "storage",
+  "warehouse",
+  "hole",
+  "pit",
+  "platform",
+  "connector",
+  "servers",
+  "sinks",
+]);
+
+/**
+ * Wording that makes the place a bearing rather than the destination.
+ *
+ * "Inside the TTS store in front of EMERCOM medical unit key zone" names two
+ * labelled places, and the document is in the first one — EMERCOM is how you
+ * find TTS. Longest-match alone picked EMERCOM and pinned the wrong store.
+ *
+ * "behind" is deliberately absent: "behind OLI administration office key door"
+ * means inside the room that door opens, which is the place we want.
+ */
+const BEARING = /(in front of|next to|nearby|near|opposite|outside of|outside|beside|across from)\s*$/;
+
+/**
  * Anchors a description to a place label on the same map.
  *
- * Longest match wins, so "Old Gas" beats "Gas" and "Warehouse 17" beats
- * "Warehouse". Matching is whole-word to stop "Pit" hitting "pitch" and
- * "Hole" hitting "whole". A miss is fine and expected — the spawn still ships,
- * it just has no pin.
+ * A place the sentence puts the document *in* beats one it merely steers by;
+ * after that, the longest match wins, so "Old Gas" beats "Gas" and
+ * "Warehouse 17" beats "Warehouse". Matching is whole-word to stop "Pit"
+ * hitting "pitch" and "Hole" hitting "whole". A miss is fine and expected —
+ * the spawn still ships, it just has no pin.
  */
 function anchorFor(note, labels, map) {
   const haystack = note.toLowerCase();
@@ -194,7 +244,9 @@ function anchorFor(note, labels, map) {
   const candidates = [];
   for (const label of labels) {
     const text = (label.text ?? "").trim();
-    if (text.length >= 3) candidates.push([text, text, label.position]);
+    if (text.length < 3) continue;
+    if (!text.includes(" ") && GENERIC_LABELS.has(text.toLowerCase())) continue;
+    candidates.push([text, text, label.position]);
   }
   for (const [phrase, target] of Object.entries(PLACE_ALIASES[map] ?? {})) {
     const position = positionOf(target);
@@ -204,9 +256,15 @@ function anchorFor(note, labels, map) {
 
   let best = null;
   for (const [phrase, text, position] of candidates) {
-    const pattern = new RegExp(`\\b${phrase.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`);
-    if (!pattern.test(haystack)) continue;
-    if (!best || phrase.length > best.matched.length) best = { text, position, matched: phrase };
+    const needle = phrase.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const match = new RegExp(`\\b${needle}\\b`).exec(haystack);
+    if (!match) continue;
+    // Everything the sentence said before this place decides whether it is
+    // where the document is, or just how you get your bearings.
+    const contained = !BEARING.test(haystack.slice(0, match.index));
+    const better = !best || (contained && !best.contained) ||
+      (contained === best.contained && phrase.length > best.matched.length);
+    if (better) best = { text, position, matched: phrase, contained };
   }
   return best;
 }
@@ -219,6 +277,7 @@ console.log(`Reading ${DOCUMENTS.length} document pages from the wiki…`);
 const spawnsByMap = {};
 const files = new Set();
 let total = 0;
+let duplicates = 0;
 
 for (const doc of DOCUMENTS) {
   const parsed = await api({ action: "parse", page: doc, prop: "wikitext" });
@@ -231,6 +290,21 @@ for (const doc of DOCUMENTS) {
   const found = parseLocations(wikitext);
   console.log(`  ${doc}: ${found.length} spawn(s)`);
   for (const entry of found) {
+    /*
+     * The wiki lists a couple of spawns twice in the same gallery — Ground
+     * Zero's "room no.3 on the 2nd floor of the TerraGroup building" and the
+     * Labyrinth's "on top of a box inside the assembly room". Same document,
+     * same sentence, one place. Keyed on the wording, and per map, so two
+     * spawns of one document described differently both survive.
+     */
+    const already = (spawnsByMap[entry.map] ?? []).some(
+      (s) => s.document === doc && s.note === entry.note,
+    );
+    if (already) {
+      duplicates++;
+      continue;
+    }
+
     const labels = geo[entry.map]?.labels ?? [];
     const anchor = anchorFor(entry.note, labels, entry.map);
     (spawnsByMap[entry.map] ??= []).push({
@@ -293,6 +367,7 @@ await fs.writeFile(OUT, `${JSON.stringify(payload, null, 1)}\n`);
 
 console.log(`\n${"=".repeat(62)}`);
 console.log(`${total} spawn(s) across ${Object.keys(spawnsByMap).length} map(s)`);
+if (duplicates) console.log(`${duplicates} duplicate listing(s) dropped`);
 console.log(`${pinned} anchored to a place (${((pinned / (total || 1)) * 100).toFixed(0)}%), ${total - pinned} listed without a pin`);
 for (const [map, spawns] of Object.entries(spawnsByMap).sort()) {
   const p = spawns.filter((s) => s.position).length;
