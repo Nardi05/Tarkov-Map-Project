@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { TaskImage } from "../types";
 import { Icon, icons } from "./ui";
 
@@ -63,6 +63,7 @@ export default function TaskGallery({
 }) {
   const [index, setLocal] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
   // Nothing has loaded yet on a fresh task, so don't reserve space for a
   // picture that may turn out to be missing.
   const [broken, setBroken] = useState<Record<number, true>>({});
@@ -132,6 +133,28 @@ export default function TaskGallery({
   useEffect(() => {
     if (!expanded) return;
     const onKey = (e: KeyboardEvent) => {
+      /*
+       * Keep focus inside the overlay. It is a role="dialog" aria-modal
+       * covering the whole page, but without this Tab walks straight out into
+       * the map and the task panel behind it, which is both a WCAG failure and
+       * plainly confusing — you are tabbing through things you cannot see.
+       */
+      if (e.key === "Tab") {
+        const nodes = dialogRef.current?.querySelectorAll<HTMLElement>(
+          "button, [href], [tabindex]:not([tabindex='-1'])",
+        );
+        if (!nodes?.length) return;
+        const list = [...nodes];
+        const first = list[0];
+        const last = list[list.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        const outside = !active || !dialogRef.current?.contains(active);
+        if (e.shiftKey ? active === first || outside : active === last || outside) {
+          e.preventDefault();
+          (e.shiftKey ? last : first).focus();
+        }
+        return;
+      }
       if (e.key !== "Escape" && e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
       // Capture phase + stopPropagation so Escape closes the photo and nothing
       // else: the map page also listens for Escape to dismiss the whole detail
@@ -150,6 +173,18 @@ export default function TaskGallery({
       document.body.style.overflow = previous;
     };
   }, [expanded, step]);
+
+  /*
+   * Move focus in on open and put it back on close. Separate from the key
+   * handler above so it doesn't re-run every time `step` changes identity and
+   * yank focus back mid-browse.
+   */
+  useEffect(() => {
+    if (!expanded) return;
+    const restore = document.activeElement as HTMLElement | null;
+    dialogRef.current?.querySelector<HTMLElement>("[data-autofocus]")?.focus();
+    return () => restore?.focus?.();
+  }, [expanded]);
 
   if (count === 0) return null;
 
@@ -257,6 +292,7 @@ export default function TaskGallery({
 
       {expanded && (
         <div
+          ref={dialogRef}
           className="fixed inset-0 z-[2000] flex flex-col"
           style={{ background: "rgba(6,10,15,.94)" }}
           role="dialog"
@@ -276,6 +312,7 @@ export default function TaskGallery({
               className="btn btn-icon"
               style={{ width: "1.9rem", height: "1.9rem", padding: 0 }}
               aria-label="Close photo"
+              data-autofocus
               onClick={(e) => {
                 e.stopPropagation();
                 setExpanded(false);

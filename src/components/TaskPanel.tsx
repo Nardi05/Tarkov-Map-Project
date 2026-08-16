@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { createElement, useMemo, useState } from "react";
 import { groupQuests, type QuestGroup } from "../lib/build-layers";
 import { useStore } from "../store";
 import type { KeyItem, MapData, TaskStatus, Vec3 } from "../types";
@@ -40,9 +40,31 @@ export default function TaskPanel({
   const setLayer = useStore((s) => s.setLayer);
 
   const [expanded, setExpanded] = useState<string | null>(null);
+  /** Held here so a section that filters down to nothing keeps its state. */
+  const [openSections, setOpenSections] = useState<Partial<Record<TaskStatus | "none", boolean>>>({});
 
-  /** Every task with objectives on this map, before any filtering. */
-  const allGroups = useMemo(() => groupQuests(data, data.markers.quests, true), [data]);
+  /**
+   * Every task with objectives on this map, before any filtering.
+   *
+   * The search text is built once here rather than per row per keystroke, and
+   * it includes quest item names because the map's own filter does
+   * (`filterQuests`) and the search box promises "items". Without them, typing
+   * an item name narrowed the pins while this list said "Nothing matches".
+   */
+  const allGroups = useMemo(
+    () =>
+      groupQuests(data, data.markers.quests, true).map((g) => ({
+        ...g,
+        searchText: [
+          g.task.name,
+          ...g.markers.map((m) => m.description),
+          ...g.markers.map((m) => m.item?.name ?? ""),
+        ]
+          .join(" ")
+          .toLowerCase(),
+      })),
+    [data],
+  );
 
   /** Search / trader / Kappa narrowing. Status is handled by the sections. */
   const matching = useMemo(() => {
@@ -51,8 +73,7 @@ export default function TaskPanel({
       if (quest.kappaOnly && !g.task.kappaRequired) return false;
       if (quest.trader && g.task.trader?.name !== quest.trader) return false;
       if (!needle) return true;
-      const haystack = `${g.task.name} ${g.markers.map((m) => m.description).join(" ")}`.toLowerCase();
-      return haystack.includes(needle);
+      return g.searchText.includes(needle);
     });
   }, [allGroups, quest.search, quest.trader, quest.kappaOnly]);
 
@@ -173,9 +194,13 @@ export default function TaskPanel({
           <span style={{ color: "var(--text-dim)" }}>Show every task on the map</span>
         </label>
 
+        {/* The denominator is every task on this map, which since the panel
+            started listing tasks with no coordinates is a bigger number than it
+            used to be — a returning player's bar dropped with no explanation.
+            Say what it counts rather than quietly changing what it means. */}
         <p className="mt-2.5 text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-          <b style={{ color: "var(--accent)" }}>{counts.active} active</b> · {counts.done} done ·{" "}
-          {allGroups.length} on {data.name}
+          <b style={{ color: "var(--accent)" }}>{counts.active} active</b> · {counts.done} of{" "}
+          {allGroups.length} tasks on {data.name} done
         </p>
         <div className="mt-1.5 h-1 overflow-hidden rounded-full" style={{ background: "var(--panel-3)" }}>
           <div
@@ -210,7 +235,13 @@ export default function TaskPanel({
               key={section.key}
               label={section.label}
               count={groups.length}
-              startsOpen={section.startsOpen}
+              open={openSections[section.key] ?? section.startsOpen}
+              onToggle={() =>
+                setOpenSections((s) => ({
+                  ...s,
+                  [section.key]: !(s[section.key] ?? section.startsOpen),
+                }))
+              }
             >
               {groups.map((group) => (
                 <TaskRow
@@ -240,25 +271,34 @@ export default function TaskPanel({
   );
 }
 
+/**
+ * Open/closed is owned by the panel, not by this component.
+ *
+ * A section with nothing in it renders nothing, which used to unmount this and
+ * throw away its `useState`. Filtering a long list empties and refills sections
+ * constantly, so an expanded "Done" would silently collapse the moment a search
+ * excluded everything in it.
+ */
 function Section({
   label,
   count,
-  startsOpen,
+  open,
+  onToggle,
   children,
 }: {
   label: string;
   count: number;
-  startsOpen: boolean;
+  open: boolean;
+  onToggle: () => void;
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = useState(startsOpen);
   return (
     <section className="mb-2">
       <button
         type="button"
         className="mb-1 flex w-full items-center gap-1.5 px-1 py-1 text-left"
         aria-expanded={open}
-        onClick={() => setOpen(!open)}
+        onClick={onToggle}
       >
         <span
           className="transition-transform"
@@ -311,6 +351,7 @@ function TaskRow({
   onIsolate: () => void;
 }) {
   const { task, markers } = group;
+  const centre = group.centre;
   const doneHere = markers.filter((m) => markerDone[m.id]).length;
   const allLocationsDone = markers.length > 0 && doneHere === markers.length;
   const sharedDescription =
@@ -334,33 +375,39 @@ function TaskRow({
         </span>
 
         <div className="min-w-0 flex-1">
-          <button
-            type="button"
-            onClick={() => group.centre && onFocus(group.centre)}
-            className="block w-full text-left"
-          >
-            <span className="block truncate text-[0.8125rem] font-medium leading-tight">{task.name}</span>
-            <span
-              className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[0.68rem]"
-              style={{ color: "var(--text-faint)" }}
-            >
-              {task.trader && <span>{task.trader.name}</span>}
-              {task.minPlayerLevel > 0 && <span>· Lv {task.minPlayerLevel}</span>}
-              {markers.length === 0 ? (
-                <span title="This task is on this map, but the game data carries no position for its objectives — kill counts, extract-from-here and survival tasks usually have none.">
-                  · not pinned
-                </span>
-              ) : markers.length > 1 ? (
-                <span>
-                  · {doneHere}/{markers.length} locations
-                </span>
-              ) : (
-                <span>· 1 location</span>
-              )}
-              {task.kappaRequired && <span className="chip chip-accent">Kappa</span>}
-              {task.factionName && <span className="chip">{task.factionName}</span>}
-            </span>
-          </button>
+          {/* A task with no coordinates has nowhere to fly to, so it isn't a
+              button. It used to render one anyway: focusable, keyboard
+              reachable, and silently doing nothing — which on Icebreaker was
+              every row on the map. */}
+          {createElement(
+            centre ? "button" : "div",
+            centre
+              ? { type: "button", onClick: () => onFocus(centre), className: "block w-full text-left" }
+              : { className: "block w-full text-left" },
+            <>
+              <span className="block truncate text-[0.8125rem] font-medium leading-tight">{task.name}</span>
+              <span
+                className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[0.68rem]"
+                style={{ color: "var(--text-faint)" }}
+              >
+                {task.trader && <span>{task.trader.name}</span>}
+                {task.minPlayerLevel > 0 && <span>· Lv {task.minPlayerLevel}</span>}
+                {markers.length === 0 ? (
+                  <span title="This task is on this map, but the game data carries no position for its objectives — kill counts, extract-from-here and survival tasks usually have none.">
+                    · not pinned
+                  </span>
+                ) : markers.length > 1 ? (
+                  <span>
+                    · {doneHere}/{markers.length} locations
+                  </span>
+                ) : (
+                  <span>· 1 location</span>
+                )}
+                {task.kappaRequired && <span className="chip chip-accent">Kappa</span>}
+                {task.factionName && <span className="chip">{task.factionName}</span>}
+              </span>
+            </>,
+          )}
 
           {keys.length > 0 && (
             <p className="mt-1 flex flex-wrap items-center gap-1 text-[0.68rem]" style={{ color: "var(--text-dim)" }}>
@@ -400,7 +447,7 @@ function TaskRow({
                         aria-checked={done}
                         aria-label={`Location ${i + 1}${done ? " done" : ""}`}
                         onClick={() => onToggleMarker(marker.id)}
-                        className="mt-px grid h-4 w-4 flex-none place-items-center rounded border"
+                        className="tap-target mt-px grid h-4 w-4 flex-none place-items-center rounded border"
                         style={{
                           borderColor: done ? "#22c55e" : "var(--line)",
                           background: done ? "#22c55e" : "transparent",
@@ -469,16 +516,20 @@ function TaskRow({
               </span>
             </button>
           )}
-          <button
-            type="button"
-            className="btn btn-icon"
-            style={{ width: "1.7rem", height: "1.7rem", padding: 0 }}
-            aria-pressed={focused}
-            title={focused ? "Show all tasks again" : "Show only this task on the map"}
-            onClick={onIsolate}
-          >
-            <Icon path={icons.target} size={14} />
-          </button>
+          {/* Isolating a task with no pins leaves "Showing only <task>" hanging
+              over an empty map, so the control isn't offered. */}
+          {centre && (
+            <button
+              type="button"
+              className="btn btn-icon"
+              style={{ width: "1.7rem", height: "1.7rem", padding: 0 }}
+              aria-pressed={focused}
+              title={focused ? "Show all tasks again" : "Show only this task on the map"}
+              onClick={onIsolate}
+            >
+              <Icon path={icons.target} size={14} />
+            </button>
+          )}
           {task.wiki && (
             <a
               className="btn btn-icon"

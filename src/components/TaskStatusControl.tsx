@@ -37,7 +37,7 @@ export default function TaskStatusControl({
       aria-label={label}
       title={label}
       onClick={onCycle}
-      className="grid flex-none place-items-center rounded-md border transition-colors"
+      className="tap-target grid flex-none place-items-center rounded-md border transition-colors"
       style={{ width: size, height: size, ...style }}
     >
       {status === "completed" ? (
