@@ -43,8 +43,25 @@ const MIN_REAL_WIDTH = 400;
  * they are the wiki's to host, and this keeps the deploy free of a few hundred
  * megabytes of screenshots.
  */
-export default function TaskGallery({ images, taskName }: { images: TaskImage[]; taskName: string }) {
-  const [index, setIndex] = useState(0);
+export default function TaskGallery({
+  images,
+  taskName,
+  index: controlled,
+}: {
+  images: TaskImage[];
+  taskName: string;
+  /**
+   * Which photo to jump to. DocumentList sets this from the spawn the reader
+   * picked, so they don't have to step through 29 screenshots to find one.
+   *
+   * It seeds the index rather than owning it: the arrows keep working from
+   * wherever the parent last put you, instead of being inert against a value
+   * only the parent can change. Omit it and the gallery is entirely its own,
+   * which is what the task detail panel does.
+   */
+  index?: number;
+}) {
+  const [index, setLocal] = useState(0);
   const [expanded, setExpanded] = useState(false);
   // Nothing has loaded yet on a fresh task, so don't reserve space for a
   // picture that may turn out to be missing.
@@ -52,18 +69,25 @@ export default function TaskGallery({ images, taskName }: { images: TaskImage[];
   const [loaded, setLoaded] = useState<Record<number, true>>({});
 
   const count = images.length;
+  // Stepping has to work from the index actually on screen, which may be the
+  // parent's, so this can't be a functional update off `local`.
   const step = useCallback(
-    (delta: number) => setIndex((i) => (i + delta + count) % count),
-    [count],
+    (delta: number) => setLocal((index + delta + count) % count),
+    [index, count],
   );
 
   // Reset when the panel switches to a different task.
   useEffect(() => {
-    setIndex(0);
+    setLocal(0);
     setExpanded(false);
     setBroken({});
     setLoaded({});
   }, [taskName]);
+
+  // Follow the parent when it moves the selection.
+  useEffect(() => {
+    if (controlled !== undefined) setLocal(controlled);
+  }, [controlled]);
 
   /*
    * Warm the neighbours, then the blow-up copy of what you're looking at.
