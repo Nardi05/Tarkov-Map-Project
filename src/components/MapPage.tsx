@@ -10,7 +10,7 @@ import { Icon, icons } from "./ui";
 import { availableStyles, floorsFor } from "../lib/base-layer";
 import { filterQuests, type Selection } from "../lib/build-layers";
 import { withinExtents } from "../lib/leaflet-crs";
-import { useStore } from "../store";
+import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import { href, navigate } from "../lib/router";
 import type { MapData, MapIndexEntry, Vec3 } from "../types";
 
@@ -35,8 +35,8 @@ export default function MapPage({
   const settings = useStore((s) => s.settings);
   const quest = useStore((s) => s.quest);
   const setQuestFilter = useStore((s) => s.setQuestFilter);
-  const taskStatus = useStore((s) => s.taskStatus);
-  const markerDone = useStore((s) => s.markerDone);
+  const taskStatus = useTaskStatus();
+  const markerDone = useMarkerDone();
   const setSetting = useStore((s) => s.setSetting);
 
   const [tab, setTab] = useState<Tab>("layers");
