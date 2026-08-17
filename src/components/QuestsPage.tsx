@@ -5,6 +5,7 @@ import { href, navigate } from "../lib/router";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import type { Faction, GameMode } from "../lib/persist-migrate";
 import type { KeyItem, Progression, TaskAvailability, TaskItemNeed } from "../types";
+import SyncPanel from "./SyncPanel";
 import TaskStatusControl from "./TaskStatusControl";
 import { EmptyState, Icon, icons } from "./ui";
 
@@ -152,6 +153,8 @@ export default function QuestsPage() {
         trackedCount={trackedCount}
         markerCount={Object.keys(markerDone).length}
       />
+
+      <SyncPanel progression={data} />
 
       {data?.degraded && (
         <p
