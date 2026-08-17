@@ -9,7 +9,9 @@ import RaidClock from "./RaidClock";
 import { Icon, icons } from "./ui";
 import { availableStyles, floorsFor } from "../lib/base-layer";
 import { filterQuests, type Selection } from "../lib/build-layers";
+import { useProgression } from "../lib/data";
 import { withinExtents } from "../lib/leaflet-crs";
+import { availableOnMap, computeAvailability } from "../lib/progression";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import { href, navigate } from "../lib/router";
 import type { MapData, MapIndexEntry, Vec3 } from "../types";
@@ -60,9 +62,28 @@ export default function MapPage({
   // Fall back gracefully when a map only ships one of the two artwork styles.
   const style = styles.includes(settings.style) ? settings.style : (styles[0] ?? "clean");
 
+  /*
+   * The task graph, so the map can draw what you could pick up here without
+   * being told. It is 285KB and loads on demand — until it arrives
+   * `availability` is empty and the map falls back to your active tasks, which
+   * is exactly the old behaviour rather than a blank screen.
+   */
+  const progression = useProgression();
+  const profile = useStore((s) => s.profile);
+
+  const availability = useMemo(
+    () => computeAvailability(progression.data, taskStatus, profile),
+    [progression.data, taskStatus, profile],
+  );
+
+  const availableHere = useMemo(
+    () => new Set(availableOnMap(progression.data, availability, data.normalizedName)),
+    [progression.data, availability, data.normalizedName],
+  );
+
   const visibleQuests = useMemo(
-    () => filterQuests(data, quest, taskStatus),
-    [data, quest, taskStatus],
+    () => filterQuests(data, quest, taskStatus, availableHere),
+    [data, quest, taskStatus, availableHere],
   );
 
   /*
@@ -127,7 +148,7 @@ export default function MapPage({
     <>
       {tab === "layers" && <LayerPanel data={data} visibleQuestCount={visibleQuests.length} />}
       {tab === "tasks" && (
-        <TaskPanel data={data} onFocus={focusOn} />
+        <TaskPanel data={data} availability={availability} onFocus={focusOn} />
       )}
       {tab === "settings" && (
         <SettingsPanel data={data} floors={floors} floorId={floorId} onFloorChange={setFloorId} />

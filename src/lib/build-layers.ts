@@ -629,17 +629,36 @@ export function filterQuests(
   data: MapData,
   filters: QuestFilterInput,
   taskStatus: Record<string, TaskStatus>,
+  /**
+   * Tasks the graph says are ready to pick up here. Absent (or empty) while the
+   * task graph is still loading, which just means the map falls back to
+   * active-only — the behaviour before availability existed.
+   */
+  availableHere?: ReadonlySet<string>,
 ): QuestMarker[] {
   const needle = filters.search.trim().toLowerCase();
+
+  /*
+   * "Active if known, else available."
+   *
+   * Once the player has told us what they are running on this map, that is
+   * exactly what gets drawn — anything else is noise during a raid. Until they
+   * have, drawing what the graph says they *could* pick up here is what makes
+   * the map useful the moment it opens, with nothing typed in.
+   */
+  const anyActiveHere = data.markers.quests.some((m) => taskStatus[m.task] === "active");
 
   return data.markers.quests.filter((marker) => {
     const task = data.tasks[marker.task];
     if (!task) return false;
     if (filters.focusTask) return task.id === filters.focusTask;
-    // The default view is "what am I doing this raid", so only tasks the
-    // player ticked active reach the map. Show-all is the browse mode and
-    // deliberately keeps finished tasks in, faded by the dimCompleted setting.
-    if (!filters.showAll && taskStatus[task.id] !== "active") return false;
+    // Show-all is the browse mode and deliberately keeps finished tasks in,
+    // faded by the dimCompleted setting.
+    if (!filters.showAll) {
+      const shown =
+        taskStatus[task.id] === "active" || (!anyActiveHere && !!availableHere?.has(task.id));
+      if (!shown) return false;
+    }
     if (filters.kappaOnly && !task.kappaRequired) return false;
     if (filters.trader && task.trader?.name !== filters.trader) return false;
     if (needle) {

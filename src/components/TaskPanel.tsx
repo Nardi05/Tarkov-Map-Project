@@ -1,7 +1,7 @@
 import { createElement, useMemo, useState } from "react";
 import { groupQuests, type QuestGroup } from "../lib/build-layers";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
-import type { KeyItem, MapData, TaskStatus, Vec3 } from "../types";
+import type { KeyItem, MapData, TaskAvailability, TaskStatus, Vec3 } from "../types";
 import TaskStatusControl from "./TaskStatusControl";
 import { EmptyState, Icon, icons } from "./ui";
 
@@ -15,17 +15,32 @@ import { EmptyState, Icon, icons } from "./ui";
  */
 
 /** Section order. `key` is the stored status; `undefined` is "not started". */
-const SECTIONS: { key: TaskStatus | "none"; label: string; startsOpen: boolean }[] = [
+/**
+ * The panel is grouped by what state a task is in, not by trader — during a
+ * raid the question is "what can I do", and the answer is a short list.
+ *
+ * "Available" and "Locked" come from the task graph, so they only appear once
+ * it has loaded; anything the graph has never heard of falls into "Not started"
+ * and behaves exactly as it did before availability existed.
+ */
+type SectionKey = TaskStatus | "available" | "locked" | "none";
+
+const SECTIONS: { key: SectionKey; label: string; startsOpen: boolean }[] = [
   { key: "active", label: "Active", startsOpen: true },
+  { key: "available", label: "Available now", startsOpen: true },
   { key: "none", label: "Not started", startsOpen: true },
+  { key: "locked", label: "Locked", startsOpen: false },
   { key: "completed", label: "Done", startsOpen: false },
 ];
 
 export default function TaskPanel({
   data,
+  availability,
   onFocus,
 }: {
   data: MapData;
+  /** From the task graph. Empty while it loads, which is a fine default. */
+  availability: Record<string, TaskAvailability>;
   onFocus: (position: Vec3) => void;
 }) {
   const quest = useStore((s) => s.quest);
@@ -41,7 +56,7 @@ export default function TaskPanel({
 
   const [expanded, setExpanded] = useState<string | null>(null);
   /** Held here so a section that filters down to nothing keeps its state. */
-  const [openSections, setOpenSections] = useState<Partial<Record<TaskStatus | "none", boolean>>>({});
+  const [openSections, setOpenSections] = useState<Partial<Record<SectionKey, boolean>>>({});
 
   /**
    * Every task with objectives on this map, before any filtering.
@@ -78,15 +93,16 @@ export default function TaskPanel({
   }, [allGroups, quest.search, quest.trader, quest.kappaOnly]);
 
   const buckets = useMemo(() => {
-    const out = new Map<TaskStatus | "none", QuestGroup[]>();
+    const out = new Map<SectionKey, QuestGroup[]>();
     for (const g of matching) {
-      const key = taskStatus[g.task.id] ?? "none";
+      // What the player said wins; the graph only fills the silence.
+      const key: SectionKey = taskStatus[g.task.id] ?? availability[g.task.id] ?? "none";
       const bucket = out.get(key);
       if (bucket) bucket.push(g);
       else out.set(key, [g]);
     }
     return out;
-  }, [matching, taskStatus]);
+  }, [matching, taskStatus, availability]);
 
   const traders = useMemo(() => {
     const names = new Set<string>();
@@ -223,7 +239,8 @@ export default function TaskPanel({
             className="mb-2 rounded-lg px-2.5 py-2 text-[0.7rem] leading-snug"
             style={{ background: "var(--panel-3)", color: "var(--text-dim)" }}
           >
-            Tick the tasks you have accepted in game and they will appear on the map together.
+            The map is showing what you could pick up here. Tick the tasks you have actually
+            accepted in game and it narrows to just those.
           </p>
         )}
 
