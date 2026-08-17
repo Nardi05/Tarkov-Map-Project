@@ -163,10 +163,79 @@ export interface QuestMarker {
 /**
  * What the player has told us about a task. Absent means "not started".
  *
- * Both states are declared by hand — the site never infers one. "active" means
- * the task is in your in-game list right now, which is what the map draws.
+ * Declared by hand or imported from a sync — never inferred. The graph can work
+ * out that a task is *available*, but only the player can say it is active or
+ * done, and what they say always wins. See `TaskAvailability`.
  */
 export type TaskStatus = "active" | "completed";
+
+/**
+ * A task's state once the graph has had its say.
+ *
+ * "locked" and "available" are derived from prerequisites, level, faction and
+ * trader loyalty; "active" and "completed" only ever come from the player.
+ * `computeAvailability` returns the declared status untouched when there is
+ * one — the previous version of this feature was removed because the inference
+ * had no override, and that is the mistake this must not repeat.
+ */
+export type TaskAvailability = "locked" | "available" | "active" | "completed";
+
+/** One requirement: a prior task that must be in one of these states. */
+export interface TaskRequirement {
+  task: string;
+  status: string[];
+}
+
+/** A trader loyalty or reputation gate, e.g. "Prapor LL2". */
+export interface TraderGate {
+  trader: string;
+  kind: "level" | "reputation";
+  value: number;
+}
+
+/** An item the task wants handed in, and whether it must be found in raid. */
+export interface TaskItemNeed {
+  /** Any one of these ids satisfies it; usually a single item. */
+  items: string[];
+  name: string;
+  icon: string | null;
+  count: number;
+  foundInRaid: boolean;
+}
+
+export interface ProgressionTask {
+  name: string;
+  trader: string | null;
+  minPlayerLevel: number;
+  factionName: string | null;
+  kappaRequired: boolean;
+  lightkeeperRequired: boolean;
+  /** Alternative requirement sets — satisfied when any one set is fully met. */
+  requires: TaskRequirement[][];
+  /** Maps this task has markers on; empty for tasks handled purely at a trader. */
+  maps: string[];
+  /** Loyalty gates the trader applies before offering it. */
+  traderGates: TraderGate[];
+  /** Items to hand in, for the "find in raid" shopping list. */
+  needs: TaskItemNeed[];
+  /** Keys the task's objectives need, by map. */
+  keys: { map: string | null; keys: string[] }[];
+  wiki: string | null;
+}
+
+/**
+ * The complete task graph, including tasks that never appear on a map. Roughly
+ * half of all prerequisite edges point at those, so availability can't be
+ * worked out from the per-map payloads alone.
+ */
+export interface Progression {
+  generated: string;
+  /** True when the upstream feed looked degraded and the graph may be thin. */
+  degraded: boolean;
+  tasks: Record<string, ProgressionTask>;
+  /** Every key any task needs, so a cross-map list has names and icons. */
+  keys: Record<string, KeyItem>;
+}
 
 /** One wiki screenshot for a task, hotlinked from the wiki's own CDN. */
 export interface TaskImage {

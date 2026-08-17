@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { MapData, MapIndex, TaskImage, TaskImages } from "../types";
+import type { MapData, MapIndex, TaskImage, TaskImages, Progression } from "../types";
 
 /**
  * Data lives as static JSON next to the bundle (see scripts/build-data.mjs).
@@ -10,6 +10,7 @@ const BASE = `${import.meta.env.BASE_URL}data`;
 
 const mapCache = new Map<string, Promise<MapData>>();
 let indexPromise: Promise<MapIndex> | null = null;
+let progressionPromise: Promise<Progression> | null = null;
 let imagesPromise: Promise<TaskImages> | null = null;
 
 async function getJson<T>(url: string): Promise<T> {
@@ -34,6 +35,26 @@ export function loadIndex(): Promise<MapIndex> {
  *
  * A failure here is not worth surfacing: the gallery just doesn't appear.
  */
+/**
+ * The full task graph, including the ~165 tasks that never appear on a map.
+ *
+ * Separate from the per-map payloads by necessity, not preference: about half
+ * of all prerequisite edges point at trader turn-ins and skill tasks that have
+ * no map row to hang on, so a per-map file physically cannot answer "what is
+ * unlocked". 285KB, so it loads on demand — the map pages never need it.
+ */
+export function loadProgression(): Promise<Progression> {
+  progressionPromise ??= getJson<Progression>(`${BASE}/progression.json`).catch((err) => {
+    progressionPromise = null;
+    throw err;
+  });
+  return progressionPromise;
+}
+
+export function useProgression() {
+  return useAsync(loadProgression, []);
+}
+
 export function loadTaskImages(): Promise<TaskImages> {
   imagesPromise ??= getJson<TaskImages>(`${BASE}/task-images.json`).catch((err) => {
     imagesPromise = null;
