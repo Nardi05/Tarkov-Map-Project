@@ -174,13 +174,13 @@ export const LAYERS: LayerDef[] = [
     id: "quests",
     group: "tasks",
     label: "Quest objectives",
-    hint: "Every task objective anchored to this map. Filter by trader or by your own progress.",
+    hint: "Your tasks on this map — the ones you ticked active, or everything you could pick up if you haven't ticked any.",
     color: "#22c55e",
     shape: "quest",
-    // Off on a first visit: a busy map carries 150+ objectives and the green
-    // would bury the spawns and exits a new player needs to see first. The
-    // Tasks panel offers to switch it on the moment they go looking.
-    defaultOn: false,
+    // On by default now that the layer draws *your* tasks rather than all 150+
+    // objectives on the map. That was the only reason it started off, and the
+    // whole point of the tracker is that the right pins are already there.
+    defaultOn: true,
   },
   {
     id: "documents",
