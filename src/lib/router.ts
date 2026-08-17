@@ -1,14 +1,18 @@
 import { useSyncExternalStore, useCallback } from "react";
 
 /**
- * Hash routing, hand-rolled. The site has exactly two routes, and hash URLs
+ * Hash routing, hand-rolled. The site has a handful of routes, and hash URLs
  * mean the build drops onto any static host — including a subpath — with no
  * server rewrite rules.
  *
  *   #/            map picker
  *   #/m/<map>     one map, optionally ?q=<taskId> to deep-link a task
+ *   #/quests      the quest tracker dashboard
  */
-export type Route = { name: "home" } | { name: "map"; map: string; task: string | null };
+export type Route =
+  | { name: "home" }
+  | { name: "quests" }
+  | { name: "map"; map: string; task: string | null };
 
 function parse(hash: string): Route {
   const raw = hash.replace(/^#/, "");
@@ -18,6 +22,7 @@ function parse(hash: string): Route {
     const task = new URLSearchParams(queryPart ?? "").get("q");
     return { name: "map", map: decodeURIComponent(segments[1]), task };
   }
+  if (segments[0] === "quests") return { name: "quests" };
   return { name: "home" };
 }
 
@@ -60,5 +65,6 @@ export function useNavigate() {
 
 export const href = {
   home: () => "#/",
+  quests: () => "#/quests",
   map: (map: string, task?: string | null) => `#/m/${encodeURIComponent(map)}${task ? `?q=${task}` : ""}`,
 };

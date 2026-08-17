@@ -47,7 +47,7 @@ export default function App() {
     );
   }
 
-  if (route.name === "home") {
+  if (route.name !== "map") {
     if (index.loading || !index.data) return <Loading label="Loading maps" />;
     return <HomePage maps={index.data.maps} />;
   }
