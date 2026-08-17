@@ -3,7 +3,7 @@ import { useProgression } from "../lib/data";
 import { computeAvailability, lockReasons, prerequisiteClosure } from "../lib/progression";
 import { href, navigate } from "../lib/router";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
-import type { Faction, GameMode } from "../lib/persist-migrate";
+import type { Faction, GameMode, Profile } from "../lib/persist-migrate";
 import type { KeyItem, Progression, TaskAvailability, TaskItemNeed } from "../types";
 import SyncPanel from "./SyncPanel";
 import TaskStatusControl from "./TaskStatusControl";
@@ -76,6 +76,19 @@ export default function QuestsPage() {
       blockers: [],
     }));
   }, [data, availability]);
+
+  /*
+   * Only traders that actually gate something get a control. Offering all
+   * eleven would put four dead selects on screen — Fence, Ref, Lightkeeper and
+   * the BTR Driver hand out tasks but never gate one on loyalty.
+   */
+  const gatingTraders = useMemo(() => {
+    const names = new Set<string>();
+    for (const task of Object.values(data?.tasks ?? {})) {
+      for (const gate of task.traderGates) if (gate.kind === "level") names.add(gate.trader);
+    }
+    return [...names].sort();
+  }, [data]);
 
   const needle = query.trim().toLowerCase();
   const matches = (row: Row) =>
@@ -150,6 +163,7 @@ export default function QuestsPage() {
       <ProfileBar
         profile={profile}
         setProfile={setProfile}
+        traders={gatingTraders}
         trackedCount={trackedCount}
         markerCount={Object.keys(markerDone).length}
       />
@@ -428,14 +442,14 @@ function Panel({
 function ProfileBar({
   profile,
   setProfile,
+  traders,
   trackedCount,
   markerCount,
 }: {
-  profile: { mode: GameMode; faction: Faction; level: number };
-  setProfile: <K extends "mode" | "faction" | "level">(
-    key: K,
-    value: { mode: GameMode; faction: Faction; level: number }[K],
-  ) => void;
+  profile: Profile;
+  setProfile: <K extends keyof Profile>(key: K, value: Profile[K]) => void;
+  /** Traders that actually gate something, from the graph. */
+  traders: string[];
   trackedCount: number;
   markerCount: number;
 }) {
@@ -495,6 +509,53 @@ function ProfileBar({
         <br />
         {markerCount} location{markerCount === 1 ? "" : "s"} ticked
       </p>
+
+      {traders.length > 0 && (
+        <div className="w-full border-t pt-3" style={{ borderColor: "var(--line-soft)" }}>
+          <p
+            className="text-[0.68rem] font-semibold uppercase tracking-[0.09em]"
+            style={{ color: "var(--text-dim)" }}
+          >
+            Trader loyalty
+          </p>
+          <p className="mt-0.5 text-[0.66rem] leading-snug" style={{ color: "var(--text-faint)" }}>
+            {/* The honest framing: this only ever narrows the list, and only for
+                traders you name. Blank is a valid answer, not an unfinished one. */}
+            Optional. Set a trader and its higher-loyalty tasks stay locked until you get there.
+            Leave one blank and it is never used against you.
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {traders.map((trader) => (
+              <label key={trader} className="flex items-center gap-1.5">
+                <span className="text-[0.72rem]" style={{ color: "var(--text-dim)" }}>
+                  {trader}
+                </span>
+                <select
+                  className="input tabular-nums"
+                  style={{ width: "auto", padding: "0.2rem 1.4rem 0.2rem 0.45rem" }}
+                  value={profile.traderLevels[trader] ?? ""}
+                  onChange={(e) => {
+                    const next = { ...profile.traderLevels };
+                    // Removing the key, not storing 0: absent means "not told",
+                    // and the engine treats those two very differently.
+                    if (e.target.value === "") delete next[trader];
+                    else next[trader] = Number(e.target.value);
+                    setProfile("traderLevels", next);
+                  }}
+                  aria-label={`${trader} loyalty level`}
+                >
+                  <option value="">—</option>
+                  {[1, 2, 3, 4].map((n) => (
+                    <option key={n} value={n}>
+                      LL{n}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

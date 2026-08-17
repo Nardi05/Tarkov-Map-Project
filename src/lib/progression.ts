@@ -12,11 +12,16 @@ import type { Progression, ProgressionTask, TaskAvailability, TaskStatus } from 
 export interface ProfileInput {
   level: number;
   faction: string;
+  /**
+   * Loyalty level per trader name. A trader missing from this record is one the
+   * player has not told us about, and is never enforced — see `meetsTraders`.
+   */
+  traderLevels?: Record<string, number>;
 }
 
 /** Why a task can't be picked up yet, in words the player can act on. */
 export interface LockReason {
-  kind: "task" | "level" | "faction";
+  kind: "task" | "level" | "faction" | "trader";
   label: string;
 }
 
@@ -44,7 +49,35 @@ function meetsProfile(task: ProgressionTask, profile: ProfileInput): boolean {
   if (task.factionName && profile.faction !== "Any" && task.factionName !== profile.faction) {
     return false;
   }
-  return true;
+  return unmetTraderGates(task, profile).length === 0;
+}
+
+/**
+ * Trader loyalty gates the player's own levels rule out.
+ *
+ * A gate is only ever enforced for a trader the player has actually given a
+ * level for. This matters more than it looks: 83 tasks carry a loyalty gate and
+ * nothing else, so enforcing an unknown trader as level 1 would lock most of
+ * the game for anybody who hasn't filled the form in. Silence means "don't
+ * know", and not knowing is never a reason to hide something.
+ *
+ * Reputation gates are skipped entirely — the site has no way to ask for a
+ * reputation figure, and guessing one would be inventing progress.
+ */
+function unmetTraderGates(task: ProgressionTask, profile: ProfileInput): LockReason[] {
+  const levels = profile.traderLevels;
+  if (!levels) return [];
+
+  const out: LockReason[] = [];
+  for (const gate of task.traderGates) {
+    if (gate.kind !== "level") continue;
+    const known = levels[gate.trader];
+    if (typeof known !== "number") continue;
+    if (known < gate.value) {
+      out.push({ kind: "trader", label: `${gate.trader} LL${gate.value}` });
+    }
+  }
+  return out;
 }
 
 export function computeAvailability(
@@ -100,6 +133,7 @@ export function lockReasons(
   if (task.factionName && profile.faction !== "Any" && task.factionName !== profile.faction) {
     reasons.push({ kind: "faction", label: `${task.factionName} only` });
   }
+  reasons.push(...unmetTraderGates(task, profile));
 
   if (task.requires.length > 0) {
     // Report the alternative that is closest to being satisfied — that is the

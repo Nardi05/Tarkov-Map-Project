@@ -25,6 +25,13 @@ export interface Profile {
   mode: GameMode;
   faction: Faction;
   level: number;
+  /**
+   * Loyalty level per trader, by trader name. A trader absent from this record
+   * means "not told", and an untold trader never gates anything — leaving it
+   * blank must never make somebody's task list worse than not having the
+   * feature at all.
+   */
+  traderLevels: Record<string, number>;
 }
 
 export interface ModeProgress {
@@ -34,7 +41,12 @@ export interface ModeProgress {
 
 export const GAME_MODES: GameMode[] = ["pvp", "pve"];
 
-export const DEFAULT_PROFILE: Profile = { mode: "pvp", faction: "Any", level: 15 };
+export const DEFAULT_PROFILE: Profile = {
+  mode: "pvp",
+  faction: "Any",
+  level: 15,
+  traderLevels: {},
+};
 
 export const emptyProgress = (): Record<GameMode, ModeProgress> => ({
   pvp: { taskStatus: {}, markerDone: {} },
@@ -118,5 +130,12 @@ export function mergeProgress(
 }
 
 export function mergeProfile(stored: Partial<Profile> | undefined): Profile {
-  return { ...DEFAULT_PROFILE, ...(stored ?? {}) };
+  return {
+    ...DEFAULT_PROFILE,
+    ...(stored ?? {}),
+    // Named explicitly, per the rule above: a nested object present in the
+    // stored state but null, or absent from a save that predates it, must come
+    // back as an object rather than undefined — every read site indexes it.
+    traderLevels: stored?.traderLevels ?? {},
+  };
 }

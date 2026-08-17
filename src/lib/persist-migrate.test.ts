@@ -75,3 +75,13 @@ test("migrating twice is a no-op, not a second move", () => {
   const twice = migrate(structuredClone(once), 4) as Record<string, any>;
   assert.deepEqual(twice.progress.pvp.taskStatus, { a: "active" });
 });
+
+test("a save from before trader levels gets an object, never undefined", () => {
+  // Every read site indexes traderLevels; undefined here would throw on load.
+  assert.deepEqual(mergeProfile({ level: 30 }).traderLevels, {});
+  assert.deepEqual(
+    mergeProfile({ traderLevels: undefined } as never).traderLevels,
+    {},
+  );
+  assert.deepEqual(mergeProfile({ traderLevels: { Prapor: 3 } }).traderLevels, { Prapor: 3 });
+});
