@@ -1,6 +1,11 @@
 import { useMemo, useState } from "react";
 import { useProgression } from "../lib/data";
-import { computeAvailability, lockReasons, prerequisiteClosure } from "../lib/progression";
+import {
+  computeAvailability,
+  lockReasons,
+  prerequisiteClosure,
+  type LockReason,
+} from "../lib/progression";
 import { href, navigate } from "../lib/router";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import type { Faction, GameMode, Profile } from "../lib/persist-migrate";
@@ -35,7 +40,7 @@ interface Row {
   gates: string[];
   wiki: string | null;
   /** Populated only for locked rows — computing it for all 511 is wasted work. */
-  blockers: { kind: string; label: string }[];
+  blockers: LockReason[];
 }
 
 const FACTIONS: Faction[] = ["Any", "USEC", "BEAR"];
@@ -170,7 +175,7 @@ export default function QuestsPage() {
 
       <SyncPanel progression={data} />
 
-      {data?.degraded && (
+      {data?.coverage && data.coverage.ungated > 0 && (
         <p
           className="surface-2 mt-4 flex items-start gap-2 p-3 text-[0.78rem] leading-relaxed"
           style={{ color: "var(--text-dim)" }}
@@ -179,9 +184,16 @@ export default function QuestsPage() {
             <Icon path={icons.info} size={15} />
           </span>
           <span>
-            The upstream task feed was incomplete when this data was built, so some prerequisites
-            are missing. A task may show as available slightly earlier than the game allows. Your
-            own ticks are never affected.
+            {/* Numbers, not a vague warning. The old banner said "data may be
+                incomplete" on every visit, which tells nobody anything and is
+                easy to stop reading. This says how much is actually known. */}
+            Prerequisites are known for{" "}
+            <strong style={{ color: "var(--text)" }}>
+              {data.coverage.withPrereq} of {data.coverage.tasks}
+            </strong>{" "}
+            tasks. The remaining {data.coverage.ungated} have nothing recorded gating them at all,
+            so they show as available from the start — the game may not offer them yet. Your own
+            ticks are never affected.
           </span>
         </p>
       )}
@@ -712,7 +724,19 @@ function TaskRow({
 
         {row.blockers.length > 0 && (
           <p className="mt-1 text-[0.7rem] leading-snug" style={{ color: "var(--text-faint)" }}>
-            Needs {row.blockers.map((b) => b.label).join(", ")}
+            Needs{" "}
+            {row.blockers.map((b, i) => (
+              <span key={`${b.kind}-${b.label}`}>
+                {i > 0 && ", "}
+                {b.label}
+                {/* The feed states barely half of these; the rest are the
+                    wiki's word. Somebody deciding whether to trust a lock
+                    should be able to see which they are looking at. */}
+                {b.from === "wiki" && (
+                  <span title="From the wiki, not the game data feed"> (per the wiki)</span>
+                )}
+              </span>
+            ))}
           </p>
         )}
 

@@ -184,6 +184,14 @@ export type TaskAvailability = "locked" | "available" | "active" | "completed";
 export interface TaskRequirement {
   task: string;
   status: string[];
+  /**
+   * Where the requirement came from. The tarkov.dev feed states barely half of
+   * them, so the rest are read off the wiki's quest infoboxes — see
+   * `scripts/fetch-quest-prereqs.mjs`. A wiki edge is only ever added to a task
+   * the feed said nothing about, never over one it stated, but it is a
+   * community source and the UI says so rather than passing it off as the feed.
+   */
+  from?: "feed" | "wiki";
 }
 
 /** A trader loyalty or reputation gate, e.g. "Prapor LL2". */
@@ -232,6 +240,16 @@ export interface Progression {
   generated: string;
   /** True when the upstream feed looked degraded and the graph may be thin. */
   degraded: boolean;
+  /**
+   * What the graph actually knows, so the dashboard can report the gap in
+   * numbers instead of warning about it vaguely on every visit.
+   *
+   * `ungated` counts tasks with no prerequisite, no level and no trader gate —
+   * ones nothing holds back, which therefore read as available from the first
+   * minute of a wipe. That number is the honest measure of what is still
+   * missing. Absent on payloads built before this was recorded.
+   */
+  coverage?: { tasks: number; withPrereq: number; ungated: number };
   tasks: Record<string, ProgressionTask>;
   /** Every key any task needs, so a cross-map list has names and icons. */
   keys: Record<string, KeyItem>;

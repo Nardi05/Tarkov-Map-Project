@@ -1058,6 +1058,66 @@ for (const [canonicalId, members] of groupMembers) {
 }
 
 /*
+ * Fill the feed's gaps from the wiki scrape.
+ *
+ * The feed states prerequisites for well under half its tasks — the rest carry
+ * nothing at all, and a task nothing gates reads as available from level one.
+ * `scripts/fetch-quest-prereqs.mjs` reads the same relationships off the wiki's
+ * quest infoboxes and writes them to data/quest-prereqs.json.
+ *
+ * The merge is one-directional on purpose: **the feed wins wherever it has an
+ * opinion.** A wiki edge is only ever added to a task the feed said nothing
+ * about, so a community edit can fill a silence but can never contradict, or
+ * quietly reshape, a relationship the feed actually stated. Requirements carry
+ * where they came from so the UI can say which is which.
+ *
+ * Missing the file is not an error. Someone building without running the scrape gets
+ * the feed-only graph, which is exactly what shipped before this existed.
+ */
+{
+  let wikiPrereqs = null;
+  try {
+    wikiPrereqs = JSON.parse(
+      await fs.readFile(path.join(ROOT, "data", "quest-prereqs.json"), "utf8"),
+    );
+  } catch {
+    console.warn("  no quest-prereqs.json — building the graph from the feed alone");
+  }
+
+  for (const task of Object.values(progression)) {
+    for (const set of task.requires) for (const req of set) req.from = "feed";
+  }
+
+  if (wikiPrereqs) {
+    let filled = 0;
+    let added = 0;
+    for (const [taskId, before] of Object.entries(wikiPrereqs.requires ?? {})) {
+      const task = progression[taskId];
+      if (!task) continue;
+      // "Has an opinion" means a non-empty set. A task whose only set is empty
+      // is one the feed listed with no requirements, which is silence.
+      if (task.requires.some((set) => set.length > 0)) continue;
+
+      const set = before
+        .filter((id) => progression[id] && id !== taskId)
+        .map((id) => ({ task: id, status: ["complete"], from: "wiki" }));
+      if (!set.length) continue;
+
+      // Replaces the empty set rather than sitting beside it: an empty set
+      // satisfies everything, so leaving it in place would make the new
+      // requirements do nothing at all.
+      task.requires = [set];
+      filled++;
+      added += set.length;
+    }
+    console.log(
+      `  wiki prerequisites: filled ${filled} tasks the feed left blank (+${added} edges, ` +
+        `${wikiPrereqs.agreement}% of scraped edges stated from both directions)`,
+    );
+  }
+}
+
+/*
  * Break prerequisite cycles.
  *
  * The raw feed is a clean DAG. Cycles appear only after canonicalisation: the
@@ -1101,15 +1161,34 @@ for (const [canonicalId, members] of groupMembers) {
 }
 
 {
-  const edges = Object.values(progression).reduce((n, t) => n + t.requires.flat().length, 0);
-  const onMap = Object.values(progression).filter((t) => t.maps.length).length;
-  const fir = Object.values(progression).reduce(
-    (n, t) => n + t.needs.filter((x) => x.foundInRaid).length,
-    0,
+  const all = Object.values(progression);
+  const edges = all.reduce((n, t) => n + t.requires.flat().length, 0);
+  const onMap = all.filter((t) => t.maps.length).length;
+  const fir = all.reduce((n, t) => n + t.needs.filter((x) => x.foundInRaid).length, 0);
+
+  /*
+   * How much of the graph is actually known.
+   *
+   * A task with no prerequisite and no level gate is one nothing holds back, so
+   * it shows as available from the first minute of a wipe. Counting those is
+   * the closest thing to an honest self-assessment this build can make, and it
+   * is what the dashboard reports instead of a vague "data may be incomplete".
+   */
+  const withPrereq = all.filter((t) => t.requires.some((set) => set.length > 0)).length;
+  const ungated = all.filter(
+    (t) =>
+      !t.requires.some((set) => set.length > 0) &&
+      t.minPlayerLevel <= 1 &&
+      t.traderGates.length === 0,
+  ).length;
+
+  console.log(
+    `  progression graph: ${all.length} tasks (${onMap} on a map), ` +
+      `${edges} prerequisite edges, ${fir} find-in-raid needs`,
   );
   console.log(
-    `  progression graph: ${Object.keys(progression).length} tasks (${onMap} on a map), ` +
-      `${edges} prerequisite edges, ${fir} find-in-raid needs`,
+    `  coverage: ${withPrereq}/${all.length} tasks have a prerequisite, ` +
+      `${ungated} have nothing gating them at all`,
   );
 
   const progressionFile = path.join(OUT, "progression.json");
@@ -1118,8 +1197,13 @@ for (const [canonicalId, members] of groupMembers) {
     JSON.stringify({
       generated: new Date().toISOString(),
       // The dashboard says so out loud rather than presenting a thin graph as
-      // fact. `sparseTasks` is set by the feed-health check further up.
+      // fact. `feedDegraded` is set by the feed-health check further up.
       degraded: feedDegraded,
+      /**
+       * What the graph knows, so the dashboard can report it rather than either
+       * hiding the gap or crying wolf about it on every visit.
+       */
+      coverage: { tasks: all.length, withPrereq, ungated },
       tasks: progression,
       keys: Object.fromEntries([...progressionKeyIds].map((id) => [id, keyIndex[id]])),
     }),

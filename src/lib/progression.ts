@@ -23,6 +23,8 @@ export interface ProfileInput {
 export interface LockReason {
   kind: "task" | "level" | "faction" | "trader";
   label: string;
+  /** For task blockers: which source stated the requirement. */
+  from?: "feed" | "wiki";
 }
 
 /*
@@ -145,7 +147,10 @@ export function lockReasons(
         .map((req) => {
           const name = progression?.tasks[req.task]?.name ?? "another task";
           const wants = req.status.includes("failed") && !req.status.includes("complete") ? " (failed)" : "";
-          return { kind: "task" as const, label: `${name}${wants}` };
+          // Where it came from travels with it. The feed states barely half of
+          // these; the rest are the wiki's word, and a player deciding whether
+          // to trust a lock deserves to know which they are looking at.
+          return { kind: "task" as const, label: `${name}${wants}`, from: req.from };
         });
       if (!best || missing.length < best.count) best = { missing, count: missing.length };
     }
