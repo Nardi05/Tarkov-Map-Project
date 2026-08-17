@@ -149,6 +149,15 @@ export default function MapPage({
         <MapSwitcher maps={maps} current={data.normalizedName} onPick={(name) => navigate(href.map(name))} />
 
         <div className="ml-auto flex items-center gap-1.5">
+          <a
+            className="btn hidden text-[0.72rem] sm:inline-flex"
+            style={{ padding: "0.28rem 0.6rem" }}
+            href={href.quests()}
+            title="Track your quests and see what to do next"
+          >
+            Quests
+          </a>
+
           <RaidClock mapName={data.normalizedName} />
 
           {styles.length > 1 && (
