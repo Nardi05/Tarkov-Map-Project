@@ -1,6 +1,6 @@
 import { createElement, useMemo, useState } from "react";
 import { groupQuests, type QuestGroup } from "../lib/build-layers";
-import { useStore } from "../store";
+import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import type { KeyItem, MapData, TaskStatus, Vec3 } from "../types";
 import TaskStatusControl from "./TaskStatusControl";
 import { EmptyState, Icon, icons } from "./ui";
@@ -31,8 +31,8 @@ export default function TaskPanel({
   const quest = useStore((s) => s.quest);
   const setQuestFilter = useStore((s) => s.setQuestFilter);
   const clearQuestFilters = useStore((s) => s.clearQuestFilters);
-  const taskStatus = useStore((s) => s.taskStatus);
-  const markerDone = useStore((s) => s.markerDone);
+  const taskStatus = useTaskStatus();
+  const markerDone = useMarkerDone();
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const setTaskStatus = useStore((s) => s.setTaskStatus);
   const toggleMarkerDone = useStore((s) => s.toggleMarkerDone);

@@ -58,9 +58,11 @@ export default function SettingsPanel({
   };
   const resetLayers = useStore((s) => s.resetLayers);
   const clearProgress = useStore((s) => s.clearProgress);
-  const trackedCount = useStore(
-    (s) => Object.keys(s.taskStatus).length + Object.keys(s.markerDone).length,
-  );
+  const mode = useStore((s) => s.profile.mode);
+  const trackedCount = useStore((s) => {
+    const p = s.progress[s.profile.mode];
+    return Object.keys(p.taskStatus).length + Object.keys(p.markerDone).length;
+  });
 
   const styles = availableStyles(data.geo);
 
@@ -205,15 +207,22 @@ export default function SettingsPanel({
             style={{ color: trackedCount ? "var(--danger)" : undefined }}
             disabled={!trackedCount}
             onClick={() => {
-              if (confirm("Clear every task status and ticked location? This cannot be undone.")) {
+              const label = mode === "pve" ? "PvE" : "PvP";
+              if (
+                confirm(
+                  `Clear every ${label} task status and ticked location? This cannot be undone.`,
+                )
+              ) {
                 clearProgress();
               }
             }}
           >
-            Clear task progress{trackedCount ? ` (${trackedCount})` : ""}
+            Clear {mode === "pve" ? "PvE" : "PvP"} progress
+            {trackedCount ? ` (${trackedCount})` : ""}
           </button>
         </div>
         <p className="mt-2 text-[0.68rem] leading-relaxed" style={{ color: "var(--text-faint)" }}>
+          Progress is kept separately for PvP and PvE; this clears only the mode you are on.
           Settings and task progress are saved in this browser only. Nothing is uploaded anywhere.
         </p>
       </Section>

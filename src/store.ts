@@ -1,7 +1,18 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { DEFAULT_LAYER_STATE, LAYERS, PRESETS, type LayerId } from "./lib/layers";
+import {
+  emptyProgress,
+  mergeProfile,
+  mergeProgress,
+  migrate,
+  type GameMode,
+  type ModeProgress,
+  type Profile,
+} from "./lib/persist-migrate";
 import type { TaskStatus } from "./types";
+
+export type { GameMode, Profile } from "./lib/persist-migrate";
 
 export type MapStyle = "clean" | "satellite";
 
@@ -49,13 +60,18 @@ interface Store {
   customViews: CustomView[];
   settings: Settings;
   quest: QuestFilters;
+  /** Who the player is playing as. Drives availability on the quest tracker. */
+  profile: Profile;
   /**
-   * The player's task progress. Absent key means "not started"; the site never
-   * writes a status it wasn't told, so this stays a record of what they said.
+   * The player's task progress, kept per game mode — PvP and PvE are separate
+   * progressions in game, and one record cannot hold both.
+   *
+   * Within a mode, an absent key means "not started": the site never writes a
+   * status it wasn't told, so this stays a record of what the player said.
+   * Read it through `useTaskStatus()` / `useMarkerDone()` rather than reaching
+   * into the mode by hand.
    */
-  taskStatus: Record<string, TaskStatus>;
-  /** Individual objective locations ticked off, keyed by quest marker id. */
-  markerDone: Record<string, true>;
+  progress: Record<GameMode, ModeProgress>;
   /** Last map opened, so the header can offer "continue where you left off". */
   lastMap: string | null;
 
@@ -68,6 +84,8 @@ interface Store {
   saveCustomView: (label: string) => void;
   removeCustomView: (id: string) => void;
 
+  setProfile: <K extends keyof Profile>(key: K, value: Profile[K]) => void;
+
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   setQuestFilter: <K extends keyof QuestFilters>(key: K, value: QuestFilters[K]) => void;
   clearQuestFilters: () => void;
@@ -77,6 +95,7 @@ interface Store {
   cycleTaskStatus: (taskId: string) => void;
   toggleMarkerDone: (markerId: string) => void;
   setMarkersDone: (markerIds: string[], done: boolean) => void;
+  /** Wipes the current mode only — the other mode's progress is untouched. */
   clearProgress: () => void;
 
   setLastMap: (map: string) => void;
@@ -101,6 +120,21 @@ const DEFAULT_QUEST: QuestFilters = {
   focusTask: null,
 };
 
+/**
+ * Applies an edit to the progress slice of whichever mode is selected.
+ *
+ * Every progress mutator goes through here so none of them can forget the mode
+ * and write to a fixed one — the bug that would silently merge a player's PvE
+ * run into their PvP progress.
+ */
+function editMode(
+  s: Store,
+  edit: (p: ModeProgress) => ModeProgress,
+): { progress: Record<GameMode, ModeProgress> } {
+  const mode = s.profile.mode;
+  return { progress: { ...s.progress, [mode]: edit(s.progress[mode]) } };
+}
+
 export const useStore = create<Store>()(
   persist(
     (set) => ({
@@ -108,8 +142,8 @@ export const useStore = create<Store>()(
       customViews: [],
       settings: { ...DEFAULT_SETTINGS },
       quest: { ...DEFAULT_QUEST },
-      taskStatus: {},
-      markerDone: {},
+      profile: mergeProfile(undefined),
+      progress: emptyProgress(),
       lastMap: null,
 
       setLayer: (id, on) => set((s) => ({ layers: { ...s.layers, [id]: on } })),
@@ -152,6 +186,8 @@ export const useStore = create<Store>()(
       removeCustomView: (id) =>
         set((s) => ({ customViews: s.customViews.filter((v) => v.id !== id) })),
 
+      setProfile: (key, value) => set((s) => ({ profile: { ...s.profile, [key]: value } })),
+
       setSetting: (key, value) => set((s) => ({ settings: { ...s.settings, [key]: value } })),
       setQuestFilter: (key, value) => set((s) => ({ quest: { ...s.quest, [key]: value } })),
       // "Show everything" is a view mode, not a filter — clearing the search
@@ -159,104 +195,107 @@ export const useStore = create<Store>()(
       clearQuestFilters: () => set((s) => ({ quest: { ...DEFAULT_QUEST, showAll: s.quest.showAll } })),
 
       setTaskStatus: (taskId, status) =>
-        set((s) => {
-          const next = { ...s.taskStatus };
-          if (status) next[taskId] = status;
-          else delete next[taskId];
-          return { taskStatus: next };
-        }),
+        set((s) =>
+          editMode(s, (p) => {
+            const taskStatus = { ...p.taskStatus };
+            if (status) taskStatus[taskId] = status;
+            else delete taskStatus[taskId];
+            return { ...p, taskStatus };
+          }),
+        ),
 
       cycleTaskStatus: (taskId) =>
-        set((s) => {
-          const next = { ...s.taskStatus };
-          const current = next[taskId];
-          if (!current) next[taskId] = "active";
-          else if (current === "active") next[taskId] = "completed";
-          else delete next[taskId];
-          return { taskStatus: next };
-        }),
+        set((s) =>
+          editMode(s, (p) => {
+            const taskStatus = { ...p.taskStatus };
+            const current = taskStatus[taskId];
+            if (!current) taskStatus[taskId] = "active";
+            else if (current === "active") taskStatus[taskId] = "completed";
+            else delete taskStatus[taskId];
+            return { ...p, taskStatus };
+          }),
+        ),
 
       toggleMarkerDone: (markerId) =>
-        set((s) => {
-          const next = { ...s.markerDone };
-          if (next[markerId]) delete next[markerId];
-          else next[markerId] = true;
-          return { markerDone: next };
-        }),
+        set((s) =>
+          editMode(s, (p) => {
+            const markerDone = { ...p.markerDone };
+            if (markerDone[markerId]) delete markerDone[markerId];
+            else markerDone[markerId] = true;
+            return { ...p, markerDone };
+          }),
+        ),
 
       setMarkersDone: (markerIds, done) =>
-        set((s) => {
-          const next = { ...s.markerDone };
-          for (const id of markerIds) {
-            if (done) next[id] = true;
-            else delete next[id];
-          }
-          return { markerDone: next };
-        }),
+        set((s) =>
+          editMode(s, (p) => {
+            const markerDone = { ...p.markerDone };
+            for (const id of markerIds) {
+              if (done) markerDone[id] = true;
+              else delete markerDone[id];
+            }
+            return { ...p, markerDone };
+          }),
+        ),
 
-      clearProgress: () => set({ taskStatus: {}, markerDone: {} }),
+      clearProgress: () => set((s) => editMode(s, () => ({ taskStatus: {}, markerDone: {} }))),
 
       setLastMap: (map) => set({ lastMap: map }),
     }),
     {
       name: "tarkov-maps",
-      version: 3,
+      version: 4,
       storage: createJSONStorage(() => localStorage),
-      // Search, trader and Kappa narrowing are momentary and reset on reload;
-      // show-all is a view preference, so it sticks like the layer toggles do.
-      partialize: ({ layers, customViews, settings, quest, taskStatus, markerDone, lastMap }) => ({
+      // An allowlist: a slice added to the store and forgotten here simply
+      // never persists. Search, trader and Kappa narrowing are momentary and
+      // reset on reload; show-all is a view preference, so it sticks like the
+      // layer toggles do.
+      partialize: ({ layers, customViews, settings, quest, profile, progress, lastMap }) => ({
         layers,
         customViews,
         settings,
         quest: { showAll: quest.showAll },
-        taskStatus,
-        markerDone,
+        profile,
+        progress,
         lastMap,
       }),
-      /**
-       * Two shapes have to survive here, and both hold real hours of somebody's
-       * raid progress, so neither migration is allowed to drop a task:
-       *
-       * v1 kept a single `completed: Record<string, true>` flag per task.
-       * v2 added a `profile` and a "failed" status, both of which belonged to
-       * the availability inference that no longer exists. Dropping the profile
-       * is a clean delete; a "failed" task becomes "not started", since the
-       * remaining model has nowhere to put it and guessing "done" would be a
-       * lie about their progress.
-       */
-      migrate: (persisted, version) => {
-        const state = (persisted ?? {}) as Record<string, unknown>;
-
-        if (version < 2) {
-          const completed = (state.completed ?? {}) as Record<string, true>;
-          state.taskStatus = Object.fromEntries(
-            Object.keys(completed).map((id) => [id, "completed"]),
-          );
-          state.markerDone = {};
-        }
-
-        delete state.profile;
-        const status = (state.taskStatus ?? {}) as Record<string, string>;
-        state.taskStatus = Object.fromEntries(
-          Object.entries(status).filter(([, v]) => v === "active" || v === "completed"),
-        );
-        return state;
-      },
+      // Lives in ./lib/persist-migrate so it can be tested without stubbing
+      // localStorage. See the rule at the top of that file: a migration may
+      // never drop a task.
+      migrate,
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<Store>;
         return {
           ...current,
           ...p,
-          // New layers and settings shipped after a user's last visit must
-          // still get their defaults rather than coming back undefined.
+          // Zustand's merge is shallow, so every nested slice needs a line
+          // here — one omitted comes back missing whatever shipped after the
+          // user's last visit, or `undefined` outright.
           layers: { ...DEFAULT_LAYER_STATE, ...(p.layers ?? {}) },
           customViews: p.customViews ?? [],
           settings: { ...DEFAULT_SETTINGS, ...(p.settings ?? {}) },
-          taskStatus: p.taskStatus ?? {},
-          markerDone: p.markerDone ?? {},
+          profile: mergeProfile(p.profile),
+          progress: mergeProgress(p),
           quest: { ...DEFAULT_QUEST, showAll: p.quest?.showAll ?? DEFAULT_QUEST.showAll },
         };
       },
     },
   ),
 );
+
+/*
+ * Progress is stored per mode, but nothing outside this file wants to think
+ * about that: every consumer asks "what has the player done?" and means the
+ * mode they are currently playing. These return the flat record for that mode,
+ * so switching modes swaps the whole map and both panels with no other change.
+ *
+ * Both are stable object references — `progress[mode]` is only rewritten when
+ * something in it actually changes — so they are safe to depend on in a memo.
+ */
+export function useTaskStatus(): Record<string, TaskStatus> {
+  return useStore((s) => s.progress[s.profile.mode].taskStatus);
+}
+
+export function useMarkerDone(): Record<string, true> {
+  return useStore((s) => s.progress[s.profile.mode].markerDone);
+}

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { pct, type Selection } from "../lib/build-layers";
 import { LAYER_BY_ID, QUEST_KIND_META } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
-import { useStore } from "../store";
+import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import { useTaskImages } from "../lib/data";
 import type { MapData, TaskImage, TaskStatus } from "../types";
 import { documentImages } from "./DocumentList";
@@ -26,8 +26,8 @@ export default function DetailPanel({
   onClose: () => void;
   onOpenTask: (taskId: string) => void;
 }) {
-  const taskStatus = useStore((s) => s.taskStatus);
-  const markerDone = useStore((s) => s.markerDone);
+  const taskStatus = useTaskStatus();
+  const markerDone = useMarkerDone();
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const toggleMarkerDone = useStore((s) => s.toggleMarkerDone);
   const setMarkersDone = useStore((s) => s.setMarkersDone);
