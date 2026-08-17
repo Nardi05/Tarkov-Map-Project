@@ -188,6 +188,9 @@ const traders = tradersData; // the traders feed's `data` is the trader map itse
 const tasks = Object.values(tasksData.tasks ?? {});
 const questItems = tasksData.questItems ?? {};
 
+/** Set when the feed-health check below finds the task feed thin. */
+let feedDegraded = false;
+
 /*
  * Refuse to ship a visibly broken upstream feed.
  *
@@ -226,6 +229,9 @@ const questItems = tasksData.questItems ?? {};
   if (noLevelShare > 0.35) problems.push(`${(noLevelShare * 100).toFixed(0)}% have no level gate (expected ~15%)`);
 
   if (problems.length) {
+    // Recorded for progression.json, so the quest dashboard can say the graph
+    // may be thin rather than presenting an understated "what's next" as fact.
+    feedDegraded = true;
     console.warn(`\nUpstream task data looks incomplete:\n  - ${problems.join("\n  - ")}`);
 
     /*
@@ -952,6 +958,176 @@ await fs.writeFile(
  * data/task-images.json. Copied rather than refetched so a deploy never
  * depends on the wiki; if it is missing the gallery simply doesn't appear.
  */
+/* --------------------------------------------------------------- progression */
+
+/**
+ * The complete prerequisite graph, covering every task in the game rather than
+ * only the ones with map markers.
+ *
+ * This has to be separate from the per-map payloads, for a reason that is easy
+ * to miss: roughly half of all prerequisite edges point at tasks that never
+ * appear on a map — hand the item back to the trader, reach a loyalty level,
+ * train a skill. A per-map file has no row to hang those on, so it drops them
+ * (see the `requires` field built above, which is deliberately pruned). Without
+ * those links you cannot tell whether anything is unlocked, which is the whole
+ * question a quest tracker exists to answer.
+ *
+ * `requires` is a disjunction of conjunctions — alternative requirement sets,
+ * satisfied when *any one* set is fully met. Single-variant tasks have exactly
+ * one set. The merged branch variants matter here: the three "Make Amends"
+ * tasks are reached from three different quests and collapse to one canonical
+ * id, so each contributes its own set and doing any one branch unlocks it.
+ * Flattening them into a single set would claim you need all three.
+ */
+const mapsByTask = new Map();
+for (const [mapName, markers] of questMarkers) {
+  for (const marker of markers) {
+    if (!mapsByTask.has(marker.task)) mapsByTask.set(marker.task, new Set());
+    mapsByTask.get(marker.task).add(mapName);
+  }
+}
+
+/** Item ids a task wants handed in, with the found-in-raid flag preserved. */
+function itemNeeds(task) {
+  const out = [];
+  for (const obj of task.objectives ?? []) {
+    if (obj.type !== "giveItem" && obj.type !== "findItem") continue;
+    const ids = (obj.items ?? []).filter(Boolean);
+    if (!ids.length) continue;
+    const first = items[ids[0]];
+    out.push({
+      items: ids,
+      // The list is alternatives ("any of these"); name the first and say so.
+      name: first?.name ?? "Unknown item",
+      icon: first?.iconLink ?? null,
+      count: obj.count ?? 1,
+      foundInRaid: !!obj.foundInRaid,
+    });
+  }
+  return out;
+}
+
+const progression = {};
+const progressionKeyIds = new Set();
+for (const [canonicalId, members] of groupMembers) {
+  const primary = members[0];
+  const requires = [];
+  for (const member of members) {
+    const set = (member.taskRequirements ?? [])
+      .filter((r) => r.task)
+      .map((r) => ({ task: canonicalOf(r.task), status: r.status ?? ["complete"] }));
+    // Identical requirement sets across variants would just be redundant work
+    // for the solver, so keep one of each.
+    const signature = JSON.stringify(set);
+    if (!requires.some((existing) => JSON.stringify(existing) === signature)) requires.push(set);
+  }
+
+  // Loyalty gates. The feed states these numerically with an explicit compare,
+  // so nothing has to be inferred.
+  const traderGates = (primary.traderRequirements ?? [])
+    .filter((r) => r.trader && typeof r.value === "number")
+    .map((r) => ({
+      trader: traderIndex[r.trader]?.name ?? r.trader,
+      kind: r.requirementType === "reputation" ? "reputation" : "level",
+      value: r.value,
+    }));
+
+  // Keys keep their map binding here, unlike the flattened per-map list.
+  const keys = (primary.neededKeys ?? [])
+    .map((k) => ({
+      map: mapNamesForId(k.map ?? "")[0] ?? null,
+      keys: (k.keys ?? []).filter((id) => keyIndex[id]),
+    }))
+    .filter((k) => k.keys.length);
+  for (const group of keys) for (const id of group.keys) progressionKeyIds.add(id);
+
+  progression[canonicalId] = {
+    name: primary.name,
+    trader: traderIndex[primary.trader]?.name ?? null,
+    minPlayerLevel: primary.minPlayerLevel ?? 0,
+    factionName: primary.factionName && primary.factionName !== "Any" ? primary.factionName : null,
+    kappaRequired: !!primary.kappaRequired,
+    lightkeeperRequired: !!primary.lightkeeperRequired,
+    requires,
+    maps: [...(mapsByTask.get(canonicalId) ?? [])].sort(),
+    traderGates,
+    needs: itemNeeds(primary),
+    keys,
+    wiki: primary.wikiLink ?? null,
+  };
+}
+
+/*
+ * Break prerequisite cycles.
+ *
+ * The raw feed is a clean DAG. Cycles appear only after canonicalisation: the
+ * three "Make Amends" branches collapse to one id while their siblings still
+ * name a specific branch, so "Security requires Make Amends" and "Make Amends
+ * requires Sweep Up requires Security" closes a loop that does not exist in
+ * game.
+ *
+ * This matters because every task in a cycle waits on another task in the same
+ * cycle, so none of them can ever be satisfied and the dashboard would show
+ * them locked forever — a confidently wrong answer, which is worse than a
+ * missing one. Dropping the edge that closes the loop leaves the rest of the
+ * chain intact and at worst makes one task available slightly early.
+ *
+ * The proper fix is not to merge tasks whose prerequisites differ, but that
+ * changes canonical ids, which are what persisted player progress is keyed on.
+ * Until that migration exists, this keeps the graph answerable.
+ */
+{
+  const colour = new Map();
+  let broken = 0;
+  const walk = (id) => {
+    colour.set(id, 1);
+    for (const set of progression[id].requires) {
+      for (let i = set.length - 1; i >= 0; i--) {
+        const next = set[i].task;
+        if (!progression[next]) continue;
+        if (colour.get(next) === 1) {
+          set.splice(i, 1);
+          broken++;
+          console.warn(`  ! dropped cyclic prerequisite ${progression[id].name} <- ${progression[next].name}`);
+        } else if (!colour.has(next)) {
+          walk(next);
+        }
+      }
+    }
+    colour.set(id, 2);
+  };
+  for (const id of Object.keys(progression)) if (!colour.has(id)) walk(id);
+  if (broken) console.warn(`  broke ${broken} prerequisite cycle(s) introduced by task merging`);
+}
+
+{
+  const edges = Object.values(progression).reduce((n, t) => n + t.requires.flat().length, 0);
+  const onMap = Object.values(progression).filter((t) => t.maps.length).length;
+  const fir = Object.values(progression).reduce(
+    (n, t) => n + t.needs.filter((x) => x.foundInRaid).length,
+    0,
+  );
+  console.log(
+    `  progression graph: ${Object.keys(progression).length} tasks (${onMap} on a map), ` +
+      `${edges} prerequisite edges, ${fir} find-in-raid needs`,
+  );
+
+  const progressionFile = path.join(OUT, "progression.json");
+  await fs.writeFile(
+    progressionFile,
+    JSON.stringify({
+      generated: new Date().toISOString(),
+      // The dashboard says so out loud rather than presenting a thin graph as
+      // fact. `sparseTasks` is set by the feed-health check further up.
+      degraded: feedDegraded,
+      tasks: progression,
+      keys: Object.fromEntries([...progressionKeyIds].map((id) => [id, keyIndex[id]])),
+    }),
+  );
+  const kb = ((await fs.stat(progressionFile)).size / 1024).toFixed(0);
+  console.log(`  wrote progression.json (${kb}KB, ${progressionKeyIds.size} keys)`);
+}
+
 const imagesSrc = path.join(ROOT, "data", "task-images.json");
 let imageNote = "no task photos (run `npm run images`)";
 try {
