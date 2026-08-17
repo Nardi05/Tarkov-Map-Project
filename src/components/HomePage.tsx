@@ -26,6 +26,15 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
   return (
     <div className="scroll-y h-full" style={{ background: "var(--bg)" }}>
       <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+        <nav className="mb-6 flex items-center gap-1.5">
+          <span className="btn is-active" aria-current="page">
+            Maps
+          </span>
+          <a className="btn" href={href.quests()}>
+            Quests
+          </a>
+        </nav>
+
         <header className="mb-8 sm:mb-10">
           <p
             className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.16em]"
