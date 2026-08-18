@@ -65,8 +65,37 @@ export function fold(text: string): string {
  * matching keeps a stray "COMPLETED" from being forced onto some poor task
  * whose name happens to share a few letters.
  */
-const CHROME =
-  /^(completed|complete|in progress|available|locked|failed|turn in|hand over|accept|decline|start|tasks?|quests?|rewards?|objectives?|description|requirements?|show all|filter|search|back|next|level \d+|[\d\s/%.,:-]+)$/i;
+const CHROME_WORDS =
+  "completed|complete|in progress|available|locked|failed|turn in|hand over|accept|decline|start|tasks?|quests?|rewards?|objectives?|description|requirements?|show all|filter|search|back|next|new|level \\d+";
+
+const CHROME = new RegExp(`^(${CHROME_WORDS}|[\\d\\s/%.,:-]+)$`, "i");
+
+/**
+ * Strips interface text off the ends of a row.
+ *
+ * The game lays a task row out as the name on the left and its status on the
+ * right, and OCR — correctly — reads that as one line: "Debut In progress".
+ * Rejecting whole chrome lines does nothing for that, and matching the joined
+ * string is hopeless, since "Debut" against "debut in progress" scores 0.33 on
+ * word overlap and less on distance.
+ *
+ * This is the case that broke the feature the first time it met a realistic
+ * screenshot, and the case the original tests missed by feeding chrome as
+ * lines of its own.
+ */
+export function stripChrome(line: string): string {
+  const trailing = new RegExp(`[\\s|·-]*\\b(${CHROME_WORDS})\\s*$`, "i");
+  const leading = new RegExp(`^\\s*\\b(${CHROME_WORDS})\\b[\\s|·-]*`, "i");
+  const counter = /[\s|·-]*\b\d+\s*\/\s*\d+\b[\s|·-]*/gi;
+
+  let out = line.replace(counter, " ");
+  for (let i = 0; i < 3; i++) {
+    const before = out;
+    out = out.replace(trailing, "").replace(leading, "");
+    if (out === before) break;
+  }
+  return out.replace(/\s+/g, " ").trim();
+}
 
 export function candidateLines(text: string): string[] {
   const out: string[] = [];
@@ -151,11 +180,28 @@ export function matchTasks(text: string, candidates: Candidate[]): MatchResult {
   const lines = candidateLines(text);
   if (!lines.length || !candidates.length) return { matches: [], unmatched: [] };
 
-  /** Each probe knows which source lines it consumed, so a join claims both. */
+  /**
+   * Each probe knows which source lines it consumed, so a join claims both.
+   *
+   * Three readings of every row, because the game gives no guarantee which one
+   * a screenshot produces: the line as read, the line with its status text
+   * stripped ("Debut In progress" -> "Debut"), and the line joined with its
+   * neighbour for names that wrapped. The best scoring one wins.
+   */
   const probes: { text: string; lines: number[] }[] = [];
   lines.forEach((line, i) => {
     probes.push({ text: line, lines: [i] });
-    if (i + 1 < lines.length) probes.push({ text: `${line} ${lines[i + 1]}`, lines: [i, i + 1] });
+
+    const stripped = stripChrome(line);
+    if (stripped && stripped !== line && stripped.length >= 3) {
+      probes.push({ text: stripped, lines: [i] });
+    }
+
+    if (i + 1 < lines.length) {
+      probes.push({ text: `${line} ${lines[i + 1]}`, lines: [i, i + 1] });
+      const joined = stripChrome(`${stripChrome(line)} ${stripChrome(lines[i + 1])}`);
+      if (joined && joined.length >= 3) probes.push({ text: joined, lines: [i, i + 1] });
+    }
   });
 
   const folded = candidates.map((c) => ({ ...c, folded: fold(c.name) }));

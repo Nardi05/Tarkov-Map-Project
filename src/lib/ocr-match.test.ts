@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { candidateLines, fold, matchTasks, similarity, CONFIDENT } from "./ocr-match.ts";
+import {
+  candidateLines,
+  fold,
+  matchTasks,
+  similarity,
+  stripChrome,
+  CONFIDENT,
+} from "./ocr-match.ts";
 
 /* A slice of Prapor's real list — the set a Prapor screenshot competes against. */
 const PRAPOR = [
@@ -100,4 +107,35 @@ test("line filtering drops prose and counters but keeps names", () => {
   );
 
   assert.deepEqual(lines, ["Debut", "BP Depot"]);
+});
+
+test("a status on the same row as the name still matches", () => {
+  // The case that broke this the first time it met a realistic screenshot.
+  // The game puts the status to the right of the name, so OCR reads one line.
+  const { matches } = matchTasks(
+    [
+      "Debut In progress",
+      "Shootout Picnic In progress",
+      "Bad Rep Evidence Completed",
+      "BP Depot 3/5",
+    ].join("\n"),
+    PRAPOR,
+  );
+
+  assert.deepEqual(
+    matches.map((m) => m.id).sort(),
+    ["bad-rep", "bp-depot", "debut", "shootout"],
+  );
+  assert.ok(
+    matches.every((m) => m.score >= CONFIDENT),
+    `all should be confident, got ${JSON.stringify(matches.map((m) => [m.name, m.score]))}`,
+  );
+});
+
+test("stripping chrome leaves the name alone when there is none", () => {
+  assert.equal(stripChrome("Debut"), "Debut");
+  assert.equal(stripChrome("Debut In progress"), "Debut");
+  assert.equal(stripChrome("Completed  Ice Cream Cones"), "Ice Cream Cones");
+  assert.equal(stripChrome("BP Depot 3/5"), "BP Depot");
+  assert.equal(stripChrome("The Punisher - Part 1"), "The Punisher - Part 1");
 });
