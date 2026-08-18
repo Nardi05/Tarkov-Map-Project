@@ -105,6 +105,14 @@ interface Store {
    * by hand outside them. Those survive.
    */
   importTaskStatus: (statuses: Record<string, TaskStatus>) => void;
+  /**
+   * Replaces both modes wholesale, from a restored save file.
+   *
+   * Replace, not merge, unlike `importTaskStatus`: a save is a complete picture
+   * of a moment, and folding it into whatever is already here would produce a
+   * state that never existed on either machine. The UI asks first.
+   */
+  restoreProgress: (progress: Record<GameMode, ModeProgress>, profile?: Partial<Profile>) => void;
 
   setLastMap: (map: string) => void;
 }
@@ -250,6 +258,12 @@ export const useStore = create<Store>()(
 
       importTaskStatus: (statuses) =>
         set((s) => editMode(s, (p) => ({ ...p, taskStatus: { ...p.taskStatus, ...statuses } }))),
+
+      restoreProgress: (progress, profile) =>
+        set((s) => ({
+          progress,
+          profile: profile ? mergeProfile({ ...s.profile, ...profile }) : s.profile,
+        })),
 
       setLastMap: (map) => set({ lastMap: map }),
     }),

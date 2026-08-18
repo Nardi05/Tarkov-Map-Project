@@ -10,6 +10,7 @@ import { href, navigate } from "../lib/router";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import type { Faction, GameMode, Profile } from "../lib/persist-migrate";
 import type { KeyItem, Progression, TaskAvailability, TaskItemNeed } from "../types";
+import SavePanel from "./SavePanel";
 import TaskStatusControl from "./TaskStatusControl";
 import { EmptyState, Icon, icons } from "./ui";
 
@@ -189,6 +190,8 @@ export default function QuestsPage() {
           {trackedCount === 0 ? "Set up my progress" : "Run the walkthrough"}
         </a>
       </section>
+
+      <SavePanel />
 
       {data?.coverage && data.coverage.ungated > 0 && (
         <p
