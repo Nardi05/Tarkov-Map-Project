@@ -6,3 +6,4 @@ dist
 tsconfig.tsbuildinfo
 .vercel
 .env*
+public/ocr
