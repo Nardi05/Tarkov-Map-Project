@@ -93,175 +93,186 @@ body {
 
 /* --------------------------------------------------------------- primitives */
 
-.surface {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
+/*
+ * The shared primitives live in Tailwind's components layer so utilities beat
+ * them, which is the whole point of having both.
+ *
+ * Unlayered, these were emitted after the utilities and won on equal
+ * specificity — so `.btn` setting `display` quietly overrode `hidden` and
+ * `md:flex`. The rail collapse handle, written to appear only on desktop, was
+ * therefore floating over the map on every phone.
+ */
+@layer components {
+  .surface {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
 
-.surface-2 {
-  background: var(--panel-2);
-  border: 1px solid var(--line-soft);
-  border-radius: 10px;
-}
+  .surface-2 {
+    background: var(--panel-2);
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+  }
 
-.divider {
-  border-color: var(--line);
-}
+  .divider {
+    border-color: var(--line);
+  }
 
-.muted {
-  color: var(--text-dim);
-}
+  .muted {
+    color: var(--text-dim);
+  }
 
-.faint {
-  color: var(--text-faint);
-}
+  .faint {
+    color: var(--text-faint);
+  }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 9px;
-  border: 1px solid var(--line);
-  background: var(--panel-2);
-  color: var(--text);
-  padding: 0.45rem 0.8rem;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  line-height: 1.2;
-  cursor: pointer;
-  transition:
-    background 0.14s ease,
-    border-color 0.14s ease,
-    color 0.14s ease;
-  white-space: nowrap;
-}
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    color: var(--text);
+    padding: 0.45rem 0.8rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+      background 0.14s ease,
+      border-color 0.14s ease,
+      color 0.14s ease;
+    white-space: nowrap;
+  }
 
-.btn:hover {
-  background: var(--panel-3);
-  border-color: var(--line);
-}
+  .btn:hover {
+    background: var(--panel-3);
+    border-color: var(--line);
+  }
 
-.btn[aria-pressed="true"],
-.btn.is-active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-ink);
-}
+  .btn[aria-pressed="true"],
+  .btn.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
 
-.btn-ghost {
-  background: transparent;
-  border-color: transparent;
-}
+  .btn-ghost {
+    background: transparent;
+    border-color: transparent;
+  }
 
-.btn-ghost:hover {
-  background: var(--panel-2);
-}
+  .btn-ghost:hover {
+    background: var(--panel-2);
+  }
 
-.btn-icon {
-  padding: 0.45rem;
-  width: 2.15rem;
-  height: 2.15rem;
-}
+  .btn-icon {
+    padding: 0.45rem;
+    width: 2.15rem;
+    height: 2.15rem;
+  }
 
-.input {
-  width: 100%;
-  background: var(--panel-2);
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  padding: 0.5rem 0.7rem;
-  color: var(--text);
-  font-size: 0.8125rem;
-  line-height: 1.3;
-}
+  .input {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 0.5rem 0.7rem;
+    color: var(--text);
+    font-size: 0.8125rem;
+    line-height: 1.3;
+  }
 
-/* Leading-icon variant; `.input`'s padding shorthand would beat a pl-* utility. */
-.input-icon {
-  padding-left: 2rem;
-}
+  /* Leading-icon variant; `.input`'s padding shorthand would beat a pl-* utility. */
+  .input-icon {
+    padding-left: 2rem;
+  }
 
-.input::placeholder {
-  color: var(--text-faint);
-}
+  .input::placeholder {
+    color: var(--text-faint);
+  }
 
-.input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
+  .input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
 
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--panel-2);
-  padding: 0.2rem 0.55rem;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--text-dim);
-  white-space: nowrap;
-}
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    padding: 0.2rem 0.55rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
 
-.chip-accent {
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-}
+  .chip-accent {
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
 
-/* Native-feeling toggle that inherits the layer's own colour. */
-.switch {
-  position: relative;
-  flex: none;
-  width: 2rem;
-  height: 1.15rem;
-  border-radius: 999px;
-  background: var(--panel-3);
-  border: 1px solid var(--line);
-  transition: background 0.15s ease;
-  cursor: pointer;
-}
+  /* Native-feeling toggle that inherits the layer's own colour. */
+  .switch {
+    position: relative;
+    flex: none;
+    width: 2rem;
+    height: 1.15rem;
+    border-radius: 999px;
+    background: var(--panel-3);
+    border: 1px solid var(--line);
+    transition: background 0.15s ease;
+    cursor: pointer;
+  }
 
-.switch::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 2px;
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 999px;
-  background: var(--text-faint);
-  transform: translateY(-50%);
-  transition:
-    transform 0.15s ease,
-    background 0.15s ease;
-}
+  .switch::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 999px;
+    background: var(--text-faint);
+    transform: translateY(-50%);
+    transition:
+      transform 0.15s ease,
+      background 0.15s ease;
+  }
 
-.switch[data-on="true"] {
-  background: color-mix(in srgb, var(--sw-color, var(--accent)) 32%, transparent);
-  border-color: var(--sw-color, var(--accent));
-}
+  .switch[data-on="true"] {
+    background: color-mix(in srgb, var(--sw-color, var(--accent)) 32%, transparent);
+    border-color: var(--sw-color, var(--accent));
+  }
 
-.switch[data-on="true"]::after {
-  transform: translate(0.82rem, -50%);
-  background: var(--sw-color, var(--accent));
-}
+  .switch[data-on="true"]::after {
+    transform: translate(0.82rem, -50%);
+    background: var(--sw-color, var(--accent));
+  }
 
-.scroll-y {
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: var(--line) transparent;
-}
+  .scroll-y {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line) transparent;
+  }
 
-.scroll-y::-webkit-scrollbar {
-  width: 8px;
-}
+  .scroll-y::-webkit-scrollbar {
+    width: 8px;
+  }
 
-.scroll-y::-webkit-scrollbar-thumb {
-  background: var(--line);
-  border-radius: 999px;
+  .scroll-y::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 999px;
+  }
 }
 
 /* ------------------------------------------------------------------ leaflet */

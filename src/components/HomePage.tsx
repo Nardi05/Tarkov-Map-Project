@@ -115,12 +115,26 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
 }
 
 function MapCard({ map }: { map: MapIndexEntry }) {
-  const stats: [string, number][] = [
-    ["spawns", map.counts.spawns],
-    ["extracts", map.counts.extracts + map.counts.transits],
-    ["tasks", map.counts.quests],
-    ["keys", map.counts.keys],
-  ];
+  /*
+   * Previews are hotlinked from tarkov.dev's CDN. When one fails — a blocked
+   * host, a flaky connection, an asset pulled upstream — the browser draws its
+   * broken-image icon, and a grid of those makes a working site look derelict.
+   * Falling back to the same placeholder used for maps that have no preview at
+   * all means a failure is indistinguishable from an absence.
+   */
+  const [previewFailed, setPreviewFailed] = useState(false);
+  const preview = previewFailed ? null : map.preview;
+
+  // Zeroes are omitted rather than printed. "0 extracts 0 tasks 0 keys" under
+  // Icebreaker reads as a broken card; saying nothing reads as a small map.
+  const stats: [string, number][] = (
+    [
+      ["spawns", map.counts.spawns],
+      ["extracts", map.counts.extracts + map.counts.transits],
+      ["tasks", map.counts.quests],
+      ["keys", map.counts.keys],
+    ] as [string, number][]
+  ).filter(([, value]) => value > 0);
 
   return (
     <li>
@@ -140,14 +154,15 @@ function MapCard({ map }: { map: MapIndexEntry }) {
           className="relative aspect-[16/9] overflow-hidden"
           style={{ background: "var(--bg-deep)" }}
         >
-          {map.preview ? (
+          {preview ? (
             <img
-              src={map.preview}
+              src={preview}
               alt=""
               loading="lazy"
               decoding="async"
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
               style={{ opacity: 0.92 }}
+              onError={() => setPreviewFailed(true)}
             />
           ) : (
             <div
