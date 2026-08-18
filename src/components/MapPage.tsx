@@ -171,7 +171,7 @@ export default function MapPage({
 
         <div className="ml-auto flex items-center gap-1.5">
           <a
-            className="btn hidden text-[0.72rem] sm:inline-flex"
+            className="btn inline-flex text-[0.72rem]"
             style={{ padding: "0.28rem 0.6rem" }}
             href={href.quests()}
             title="Track your quests and see what to do next"
