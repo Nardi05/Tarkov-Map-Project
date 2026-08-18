@@ -73,12 +73,12 @@ Beyond the layers:
 
 ## Tracking tasks through a raid
 
-The task panel is built around the way you actually play. Before a raid, open
-the map's task list and tick the tasks that are in your in-game list as
-**active**; the map then draws those objectives and nothing else, so you see
-every active location at once instead of a wall of green. During the raid you
-can tick off individual locations — a task with three mark spots remembers which
-one you did — and mark the whole task done when you finish it.
+The task panel is built around the way you actually play. Before a raid, tick
+the tasks that are in your in-game list as **active**; the map then draws those
+objectives and nothing else, so you see every active location at once instead of
+a wall of green. During the raid you can tick off individual locations — a task
+with three mark spots remembers which one you did — and mark the whole task done
+when you finish it.
 
 A task is in one of three states, and you set all of them yourself:
 
@@ -92,16 +92,18 @@ The control cycles forward, so a task carrying any status also gets an undo
 button that puts it straight back to not started — a mis-tap shouldn't have to
 be walked through "done", inventing progress you never made.
 
-Nothing here is inferred. The site never guesses which tasks you could have
-picked up or hides one behind a prerequisite it thinks you haven't met, so the
-panel can't disagree with what the game is telling you. If you just want to
-study a map you haven't started, tick **Show every task on the map**.
+If you have ticked nothing on a map, it draws what the graph says you could pick
+up there, so an unfamiliar map is useful the moment it opens. The instant you
+mark something active, it narrows to exactly that: **active if known, else
+available**. To browse everything regardless, tick **Show every task on the
+map**.
 
-Some rows say **not pinned**. Only about a third of objectives in the game data
-carry coordinates; the rest name their map and stop there — kill counts,
+Some rows say **no map location**. Only about a third of objectives in the game
+data carry coordinates; the rest name their map and stop there — kill counts,
 "survive and extract from here", most of the Survivalist Path. Those tasks are
 still yours to do on that map, so they are listed and simply have nowhere to
-point. Leaving them out was hiding roughly 150 real tasks.
+point. Tasks that do have pins sort first, so ticking from the top of the list
+always moves something.
 
 Where the wiki has screenshots for a task, the detail panel shows them as a
 carousel — arrows to step through, click to blow one up full screen, Escape or
@@ -109,9 +111,53 @@ another click to come back. Neighbouring photos and the full-size copy are
 fetched while you look at the current one, so only the first costs a wait. It is
 usually the fastest way to turn "somewhere in this building" into "that shelf".
 
-Everything is stored in your browser only. It survives a reload and switching
-maps, so dying on Customs and running a Woods raid before coming back does not
-cost you your ticked list.
+## The quest tracker
+
+`#/quests` answers a different question from the maps. They tell you what is on
+a map; it tells you what you should be doing — your active tasks, what each
+trader will offer next, the keys those tasks go through, and everything you need
+to find in raid.
+
+It runs on the full task graph, including the ~165 tasks that never appear on a
+map, which is why the per-map payloads cannot answer it alone.
+
+**Setting it up.** Open the walkthrough and go through the traders in the order
+they unlock, ticking whatever is in your list. That is the whole job: a quest
+sitting in your list means the trader already gave it to you, so everything
+behind it must be done, and the site fills in the rest of your wipe from there.
+Ticking one late Prapor quest fills in three earlier ones without being asked.
+Nothing is written until you press Finish, and the summary names every task it
+worked out for you before it does.
+
+**Screenshots instead of ticking.** Each trader step can read its list off a
+screenshot. Because you have already said which trader you are on, a garbled
+line is matched against that trader's fifty-odd names rather than all 511, which
+is what makes it workable. It proposes and you confirm — strong matches start
+ticked, loose ones are listed unticked and marked, and anything it read but
+could not place is shown rather than dropped. The reader runs entirely in your
+browser; the image is not uploaded anywhere.
+
+**What it infers, and what it never does.** The graph works out `locked` and
+`available` from prerequisites, level, faction and trader loyalty. It never
+invents `active` or `done` — those only ever come from you, and what you say
+always wins over what it worked out. Every row carries the same control as the
+map panels, so a wrong inference is one click from corrected.
+
+Prerequisites come from two sources. The tarkov.dev feed states them for barely
+half its tasks, so the rest are read off the wiki's quest infoboxes by
+`npm run quest-prereqs` into `data/quest-prereqs.json`. The feed wins wherever it
+has an opinion; wiki edges only fill silence, and a lock that only the wiki
+claims says so on screen. The dashboard reports its own coverage rather than
+warning vaguely.
+
+**Trader loyalty** is optional and only ever narrows the list, and only for
+traders you name. Leaving it blank gives exactly the list you would have had
+without the feature.
+
+**Your progress is yours.** It lives in your browser, kept separately for PvP
+and PvE, with no account and no server. Save it to a file to back it up or move
+it to another device; restoring replaces rather than merges, and tells you what
+is about to be overwritten first.
 
 ## Running it
 
@@ -122,17 +168,25 @@ npm run dev
 ```
 
 ```bash
+npm test              # unit tests (no browser, no network)
 npm run images        # refresh the wiki screenshot cache (optional, slow)
 npm run kord-docs     # refresh the battle-pass document spawns from the wiki
+npm run quest-prereqs # rescrape quest prerequisites from the wiki (slow)
 npm run check-quests  # cross-check quest data against the wiki (optional, slow)
 npm run task-facts    # refresh the level/Kappa fallback from known-good data
-npm run build         # type-check + production bundle into dist/
+npm run og            # redraw the social preview card (needs a browser)
+npm run build         # stage OCR assets, type-check, bundle into dist/
 npm run preview
 npm run smoke         # opens every map in a browser and checks for errors
 ```
 
 `dist/` is a plain static site — the app uses hash routing, so it drops onto any
 static host, including a subpath, with no rewrite rules.
+
+`npm run build` stages the OCR runtime into `public/ocr` first (gitignored,
+copied from `node_modules` plus the committed language model), so screenshot
+reading works without fetching anything from a CDN at runtime. None of it is
+downloaded by a visitor unless they open the screenshot panel.
 
 ## Deploying a private preview
 
