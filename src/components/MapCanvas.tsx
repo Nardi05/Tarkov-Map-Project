@@ -78,6 +78,14 @@ export default function MapCanvas(props: Props) {
   const svgBaseRef = useRef<SvgBase | null>(null);
   const labelsRef = useRef<L.LayerGroup | null>(null);
   const markerLayersRef = useRef(new Map<LayerId, L.LayerGroup>());
+  /**
+   * Set by the all-layers effect so the quest-only effect can tell "the layers
+   * were just rebuilt from these same inputs" from "task progress changed".
+   * The old guard tested whether the quests layer existed, which is true by the
+   * time this effect first runs — so it never fired and every mount built the
+   * quest layer twice.
+   */
+  const questsFreshRef = useRef(false);
   const highlightRef = useRef<L.Layer | null>(null);
   const declutterRef = useRef<(() => void) | null>(null);
   const refitRef = useRef<(() => void) | null>(null);
@@ -329,6 +337,7 @@ export default function MapCanvas(props: Props) {
     for (const def of LAYERS) {
       markerLayersRef.current.set(def.id, buildLayer(def.id, ctx));
     }
+    questsFreshRef.current = true;
     // Adding happens in the visibility effect below, which runs straight after.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, baseDeps);
@@ -337,8 +346,12 @@ export default function MapCanvas(props: Props) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !rendererRef.current) return;
-    // Skip the first run: the effect above has just built every layer, quests
-    // included, from the same inputs.
+    // Skip when the effect above has just built every layer, quests included,
+    // from these same inputs.
+    if (questsFreshRef.current) {
+      questsFreshRef.current = false;
+      return;
+    }
     if (!markerLayersRef.current.has("quests")) return;
 
     const previous = markerLayersRef.current.get("quests");
