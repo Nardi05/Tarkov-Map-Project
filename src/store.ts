@@ -72,14 +72,6 @@ interface Store {
    * into the mode by hand.
    */
   progress: Record<GameMode, ModeProgress>;
-  /**
-   * TarkovTracker API token, kept so a re-sync is one click.
-   *
-   * This is the player's own credential in their own browser, and it never
-   * leaves it except to TarkovTracker itself — the import runs client-side
-   * precisely so this site never handles it. Clearable from the sync panel.
-   */
-  trackerToken: string | null;
   /** Last map opened, so the header can offer "continue where you left off". */
   lastMap: string | null;
 
@@ -106,13 +98,13 @@ interface Store {
   /** Wipes the current mode only — the other mode's progress is untouched. */
   clearProgress: () => void;
   /**
-   * Folds an imported set of completions into the current mode.
+   * Folds a set of statuses in over the current mode.
    *
-   * Additive on purpose: an import says what you have finished, and it has no
-   * opinion about the tasks you ticked active yourself. Those survive.
+   * Additive on purpose: the setup walkthrough and a restored save both say
+   * what they know, and neither has an opinion about tasks the player ticked
+   * by hand outside them. Those survive.
    */
   importTaskStatus: (statuses: Record<string, TaskStatus>) => void;
-  setTrackerToken: (token: string | null) => void;
 
   setLastMap: (map: string) => void;
 }
@@ -160,7 +152,6 @@ export const useStore = create<Store>()(
       quest: { ...DEFAULT_QUEST },
       profile: mergeProfile(undefined),
       progress: emptyProgress(),
-      trackerToken: null,
       lastMap: null,
 
       setLayer: (id, on) => set((s) => ({ layers: { ...s.layers, [id]: on } })),
@@ -260,13 +251,11 @@ export const useStore = create<Store>()(
       importTaskStatus: (statuses) =>
         set((s) => editMode(s, (p) => ({ ...p, taskStatus: { ...p.taskStatus, ...statuses } }))),
 
-      setTrackerToken: (token) => set({ trackerToken: token }),
-
       setLastMap: (map) => set({ lastMap: map }),
     }),
     {
       name: "tarkov-maps",
-      version: 4,
+      version: 5,
       storage: createJSONStorage(() => localStorage),
       // An allowlist: a slice added to the store and forgotten here simply
       // never persists. Search, trader and Kappa narrowing are momentary and
@@ -279,7 +268,6 @@ export const useStore = create<Store>()(
         quest,
         profile,
         progress,
-        trackerToken,
         lastMap,
       }) => ({
         layers,
@@ -288,7 +276,6 @@ export const useStore = create<Store>()(
         quest: { showAll: quest.showAll },
         profile,
         progress,
-        trackerToken,
         lastMap,
       }),
       // Lives in ./lib/persist-migrate so it can be tested without stubbing
@@ -308,7 +295,6 @@ export const useStore = create<Store>()(
           settings: { ...DEFAULT_SETTINGS, ...(p.settings ?? {}) },
           profile: mergeProfile(p.profile),
           progress: mergeProgress(p),
-          trackerToken: p.trackerToken ?? null,
           quest: { ...DEFAULT_QUEST, showAll: p.quest?.showAll ?? DEFAULT_QUEST.showAll },
         };
       },

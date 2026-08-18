@@ -85,3 +85,15 @@ test("a save from before trader levels gets an object, never undefined", () => {
   );
   assert.deepEqual(mergeProfile({ traderLevels: { Prapor: 3 } }).traderLevels, { Prapor: 3 });
 });
+
+test("v5 deletes the stored TarkovTracker token, and nothing else", () => {
+  // A field dropped from the type still sits in localStorage. This one is a
+  // credential, so it gets deleted rather than merely ignored.
+  const out = migrate(
+    { trackerToken: "secret", progress: { pvp: { taskStatus: { a: "active" }, markerDone: {} } } },
+    4,
+  ) as Record<string, any>;
+
+  assert.equal("trackerToken" in out, false);
+  assert.deepEqual(out.progress.pvp.taskStatus, { a: "active" });
+});
