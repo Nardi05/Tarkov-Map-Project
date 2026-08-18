@@ -26,16 +26,25 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "public", "ocr");
 
 /*
- * LSTM cores only. Tesseract ships four builds — with and without SIMD, each
- * with and without the legacy engine — and the legacy pair is roughly 600KB
- * larger apiece for a recogniser we never ask for. Both of the SIMD/non-SIMD
- * pair are needed: tesseract.js feature-detects between them at runtime.
+ * The `.wasm.js` single-file builds, LSTM only.
+ *
+ * Two things here are easy to get wrong, and I got both wrong first time. The
+ * worker only ever requests `.wasm.js` — never the bare `.js` plus its sibling
+ * `.wasm` — and those files embed the binary as base64 rather than fetching it,
+ * so nothing else has to be staged beside them. And it picks between three
+ * instruction-set builds by feature detection at load time, so all three have
+ * to be present even though any one browser fetches exactly one of them.
+ *
+ * `-lstm` because the worker is started with oem 1. The builds carrying the
+ * legacy engine as well are considerably larger for a recogniser never asked
+ * for.
+ *
+ * That makes this ~12MB on disk and ~4MB over the wire, once, per browser.
  */
 const CORE = [
-  "tesseract-core-simd-lstm.js",
-  "tesseract-core-simd-lstm.wasm",
-  "tesseract-core-lstm.js",
-  "tesseract-core-lstm.wasm",
+  "tesseract-core-relaxedsimd-lstm.wasm.js",
+  "tesseract-core-simd-lstm.wasm.js",
+  "tesseract-core-lstm.wasm.js",
 ];
 
 await fs.rm(OUT, { recursive: true, force: true });

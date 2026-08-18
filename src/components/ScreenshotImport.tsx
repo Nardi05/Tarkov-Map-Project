@@ -55,6 +55,10 @@ export default function ScreenshotImport({
 
   const run = async (files: FileList | null) => {
     if (!files?.length) return;
+    // Copied out immediately: the caller clears the input's value straight
+    // after calling this, which empties the live FileList before the awaits
+    // below get to it — and the count then read as zero.
+    const chosenFiles = Array.from(files);
     setError(null);
     setBusy({ phase: "loading", ratio: null });
 
@@ -65,7 +69,7 @@ export default function ScreenshotImport({
        * across the seam of two shots still has both halves available.
        */
       let text = "";
-      for (const file of Array.from(files)) {
+      for (const file of chosenFiles) {
         text += `${await readImage(file, setBusy)}\n`;
       }
 
@@ -79,7 +83,7 @@ export default function ScreenshotImport({
             .map((m) => [m.id, m.score >= CONFIDENT]),
         ),
       );
-      setReadCount(files.length);
+      setReadCount(chosenFiles.length);
     } catch (err) {
       setError(err instanceof OcrError ? err.message : "That screenshot could not be read.");
       setMatches(null);
