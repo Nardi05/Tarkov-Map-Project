@@ -172,6 +172,24 @@ export default function QuestsPage() {
         markerCount={Object.keys(markerDone).length}
       />
 
+      <section className="surface mt-4 flex flex-wrap items-center gap-3 p-3">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-sm font-semibold">
+            {trackedCount === 0 ? "Start by telling it where you are" : "Update your progress"}
+          </h2>
+          <p className="mt-0.5 text-[0.72rem] leading-snug" style={{ color: "var(--text-faint)" }}>
+            {/* Framed by what it costs, because the objection to any setup flow
+                is "how long is this going to take". Ticking actives is genuinely
+                the whole job — the history falls out of it. */}
+            Walk through your traders and tick the quests you have accepted. A quest in your list
+            means everything behind it is done, so a couple of dozen ticks rebuild the whole wipe.
+          </p>
+        </div>
+        <a className="btn is-active flex-none" href={href.setup()}>
+          {trackedCount === 0 ? "Set up my progress" : "Run the walkthrough"}
+        </a>
+      </section>
+
       {data?.coverage && data.coverage.ungated > 0 && (
         <p
           className="surface-2 mt-4 flex items-start gap-2 p-3 text-[0.78rem] leading-relaxed"
