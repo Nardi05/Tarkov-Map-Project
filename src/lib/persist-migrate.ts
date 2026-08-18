@@ -56,7 +56,7 @@ export const emptyProgress = (): Record<GameMode, ModeProgress> => ({
 const isStatus = (v: unknown): v is TaskStatus => v === "active" || v === "completed";
 
 /**
- * v1 -> v2 -> v3 -> v4.
+ * v1 -> v2 -> v3 -> v4 -> v5.
  *
  * - v1 kept a single `completed: Record<string, true>` flag per task.
  * - v2 added a `profile` and a "failed" status, both belonging to an
@@ -66,6 +66,10 @@ const isStatus = (v: unknown): v is TaskStatus => v === "active" || v === "compl
  * - v4 splits progress by game mode, because PvP and PvE are separate
  *   progressions in game and a flat record cannot hold both. Everything stored
  *   until now was PvP, so it all moves there intact.
+ * - v5 drops the stored TarkovTracker token. The site no longer talks to them,
+ *   so the field is gone from the store — but a field simply removed from the
+ *   type would sit in localStorage forever, and it is a credential. Deleting it
+ *   on migrate is the difference between "unused" and "actually gone".
  */
 export function migrate(persisted: unknown, version: number): Record<string, unknown> {
   const state = (persisted ?? {}) as Record<string, unknown>;
@@ -102,6 +106,10 @@ export function migrate(persisted: unknown, version: number): Record<string, unk
     delete state.taskStatus;
     delete state.markerDone;
   }
+
+  // Progress is never touched here: this only removes a credential the site has
+  // no further use for.
+  if (version < 5) delete state.trackerToken;
 
   return state;
 }
