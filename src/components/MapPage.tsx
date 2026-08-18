@@ -6,6 +6,7 @@ import SettingsPanel from "./SettingsPanel";
 import DetailPanel from "./DetailPanel";
 import MapSwitcher from "./MapSwitcher";
 import RaidClock from "./RaidClock";
+import ShortcutHelp, { isTypingInto } from "./ShortcutHelp";
 import { Icon, icons } from "./ui";
 import { availableStyles, floorsFor } from "../lib/base-layer";
 import { filterQuests, type Selection } from "../lib/build-layers";
@@ -53,6 +54,7 @@ export default function MapPage({
    * somebody wants remembered next time they open the site.
    */
   const [railCollapsed, setRailCollapsed] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const floors = useMemo(() => floorsFor(data.geo), [data.geo]);
   const [floorId, setFloorId] = useState(floors[0]?.id ?? "ground");
@@ -133,11 +135,42 @@ export default function MapPage({
     if (next) setSheetOpen(false);
   }, []);
 
+  /*
+   * Shortcuts for the panels. Fullscreen lives in MapCanvas, beside the thing
+   * it toggles.
+   *
+   * Everything is guarded by isTypingInto, without which searching a task list
+   * for "flash" would trip Fullscreen, Layers, Settings and hide-the-panel on
+   * the way through.
+   */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        setShowHelp(false);
         setSelection(null);
         setSheetOpen(false);
+        return;
+      }
+      if (e.metaKey || e.ctrlKey || e.altKey || isTypingInto(e.target)) return;
+
+      const key = e.key.toLowerCase();
+      const openTab = (next: Tab) => {
+        e.preventDefault();
+        setTab(next);
+        // On a phone the panel is a sheet, so a shortcut has to open it too.
+        setSheetOpen(true);
+        setRailCollapsed(false);
+      };
+
+      if (key === "l") openTab("layers");
+      else if (key === "t") openTab("tasks");
+      else if (key === "s") openTab("settings");
+      else if (key === "[") {
+        e.preventDefault();
+        setRailCollapsed((v) => !v);
+      } else if (key === "?" || (key === "/" && e.shiftKey)) {
+        e.preventDefault();
+        setShowHelp((v) => !v);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -179,6 +212,18 @@ export default function MapPage({
             Quests
           </a>
 
+          {/* Shortcuts nobody can find may as well not exist. Pointer devices
+              only: there is no keyboard to shortcut on a phone. */}
+          <button
+            type="button"
+            className="btn btn-ghost btn-icon hidden md:inline-flex"
+            aria-label="Keyboard shortcuts"
+            title="Keyboard shortcuts (?)"
+            onClick={() => setShowHelp(true)}
+          >
+            <span className="text-[0.8rem] font-semibold">?</span>
+          </button>
+
           <RaidClock mapName={data.normalizedName} />
 
           {styles.length > 1 && (
@@ -217,6 +262,8 @@ export default function MapPage({
           )}
         </div>
       </header>
+
+      {showHelp && <ShortcutHelp onClose={() => setShowHelp(false)} />}
 
       <div className="flex min-h-0 flex-1">
         {/* ---------------------------------------------------- desktop rail */}

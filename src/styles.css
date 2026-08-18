@@ -275,6 +275,15 @@ body {
   }
 }
 
+/*
+ * Headings are focused on navigation so assistive tech announces the new page.
+ * They are targets, not controls, so they should not draw a focus ring — but
+ * only for pointer users: a keyboard user who lands there deserves to see it.
+ */
+h1[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* ------------------------------------------------------------------ leaflet */
 
 .tk-map {

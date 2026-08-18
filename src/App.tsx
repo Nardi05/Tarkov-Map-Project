@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import HomePage from "./components/HomePage";
 import MapPage from "./components/MapPage";
 import QuestsPage from "./components/QuestsPage";
@@ -44,6 +44,38 @@ export default function App() {
   useEffect(() => {
     if (map.data) setLastMap(map.data.normalizedName);
   }, [map.data, setLastMap]);
+
+  /*
+   * Manners a real page gets from the browser and a single-page app has to do
+   * for itself.
+   *
+   * Following a link left the new page scrolled wherever the old one was — go
+   * to a map from halfway down the quest tracker, come back, and you land in
+   * the middle of a list you have never seen. And because nothing moves, a
+   * screen reader carries on announcing from where it was, with no sign the
+   * page changed at all; moving focus to the new heading is what tells it.
+   *
+   * Skipped on first paint: there is nothing to restore, and stealing focus
+   * from a fresh load would be rude rather than helpful.
+   */
+  const firstRoute = useRef(true);
+  const routeKey = route.name === "map" ? `map:${route.map}` : route.name;
+  useEffect(() => {
+    if (firstRoute.current) {
+      firstRoute.current = false;
+      return;
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    // Deferred a frame so the incoming page has rendered its heading.
+    const id = requestAnimationFrame(() => {
+      const heading = document.querySelector<HTMLElement>("h1");
+      if (!heading) return;
+      // Focusable for this purpose without joining the tab order.
+      heading.setAttribute("tabindex", "-1");
+      heading.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [routeKey]);
 
   if (index.error) {
     return (
