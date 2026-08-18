@@ -707,8 +707,20 @@ export function groupQuests(
     }
   }
 
+  /*
+   * Tasks you can actually see on this map come first.
+   *
+   * Nearly every task reports `minPlayerLevel: 0`, so sorting by level then
+   * name was in practice sorting alphabetically — which scattered the unmapped
+   * tasks through the list and, on Customs, put eleven of them at the very top.
+   * Someone ticking from the top of the panel therefore watched the map not
+   * change, eleven times, with nothing on screen explaining why.
+   */
   return groups.sort(
-    (a, b) => a.task.minPlayerLevel - b.task.minPlayerLevel || a.task.name.localeCompare(b.task.name),
+    (a, b) =>
+      Number(b.markers.length > 0) - Number(a.markers.length > 0) ||
+      a.task.minPlayerLevel - b.task.minPlayerLevel ||
+      a.task.name.localeCompare(b.task.name),
   );
 }
 

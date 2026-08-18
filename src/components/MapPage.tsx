@@ -344,7 +344,7 @@ export default function MapPage({
           background: "var(--panel)",
           paddingBottom: "calc(0.375rem + env(safe-area-inset-bottom, 0px))",
         }}
-        aria-label="Map tools"
+        aria-label="Map tools (mobile)"
       >
         {TABS.map((t) => (
           <button

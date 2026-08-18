@@ -411,7 +411,9 @@ function TaskRow({
                 {task.minPlayerLevel > 0 && <span>· Lv {task.minPlayerLevel}</span>}
                 {markers.length === 0 ? (
                   <span title="This task is on this map, but the game data carries no position for its objectives — kill counts, extract-from-here and survival tasks usually have none.">
-                    · not pinned
+                    {/* Named for the consequence, not the data: "not pinned"
+                        left people wondering why ticking changed nothing. */}
+                    · <span title="This task is done on this map, but the game data has no coordinates for its objectives, so there is nothing to draw.">no map location</span>
                   </span>
                 ) : markers.length > 1 ? (
                   <span>
