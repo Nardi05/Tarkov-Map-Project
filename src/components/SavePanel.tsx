@@ -17,7 +17,7 @@ import { Icon, icons } from "./ui";
  * is parsed and *described* first, and nothing is written until the numbers
  * have been read and confirmed.
  */
-export default function SavePanel() {
+export default function SavePanel({ compact = false }: { compact?: boolean } = {}) {
   const profile = useStore((s) => s.profile);
   const progress = useStore((s) => s.progress);
   const restoreProgress = useStore((s) => s.restoreProgress);
@@ -69,18 +69,34 @@ export default function SavePanel() {
     setDone(`Restored ${total} task${total === 1 ? "" : "s"} from ${pending.name}.`);
   };
 
+  /*
+   * `compact` is the version shown inside the "nothing tracked yet" panel: no
+   * heading, and no offer to save an empty profile — just the way back in for
+   * someone who has a file from another browser.
+   */
   return (
-    <section className="surface mt-4 p-3">
-      <h2 className="text-sm font-semibold">Back up or move your progress</h2>
-      <p className="mt-0.5 text-[0.72rem] leading-relaxed" style={{ color: "var(--text-faint)" }}>
-        Everything is stored in this browser only, so clearing site data loses it. Save a file to
-        keep a copy, or to carry a wipe over to another device.
-      </p>
+    <section className={compact ? "" : "surface mt-4 p-3"}>
+      {!compact && (
+        <>
+          <h2 className="text-sm font-semibold">Back up or move your progress</h2>
+          <p className="mt-0.5 text-[0.72rem] leading-relaxed" style={{ color: "var(--text-faint)" }}>
+            Everything is stored in this browser only, so clearing site data loses it. Save a file
+            to keep a copy, or to carry a wipe over to another device.
+          </p>
+        </>
+      )}
+      {compact && (
+        <p className="text-[0.72rem] leading-relaxed" style={{ color: "var(--text-faint)" }}>
+          Already set this up on another device? Bring the file over.
+        </p>
+      )}
 
-      <div className="mt-3 flex flex-wrap items-center gap-2">
-        <button type="button" className="btn" disabled={!hasAnything} onClick={download}>
-          Save to a file
-        </button>
+      <div className={`flex flex-wrap items-center gap-2 ${compact ? "mt-2 justify-center" : "mt-3"}`}>
+        {!compact && (
+          <button type="button" className="btn" disabled={!hasAnything} onClick={download}>
+            Save to a file
+          </button>
+        )}
         <button type="button" className="btn" onClick={() => fileInput.current?.click()}>
           Restore from a file
         </button>
@@ -95,9 +111,11 @@ export default function SavePanel() {
             e.target.value = "";
           }}
         />
-        <span className="text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-          {counts.pvp} PvP · {counts.pve} PvE tracked
-        </span>
+        {!compact && (
+          <span className="text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
+            {counts.pvp} PvP · {counts.pve} PvE tracked
+          </span>
+        )}
       </div>
 
       {pending && (
