@@ -1,10 +1,12 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useProgression } from "../lib/data";
+import { disposeOcr } from "../lib/ocr";
 import { prerequisiteClosure } from "../lib/progression";
 import { href, navigate } from "../lib/router";
 import { useStore, useTaskStatus } from "../store";
 import type { Faction, GameMode } from "../lib/persist-migrate";
 import type { Progression, TaskStatus } from "../types";
+import ScreenshotImport from "./ScreenshotImport";
 import TaskStatusControl from "./TaskStatusControl";
 import { EmptyState, Icon, icons } from "./ui";
 
@@ -133,6 +135,18 @@ export default function SetupWizard() {
   const activeCount = Object.values(staged).filter((s) => s === "active").length;
   const doneCount = Object.values(staged).filter((s) => s === "completed").length;
 
+  /* The reader holds several megabytes of wasm; let it go with the screen. */
+  useEffect(() => () => void disposeOcr(), []);
+
+  const markActive = (ids: string[]) =>
+    setStaged((prev) => {
+      const next = { ...prev };
+      // Never downgrades: a task the player already marked done by hand is not
+      // demoted to active because a screenshot also showed it.
+      for (const id of ids) if (!next[id]) next[id] = "active";
+      return next;
+    });
+
   const cycle = (id: string) =>
     setStaged((prev) => {
       const next = { ...prev };
@@ -184,6 +198,7 @@ export default function SetupWizard() {
           query={query}
           onQuery={setQuery}
           onCycle={cycle}
+          onMarkActive={markActive}
         />
       )}
 
@@ -404,6 +419,7 @@ function TraderStepView({
   query,
   onQuery,
   onCycle,
+  onMarkActive,
 }: {
   step: TraderStep;
   staged: Record<string, TaskStatus>;
@@ -411,6 +427,7 @@ function TraderStepView({
   query: string;
   onQuery: (q: string) => void;
   onCycle: (id: string) => void;
+  onMarkActive: (ids: string[]) => void;
 }) {
   const needle = query.trim().toLowerCase();
   const shown = needle ? step.tasks.filter((t) => t.name.toLowerCase().includes(needle)) : step.tasks;
@@ -423,6 +440,13 @@ function TraderStepView({
         Tick anything in your {step.trader} list right now. Tick twice for one you have already
         finished — useful when a trader has nothing active because you are through their chain.
       </p>
+
+      <ScreenshotImport
+        trader={step.trader}
+        candidates={step.tasks}
+        alreadyStaged={(id) => !!staged[id]}
+        onApply={onMarkActive}
+      />
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <div className="relative w-full max-w-xs">

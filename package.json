@@ -6,8 +6,8 @@
   "description": "A clean, modern interactive map site for Escape from Tarkov.",
   "scripts": {
     "data": "node scripts/build-data.mjs",
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "node scripts/setup-ocr.mjs && vite",
+    "build": "node scripts/setup-ocr.mjs && tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "node --experimental-strip-types --test \"src/**/*.test.ts\" \"scripts/**/*.test.mjs\"",
@@ -16,7 +16,8 @@
     "check-quests": "node scripts/check-quests.mjs",
     "task-facts": "node scripts/build-task-facts.mjs",
     "kord-docs": "node scripts/fetch-kord-documents.mjs",
-    "quest-prereqs": "node scripts/fetch-quest-prereqs.mjs"
+    "quest-prereqs": "node scripts/fetch-quest-prereqs.mjs",
+    "setup-ocr": "node scripts/setup-ocr.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
@@ -24,6 +25,7 @@
     "leaflet": "^1.9.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "tesseract.js": "^7.0.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
