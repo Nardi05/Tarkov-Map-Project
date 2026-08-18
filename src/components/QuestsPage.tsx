@@ -281,6 +281,14 @@ export default function QuestsPage() {
           <p className="mt-3 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
             Or use the search above and tick tasks one at a time.
           </p>
+
+          {/* Restoring has to be reachable from exactly here. Hiding the whole
+              backup panel until there is progress also hid the way to bring
+              progress back on a new browser, which is the one moment it is
+              needed. */}
+          <div className="mt-5 border-t pt-4" style={{ borderColor: "var(--line-soft)" }}>
+            <SavePanel compact />
+          </div>
         </section>
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
