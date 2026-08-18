@@ -1,5 +1,6 @@
 import { createElement, useMemo, useState } from "react";
 import { groupQuests, type QuestGroup } from "../lib/build-layers";
+import { useDebouncedInput } from "../lib/use-debounced-input";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import type { KeyItem, MapData, TaskAvailability, TaskStatus, Vec3 } from "../types";
 import TaskStatusControl from "./TaskStatusControl";
@@ -53,6 +54,15 @@ export default function TaskPanel({
   const toggleMarkerDone = useStore((s) => s.toggleMarkerDone);
   const layers = useStore((s) => s.layers);
   const setLayer = useStore((s) => s.setLayer);
+
+  /*
+   * The committed term lives in the store, which is what the map filters on —
+   * so an un-debounced keystroke re-filtered every marker and rebuilt the whole
+   * quest layer on the canvas, per character.
+   */
+  const [typedSearch, setTypedSearch] = useDebouncedInput(quest.search, (v) =>
+    setQuestFilter("search", v),
+  );
 
   const [expanded, setExpanded] = useState<string | null>(null);
   /** Held here so a section that filters down to nothing keeps its state. */
@@ -158,8 +168,9 @@ export default function TaskPanel({
             className="input input-icon"
             type="search"
             placeholder="Search tasks, objectives, items…"
-            value={quest.search}
-            onChange={(e) => setQuestFilter("search", e.target.value)}
+            value={typedSearch}
+            onChange={(e) => setTypedSearch(e.target.value)}
+            aria-label="Search tasks on this map"
           />
         </div>
 
