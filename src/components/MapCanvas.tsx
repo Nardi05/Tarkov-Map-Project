@@ -13,6 +13,7 @@ import {
 import { buildLayer, type Selection } from "../lib/build-layers";
 import { createDeclutterer } from "../lib/declutter";
 import { LAYERS, type LayerId } from "../lib/layers";
+import { isTypingInto } from "./ShortcutHelp";
 import type { QuestMarker, TaskStatus } from "../types";
 import type { MapStyle } from "../store";
 import { icons } from "./ui";
@@ -107,6 +108,18 @@ export default function MapCanvas(props: Props) {
     if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
     else void shell.requestFullscreen().catch(() => {});
   }, []);
+
+  /* `f` lives here rather than in MapPage, next to the thing it toggles. */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "f" && e.key !== "F") return;
+      if (e.metaKey || e.ctrlKey || e.altKey || isTypingInto(e.target)) return;
+      e.preventDefault();
+      toggleFullscreen();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [toggleFullscreen]);
 
   // Tracked by event rather than by the click, because Escape and the browser's
   // own chrome can leave fullscreen without going through the button.

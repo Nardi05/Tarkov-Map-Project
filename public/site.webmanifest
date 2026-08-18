@@ -1,0 +1,16 @@
+{
+  "name": "Tarkov Maps & Quest Tracker",
+  "short_name": "Tarkov Maps",
+  "description": "Interactive Escape from Tarkov maps with spawns, extracts, keys and a quest tracker that puts your own tasks on the map.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0d11",
+  "theme_color": "#0a0d11",
+  "categories": ["games", "utilities"],
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
