@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useProgression } from "../lib/data";
+import { useDebouncedInput } from "../lib/use-debounced-input";
 import {
   computeAvailability,
   lockReasons,
@@ -55,7 +56,9 @@ export default function QuestsPage() {
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const setTaskStatus = useStore((s) => s.setTaskStatus);
 
+  /* Committed search term; `typed` is what the box shows while you type. */
   const [query, setQuery] = useState("");
+  const [typed, setTyped] = useDebouncedInput(query, setQuery);
 
   const data = progression.data;
 
@@ -99,9 +102,26 @@ export default function QuestsPage() {
   const matches = (row: Row) =>
     !needle || row.name.toLowerCase().includes(needle) || row.trader.toLowerCase().includes(needle);
 
-  const active = rows.filter((r) => r.availability === "active" && matches(r));
-  const available = rows.filter((r) => r.availability === "available" && matches(r));
-  const completed = rows.filter((r) => r.availability === "completed" && matches(r));
+  /*
+   * Bucketed in one pass, and memoised.
+   *
+   * These used to be three bare `rows.filter(...)` calls, which meant a new
+   * array identity on every render — so `upcoming` below never hit its memo,
+   * and neither did the key and find-in-raid lists built from it. Typing in the
+   * search box rebuilt both shopping lists on every keystroke.
+   */
+  const { active, available, completed } = useMemo(() => {
+    const out = { active: [] as Row[], available: [] as Row[], completed: [] as Row[] };
+    for (const row of rows) {
+      if (!matches(row)) continue;
+      if (row.availability === "active") out.active.push(row);
+      else if (row.availability === "available") out.available.push(row);
+      else if (row.availability === "completed") out.completed.push(row);
+    }
+    return out;
+    // `matches` closes over `needle`, which is the dependency that matters.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows, needle]);
 
   /*
    * Locked is 300+ tasks on a fresh profile and nobody scrolls that. What is
@@ -165,15 +185,13 @@ export default function QuestsPage() {
         </p>
       </header>
 
-      <ProfileBar
-        profile={profile}
-        setProfile={setProfile}
-        traders={gatingTraders}
-        trackedCount={trackedCount}
-        markerCount={Object.keys(markerDone).length}
-      />
-
-      <section className="surface mt-4 flex flex-wrap items-center gap-3 p-3">
+      {/* The call to action comes first on a fresh visit. It used to sit third,
+          below seven optional trader-loyalty selects — which also made it the
+          fourteenth tab stop, so the one thing a new player needs was the
+          hardest thing on the page to reach. */}
+      <section
+        className={`surface flex flex-wrap items-center gap-3 p-3 ${trackedCount === 0 ? "mt-1" : "mt-4"}`}
+      >
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold">
             {trackedCount === 0 ? "Start by telling it where you are" : "Update your progress"}
@@ -191,7 +209,13 @@ export default function QuestsPage() {
         </a>
       </section>
 
-      <SavePanel />
+      <ProfileBar
+        profile={profile}
+        setProfile={setProfile}
+        traders={gatingTraders}
+        trackedCount={trackedCount}
+        markerCount={Object.keys(markerDone).length}
+      />
 
       {data?.coverage && data.coverage.ungated > 0 && (
         <p
@@ -227,8 +251,8 @@ export default function QuestsPage() {
           className="input input-icon"
           type="search"
           placeholder="Find a task or trader…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={typed}
+          onChange={(e) => setTyped(e.target.value)}
           aria-label="Search tasks"
         />
       </div>
@@ -237,6 +261,27 @@ export default function QuestsPage() {
         <p className="py-16 text-center text-sm" style={{ color: "var(--text-dim)" }}>
           Loading the task graph…
         </p>
+      ) : trackedCount === 0 && !needle ? (
+        /* Five panels of empty states told a new player nothing five times
+           over. One sentence and the list of what they will get is a better
+           use of the screen. */
+        <section className="surface mt-6 p-6 text-center">
+          <h2 className="text-base font-semibold">Nothing tracked yet</h2>
+          <p
+            className="mx-auto mt-2 max-w-md text-[0.85rem] leading-relaxed"
+            style={{ color: "var(--text-dim)" }}
+          >
+            Once you have marked what you are running, this page shows your active tasks, what each
+            trader will offer next, the keys those tasks go through and everything you need to find
+            in raid — and every map draws your objectives without being asked.
+          </p>
+          <a className="btn is-active mt-4 inline-flex" href={href.setup()}>
+            Walk me through it
+          </a>
+          <p className="mt-3 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
+            Or use the search above and tick tasks one at a time.
+          </p>
+        </section>
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Panel
@@ -390,6 +435,11 @@ export default function QuestsPage() {
           )}
         </div>
       )}
+
+      {/* Last, and only when there is something to save. Offering to back up an
+          empty profile is noise on the one screen a new player most needs to
+          be able to read. */}
+      {trackedCount > 0 && <SavePanel />}
     </Shell>
   );
 }
@@ -400,11 +450,10 @@ function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="scroll-y h-full" style={{ background: "var(--bg)" }}>
       <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
-        <nav className="mb-6 flex items-center gap-1.5">
-          <a href={href.home()} className="btn btn-ghost btn-icon flex-none" aria-label="All maps">
-            <Icon path={icons.back} size={18} />
-          </a>
-          <a href={href.home()} className="btn">
+        {/* One way back, not two: the arrow and the "Maps" button went to the
+            same place and read as different things. */}
+        <nav className="mb-6 flex items-center gap-1.5" aria-label="Sections">
+          <a className="btn" href={href.home()}>
             Maps
           </a>
           <span className="btn is-active" aria-current="page">
@@ -483,8 +532,10 @@ function ProfileBar({
   trackedCount: number;
   markerCount: number;
 }) {
+  const set = traders.filter((t) => typeof profile.traderLevels[t] === "number").length;
+
   return (
-    <div className="surface flex flex-wrap items-end gap-3 p-3">
+    <div className="surface mt-4 flex flex-wrap items-end gap-3 p-3">
       <Field label="Mode" hint="PvP and PvE keep separate progress.">
         <div className="flex gap-1 rounded-lg p-0.5" style={{ background: "var(--panel-2)" }}>
           {(["pvp", "pve"] as GameMode[]).map((m) => (
@@ -541,14 +592,19 @@ function ProfileBar({
       </p>
 
       {traders.length > 0 && (
-        <div className="w-full border-t pt-3" style={{ borderColor: "var(--line-soft)" }}>
-          <p
-            className="text-[0.68rem] font-semibold uppercase tracking-[0.09em]"
+        <details className="w-full border-t pt-3" style={{ borderColor: "var(--line-soft)" }}>
+          <summary
+            className="cursor-pointer text-[0.68rem] font-semibold uppercase tracking-[0.09em]"
             style={{ color: "var(--text-dim)" }}
           >
             Trader loyalty
-          </p>
-          <p className="mt-0.5 text-[0.66rem] leading-snug" style={{ color: "var(--text-faint)" }}>
+            {set > 0 && (
+              <span className="ml-1.5 font-normal normal-case tracking-normal" style={{ color: "var(--text-faint)" }}>
+                {set} set
+              </span>
+            )}
+          </summary>
+          <p className="mt-1 text-[0.66rem] leading-snug" style={{ color: "var(--text-faint)" }}>
             {/* The honest framing: this only ever narrows the list, and only for
                 traders you name. Blank is a valid answer, not an unfinished one. */}
             Optional. Set a trader and its higher-loyalty tasks stay locked until you get there.
@@ -584,7 +640,7 @@ function ProfileBar({
               </label>
             ))}
           </div>
-        </div>
+        </details>
       )}
     </div>
   );
