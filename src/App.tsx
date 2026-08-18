@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import HomePage from "./components/HomePage";
 import MapPage from "./components/MapPage";
 import QuestsPage from "./components/QuestsPage";
+import SetupWizard from "./components/SetupWizard";
 import { useMapData, useMapIndex } from "./lib/data";
 import { href, navigate, useRoute } from "./lib/router";
 import { useStore } from "./store";
@@ -35,7 +36,9 @@ export default function App() {
         ? `${map.data.name} — Tarkov Maps`
         : route.name === "quests"
           ? "Quest tracker — Tarkov Maps"
-          : "Tarkov Maps";
+          : route.name === "setup"
+            ? "Set up your progress — Tarkov Maps"
+            : "Tarkov Maps";
   }, [route, map.data]);
 
   useEffect(() => {
@@ -53,6 +56,7 @@ export default function App() {
   }
 
   if (route.name === "quests") return <QuestsPage />;
+  if (route.name === "setup") return <SetupWizard />;
 
   if (route.name === "home") {
     if (index.loading || !index.data) return <Loading label="Loading maps" />;
