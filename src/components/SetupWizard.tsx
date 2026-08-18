@@ -48,7 +48,7 @@ const TRADER_ORDER = [
 
 interface TraderStep {
   trader: string;
-  tasks: { id: string; name: string; level: number; kappa: boolean }[];
+  tasks: { id: string; name: string; level: number; kappa: boolean; depth: number }[];
 }
 
 export default function SetupWizard() {
@@ -65,6 +65,23 @@ export default function SetupWizard() {
 
   const data = progression.data;
 
+  /*
+   * How far into a chain each task sits, as the number of tasks behind it.
+   *
+   * The lists were alphabetical, which for Prapor meant 66 names in an order
+   * with no relationship to the game: Debut, his very first quest, sat third,
+   * and the end of a chain could sit above its own beginning. Ordering by depth
+   * walks each chain the way the trader hands it to you, so scanning for "where
+   * am I up to" follows the list downwards instead of jumping about.
+   */
+  const depth = useMemo(() => {
+    const out = new Map<string, number>();
+    for (const id of Object.keys(data?.tasks ?? {})) {
+      out.set(id, prerequisiteClosure(data, id).length);
+    }
+    return out;
+  }, [data]);
+
   const steps = useMemo<TraderStep[]>(() => {
     if (!data) return [];
     const byTrader = new Map<string, TraderStep["tasks"]>();
@@ -76,7 +93,13 @@ export default function SetupWizard() {
         continue;
       }
       const list = byTrader.get(task.trader) ?? [];
-      list.push({ id, name: task.name, level: task.minPlayerLevel, kappa: task.kappaRequired });
+      list.push({
+        id,
+        name: task.name,
+        level: task.minPlayerLevel,
+        kappa: task.kappaRequired,
+        depth: depth.get(id) ?? 0,
+      });
       byTrader.set(task.trader, list);
     }
 
@@ -85,10 +108,10 @@ export default function SetupWizard() {
     return [...known, ...rest].map((trader) => ({
       trader,
       tasks: (byTrader.get(trader) ?? []).sort(
-        (a, b) => a.level - b.level || a.name.localeCompare(b.name),
+        (a, b) => a.depth - b.depth || a.level - b.level || a.name.localeCompare(b.name),
       ),
     }));
-  }, [data, profile.faction]);
+  }, [data, profile.faction, depth]);
 
   /*
    * Everything the staged ticks imply, worked out fresh each render.
@@ -201,7 +224,14 @@ export default function SetupWizard() {
             {onProfile ? "Start" : "Next trader"}
           </button>
         ) : (
-          <button type="button" className="btn is-active" onClick={finish}>
+          <button
+            type="button"
+            className="btn is-active"
+            // Enabled, it silently returned you to the dashboard having written
+            // nothing, which reads as the save having failed.
+            disabled={activeCount === 0 && doneCount === 0}
+            onClick={finish}
+          >
             Finish and save
           </button>
         )}
