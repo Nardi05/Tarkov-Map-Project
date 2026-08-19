@@ -111,6 +111,25 @@ another click to come back. Neighbouring photos and the full-size copy are
 fetched while you look at the current one, so only the first costs a wait. It is
 usually the fastest way to turn "somewhere in this building" into "that shelf".
 
+## Kord Breach (Season 1)
+
+The site now tracks three characters, because the game does: **PvP Zone**, **Season**,
+and **PvE**. Progress never crosses between them.
+
+The seasonal story line is not in the tarkov.dev feed. It is vendored from the wiki
+into `src/data/kord-season.json` and folded into the graph at load, so Uninvited
+Guests through Digital Puzzle show up on the tracker when you are on Season.
+
+Quest names that gained a `[PVP ZONE]` / `[PVE ZONE]` suffix after 1.1 are stripped
+in the UI and filtered by the mode you picked — a PvE character no longer sees the
+PvP Zone variants.
+
+Battle-pass documents are a first-class hunt: a type-to-map list on the quest
+page, a **Battle pass hunt** layer preset, and a "show documents" prompt on any
+map that has them. Daily pickup limits differ by mode (30 / 20 / 15).
+
+The quest tracker also ranks **which map to queue** from your active tasks.
+
 ## The quest tracker
 
 `#/quests` answers a different question from the maps. They tell you what is on
