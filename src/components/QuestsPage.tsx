@@ -192,7 +192,13 @@ export default function QuestsPage() {
       <section
         className={`surface flex flex-wrap items-center gap-3 p-3 ${trackedCount === 0 ? "mt-1" : "mt-4"}`}
       >
-        <div className="min-w-0 flex-1">
+        {/* `flex-1` alone is `flex: 1 1 0%`, so on a phone this column shrank
+            towards nothing instead of pushing the button onto its own line: the
+            copy squeezed into a ~230px gutter seven lines tall with the button
+            pinned alongside it. A basis wide enough to be worth reading makes
+            the row wrap when it cannot honour it, and changes nothing on a
+            desktop, where there is room for both. */}
+        <div className="min-w-0 flex-1 basis-72">
           <h2 className="text-sm font-semibold">
             {trackedCount === 0 ? "Start by telling it where you are" : "Update your progress"}
           </h2>
