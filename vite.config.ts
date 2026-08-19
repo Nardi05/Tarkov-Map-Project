@@ -5,6 +5,9 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   base: "./",
   plugins: [react(), tailwindcss()],
+  optimizeDeps: {
+    include: ["leaflet", "react", "react-dom", "zustand"],
+  },
   build: {
     target: "es2020",
     cssMinify: "lightningcss",
