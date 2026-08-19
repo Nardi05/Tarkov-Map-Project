@@ -53,11 +53,37 @@ export function declutterLabels(container: HTMLElement) {
     });
   }
 
+  /*
+   * The glyphs themselves are obstacles too, for place names only.
+   *
+   * Text was only ever tested against other text, so a place name and a marker
+   * could occupy the same pixels quite happily — on Customs alone an icon sat
+   * in the middle of CRACKHOUSE, TRAILER PARK, BIG RED and Interchange. A name
+   * with a pin stamped through it is worse than no name: it reads as neither.
+   *
+   * Only labels the map draws as background annotation give way (place names
+   * come in at -10; a marker's own label is 0 or above). Marker labels stay put
+   * even when they clip a neighbouring pin, because that label is what the
+   * player is hunting for when they turn labels on, and the pin underneath is
+   * still perfectly visible as a pin.
+   */
+  const glyphs: Box[] = [];
+  for (const el of container.querySelectorAll<HTMLElement>(".marker-shape")) {
+    const r = el.getBoundingClientRect();
+    if (r.width === 0 || r.right < view.left || r.left > view.right || r.bottom < view.top || r.top > view.bottom) {
+      continue;
+    }
+    glyphs.push({ el, left: r.left, top: r.top, right: r.right, bottom: r.bottom, priority: 0 });
+  }
+
   boxes.sort((a, b) => b.priority - a.priority || a.top - b.top || a.left - b.left);
 
   const placed: Box[] = [];
   for (const box of boxes) {
-    if (placed.some((other) => overlaps(box, other))) box.el.classList.add("is-crowded");
+    const blocked =
+      placed.some((other) => overlaps(box, other)) ||
+      (box.priority < 0 && glyphs.some((glyph) => overlaps(box, glyph)));
+    if (blocked) box.el.classList.add("is-crowded");
     else placed.push(box);
   }
 }
