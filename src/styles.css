@@ -2,6 +2,51 @@
 @import "leaflet/dist/leaflet.css";
 
 /*
+ * Inter, shipped rather than hoped for.
+ *
+ * The stack below asked for "Inter var" and nothing ever provided it, so every
+ * visitor was quietly served their system font — Segoe UI on the Windows
+ * machines most of them are playing on. The design was drawn for Inter's
+ * proportions, and leans on its figures in particular — `tabular-nums` is on
+ * the raid clock, the map-card counts and every quantity chip, and what those
+ * columns line up as was never the font actually rendering them.
+ *
+ * Two subsets, latin and latin-ext, out of the five the package carries. The
+ * interface is English and so is the game data; the Cyrillic in a map name like
+ * ZB-1011 is transliterated long before it reaches us. `unicode-range` would
+ * stop a browser fetching the others anyway, but not shipping them keeps dist/
+ * honest about what the site can actually render.
+ *
+ * One variable file per subset covers every weight the UI uses (400 through
+ * 700) in a single fetch, where static cuts would want four. In practice that
+ * is the 48KB latin file and nothing else — latin-ext is another 85KB sitting
+ * in dist/ that no English session ever asks for. Self-hosted from
+ * node_modules on the same rule as the OCR runtime: a deploy must not depend
+ * on somebody else's server.
+ */
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("@fontsource-variable/inter/files/inter-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/*
  * Colour lives in CSS variables, never in utility classes, so the light theme is
  * a single block of overrides rather than a `dark:` prefix on every element.
  * Layer colours (marker hues) are deliberately theme-independent — they carry
@@ -9,7 +54,7 @@
  */
 @theme {
   --font-sans:
-    "Inter var", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
 }
