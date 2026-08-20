@@ -38,6 +38,8 @@
   --shadow: 0 10px 28px -16px rgb(0 0 0 / 0.65);
   --radius: 10px;
   --highlight: inset 0 1px 0 rgb(255 255 255 / 0.04);
+  --place-label: rgb(233 240 246 / 0.86);
+  --place-halo: rgb(4 8 12 / 0.9);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur: 0.24s;
   --dur-fast: 0.14s;
@@ -65,6 +67,8 @@
   --ok: #15803d;
   --shadow: 0 10px 24px -16px rgb(15 25 35 / 0.28);
   --highlight: inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --place-label: rgb(23 33 45 / 0.9);
+  --place-halo: rgb(255 255 255 / 0.92);
 
   color-scheme: light;
 }
@@ -77,6 +81,23 @@ html,
 body,
 #root {
   height: 100%;
+}
+
+/*
+ * The dynamic viewport, where the browser reports one.
+ *
+ * On a phone `100%` resolves against the *large* viewport — the one with the
+ * URL bar already scrolled away — so a full-height app shell is taller than
+ * what you can see, and the map page's bottom tab bar sits under the browser
+ * chrome until you scroll a page that does not scroll. `100dvh` tracks the
+ * bar as it comes and goes.
+ */
+@supports (height: 100dvh) {
+  html,
+  body,
+  #root {
+    height: 100dvh;
+  }
 }
 
 body {
@@ -358,7 +379,10 @@ body {
   .map-tools {
     position: absolute;
     right: 0.75rem;
-    bottom: 0.75rem;
+    /* Above the phone's home indicator, and above Leaflet's zoom stack on a
+       desktop — where the zoom control is 0.75rem from the bottom and 5.1rem
+       tall once its own margin is counted. */
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
     z-index: 500;
     display: flex;
     flex-direction: column;
@@ -374,6 +398,51 @@ body {
     .map-tools {
       bottom: 6.6rem;
     }
+  }
+
+  /*
+   * The floating hint over the map ("20 document spawns · Show").
+   *
+   * Centred, but only across the space the map tools are not using: at 390px
+   * a centred pill wide enough for that sentence ran straight underneath the
+   * fullscreen and fit buttons, and the tap landed on whichever was on top.
+   */
+  .map-hint {
+    position: absolute;
+    left: 0.75rem;
+    right: 3.6rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.72rem;
+    text-align: left;
+  }
+
+  @media (min-width: 768px) {
+    .map-hint {
+      left: 50%;
+      right: auto;
+      bottom: 0.85rem;
+      width: max-content;
+      max-width: min(32rem, calc(100% - 9rem));
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+    }
+  }
+
+  /*
+   * The element the browser puts fullscreen. Without an explicit background
+   * the UA paints its own black behind a page whose colour lives on <body>,
+   * which shows through everywhere the map does not reach.
+   */
+  .map-shell:fullscreen {
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
   }
 
   .btn[aria-pressed="true"],
@@ -493,6 +562,186 @@ body {
   .switch[data-on="true"]::after {
     transform: translate(0.82rem, -50%);
     background: var(--sw-color, var(--accent));
+  }
+
+  /* ------------------------------------------------------------- dashboard */
+
+  /*
+   * The dashboard grid.
+   *
+   * Two columns only from `lg`, because a half-width panel below that is
+   * narrower than the task rows inside it want to be — a tablet gets one
+   * readable column rather than two cramped ones, whatever the saved
+   * preference says. `data-columns="1"` keeps a single column at every width
+   * for players who prefer the list.
+   */
+  .dash-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .dash-grid[data-columns="2"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dash-grid[data-columns="2"] > .dash-panel[data-wide="true"] {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .dash-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 0.875rem;
+    /* Only the drag transform animates; `all` would fight the pointer. */
+    transition:
+      border-color var(--dur-fast) ease,
+      box-shadow var(--dur-fast) ease;
+  }
+
+  .dash-panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .dash-panel-tools {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.25rem;
+  }
+
+  .dash-panel-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dash-grip {
+    cursor: grab;
+    /* Without this the browser scrolls the page instead of starting the drag. */
+    touch-action: none;
+  }
+
+  .dash-grip:active {
+    cursor: grabbing;
+  }
+
+  /* The card under the pointer, lifted off the page and following it. */
+  .dash-panel[data-dragged] {
+    position: relative;
+    z-index: 20;
+    cursor: grabbing;
+    opacity: 0.92;
+    border-color: var(--accent);
+    box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.75);
+  }
+
+  /* Where it will land. */
+  .dash-panel[data-target] {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+
+  .dash-grid[data-editing] .dash-panel:not([data-dragged]) {
+    border-style: dashed;
+  }
+
+  /* Stat tiles on the progress panel. */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 480px) {
+    .stat-row {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .stat {
+    background: var(--panel-2);
+    border: 1px solid var(--line-soft);
+    border-radius: 11px;
+    padding: 0.55rem 0.65rem;
+  }
+
+  .stat-value {
+    display: block;
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .stat-of {
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .stat-label {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .meter {
+    display: block;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--panel-3);
+    overflow: hidden;
+  }
+
+  .meter > i {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.6s var(--ease);
+  }
+
+  /* A chip that is a link or a button, so it reacts like one. */
+  .chip-button {
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      border-color var(--dur-fast) ease,
+      background var(--dur-fast) ease,
+      color var(--dur-fast) ease;
+  }
+
+  .chip-button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .skeleton {
+    border-radius: 8px;
+    background: linear-gradient(
+      90deg,
+      var(--panel-2) 25%,
+      var(--panel-3) 50%,
+      var(--panel-2) 75%
+    );
+    background-size: 200% 100%;
+    animation: tk-shimmer 1.4s linear infinite;
+  }
+
+  @keyframes tk-shimmer {
+    to {
+      background-position: -200% 0;
+    }
   }
 
   .scroll-y {
@@ -618,16 +867,22 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
   transition: none;
 }
 
+/*
+ * Place names are printed over the artwork, so they carry their own halo
+ * rather than trusting whatever is underneath. The pair is inverted for the
+ * light theme: the vector artwork is pale, and pale-on-pale with a dark
+ * shadow is legible on dark ground and a smudge on light.
+ */
 .tk-place-label span {
   position: absolute;
   display: block;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgb(233 240 246 / 0.82);
+  color: var(--place-label);
   text-shadow:
-    0 0 4px rgb(4 8 12 / 0.9),
-    0 1px 2px rgb(4 8 12 / 0.85);
+    0 0 4px var(--place-halo),
+    0 1px 2px var(--place-halo);
   white-space: nowrap;
   pointer-events: none;
 }
@@ -936,6 +1191,12 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
   }
   .btn:active {
     transform: none;
+  }
+  .skeleton {
+    animation: none;
+  }
+  .meter > i {
+    transition: none;
   }
   .reveal,
   .status-pop,

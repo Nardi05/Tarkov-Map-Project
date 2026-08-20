@@ -1,5 +1,15 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import {
+  DEFAULT_DASHBOARD,
+  mergeDashboard,
+  movePanel,
+  reorderPanels,
+  setPanelFlag,
+  UPCOMING_LIMITS,
+  type DashboardLayout,
+  type DashPanelId,
+} from "./lib/dashboard";
 import { DEFAULT_LAYER_STATE, LAYERS, PRESETS, type LayerId } from "./lib/layers";
 import {
   emptyProgress,
@@ -13,6 +23,15 @@ import {
 import type { TaskStatus } from "./types";
 
 export type { GameMode, Profile } from "./lib/persist-migrate";
+export {
+  DASH_PANELS,
+  DASH_PANEL_META,
+  DEFAULT_DASHBOARD,
+  UPCOMING_LIMITS,
+  type DashboardLayout,
+  type DashPanel,
+  type DashPanelId,
+} from "./lib/dashboard";
 
 export type MapStyle = "clean" | "satellite";
 
@@ -117,38 +136,16 @@ interface Store {
   restoreProgress: (progress: Record<GameMode, ModeProgress>, profile?: Partial<Profile>) => void;
 
   setLastMap: (map: string) => void;
+
+  /** Steps a panel one place up or down, skipping the ones switched off. */
   moveDashPanel: (id: DashPanelId, dir: -1 | 1) => void;
+  /** Drops a dragged panel at an index. */
+  reorderDashPanels: (from: number, to: number) => void;
+  toggleDashPanel: (id: DashPanelId) => void;
+  setDashPanelWide: (id: DashPanelId, wide: boolean) => void;
+  setDashColumns: (columns: 1 | 2) => void;
+  resetDashboard: () => void;
   setUpcomingLimit: (n: number) => void;
-}
-
-export type DashPanelId = "upcoming" | "keys" | "needs";
-
-export interface DashboardLayout {
-  panelOrder: DashPanelId[];
-  upcomingLimit: number;
-}
-
-export const DASH_PANELS: DashPanelId[] = ["upcoming", "keys", "needs"];
-export const UPCOMING_LIMITS = [5, 6, 8, 10, 12] as const;
-
-export const DEFAULT_DASHBOARD: DashboardLayout = {
-  panelOrder: ["upcoming", "keys", "needs"],
-  upcomingLimit: 8,
-};
-
-export function mergeDashboard(stored: Partial<DashboardLayout> | undefined): DashboardLayout {
-  const raw = stored ?? {};
-  const order = (raw.panelOrder ?? []).filter((id): id is DashPanelId =>
-    DASH_PANELS.includes(id),
-  );
-  for (const id of DASH_PANELS) if (!order.includes(id)) order.push(id);
-  const limit = Number(raw.upcomingLimit);
-  return {
-    panelOrder: order,
-    upcomingLimit: (UPCOMING_LIMITS as readonly number[]).includes(limit)
-      ? limit
-      : DEFAULT_DASHBOARD.upcomingLimit,
-  };
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -195,7 +192,7 @@ export const useStore = create<Store>()(
       profile: mergeProfile(undefined),
       progress: emptyProgress(),
       lastMap: null,
-      dashboard: { ...DEFAULT_DASHBOARD },
+      dashboard: { ...DEFAULT_DASHBOARD, panels: [...DEFAULT_DASHBOARD.panels] },
 
       setLayer: (id, on) => set((s) => ({ layers: { ...s.layers, [id]: on } })),
       toggleLayer: (id) => set((s) => ({ layers: { ...s.layers, [id]: !s.layers[id] } })),
@@ -303,14 +300,27 @@ export const useStore = create<Store>()(
       setLastMap: (map) => set({ lastMap: map }),
 
       moveDashPanel: (id, dir) =>
-        set((s) => {
-          const order = [...s.dashboard.panelOrder];
-          const i = order.indexOf(id);
-          const j = i + dir;
-          if (i < 0 || j < 0 || j >= order.length) return {};
-          [order[i], order[j]] = [order[j], order[i]];
-          return { dashboard: { ...s.dashboard, panelOrder: order } };
-        }),
+        set((s) => ({ dashboard: { ...s.dashboard, panels: movePanel(s.dashboard.panels, id, dir) } })),
+      reorderDashPanels: (from, to) =>
+        set((s) => ({ dashboard: { ...s.dashboard, panels: reorderPanels(s.dashboard.panels, from, to) } })),
+      toggleDashPanel: (id) =>
+        set((s) => ({
+          dashboard: {
+            ...s.dashboard,
+            panels: setPanelFlag(
+              s.dashboard.panels,
+              id,
+              "visible",
+              !s.dashboard.panels.find((p) => p.id === id)?.visible,
+            ),
+          },
+        })),
+      setDashPanelWide: (id, wide) =>
+        set((s) => ({
+          dashboard: { ...s.dashboard, panels: setPanelFlag(s.dashboard.panels, id, "wide", wide) },
+        })),
+      setDashColumns: (columns) => set((s) => ({ dashboard: { ...s.dashboard, columns } })),
+      resetDashboard: () => set({ dashboard: { ...DEFAULT_DASHBOARD, panels: [...DEFAULT_DASHBOARD.panels] } }),
       setUpcomingLimit: (n) =>
         set((s) => ({
           dashboard: {

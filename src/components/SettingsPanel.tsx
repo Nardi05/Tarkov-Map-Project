@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { availableStyles, type Floor } from "../lib/base-layer";
 import { LAYERS } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
-import { modeLabel } from "../lib/mode";
+import { MODE_META, modeLabel } from "../lib/mode";
 import { useStore, type Theme } from "../store";
 import type { MapData } from "../types";
+import ModeSwitch from "./ModeSwitch";
 import { Section, Toggle } from "./ui";
 
 const THEMES: { id: Theme; label: string }[] = [
@@ -60,6 +61,7 @@ export default function SettingsPanel({
   const resetLayers = useStore((s) => s.resetLayers);
   const clearProgress = useStore((s) => s.clearProgress);
   const mode = useStore((s) => s.profile.mode);
+  const setProfile = useStore((s) => s.setProfile);
   const trackedCount = useStore((s) => {
     const p = s.progress[s.profile.mode];
     return Object.keys(p.taskStatus).length + Object.keys(p.markerDone).length;
@@ -69,6 +71,17 @@ export default function SettingsPanel({
 
   return (
     <div>
+      {/*
+        The mode belongs here as well as on the pages that list tasks.
+        It decides which task names this map draws at all — the PvE variants,
+        the seasonal line — so a map that quietly disagreed with the tracker,
+        with no way to see why from the map itself, was the one place the
+        setting was invisible and mattered most.
+      */}
+      <Section title="Character" hint={MODE_META[mode].hint}>
+        <ModeSwitch value={mode} onChange={(m) => setProfile("mode", m)} />
+      </Section>
+
       {styles.length > 1 && (
         <Section title="Map style" hint="Both styles line up exactly — markers never move.">
           <div className="flex gap-1.5">
