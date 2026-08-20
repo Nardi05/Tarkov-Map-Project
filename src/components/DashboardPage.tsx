@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useId, useMemo, useState } from "react";
 import { useMapIndex, useProgression } from "../lib/data";
 import { KORD_SEASON, prettyMapName, seasonDaysLeft, seasonElapsed } from "../lib/kord-season";
 import { nextRaids, type RaidPick } from "../lib/next-raid";
@@ -198,7 +198,7 @@ export default function DashboardPage() {
           </section>
         )}
 
-        {data && editing && <CustomiseBar onDone={() => setEditing(false)} />}
+        {data && editing && <CustomiseBar />}
 
         {data && <PanelGrid editing={editing} fresh={fresh} body={body} />}
       </div>
@@ -403,10 +403,10 @@ function DashPanelCard({
                 style={{ width: "1.75rem", height: "1.75rem", padding: 0 }}
                 aria-pressed={panel.wide}
                 aria-label={`${title}: full width`}
-                title={panel.wide ? "Full width — press for half" : "Half width — press for full"}
+                title="Full width"
                 onClick={() => onWide(!panel.wide)}
               >
-                <Icon path={panel.wide ? icons.narrow : icons.wide} size={14} />
+                <Icon path={icons.paneFull} size={14} />
               </button>
             )}
             <button
@@ -467,7 +467,8 @@ function HiddenTray({
   );
 }
 
-function CustomiseBar({ onDone }: { onDone: () => void }) {
+function CustomiseBar() {
+  const columnsId = useId();
   const columns = useStore((s) => s.dashboard.columns);
   const upcomingLimit = useStore((s) => s.dashboard.upcomingLimit);
   const setDashColumns = useStore((s) => s.setDashColumns);
@@ -481,8 +482,18 @@ function CustomiseBar({ onDone }: { onDone: () => void }) {
         or use the arrows. Wide panels fill the row; the × switches one off.
       </p>
 
-      <label className="flex flex-col gap-1">
-        <span className="eyebrow" style={{ color: "var(--text-dim)", letterSpacing: "0.1em" }}>
+      {/*
+        A group, not a <label>. A label wrapping two buttons binds itself to
+        the first one and hands it the label's whole text as its accessible
+        name, so "One" announced as "Columns Two" — the label's words plus the
+        *other* button's. Only a single form control can be named that way.
+      */}
+      <div className="flex flex-col gap-1" role="group" aria-labelledby={columnsId}>
+        <span
+          id={columnsId}
+          className="eyebrow"
+          style={{ color: "var(--text-dim)", letterSpacing: "0.1em" }}
+        >
           Columns
         </span>
         <span className="flex gap-1">
@@ -499,18 +510,23 @@ function CustomiseBar({ onDone }: { onDone: () => void }) {
             </button>
           ))}
         </span>
-      </label>
+        <span className="text-[0.66rem] leading-snug lg:hidden" style={{ color: "var(--text-faint)" }}>
+          Two columns — and the panel widths — need a wider screen than this
+          one. They are saved either way.
+        </span>
+      </div>
 
       <label className="flex flex-col gap-1">
         <span className="eyebrow" style={{ color: "var(--text-dim)", letterSpacing: "0.1em" }}>
           Upcoming
         </span>
+        {/* One control, so the wrapping label names it — and names it with the
+            words on screen rather than a second, different sentence. */}
         <select
           className="input tabular-nums"
           style={{ width: "auto", padding: "0.3rem 1.6rem 0.3rem 0.6rem" }}
           value={upcomingLimit}
           onChange={(e) => setUpcomingLimit(Number(e.target.value))}
-          aria-label="How many upcoming tasks to show"
         >
           {UPCOMING_LIMITS.map((n) => (
             <option key={n} value={n}>
@@ -528,14 +544,6 @@ function CustomiseBar({ onDone }: { onDone: () => void }) {
           onClick={resetDashboard}
         >
           Reset layout
-        </button>
-        <button
-          type="button"
-          className="btn is-active sm:hidden"
-          style={{ padding: "0.34rem 0.7rem", fontSize: "0.75rem" }}
-          onClick={onDone}
-        >
-          Done
         </button>
       </div>
     </section>

@@ -107,6 +107,8 @@ export default function SavePanel({ compact = false }: { compact?: boolean } = {
           type="file"
           accept="application/json,.json"
           className="sr-only"
+          tabIndex={-1}
+          aria-hidden="true"
           onChange={(e) => {
             void pick(e.target.files?.[0]);
             // Cleared so picking the same file twice still fires a change.

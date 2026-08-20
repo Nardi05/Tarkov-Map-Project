@@ -1134,6 +1134,7 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  padding-block: 0.2rem;
   color: inherit;
   text-decoration: none;
 }
@@ -1156,8 +1157,15 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 }
 
 @media (max-width: 640px) {
+  /* The name is dropped for room, which leaves the mark alone as the link —
+     and a 23px-wide tap target. The padding puts it back over 24 without
+     making the mark itself bigger than the nav beside it. */
   .wordmark-name {
     display: none;
+  }
+
+  .wordmark {
+    padding-inline: 0.2rem;
   }
 
   .page-chrome {
@@ -1297,5 +1305,28 @@ html[data-slide="back"]::view-transition-new(root) {
     min-height: 44px;
     /* Spend the card's existing padding rather than pushing the layout out. */
     margin-block: -0.5rem;
+  }
+
+  /*
+   * A floor under every button on a touch screen. Several are deliberately
+   * small — the layer group's All/None, "+ save these layers", the mode
+   * segment — and measured 22px, which is a miss as often as a hit. Growing
+   * the box rather than the type leaves the design where it was on a desktop.
+   */
+  .btn {
+    min-height: 32px;
+  }
+
+  /*
+   * The layer toggles are 32x18 by design and mostly sit inside a label whose
+   * whole row is the target. The documents row is the exception: its text is a
+   * disclosure button, so the switch has to carry its own hit area. An
+   * invisible ::before extends it to 44px without moving anything on screen —
+   * rows are ~50px apart, so it cannot reach a neighbour.
+   */
+  .switch::before {
+    content: "";
+    position: absolute;
+    inset: -13px -6px;
   }
 }
