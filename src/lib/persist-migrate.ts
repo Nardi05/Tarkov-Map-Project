@@ -18,7 +18,7 @@ import type { TaskStatus } from "../types";
  * losing it is not recoverable from anywhere.
  */
 
-export type GameMode = "pvp" | "pve";
+export type GameMode = "pvp" | "pve" | "season";
 export type Faction = "Any" | "USEC" | "BEAR";
 
 export interface Profile {
@@ -39,7 +39,7 @@ export interface ModeProgress {
   markerDone: Record<string, true>;
 }
 
-export const GAME_MODES: GameMode[] = ["pvp", "pve"];
+export const GAME_MODES: GameMode[] = ["pvp", "pve", "season"];
 
 export const DEFAULT_PROFILE: Profile = {
   mode: "pvp",
@@ -51,6 +51,7 @@ export const DEFAULT_PROFILE: Profile = {
 export const emptyProgress = (): Record<GameMode, ModeProgress> => ({
   pvp: { taskStatus: {}, markerDone: {} },
   pve: { taskStatus: {}, markerDone: {} },
+  season: { taskStatus: {}, markerDone: {} },
 });
 
 const isStatus = (v: unknown): v is TaskStatus => v === "active" || v === "completed";
@@ -70,6 +71,10 @@ const isStatus = (v: unknown): v is TaskStatus => v === "active" || v === "compl
  *   so the field is gone from the store — but a field simply removed from the
  *   type would sit in localStorage forever, and it is a credential. Deleting it
  *   on migrate is the difference between "unused" and "actually gone".
+ * - v6 adds a `season` progress slice. Kord Breach (and every season after it)
+ *   is a third character: copying PvP Zone ticks into it would be inventing a
+ *   wipe they have not played. The slice starts empty; `mergeProgress` is what
+ *   actually creates it for older saves.
  */
 export function migrate(persisted: unknown, version: number): Record<string, unknown> {
   const state = (persisted ?? {}) as Record<string, unknown>;
@@ -111,6 +116,10 @@ export function migrate(persisted: unknown, version: number): Record<string, unk
   // no further use for.
   if (version < 5) delete state.trackerToken;
 
+  // v6 does not rewrite `progress`. A save that predates the season slice is
+  // missing the key; `mergeProgress` fills it with empty records so a later
+  // migration cannot accidentally clone PvP ticks into a wipe that never ran.
+
   return state;
 }
 
@@ -137,13 +146,20 @@ export function mergeProgress(
   return base;
 }
 
+const isMode = (v: unknown): v is GameMode =>
+  v === "pvp" || v === "pve" || v === "season";
+
 export function mergeProfile(stored: Partial<Profile> | undefined): Profile {
+  const raw = stored ?? {};
   return {
     ...DEFAULT_PROFILE,
-    ...(stored ?? {}),
+    ...raw,
+    // A junk or pre-season value must not become the selected mode — the
+    // progress lookup indexes by it.
+    mode: isMode(raw.mode) ? raw.mode : DEFAULT_PROFILE.mode,
     // Named explicitly, per the rule above: a nested object present in the
     // stored state but null, or absent from a save that predates it, must come
     // back as an object rather than undefined — every read site indexes it.
-    traderLevels: stored?.traderLevels ?? {},
+    traderLevels: raw.traderLevels ?? {},
   };
 }

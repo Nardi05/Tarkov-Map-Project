@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
+import DashboardPage from "./components/DashboardPage";
 import HomePage from "./components/HomePage";
 import MapPage from "./components/MapPage";
 import QuestsPage from "./components/QuestsPage";
 import SetupWizard from "./components/SetupWizard";
-import { useMapData, useMapIndex } from "./lib/data";
+import { prefetchIdleMaps, prefetchProgression, useMapData, useMapIndex } from "./lib/data";
 import { href, navigate, useRoute } from "./lib/router";
 import { useStore } from "./store";
 
@@ -35,15 +36,30 @@ export default function App() {
       route.name === "map" && map.data
         ? `${map.data.name} — Tarkov Maps`
         : route.name === "quests"
-          ? "Quest tracker — Tarkov Maps"
+          ? "Quests — Tarkov Maps"
           : route.name === "setup"
             ? "Set up your progress — Tarkov Maps"
-            : "Tarkov Maps";
+            : route.name === "dashboard"
+              ? "Dashboard — Tarkov Maps"
+              : route.name === "home"
+                ? "Maps — Tarkov Maps"
+                : "Tarkov Maps";
   }, [route, map.data]);
 
   useEffect(() => {
     if (map.data) setLastMap(map.data.normalizedName);
   }, [map.data, setLastMap]);
+
+  useEffect(() => {
+    prefetchProgression();
+  }, []);
+
+  useEffect(() => {
+    if (!index.data) return;
+    const last = useStore.getState().lastMap;
+    const names = index.data.maps.map((m) => m.normalizedName);
+    prefetchIdleMaps(last ? [last, ...names.filter((n) => n !== last)] : names);
+  }, [index.data]);
 
   /*
    * Manners a real page gets from the browser and a single-page app has to do
@@ -87,6 +103,7 @@ export default function App() {
     );
   }
 
+  if (route.name === "dashboard") return <DashboardPage />;
   if (route.name === "quests") return <QuestsPage />;
   if (route.name === "setup") return <SetupWizard />;
 
@@ -118,10 +135,10 @@ export default function App() {
 
 function Loading({ label }: { label: string }) {
   return (
-    <div className="grid h-full place-items-center" style={{ background: "var(--bg)" }}>
-      <div className="flex flex-col items-center gap-3">
+    <div className="page grid h-full place-items-center">
+      <div className="flex flex-col items-center gap-4">
         <span
-          className="h-7 w-7 animate-spin rounded-full border-2 border-transparent"
+          className="h-8 w-8 animate-spin rounded-full border-2 border-transparent"
           style={{ borderTopColor: "var(--accent)", borderRightColor: "var(--accent)" }}
         />
         <p className="text-sm" style={{ color: "var(--text-dim)" }}>
@@ -142,8 +159,8 @@ function Message({
   action?: { label: string; onClick: () => void };
 }) {
   return (
-    <div className="grid h-full place-items-center p-6" style={{ background: "var(--bg)" }}>
-      <div className="surface max-w-md p-6 text-center">
+    <div className="page grid h-full place-items-center p-6">
+      <div className="surface max-w-md p-8 text-center">
         <h1 className="text-base font-semibold">{title}</h1>
         {detail && (
           <p className="mt-2 text-sm" style={{ color: "var(--text-dim)" }}>

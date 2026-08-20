@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { availableStyles, type Floor } from "../lib/base-layer";
 import { LAYERS } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
+import { modeLabel } from "../lib/mode";
 import { useStore, type Theme } from "../store";
 import type { MapData } from "../types";
 import { Section, Toggle } from "./ui";
@@ -207,7 +208,7 @@ export default function SettingsPanel({
             style={{ color: trackedCount ? "var(--danger)" : undefined }}
             disabled={!trackedCount}
             onClick={() => {
-              const label = mode === "pve" ? "PvE" : "PvP";
+              const label = modeLabel(mode);
               if (
                 confirm(
                   `Clear every ${label} task status and ticked location? This cannot be undone.`,
@@ -217,12 +218,12 @@ export default function SettingsPanel({
               }
             }}
           >
-            Clear {mode === "pve" ? "PvE" : "PvP"} progress
+            Clear {modeLabel(mode)} progress
             {trackedCount ? ` (${trackedCount})` : ""}
           </button>
         </div>
         <p className="mt-2 text-[0.68rem] leading-relaxed" style={{ color: "var(--text-faint)" }}>
-          Progress is kept separately for PvP and PvE; this clears only the mode you are on.
+          Progress is kept separately for PvP Zone, Season and PvE; this clears only the mode you are on.
           Settings and task progress are saved in this browser only. Nothing is uploaded anywhere.
         </p>
       </Section>

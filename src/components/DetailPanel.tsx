@@ -4,6 +4,7 @@ import { LAYER_BY_ID, QUEST_KIND_META } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import { useTaskImages } from "../lib/data";
+import { displayName } from "../lib/task-variant";
 import type { MapData, TaskImage, TaskStatus } from "../types";
 import { documentImages } from "./DocumentList";
 import TaskGallery from "./TaskGallery";
@@ -300,7 +301,7 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
       const kindMeta = QUEST_KIND_META[marker.kind];
 
       return {
-        title: task.name,
+        title: displayName(task.name),
         kind: `${kindMeta?.label ?? "Task objective"}${marker.optional ? " (optional)" : ""}`,
         // Matches the glyph actually drawn on the map for this objective kind.
         shape: kindMeta?.shape ?? layer.shape,

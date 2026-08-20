@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { matchTasks, CONFIDENT, type Candidate, type OcrMatch } from "../lib/ocr-match";
+import { displayName } from "../lib/task-variant";
 import { OcrError, readImage, type OcrProgress } from "../lib/ocr";
+import TaskName from "./TaskName";
 import { Icon, icons } from "./ui";
 
 /**
@@ -213,10 +215,12 @@ export default function ScreenshotImport({
                           onChange={(e) => setPicked((p) => ({ ...p, [m.id]: e.target.checked }))}
                         />
                         <span className="min-w-0 flex-1">
-                          <span className="block text-[0.8125rem] font-medium">{m.name}</span>
+                          <span className="block text-[0.8125rem] font-medium">
+                            <TaskName name={m.name} />
+                          </span>
                           {/* What it actually read, when that differs — so a
                               wrong guess is explicable rather than mysterious. */}
-                          {m.line.toLowerCase() !== m.name.toLowerCase() && (
+                          {m.line.toLowerCase() !== displayName(m.name).toLowerCase() && (
                             <span
                               className="block text-[0.68rem]"
                               style={{ color: "var(--text-faint)" }}

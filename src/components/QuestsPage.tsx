@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useProgression } from "../lib/data";
+import { useMapIndex, useProgression } from "../lib/data";
 import { useDebouncedInput } from "../lib/use-debounced-input";
 import {
   computeAvailability,
@@ -7,13 +7,21 @@ import {
   prerequisiteClosure,
   type LockReason,
 } from "../lib/progression";
-import { href, navigate } from "../lib/router";
+import { prettyMapName } from "../lib/kord-season";
+import { collectKeys, collectNeeds } from "../lib/quest-lists";
+import { href, navigate, onNavClick } from "../lib/router";
+import { nextRaids } from "../lib/next-raid";
+import { displayName, visibleInMode } from "../lib/task-variant";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
-import type { Faction, GameMode, Profile } from "../lib/persist-migrate";
-import type { KeyItem, Progression, TaskAvailability, TaskItemNeed } from "../types";
+import type { Faction, Profile } from "../lib/persist-migrate";
+import type { TaskAvailability } from "../types";
+import ModeSwitch from "./ModeSwitch";
+import NextRaid from "./NextRaid";
 import SavePanel from "./SavePanel";
+import SeasonPanel from "./SeasonPanel";
+import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
-import { EmptyState, Icon, icons } from "./ui";
+import { EmptyState, Icon, PageChrome, icons } from "./ui";
 
 /**
  * The quest tracker.
@@ -45,7 +53,6 @@ interface Row {
 }
 
 const FACTIONS: Faction[] = ["Any", "USEC", "BEAR"];
-const MODE_LABEL: Record<GameMode, string> = { pvp: "PvP", pve: "PvE" };
 
 export default function QuestsPage() {
   const progression = useProgression();
@@ -61,6 +68,7 @@ export default function QuestsPage() {
   const [typed, setTyped] = useDebouncedInput(query, setQuery);
 
   const data = progression.data;
+  const maps = useMapIndex();
 
   const availability = useMemo(
     () => computeAvailability(data, taskStatus, profile),
@@ -69,21 +77,23 @@ export default function QuestsPage() {
 
   const rows = useMemo<Row[]>(() => {
     if (!data) return [];
-    return Object.entries(data.tasks).map(([id, task]) => ({
-      id,
-      name: task.name,
-      trader: task.trader ?? "Unknown",
-      level: task.minPlayerLevel,
-      availability: availability[id] ?? "locked",
-      kappa: task.kappaRequired,
-      maps: task.maps,
-      gates: task.traderGates
-        .filter((g) => g.kind === "level")
-        .map((g) => `${g.trader} LL${g.value}`),
-      wiki: task.wiki,
-      blockers: [],
-    }));
-  }, [data, availability]);
+    return Object.entries(data.tasks)
+      .filter(([, task]) => visibleInMode(task.name, profile.mode))
+      .map(([id, task]) => ({
+        id,
+        name: task.name,
+        trader: task.trader ?? "Unknown",
+        level: task.minPlayerLevel,
+        availability: availability[id] ?? "locked",
+        kappa: task.kappaRequired,
+        maps: task.maps,
+        gates: task.traderGates
+          .filter((g) => g.kind === "level")
+          .map((g) => `${g.trader} LL${g.value}`),
+        wiki: task.wiki,
+        blockers: [],
+      }));
+  }, [data, availability, profile.mode]);
 
   /*
    * Only traders that actually gate something get a control. Offering all
@@ -100,7 +110,9 @@ export default function QuestsPage() {
 
   const needle = query.trim().toLowerCase();
   const matches = (row: Row) =>
-    !needle || row.name.toLowerCase().includes(needle) || row.trader.toLowerCase().includes(needle);
+    !needle ||
+    displayName(row.name).toLowerCase().includes(needle) ||
+    row.trader.toLowerCase().includes(needle);
 
   /*
    * Bucketed in one pass, and memoised.
@@ -142,8 +154,9 @@ export default function QuestsPage() {
 
   /** Keys and hand-ins for what you can do next — active first, then available. */
   const upcoming = useMemo(() => [...active, ...available], [active, available]);
-  const keys = useMemo(() => collectKeys(data, upcoming), [data, upcoming]);
-  const needs = useMemo(() => collectNeeds(data, upcoming), [data, upcoming]);
+  const upcomingIds = useMemo(() => upcoming.map((r) => r.id), [upcoming]);
+  const keys = useMemo(() => collectKeys(data, upcomingIds), [data, upcomingIds]);
+  const needs = useMemo(() => collectNeeds(data, upcomingIds), [data, upcomingIds]);
 
   /** "I finished this one" also means everything behind it is finished. */
   const completeWithHistory = (taskId: string) => {
@@ -154,6 +167,10 @@ export default function QuestsPage() {
   };
 
   const trackedCount = Object.keys(taskStatus).length;
+  const raidPicks = useMemo(
+    () => nextRaids(maps.data?.maps ?? [], data, taskStatus, 4),
+    [maps.data, data, taskStatus],
+  );
 
   if (progression.error) {
     return (
@@ -169,19 +186,10 @@ export default function QuestsPage() {
   return (
     <Shell>
       <header className="mb-6">
-        <p
-          className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.16em]"
-          style={{ color: "var(--accent)" }}
-        >
-          Escape from Tarkov
-        </p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Quest tracker</h1>
-        <p
-          className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed"
-          style={{ color: "var(--text-dim)" }}
-        >
-          Tell it what you have finished and it works out what you can pick up next, which keys to
-          bring and what to hand in found-in-raid. Whatever you tick here is what the maps draw.
+        <h1 className="display text-2xl sm:text-3xl">Quests</h1>
+        <p className="mt-1.5 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
+          Tick what you have accepted. The graph fills in what that unlocks, which map to queue,
+          which keys to bring, and what to find in raid.
         </p>
       </header>
 
@@ -190,7 +198,7 @@ export default function QuestsPage() {
           fourteenth tab stop, so the one thing a new player needs was the
           hardest thing on the page to reach. */}
       <section
-        className={`surface flex flex-wrap items-center gap-3 p-3 ${trackedCount === 0 ? "mt-1" : "mt-4"}`}
+        className={`surface flex flex-wrap items-center gap-4 p-4 ${trackedCount === 0 ? "mt-1" : "mt-4"}`}
       >
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold">
@@ -204,7 +212,7 @@ export default function QuestsPage() {
             means everything behind it is done, so a couple of dozen ticks rebuild the whole wipe.
           </p>
         </div>
-        <a className="btn is-active flex-none" href={href.setup()}>
+        <a className="btn is-active flex-none" href={href.setup()} onClick={onNavClick(href.setup())}>
           {trackedCount === 0 ? "Set up my progress" : "Run the walkthrough"}
         </a>
       </section>
@@ -216,6 +224,25 @@ export default function QuestsPage() {
         trackedCount={trackedCount}
         markerCount={Object.keys(markerDone).length}
       />
+
+      <div className="mt-4">
+        <SeasonPanel
+          mode={profile.mode}
+          taskStatus={taskStatus}
+          availability={availability}
+          onCycle={cycleTaskStatus}
+        />
+      </div>
+
+      {trackedCount > 0 && (
+        <section className="surface mt-4 p-4">
+          <h2 className="text-sm font-semibold">Next raid</h2>
+          <p className="mb-3 mt-1 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
+            Maps that hold your active tasks, documents as a tie-break.
+          </p>
+          <NextRaid picks={raidPicks} />
+        </section>
+      )}
 
       {data?.coverage && data.coverage.ungated > 0 && (
         <p
@@ -254,6 +281,7 @@ export default function QuestsPage() {
           value={typed}
           onChange={(e) => setTyped(e.target.value)}
           aria-label="Search tasks"
+          data-search
         />
       </div>
 
@@ -265,7 +293,7 @@ export default function QuestsPage() {
         /* Five panels of empty states told a new player nothing five times
            over. One sentence and the list of what they will get is a better
            use of the screen. */
-        <section className="surface mt-6 p-6 text-center">
+        <section className="surface mt-6 p-8 text-center">
           <h2 className="text-base font-semibold">Nothing tracked yet</h2>
           <p
             className="mx-auto mt-2 max-w-md text-[0.85rem] leading-relaxed"
@@ -275,7 +303,7 @@ export default function QuestsPage() {
             trader will offer next, the keys those tasks go through and everything you need to find
             in raid — and every map draws your objectives without being asked.
           </p>
-          <a className="btn is-active mt-4 inline-flex" href={href.setup()}>
+          <a className="btn is-active mt-4 inline-flex" href={href.setup()} onClick={onNavClick(href.setup())}>
             Walk me through it
           </a>
           <p className="mt-3 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
@@ -338,7 +366,7 @@ export default function QuestsPage() {
             hint="Doors your active and available tasks go through."
           >
             {keys.length === 0 ? (
-              <EmptyState title="No keys needed" hint="Nothing coming up is behind a locked door." />
+              <EmptyState compact title="No keys needed" hint="Nothing coming up is behind a locked door." />
             ) : (
               <ul className="space-y-1">
                 {keys.map((k) => (
@@ -373,6 +401,7 @@ export default function QuestsPage() {
           >
             {needs.length === 0 ? (
               <EmptyState
+                compact
                 title="Nothing to find"
                 hint="No found-in-raid hand-ins among your active and available tasks."
               />
@@ -455,19 +484,14 @@ export default function QuestsPage() {
 /* ------------------------------------------------------------------ layout */
 
 function Shell({ children }: { children: React.ReactNode }) {
+  const mode = useStore((s) => s.profile.mode);
+  const setProfile = useStore((s) => s.setProfile);
   return (
-    <div className="scroll-y h-full" style={{ background: "var(--bg)" }}>
-      <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
-        {/* One way back, not two: the arrow and the "Maps" button went to the
-            same place and read as different things. */}
-        <nav className="mb-6 flex items-center gap-1.5" aria-label="Sections">
-          <a className="btn" href={href.home()}>
-            Maps
-          </a>
-          <span className="btn is-active" aria-current="page">
-            Quests
-          </span>
-        </nav>
+    <div className="page scroll-y h-full">
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+        <PageChrome current="quests">
+          <ModeSwitch value={mode} onChange={(m) => setProfile("mode", m)} size="sm" />
+        </PageChrome>
         {children}
       </div>
     </div>
@@ -543,24 +567,7 @@ function ProfileBar({
   const set = traders.filter((t) => typeof profile.traderLevels[t] === "number").length;
 
   return (
-    <div className="surface mt-4 flex flex-wrap items-end gap-3 p-3">
-      <Field label="Mode" hint="PvP and PvE keep separate progress.">
-        <div className="flex gap-1 rounded-lg p-0.5" style={{ background: "var(--panel-2)" }}>
-          {(["pvp", "pve"] as GameMode[]).map((m) => (
-            <button
-              key={m}
-              type="button"
-              className="btn btn-ghost text-[0.75rem]"
-              style={{ padding: "0.3rem 0.7rem" }}
-              aria-pressed={profile.mode === m}
-              onClick={() => setProfile("mode", m)}
-            >
-              {MODE_LABEL[m]}
-            </button>
-          ))}
-        </div>
-      </Field>
-
+    <div className="surface mt-4 flex flex-wrap items-end gap-3 p-4">
       <Field label="Faction" hint="Hides the other side's exclusive tasks.">
         <select
           className="input"
@@ -782,7 +789,9 @@ function TaskRow({
 
       <div className="min-w-0 flex-1">
         <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-          <span className="text-[0.8125rem] font-medium">{row.name}</span>
+          <span className="text-[0.8125rem] font-medium">
+            <TaskName name={row.name} />
+          </span>
           <span className="text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
             {/* Most tasks report level 0, which is not a requirement worth
                 printing 300 times. */}
@@ -830,9 +839,9 @@ function TaskRow({
                 type="button"
                 className="chip chip-accent"
                 onClick={() => navigate(href.map(map, row.id))}
-                title={`Open ${row.name} on this map`}
+                title={`Open ${displayName(row.name)} on this map`}
               >
-                {map.replace(/-/g, " ")}
+                {prettyMapName(map)}
               </button>
             ))}
           </p>
@@ -846,9 +855,9 @@ function TaskRow({
             className="btn btn-ghost text-[0.68rem]"
             style={{ padding: "0.25rem 0.5rem", color: "var(--text-faint)" }}
             onClick={onCompleteChain}
-            title={`Mark ${row.name} done, and everything it needed before it`}
+            title={`Mark ${displayName(row.name)} done, and everything it needed before it`}
           >
-            + before
+            Done + earlier
           </button>
         )}
         {row.wiki && (
@@ -857,7 +866,7 @@ function TaskRow({
             href={row.wiki}
             target="_blank"
             rel="noreferrer noopener"
-            aria-label={`${row.name} on the wiki`}
+            aria-label={`${displayName(row.name)} on the wiki`}
           >
             <Icon path={icons.external} size={15} />
           </a>
@@ -867,72 +876,4 @@ function TaskRow({
   );
 }
 
-/* -------------------------------------------------------------- shopping lists */
 
-interface KeyRow {
-  item: KeyItem;
-  tasks: string[];
-  maps: string[];
-}
-
-function collectKeys(progression: Progression | null, rows: Row[]): KeyRow[] {
-  if (!progression) return [];
-  const out = new Map<string, KeyRow>();
-
-  for (const row of rows) {
-    const task = progression.tasks[row.id];
-    if (!task) continue;
-    for (const entry of task.keys) {
-      for (const keyId of entry.keys) {
-        const item = progression.keys[keyId];
-        if (!item) continue;
-        const existing = out.get(keyId) ?? { item, tasks: [], maps: [] };
-        if (!existing.tasks.includes(task.name)) existing.tasks.push(task.name);
-        const map = entry.map?.replace(/-/g, " ");
-        if (map && !existing.maps.includes(map)) existing.maps.push(map);
-        out.set(keyId, existing);
-      }
-    }
-  }
-
-  return [...out.values()].sort((a, b) => b.tasks.length - a.tasks.length);
-}
-
-interface NeedRow {
-  name: string;
-  icon: string | null;
-  count: number;
-  tasks: string[];
-}
-
-/**
- * Found-in-raid hand-ins only. A task also wanting a bought item is not news —
- * you can buy it on the way to the trader; a FIR item changes how you play the
- * raid, which is the whole reason this list exists.
- *
- * Grouped by item name rather than id: several tasks want the same item under
- * different ids in the feed, and a player reads "8 × Bolts", not two rows.
- */
-function collectNeeds(progression: Progression | null, rows: Row[]): NeedRow[] {
-  if (!progression) return [];
-  const out = new Map<string, NeedRow>();
-
-  for (const row of rows) {
-    const task = progression.tasks[row.id];
-    if (!task) continue;
-    for (const need of task.needs as TaskItemNeed[]) {
-      if (!need.foundInRaid) continue;
-      const existing = out.get(need.name) ?? {
-        name: need.name,
-        icon: need.icon,
-        count: 0,
-        tasks: [],
-      };
-      existing.count += need.count;
-      if (!existing.tasks.includes(task.name)) existing.tasks.push(task.name);
-      out.set(need.name, existing);
-    }
-  }
-
-  return [...out.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-}

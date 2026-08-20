@@ -6,15 +6,17 @@ import SettingsPanel from "./SettingsPanel";
 import DetailPanel from "./DetailPanel";
 import MapSwitcher from "./MapSwitcher";
 import RaidClock from "./RaidClock";
-import ShortcutHelp, { isTypingInto } from "./ShortcutHelp";
+import { isTypingInto } from "./ShortcutHelp";
 import { Icon, icons } from "./ui";
 import { availableStyles, floorsFor } from "../lib/base-layer";
 import { filterQuests, type Selection } from "../lib/build-layers";
 import { useProgression } from "../lib/data";
 import { withinExtents } from "../lib/leaflet-crs";
+import { documentTypesOnMap, withSeasonTasks } from "../lib/kord-season";
 import { availableOnMap, computeAvailability } from "../lib/progression";
+import { displayName, visibleInMode } from "../lib/task-variant";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
-import { href, navigate } from "../lib/router";
+import { href, navigate, onNavClick } from "../lib/router";
 import type { MapData, MapIndexEntry, Vec3 } from "../types";
 
 type Tab = "layers" | "tasks" | "settings";
@@ -38,6 +40,7 @@ export default function MapPage({
   const settings = useStore((s) => s.settings);
   const quest = useStore((s) => s.quest);
   const setQuestFilter = useStore((s) => s.setQuestFilter);
+  const setLayer = useStore((s) => s.setLayer);
   const taskStatus = useTaskStatus();
   const markerDone = useMarkerDone();
   const setSetting = useStore((s) => s.setSetting);
@@ -54,7 +57,9 @@ export default function MapPage({
    * somebody wants remembered next time they open the site.
    */
   const [railCollapsed, setRailCollapsed] = useState(false);
-  const [showHelp, setShowHelp] = useState(false);
+  const [mapFullscreen, setMapFullscreen] = useState(false);
+  const [fitToken, setFitToken] = useState(0);
+  const hideChrome = mapFullscreen;
 
   const floors = useMemo(() => floorsFor(data.geo), [data.geo]);
   const [floorId, setFloorId] = useState(floors[0]?.id ?? "ground");
@@ -73,19 +78,34 @@ export default function MapPage({
   const progression = useProgression();
   const profile = useStore((s) => s.profile);
 
+  const mapData = useMemo(() => withSeasonTasks(data, profile.mode), [data, profile.mode]);
+
   const availability = useMemo(
     () => computeAvailability(progression.data, taskStatus, profile),
     [progression.data, taskStatus, profile],
   );
 
   const availableHere = useMemo(
-    () => new Set(availableOnMap(progression.data, availability, data.normalizedName)),
-    [progression.data, availability, data.normalizedName],
+    () => new Set(availableOnMap(progression.data, availability, mapData.normalizedName)),
+    [progression.data, availability, mapData.normalizedName],
   );
 
+  const allowedTasks = useMemo(() => {
+    const ids = new Set<string>();
+    for (const task of Object.values(mapData.tasks)) {
+      if (visibleInMode(task.name, profile.mode)) ids.add(task.id);
+    }
+    return ids;
+  }, [mapData, profile.mode]);
+
   const visibleQuests = useMemo(
-    () => filterQuests(data, quest, taskStatus, availableHere),
-    [data, quest, taskStatus, availableHere],
+    () => filterQuests(mapData, quest, taskStatus, availableHere, allowedTasks),
+    [mapData, quest, taskStatus, availableHere, allowedTasks],
+  );
+
+  const docTypes = useMemo(
+    () => documentTypesOnMap(mapData.normalizedName),
+    [mapData.normalizedName],
   );
 
   /*
@@ -101,11 +121,11 @@ export default function MapPage({
 
   /* A deep link (#/m/customs?q=<task>) opens that task isolated on the map. */
   useEffect(() => {
-    if (deepLinkTask && data.tasks[deepLinkTask]) {
+    if (deepLinkTask && mapData.tasks[deepLinkTask]) {
       setQuestFilter("focusTask", deepLinkTask);
       setTab("tasks");
     }
-  }, [deepLinkTask, data, setQuestFilter]);
+  }, [deepLinkTask, mapData, setQuestFilter]);
 
   const focusOn = useCallback(
     (position: Vec3) => {
@@ -145,33 +165,9 @@ export default function MapPage({
    */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setShowHelp(false);
-        setSelection(null);
-        setSheetOpen(false);
-        return;
-      }
-      if (e.metaKey || e.ctrlKey || e.altKey || isTypingInto(e.target)) return;
-
-      const key = e.key.toLowerCase();
-      const openTab = (next: Tab) => {
-        e.preventDefault();
-        setTab(next);
-        // On a phone the panel is a sheet, so a shortcut has to open it too.
-        setSheetOpen(true);
-        setRailCollapsed(false);
-      };
-
-      if (key === "l") openTab("layers");
-      else if (key === "t") openTab("tasks");
-      else if (key === "s") openTab("settings");
-      else if (key === "[") {
-        e.preventDefault();
-        setRailCollapsed((v) => !v);
-      } else if (key === "?" || (key === "/" && e.shiftKey)) {
-        e.preventDefault();
-        setShowHelp((v) => !v);
-      }
+      if (e.key !== "Escape" || isTypingInto(e.target)) return;
+      setSelection(null);
+      setSheetOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -179,9 +175,9 @@ export default function MapPage({
 
   const panel = (
     <>
-      {tab === "layers" && <LayerPanel data={data} visibleQuestCount={visibleQuests.length} />}
+      {tab === "layers" && <LayerPanel data={mapData} visibleQuestCount={visibleQuests.length} />}
       {tab === "tasks" && (
-        <TaskPanel data={data} availability={availability} onFocus={focusOn} />
+        <TaskPanel data={mapData} availability={availability} onFocus={focusOn} />
       )}
       {tab === "settings" && (
         <SettingsPanel data={data} floors={floors} floorId={floorId} onFloorChange={setFloorId} />
@@ -192,37 +188,58 @@ export default function MapPage({
   return (
     <div className="flex h-full flex-col" style={{ background: "var(--bg)" }}>
       {/* ------------------------------------------------------------ header */}
+      {!hideChrome && (
       <header
-        className="flex flex-none items-center gap-2 border-b px-2 py-2 md:px-3"
-        style={{ borderColor: "var(--line)", background: "var(--panel)" }}
+        className="map-glass flex flex-none items-center gap-2 border-b px-2 py-2 md:px-3"
+        style={{ borderColor: "var(--line)" }}
       >
-        <a href={href.home()} className="btn btn-ghost btn-icon flex-none" aria-label="All maps">
+        <a
+          href={href.home()}
+          onClick={onNavClick(href.home())}
+          className="btn btn-ghost btn-icon flex-none"
+          aria-label="All maps"
+        >
           <Icon path={icons.back} size={18} />
         </a>
 
         <MapSwitcher maps={maps} current={data.normalizedName} onPick={(name) => navigate(href.map(name))} />
 
         <div className="ml-auto flex items-center gap-1.5">
+          <button
+            type="button"
+            className="btn hidden text-[0.72rem] md:inline-flex"
+            style={{ padding: "0.28rem 0.6rem" }}
+            aria-pressed={!railCollapsed}
+            onClick={() => setRailCollapsed((v) => !v)}
+          >
+            {railCollapsed ? "Show panel" : "Hide panel"}
+          </button>
+          <button
+            type="button"
+            className="btn hidden text-[0.72rem] sm:inline-flex"
+            style={{ padding: "0.28rem 0.6rem" }}
+            onClick={() => setFitToken((n) => n + 1)}
+          >
+            Reset view
+          </button>
           <a
             className="btn inline-flex text-[0.72rem]"
             style={{ padding: "0.28rem 0.6rem" }}
+            href={href.dashboard()}
+            onClick={onNavClick(href.dashboard())}
+            title="What to run next"
+          >
+            Dashboard
+          </a>
+          <a
+            className="btn hidden text-[0.72rem] sm:inline-flex"
+            style={{ padding: "0.28rem 0.6rem" }}
             href={href.quests()}
-            title="Track your quests and see what to do next"
+            onClick={onNavClick(href.quests())}
+            title="Track your quests"
           >
             Quests
           </a>
-
-          {/* Shortcuts nobody can find may as well not exist. Pointer devices
-              only: there is no keyboard to shortcut on a phone. */}
-          <button
-            type="button"
-            className="btn btn-ghost btn-icon hidden md:inline-flex"
-            aria-label="Keyboard shortcuts"
-            title="Keyboard shortcuts (?)"
-            onClick={() => setShowHelp(true)}
-          >
-            <span className="text-[0.8rem] font-semibold">?</span>
-          </button>
 
           <RaidClock mapName={data.normalizedName} />
 
@@ -262,11 +279,11 @@ export default function MapPage({
           )}
         </div>
       </header>
-
-      {showHelp && <ShortcutHelp onClose={() => setShowHelp(false)} />}
+      )}
 
       <div className="flex min-h-0 flex-1">
         {/* ---------------------------------------------------- desktop rail */}
+        {!hideChrome && (
         <aside
           className="hidden w-[21rem] flex-none flex-col overflow-hidden border-r transition-[width] duration-200 md:flex lg:w-[23rem]"
           // Inline width only kicks in while collapsed; expanded keeps the
@@ -305,6 +322,7 @@ export default function MapPage({
           </nav>
           <div className="scroll-y min-h-0 flex-1">{panel}</div>
         </aside>
+        )}
 
         {/* ---------------------------------------------------------- canvas */}
         <main className="relative min-w-0 flex-1">
@@ -326,10 +344,21 @@ export default function MapPage({
             selection={selection}
             onSelect={handleSelect}
             focus={focus}
+            fitToken={fitToken}
+            onFullscreen={(on) => {
+              setMapFullscreen(on);
+              if (on) {
+                setRailCollapsed(true);
+                setSheetOpen(false);
+              } else {
+                setRailCollapsed(false);
+              }
+            }}
           />
 
           {/* Rail handle. Lives in the canvas, not the rail, so it stays
               reachable once the rail itself has no width left. */}
+          {!hideChrome && (
           <button
             type="button"
             className="btn absolute left-0 top-1/2 z-[500] hidden -translate-y-1/2 md:flex"
@@ -348,8 +377,9 @@ export default function MapPage({
               <Icon path={icons.chevron} size={15} />
             </span>
           </button>
+          )}
 
-          {quest.focusTask && data.tasks[quest.focusTask] && (
+          {quest.focusTask && mapData.tasks[quest.focusTask] && (
             <button
               type="button"
               className="surface animate-in absolute left-1/2 top-3 z-[500] flex -translate-x-1/2 items-center gap-2 px-3 py-1.5 text-xs"
@@ -357,9 +387,27 @@ export default function MapPage({
               onClick={() => setQuestFilter("focusTask", null)}
             >
               <span className="truncate" style={{ maxWidth: "16rem" }}>
-                Showing only <b>{data.tasks[quest.focusTask].name}</b>
+                Showing only <b>{displayName(mapData.tasks[quest.focusTask].name)}</b>
               </span>
               <Icon path={icons.close} size={13} />
+            </button>
+          )}
+
+          {!layers.documents && mapData.markers.documents.length > 0 && (
+            <button
+              type="button"
+              className="surface animate-in absolute bottom-3 left-1/2 z-[500] flex -translate-x-1/2 items-center gap-2 px-3 py-1.5 text-xs"
+              style={{ boxShadow: "var(--shadow)" }}
+              onClick={() => setLayer("documents", true)}
+            >
+              <span>
+                {mapData.markers.documents.length} document spawn
+                {mapData.markers.documents.length === 1 ? "" : "s"}
+                {docTypes.length > 0
+                  ? ` · ${docTypes.map((d) => d.name.replace(/ documents?| documentation/gi, "")).join(", ")}`
+                  : ""}
+              </span>
+              <span style={{ color: "var(--accent)" }}>Show</span>
             </button>
           )}
 
@@ -384,6 +432,7 @@ export default function MapPage({
       </div>
 
       {/* ------------------------------------------------------- mobile bar */}
+      {!hideChrome && (
       <nav
         className="flex flex-none items-stretch gap-1 border-t p-1.5 md:hidden"
         style={{
@@ -413,6 +462,7 @@ export default function MapPage({
           </button>
         ))}
       </nav>
+      )}
 
       {/* ----------------------------------------------------- mobile sheets */}
       {sheetOpen && (

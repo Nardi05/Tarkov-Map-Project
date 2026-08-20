@@ -635,6 +635,7 @@ export function filterQuests(
    * active-only — the behaviour before availability existed.
    */
   availableHere?: ReadonlySet<string>,
+  allowedTasks?: ReadonlySet<string>,
 ): QuestMarker[] {
   const needle = filters.search.trim().toLowerCase();
 
@@ -651,6 +652,7 @@ export function filterQuests(
   return data.markers.quests.filter((marker) => {
     const task = data.tasks[marker.task];
     if (!task) return false;
+    if (allowedTasks && !allowedTasks.has(task.id)) return false;
     if (filters.focusTask) return task.id === filters.focusTask;
     // Show-all is the browse mode and deliberately keeps finished tasks in,
     // faded by the dimCompleted setting.
@@ -662,7 +664,8 @@ export function filterQuests(
     if (filters.kappaOnly && !task.kappaRequired) return false;
     if (filters.trader && task.trader?.name !== filters.trader) return false;
     if (needle) {
-      const haystack = `${task.name} ${marker.description} ${marker.item?.name ?? ""}`.toLowerCase();
+      const plain = task.name.replace(/\s*\[(PVP ZONE|PVE ZONE|KORD BREACH)\]\s*$/i, "");
+      const haystack = `${plain} ${task.name} ${marker.description} ${marker.item?.name ?? ""}`.toLowerCase();
       if (!haystack.includes(needle)) return false;
     }
     return true;

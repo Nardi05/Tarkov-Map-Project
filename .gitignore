@@ -7,4 +7,3 @@ tsconfig.tsbuildinfo
 .vercel
 .env*
 public/ocr
-eng.traineddata

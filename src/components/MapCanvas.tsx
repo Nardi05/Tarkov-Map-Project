@@ -13,7 +13,6 @@ import {
 import { buildLayer, type Selection } from "../lib/build-layers";
 import { createDeclutterer } from "../lib/declutter";
 import { LAYERS, type LayerId } from "../lib/layers";
-import { isTypingInto } from "./ShortcutHelp";
 import type { QuestMarker, TaskStatus } from "../types";
 import type { MapStyle } from "../store";
 import { icons } from "./ui";
@@ -42,6 +41,9 @@ interface Props {
   selection: Selection | null;
   onSelect: (selection: Selection | null) => void;
   focus: FocusRequest | null;
+  /** Bumped to ask the map to fit the whole bounds again. */
+  fitToken?: number;
+  onFullscreen?: (on: boolean) => void;
 }
 
 /** Where the currently selected thing sits, so we can ring it on the map. */
@@ -70,7 +72,7 @@ function selectionPosition(selection: Selection | null): Vec3 | null {
 }
 
 export default function MapCanvas(props: Props) {
-  const { data, style, floor, layers, selection, onSelect, focus } = props;
+  const { data, style, floor, layers, selection, onSelect, focus, fitToken, onFullscreen } = props;
   const shellRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -109,25 +111,25 @@ export default function MapCanvas(props: Props) {
     else void shell.requestFullscreen().catch(() => {});
   }, []);
 
-  /* `f` lives here rather than in MapPage, next to the thing it toggles. */
+  const fitMap = useCallback(() => {
+    fitRef.current?.();
+  }, []);
+
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "f" && e.key !== "F") return;
-      if (e.metaKey || e.ctrlKey || e.altKey || isTypingInto(e.target)) return;
-      e.preventDefault();
-      toggleFullscreen();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [toggleFullscreen]);
+    if (fitToken) fitMap();
+  }, [fitToken, fitMap]);
 
   // Tracked by event rather than by the click, because Escape and the browser's
   // own chrome can leave fullscreen without going through the button.
   useEffect(() => {
-    const sync = () => setIsFullscreen(document.fullscreenElement === shellRef.current);
+    const sync = () => {
+      const on = document.fullscreenElement === shellRef.current;
+      setIsFullscreen(on);
+      onFullscreen?.(on);
+    };
     document.addEventListener("fullscreenchange", sync);
     return () => document.removeEventListener("fullscreenchange", sync);
-  }, []);
+  }, [onFullscreen]);
 
   /* ------------------------------------------------------------ map instance */
   useEffect(() => {
@@ -436,37 +438,33 @@ export default function MapCanvas(props: Props) {
     <div ref={shellRef} className="relative h-full w-full" style={{ background: "var(--bg)" }}>
       <div ref={containerRef} className="tk-map h-full w-full" role="application" aria-label={`${data.name} map`} />
 
-      {/* Stacked above the fit button, which sits above Leaflet's zoom control. */}
-      <button
-        type="button"
-        className="btn btn-icon absolute bottom-[3.5rem] right-3 z-[500] md:bottom-[10rem]"
-        style={{ boxShadow: "var(--shadow)" }}
-        aria-pressed={isFullscreen}
-        title={isFullscreen ? "Leave fullscreen" : "Fill the screen with the map"}
-        aria-label={isFullscreen ? "Leave fullscreen" : "Fill the screen with the map"}
-        onClick={toggleFullscreen}
-      >
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          {isFullscreen ? (
-            <path d="M9 3v6H3M21 9h-6V3M15 21v-6h6M3 15h6v6" />
-          ) : (
-            <path d={icons.expand} />
-          )}
-        </svg>
-      </button>
-
-      <button
-        type="button"
-        className="btn btn-icon absolute bottom-3 right-3 z-[500] md:bottom-[6.5rem]"
-        style={{ boxShadow: "var(--shadow)" }}
-        title="Fit the whole map on screen"
-        aria-label="Fit the whole map on screen"
-        onClick={() => fitRef.current?.()}
-      >
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M4 9V6a2 2 0 0 1 2-2h3M15 4h3a2 2 0 0 1 2 2v3M20 15v3a2 2 0 0 1-2 2h-3M9 20H6a2 2 0 0 1-2-2v-3" />
-        </svg>
-      </button>
+      <div className="map-tools">
+        <button
+          type="button"
+          className="btn btn-icon"
+          style={{ boxShadow: "var(--shadow)" }}
+          aria-pressed={isFullscreen}
+          title={isFullscreen ? "Leave fullscreen" : "Fullscreen"}
+          aria-label={isFullscreen ? "Leave fullscreen" : "Fullscreen"}
+          onClick={toggleFullscreen}
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            {isFullscreen ? <path d={icons.collapse} /> : <path d={icons.expand} />}
+          </svg>
+        </button>
+        <button
+          type="button"
+          className="btn btn-icon"
+          style={{ boxShadow: "var(--shadow)" }}
+          title="Reset view"
+          aria-label="Reset view"
+          onClick={fitMap}
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d={icons.fit} />
+          </svg>
+        </button>
+      </div>
       {baseError && (
         <div className="pointer-events-none absolute inset-0 grid place-items-center p-6">
           <p className="pointer-events-auto rounded-lg border border-red-500/40 bg-red-950/80 px-4 py-3 text-sm text-red-100 backdrop-blur">

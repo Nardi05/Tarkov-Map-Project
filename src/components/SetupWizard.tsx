@@ -2,11 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useProgression } from "../lib/data";
 import { disposeOcr } from "../lib/ocr";
 import { prerequisiteClosure } from "../lib/progression";
-import { href, navigate } from "../lib/router";
+import { href, navigate, onNavClick } from "../lib/router";
+import { displayName, visibleInMode } from "../lib/task-variant";
 import { useStore, useTaskStatus } from "../store";
 import type { Faction, GameMode } from "../lib/persist-migrate";
 import type { Progression, TaskStatus } from "../types";
+import ModeSwitch from "./ModeSwitch";
 import ScreenshotImport from "./ScreenshotImport";
+import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
 import { EmptyState, Icon, icons } from "./ui";
 
@@ -94,6 +97,7 @@ export default function SetupWizard() {
       if (task.factionName && profile.faction !== "Any" && task.factionName !== profile.faction) {
         continue;
       }
+      if (!visibleInMode(task.name, profile.mode)) continue;
       const list = byTrader.get(task.trader) ?? [];
       list.push({
         id,
@@ -113,7 +117,7 @@ export default function SetupWizard() {
         (a, b) => a.depth - b.depth || a.level - b.level || a.name.localeCompare(b.name),
       ),
     }));
-  }, [data, profile.faction, depth]);
+  }, [data, profile.faction, profile.mode, depth]);
 
   /*
    * Everything the staged ticks imply, worked out fresh each render.
@@ -160,7 +164,7 @@ export default function SetupWizard() {
     const toWrite: Record<string, TaskStatus> = { ...staged };
     for (const id of implied) toWrite[id] = "completed";
     importTaskStatus(toWrite);
-    navigate(href.quests());
+    navigate(href.dashboard());
   };
 
   if (progression.error) {
@@ -256,7 +260,7 @@ export default function SetupWizard() {
           {implied.size > 0 ? ` (${implied.size} worked out)` : ""}
         </span>
 
-        <a className="btn btn-ghost text-[0.72rem]" href={href.quests()}>
+        <a className="btn btn-ghost text-[0.72rem]" href={href.dashboard()} onClick={onNavClick(href.dashboard())}>
           Cancel
         </a>
       </footer>
@@ -268,10 +272,15 @@ export default function SetupWizard() {
 
 function Shell({ step, total, children }: { step: number; total: number; children: React.ReactNode }) {
   return (
-    <div className="scroll-y h-full" style={{ background: "var(--bg)" }}>
+    <div className="page scroll-y h-full">
       <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
         <nav className="mb-5 flex items-center gap-1.5">
-          <a href={href.quests()} className="btn btn-ghost btn-icon flex-none" aria-label="Back to quests">
+          <a
+            href={href.dashboard()}
+            onClick={onNavClick(href.dashboard())}
+            className="btn btn-ghost btn-icon flex-none"
+            aria-label="Back to dashboard"
+          >
             <Icon path={icons.back} size={18} />
           </a>
           <span className="text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
@@ -315,7 +324,7 @@ function ProfileStep({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Set up your progress</h1>
+      <h1 className="display text-2xl sm:text-3xl">Set up your progress</h1>
       <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
         Open the game, go through your traders, and tick the quests you have accepted. That is
         enough — a quest sitting in your list means everything behind it is already done, so the
@@ -330,20 +339,7 @@ function ProfileStep({
           >
             Mode
           </span>
-          <div className="flex gap-1 rounded-lg p-0.5" style={{ background: "var(--panel-2)" }}>
-            {(["pvp", "pve"] as GameMode[]).map((m) => (
-              <button
-                key={m}
-                type="button"
-                className="btn btn-ghost text-[0.75rem]"
-                style={{ padding: "0.3rem 0.7rem" }}
-                aria-pressed={profile.mode === m}
-                onClick={() => setProfile("mode", m as never)}
-              >
-                {m === "pve" ? "PvE" : "PvP"}
-              </button>
-            ))}
-          </div>
+          <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m as never)} />
         </label>
 
         <label className="block">
@@ -430,7 +426,13 @@ function TraderStepView({
   onMarkActive: (ids: string[]) => void;
 }) {
   const needle = query.trim().toLowerCase();
-  const shown = needle ? step.tasks.filter((t) => t.name.toLowerCase().includes(needle)) : step.tasks;
+  const shown = needle
+    ? step.tasks.filter(
+        (t) =>
+          t.name.toLowerCase().includes(needle) ||
+          displayName(t.name).toLowerCase().includes(needle),
+      )
+    : step.tasks;
   const mine = step.tasks.filter((t) => staged[t.id]).length;
 
   return (
@@ -482,7 +484,9 @@ function TraderStepView({
             >
               <TaskStatusControl status={status} name={task.name} onCycle={() => onCycle(task.id)} />
               <span className="min-w-0 flex-1">
-                <span className="text-[0.8125rem] font-medium">{task.name}</span>
+                <span className="text-[0.8125rem] font-medium">
+                  <TaskName name={task.name} />
+                </span>
                 {task.level > 1 && (
                   <span className="ml-2 text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
                     lvl {task.level}
@@ -521,7 +525,7 @@ function SummaryStep({
   const impliedNames = useMemo(
     () =>
       [...implied]
-        .map((id) => data.tasks[id]?.name ?? id)
+        .map((id) => displayName(data.tasks[id]?.name ?? id))
         .sort((a, b) => a.localeCompare(b)),
     [implied, data],
   );

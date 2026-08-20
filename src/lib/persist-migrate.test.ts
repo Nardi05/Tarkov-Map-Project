@@ -62,12 +62,20 @@ test("merge fills in slices a stored state predates", () => {
   const empty = mergeProgress(undefined);
   assert.deepEqual(empty.pvp, { taskStatus: {}, markerDone: {} });
   assert.deepEqual(empty.pve, { taskStatus: {}, markerDone: {} });
+  assert.deepEqual(empty.season, { taskStatus: {}, markerDone: {} });
 
   // A save written before PvE existed must not come back with pve undefined.
   const partial = mergeProgress({ progress: { pvp: { taskStatus: { a: "active" } } } });
   assert.equal(partial.pvp.taskStatus.a, "active");
   assert.deepEqual(partial.pvp.markerDone, {});
   assert.deepEqual(partial.pve, { taskStatus: {}, markerDone: {} });
+  // Same rule for the season slice — it must not inherit PvP ticks.
+  assert.deepEqual(partial.season, { taskStatus: {}, markerDone: {} });
+});
+
+test("a junk mode falls back to the default rather than breaking lookups", () => {
+  assert.equal(mergeProfile({ mode: "arena" as never }).mode, DEFAULT_PROFILE.mode);
+  assert.equal(mergeProfile({ mode: "season" }).mode, "season");
 });
 
 test("migrating twice is a no-op, not a second move", () => {

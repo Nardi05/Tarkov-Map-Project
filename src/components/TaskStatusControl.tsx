@@ -24,21 +24,15 @@ export default function TaskStatusControl({
         ? `${name}: active. Tap to mark done.`
         : `${name}: not started. Tap to mark active.`;
 
-  const style =
-    status === "completed"
-      ? { borderColor: "#22c55e", background: "#22c55e", color: "#062b16" }
-      : status === "active"
-        ? { borderColor: "var(--accent)", background: "var(--accent)", color: "var(--accent-ink)" }
-        : { borderColor: "var(--line)", background: "transparent", color: "transparent" };
-
   return (
     <button
       type="button"
       aria-label={label}
       title={label}
       onClick={onCycle}
-      className="tap-target grid flex-none place-items-center rounded-md border transition-colors"
-      style={{ width: size, height: size, ...style }}
+      className="status-box status-pop tap-target"
+      data-state={status ?? "none"}
+      style={{ width: size, height: size }}
     >
       {status === "completed" ? (
         <Icon path={icons.check} size={Math.round(size * 0.62)} />

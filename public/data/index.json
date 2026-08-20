@@ -11,7 +11,7 @@
    "raidDuration": 35,
    "bosses": [
     "Reshala",
-    "Knight",
+    "Goons",
     "Partisan",
     "Cultist Priest"
    ],
@@ -86,8 +86,7 @@
    "players": "1-3",
    "raidDuration": 50,
    "bosses": [
-    "Knight",
-    "Rogue",
+    "Goons",
     "Black Div. Boss",
     "Black Div. Raider",
     "The Wedge"
@@ -141,9 +140,8 @@
    "raidDuration": 40,
    "bosses": [
     "Zryachiy",
-    "Knight",
-    "Partisan",
-    "Rogue"
+    "Goons",
+    "Partisan"
    ],
    "styles": [
     "clean"
@@ -194,10 +192,9 @@
    "raidDuration": 45,
    "bosses": [
     "Sanitar",
-    "Knight",
+    "Goons",
     "Partisan",
-    "Cultist Priest",
-    "AF"
+    "Cultist Priest"
    ],
    "styles": [
     "clean",
@@ -248,7 +245,6 @@
    "raidDuration": 50,
    "bosses": [
     "Black Div.",
-    "AF",
     "Glukhar",
     "Killa",
     "Reshala",
@@ -326,7 +322,7 @@
    "raidDuration": 35,
    "bosses": [
     "Shturman",
-    "Knight",
+    "Goons",
     "Partisan",
     "Cultist Priest"
    ],

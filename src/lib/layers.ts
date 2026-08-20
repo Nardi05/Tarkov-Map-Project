@@ -250,6 +250,12 @@ export const PRESETS: Preset[] = [
     layers: ["quests", "keys", "pmc-extracts", "shared-extracts", "transits"],
   },
   {
+    id: "kord",
+    label: "Battle pass hunt",
+    hint: "Document spawns and extracts — the Kord Breach pass is a document grind.",
+    layers: ["documents", "pmc-extracts", "shared-extracts", "transits"],
+  },
+  {
     id: "scav",
     label: "Scav run",
     hint: "Scav spawns and the exits a Scav is allowed to use.",

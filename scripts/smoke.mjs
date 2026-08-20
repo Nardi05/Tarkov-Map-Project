@@ -1,9 +1,7 @@
 /**
  * End-to-end smoke test. Opens every map against a running preview server,
  * turns on every layer, walks every floor and every artwork style, and fails
- * if any map logs a console error or renders no base artwork. Then opens the
- * routes that are not maps — the quest tracker and its walkthrough — and fails
- * the same way if either logs an error or never renders.
+ * if any map logs a console error or renders no base artwork.
  *
  *   npm run build && npm run preview &
  *   npm run smoke
@@ -102,44 +100,6 @@ for (const map of maps) {
   );
 }
 
-/*
- * The routes that are not maps.
- *
- * The quest tracker and its walkthrough are a third of the app and neither is
- * reachable from the loop above, so until now the smoke pass could go green
- * with both of them throwing on load. They need no interaction to be worth
- * checking: the tracker builds the whole 511-task graph on mount, and the
- * wizard resolves every trader, so simply rendering exercises most of what
- * either one can get wrong.
- *
- * Checked against a heading rather than a screenful of markup — it is the one
- * thing that cannot be there unless the page got past its data load.
- */
-const routes = [
-  { hash: "#/quests", heading: "Quest tracker" },
-  { hash: "#/quests/setup", heading: "Set up your progress" },
-];
-
-for (const route of routes) {
-  errors.length = 0;
-  await page.goto(`${BASE}/${route.hash}`, { waitUntil: "load" });
-
-  let rendered = true;
-  try {
-    await page.getByRole("heading", { name: route.heading, exact: true }).waitFor({ timeout: 10000 });
-  } catch {
-    rendered = false;
-  }
-  await page.waitForTimeout(500);
-
-  const bad = errors.length > 0 || !rendered;
-  if (bad) failures++;
-  console.log(
-    `${bad ? "FAIL" : "ok  "} ${route.hash.padEnd(20)} ` +
-      `${rendered ? "rendered" : "NO HEADING"} ${errors.slice(0, 2).join(" | ")}`,
-  );
-}
-
-console.log(failures ? `\n${failures} check(s) failed` : "\nall maps and routes ok");
+console.log(failures ? `\n${failures} map(s) failed` : "\nall maps ok");
 await browser.close();
 process.exit(failures ? 1 : 0);

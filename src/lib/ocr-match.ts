@@ -204,7 +204,10 @@ export function matchTasks(text: string, candidates: Candidate[]): MatchResult {
     }
   });
 
-  const folded = candidates.map((c) => ({ ...c, folded: fold(c.name) }));
+  const folded = candidates.map((c) => ({
+    ...c,
+    folded: fold(c.name.replace(/\s*\[(PVP ZONE|PVE ZONE|KORD BREACH)\]\s*$/i, "")),
+  }));
 
   const pairs: { probe: number; candidate: number; score: number }[] = [];
   probes.forEach((probe, pi) => {

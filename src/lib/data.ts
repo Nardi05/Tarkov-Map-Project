@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { MapData, MapIndex, TaskImage, TaskImages, Progression } from "../types";
+import { kordProgressionTasks } from "./kord-season";
 
 /**
  * Data lives as static JSON next to the bundle (see scripts/build-data.mjs).
@@ -44,11 +45,34 @@ export function loadIndex(): Promise<MapIndex> {
  * unlocked". 285KB, so it loads on demand — the map pages never need it.
  */
 export function loadProgression(): Promise<Progression> {
-  progressionPromise ??= getJson<Progression>(`${BASE}/progression.json`).catch((err) => {
-    progressionPromise = null;
-    throw err;
-  });
+  progressionPromise ??= getJson<Progression>(`${BASE}/progression.json`)
+    .then(withKordSeason)
+    .catch((err) => {
+      progressionPromise = null;
+      throw err;
+    });
   return progressionPromise;
+}
+
+/**
+ * Tarkov.dev does not ship the seasonal story line. Fold it in at load so
+ * every consumer — tracker, wizard, maps — sees the same graph, and a data
+ * rebuild that forgot to copy the file cannot drop someone's season.
+ */
+function withKordSeason(progression: Progression): Progression {
+  const extras = kordProgressionTasks();
+  let added = 0;
+  const tasks = { ...progression.tasks };
+  for (const [id, task] of Object.entries(extras)) {
+    if (tasks[id]) continue;
+    tasks[id] = task;
+    added++;
+  }
+  if (!added) return progression;
+  const coverage = progression.coverage
+    ? { ...progression.coverage, tasks: Object.keys(tasks).length }
+    : progression.coverage;
+  return { ...progression, tasks, coverage };
 }
 
 export function useProgression() {
@@ -94,6 +118,34 @@ export function loadMap(name: string): Promise<MapData> {
 /** Warm the cache without blocking render — used on map-card hover. */
 export function prefetchMap(name: string) {
   if (!mapCache.has(name)) void loadMap(name).catch(() => {});
+}
+
+/** Warm the 285KB task graph so opening Quests is instant. */
+export function prefetchProgression() {
+  void loadProgression().catch(() => {});
+}
+
+/**
+ * Fetch map payloads when the browser is idle, last-opened first.
+ *
+ * Opening a map is one JSON request. Doing the first few in the background
+ * after the home page paints makes "continue" and the next-raid cards feel
+ * local without competing with first paint.
+ */
+export function prefetchIdleMaps(names: string[]) {
+  if (typeof window === "undefined" || !names.length) return;
+  const unique = [...new Set(names)];
+  const run = (batch: string[]) => {
+    for (const name of batch) prefetchMap(name);
+  };
+  const idle =
+    "requestIdleCallback" in window
+      ? (cb: () => void, timeout: number) => window.requestIdleCallback(cb, { timeout })
+      : (cb: () => void) => window.setTimeout(cb, 350);
+  idle(() => {
+    run(unique.slice(0, 3));
+    if (unique.length > 3) idle(() => run(unique.slice(3, 8)), 2000);
+  }, 1200);
 }
 
 export interface AsyncState<T> {

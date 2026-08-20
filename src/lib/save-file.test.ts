@@ -23,6 +23,7 @@ test("a save round-trips through export and import", () => {
 test("a mode absent from the file comes back empty, not undefined", () => {
   const back = parseSave(JSON.stringify(buildSave(DEFAULT_PROFILE, withProgress())));
   assert.deepEqual(back.progress.pve, { taskStatus: {}, markerDone: {} });
+  assert.deepEqual(back.progress.season, { taskStatus: {}, markerDone: {} });
 });
 
 test("someone else's JSON is refused by name", () => {
@@ -53,4 +54,5 @@ test("an empty save is refused, so a mis-click cannot look like success", () => 
 test("the file name sorts and says which mode it holds", () => {
   assert.equal(saveFileName("pvp", new Date("2026-08-17T10:00:00Z")), "tarkov-progress-pvp-2026-08-17.json");
   assert.equal(saveFileName("pve", new Date("2026-01-02T10:00:00Z")), "tarkov-progress-pve-2026-01-02.json");
+  assert.equal(saveFileName("season", new Date("2026-08-19T10:00:00Z")), "tarkov-progress-season-2026-08-19.json");
 });
