@@ -15,11 +15,14 @@ export interface Shortcut {
 }
 
 export const SHORTCUTS: Shortcut[] = [
+  { keys: ["/"], label: "Search" },
+  { keys: ["0"], label: "Reset map zoom" },
+  { keys: ["F"], label: "Fullscreen" },
+  { keys: ["H"], label: "Hide the interface" },
+  { keys: ["["], label: "Hide or show the side panel" },
   { keys: ["L"], label: "Layers panel" },
   { keys: ["T"], label: "Tasks panel" },
   { keys: ["S"], label: "Settings panel" },
-  { keys: ["["], label: "Hide or show the side panel" },
-  { keys: ["F"], label: "Fullscreen" },
   { keys: ["Esc"], label: "Close what is open" },
   { keys: ["?"], label: "This list" },
 ];
@@ -36,6 +39,23 @@ export function isTypingInto(target: EventTarget | null): boolean {
   if (!el) return false;
   if (el.isContentEditable) return true;
   return ["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName);
+}
+
+/** `/` focuses the page search box, the same convention as GitHub and Slack. */
+export function useSlashSearch() {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (isTypingInto(e.target)) return;
+      const box = document.querySelector<HTMLInputElement>("[data-search]");
+      if (!box) return;
+      e.preventDefault();
+      box.focus();
+      box.select();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 }
 
 export default function ShortcutHelp({ onClose }: { onClose: () => void }) {

@@ -344,6 +344,8 @@ export interface MapIndexEntry {
     transits: number;
     keys: number;
     quests: number;
+    /** Battle-pass document spawns. Absent on payloads built before the layer. */
+    docs?: number;
   };
 }
 

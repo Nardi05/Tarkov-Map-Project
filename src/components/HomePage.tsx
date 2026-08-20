@@ -1,54 +1,66 @@
-import { useMemo, useState } from "react";
-import { prefetchMap } from "../lib/data";
-import { href, navigate } from "../lib/router";
+import { useEffect, useMemo, useState } from "react";
+import { prefetchIdleMaps, prefetchMap, prefetchProgression, useProgression } from "../lib/data";
+import { KORD_SEASON, seasonDaysLeft } from "../lib/kord-season";
+import { bossMatchesSearch, listMapBosses } from "../lib/boss-names";
+import { MODE_META } from "../lib/mode";
+import { nextRaids } from "../lib/next-raid";
+import { href, navigate, onNavClick } from "../lib/router";
 import { LAYERS } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
-import { useStore } from "../store";
+import { useStore, useTaskStatus } from "../store";
 import type { MapIndexEntry } from "../types";
-import { Icon, icons } from "./ui";
+import ModeSwitch from "./ModeSwitch";
+import NextRaid from "./NextRaid";
+import { Icon, PageChrome, icons } from "./ui";
 
 export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
   const [query, setQuery] = useState("");
   const lastMap = useStore((s) => s.lastMap);
+  const profile = useStore((s) => s.profile);
+  const setProfile = useStore((s) => s.setProfile);
+  const taskStatus = useTaskStatus();
+  const progression = useProgression();
+  const days = seasonDaysLeft();
+  const raidPicks = useMemo(
+    () => nextRaids(maps, progression.data, taskStatus, 3),
+    [maps, progression.data, taskStatus],
+  );
+
+  useEffect(() => {
+    prefetchProgression();
+    const last = lastMap;
+    const ranked = [
+      ...raidPicks.map((p) => p.map.normalizedName),
+      ...(last ? [last] : []),
+      ...maps.map((m) => m.normalizedName),
+    ];
+    prefetchIdleMaps(ranked);
+  }, [maps, lastMap, raidPicks]);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!needle) return maps;
     return maps.filter(
-      (m) =>
-        m.name.toLowerCase().includes(needle) ||
-        m.bosses.some((b) => b.toLowerCase().includes(needle)),
+      (m) => m.name.toLowerCase().includes(needle) || bossMatchesSearch(m.bosses, needle),
     );
   }, [maps, query]);
 
   const resume = maps.find((m) => m.normalizedName === lastMap);
 
   return (
-    <div className="scroll-y h-full" style={{ background: "var(--bg)" }}>
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-        <nav className="mb-6 flex items-center gap-1.5">
-          <span className="btn is-active" aria-current="page">
-            Maps
-          </span>
-          <a className="btn" href={href.quests()}>
-            Quests
-          </a>
-        </nav>
+    <div className="page scroll-y h-full">
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-14">
+        <PageChrome current="maps">
+          <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m)} size="sm" />
+        </PageChrome>
 
-        <header className="mb-8 sm:mb-10">
-          <p
-            className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.16em]"
-            style={{ color: "var(--accent)" }}
-          >
-            Escape from Tarkov
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Interactive maps</h1>
-          <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-            Spawns, extracts, transits, keys and every task objective — on one map, with each layer
-            explained in plain English. Pick a map to start.
+        <header className="mb-8">
+          <h1 className="display text-2xl sm:text-3xl">Maps</h1>
+          <p className="mt-1.5 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
+            Spawns, extracts, keys and your active tasks. Pick a map or continue where you left off.
           </p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-2">
+          <div className="mt-6 flex flex-wrap items-center gap-2.5">
             <div className="relative w-full max-w-xs">
               <span
                 className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2"
@@ -63,19 +75,53 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 aria-label="Search maps"
+                data-search
               />
             </div>
             {resume && (
-              <a className="btn" href={href.map(resume.normalizedName)}>
+              <a
+                className="btn is-active"
+                href={href.map(resume.normalizedName)}
+                onClick={onNavClick(href.map(resume.normalizedName))}
+              >
                 Continue on {resume.name}
               </a>
             )}
           </div>
+          <p className="mt-3 text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
+            Tracking {MODE_META[profile.mode].label}. {MODE_META[profile.mode].hint}
+          </p>
         </header>
 
+        <a
+          href={href.quests()}
+          onClick={onNavClick(href.quests())}
+          className="surface surface-link mb-6 flex flex-wrap items-center justify-between gap-3 p-3.5"
+        >
+          <div className="min-w-0">
+            <p className="text-sm font-semibold">
+              {KORD_SEASON.name}
+              <span className="ml-2 font-normal" style={{ color: "var(--text-faint)" }}>
+                {days > 0 ? `${days}d left` : "ended"}
+              </span>
+            </p>
+            <p className="mt-0.5 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
+              Seasonal story line, documents, next raid
+            </p>
+          </div>
+          <span className="btn flex-none">Quests</span>
+        </a>
+
+        {raidPicks.some((p) => p.active.length > 0) && (
+          <section className="mb-8">
+            <h2 className="mb-2 text-sm font-semibold">Next raid</h2>
+            <NextRaid picks={raidPicks.filter((p) => p.active.length > 0)} />
+          </section>
+        )}
+
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((map) => (
-            <MapCard key={map.normalizedName} map={map} />
+          {filtered.map((map, i) => (
+            <MapCard key={map.normalizedName} map={map} priority={i < 3} />
           ))}
         </ul>
 
@@ -88,7 +134,7 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
         <Primer />
 
         <footer
-          className="mt-12 border-t pt-6 text-xs leading-relaxed"
+          className="mt-16 border-t pt-6 text-xs leading-relaxed"
           style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
         >
           <p>
@@ -114,7 +160,7 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
   );
 }
 
-function MapCard({ map }: { map: MapIndexEntry }) {
+function MapCard({ map, priority }: { map: MapIndexEntry; priority: boolean }) {
   /*
    * Previews are hotlinked from tarkov.dev's CDN. When one fails — a blocked
    * host, a flaky connection, an asset pulled upstream — the browser draws its
@@ -123,16 +169,20 @@ function MapCard({ map }: { map: MapIndexEntry }) {
    * all means a failure is indistinguishable from an absence.
    */
   const [previewFailed, setPreviewFailed] = useState(false);
+  const [ready, setReady] = useState(false);
   const preview = previewFailed ? null : map.preview;
 
   // Zeroes are omitted rather than printed. "0 extracts 0 tasks 0 keys" under
   // Icebreaker reads as a broken card; saying nothing reads as a small map.
+  const bosses = listMapBosses(map.bosses);
+
   const stats: [string, number][] = (
     [
       ["spawns", map.counts.spawns],
       ["extracts", map.counts.extracts + map.counts.transits],
       ["tasks", map.counts.quests],
       ["keys", map.counts.keys],
+      ["docs", map.counts.docs ?? 0],
     ] as [string, number][]
   ).filter(([, value]) => value > 0);
 
@@ -158,51 +208,50 @@ function MapCard({ map }: { map: MapIndexEntry }) {
             <img
               src={preview}
               alt=""
-              loading="lazy"
+              loading={priority ? "eager" : "lazy"}
+              fetchPriority={priority ? "high" : "auto"}
               decoding="async"
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
-              style={{ opacity: 0.92 }}
+              className={`img-fade h-full w-full object-cover ${ready ? "is-ready" : ""}`}
+              onLoad={() => setReady(true)}
               onError={() => setPreviewFailed(true)}
             />
           ) : (
             <div
-              className="grid h-full w-full place-items-center text-4xl font-semibold"
+              className="display grid h-full w-full place-items-center text-5xl"
               style={{ color: "var(--line)" }}
             >
               {map.name.slice(0, 2).toUpperCase()}
             </div>
           )}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{ background: "linear-gradient(to top, var(--panel) 4%, transparent 55%)" }}
-          />
         </div>
 
-        <div className="flex flex-1 flex-col p-3">
+        <div className="flex flex-1 flex-col px-3 pb-3 pt-2.5">
           <div className="flex items-baseline justify-between gap-2">
-            <h2 className="truncate text-base font-semibold">{map.name}</h2>
-            <span className="flex-none text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
+            <h2 className="truncate text-[0.95rem] font-semibold">{map.name}</h2>
+            <span className="flex-none text-[0.68rem] tabular-nums" style={{ color: "var(--text-faint)" }}>
               {map.players ?? "—"}
               {map.raidDuration ? ` · ${map.raidDuration}m` : ""}
             </span>
           </div>
-
-          {map.bosses.length > 0 && (
+          {bosses.length > 0 && (
             <p className="mt-1.5 flex flex-wrap gap-1">
-              {map.bosses.slice(0, 3).map((boss) => (
+              {bosses.slice(0, 4).map((boss) => (
                 <span key={boss} className="chip">
                   {boss}
                 </span>
               ))}
-              {map.bosses.length > 3 && <span className="chip">+{map.bosses.length - 3}</span>}
+              {bosses.length > 4 && <span className="chip">+{bosses.length - 4}</span>}
             </p>
           )}
 
-          <dl className="mt-auto flex flex-wrap gap-x-3 gap-y-0.5 pt-3 text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
+          <dl
+            className="mt-auto flex flex-wrap gap-x-3.5 gap-y-0.5 pt-3 text-[0.68rem]"
+            style={{ color: "var(--text-faint)" }}
+          >
             {stats.map(([label, value]) => (
               <div key={label} className="flex items-baseline gap-1">
                 <dt className="sr-only">{label}</dt>
-                <dd className="font-medium tabular-nums" style={{ color: "var(--text-dim)" }}>
+                <dd className="font-medium tabular-nums" style={{ color: "var(--text)" }}>
                   {value}
                 </dd>
                 <span>{label}</span>
@@ -221,19 +270,19 @@ function Primer() {
   const items = LAYERS.filter((l) => picks.includes(l.id));
 
   return (
-    <section className="mt-12">
-      <h2 className="text-lg font-semibold tracking-tight">New to Tarkov maps?</h2>
-      <p className="mt-1.5 max-w-2xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
-        Here is what the symbols mean. Colour tells you <em>who</em> something belongs to, shape
-        tells you <em>what</em> it is — so a blue square is always a PMC exit, wherever you see it.
+    <section className="mt-16">
+      <h2 className="text-lg font-semibold">New to Tarkov maps?</h2>
+      <p className="mt-2 max-w-2xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
+        Colour tells you <em>who</em> something belongs to, shape tells you <em>what</em> it is —
+        so a blue square is always a PMC exit, wherever you see it.
       </p>
-      <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((layer) => (
-          <li key={layer.id} className="surface-2 flex items-start gap-2.5 p-3">
+          <li key={layer.id} className="surface-2 flex items-start gap-3 p-3.5">
             <span
               className="mt-0.5 flex-none"
               aria-hidden="true"
-              dangerouslySetInnerHTML={{ __html: swatchSvg(layer.shape, layer.color, 19) }}
+              dangerouslySetInnerHTML={{ __html: swatchSvg(layer.shape, layer.color, 20) }}
             />
             <div>
               <p className="text-[0.8125rem] font-medium">{layer.label}</p>

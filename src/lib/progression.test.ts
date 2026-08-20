@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { computeAvailability, lockReasons } from "./progression.ts";
+import { computeAvailability, lockReasons, unlocksAfter } from "./progression.ts";
 import type { Progression, ProgressionTask } from "../types.ts";
 
 const task = (over: Partial<ProgressionTask> = {}): ProgressionTask => ({
@@ -79,4 +79,34 @@ test("level and faction gates still work alongside trader levels", () => {
     { kind: "level", label: "Level 50" },
     { kind: "faction", label: "USEC only" },
   ]);
+});
+
+test("lockReasons strips mode suffixes from prerequisite names", () => {
+  const g = graph({
+    debut: task({ name: "Debut [PVP ZONE]" }),
+    next: task({
+      name: "Checking",
+      requires: [[{ task: "debut", status: ["complete"], from: "wiki" }]],
+    }),
+  });
+  const reasons = lockReasons(g, "next", {}, profile());
+  assert.equal(reasons.some((r) => r.label === "Debut"), true);
+  assert.equal(reasons.some((r) => r.label.includes("PVP ZONE")), false);
+});
+
+test("unlocksAfter lists the next quests, not the whole tree", () => {
+  const g = graph({
+    debut: task({ name: "Debut" }),
+    checking: task({
+      name: "Checking",
+      requires: [[{ task: "debut", status: ["complete"] }]],
+    }),
+    shortage: task({
+      name: "Shortage",
+      requires: [[{ task: "checking", status: ["complete"] }]],
+    }),
+  });
+  assert.deepEqual(unlocksAfter(g, "debut"), ["checking"]);
+  assert.deepEqual(unlocksAfter(g, "checking"), ["shortage"]);
+  assert.deepEqual(unlocksAfter(g, "shortage"), []);
 });

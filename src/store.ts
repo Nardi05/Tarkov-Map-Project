@@ -74,6 +74,8 @@ interface Store {
   progress: Record<GameMode, ModeProgress>;
   /** Last map opened, so the header can offer "continue where you left off". */
   lastMap: string | null;
+  /** Dashboard layout — panel order and how many upcoming tasks to show. */
+  dashboard: DashboardLayout;
 
   setLayer: (id: LayerId, on: boolean) => void;
   toggleLayer: (id: LayerId) => void;
@@ -115,6 +117,38 @@ interface Store {
   restoreProgress: (progress: Record<GameMode, ModeProgress>, profile?: Partial<Profile>) => void;
 
   setLastMap: (map: string) => void;
+  moveDashPanel: (id: DashPanelId, dir: -1 | 1) => void;
+  setUpcomingLimit: (n: number) => void;
+}
+
+export type DashPanelId = "upcoming" | "keys" | "needs";
+
+export interface DashboardLayout {
+  panelOrder: DashPanelId[];
+  upcomingLimit: number;
+}
+
+export const DASH_PANELS: DashPanelId[] = ["upcoming", "keys", "needs"];
+export const UPCOMING_LIMITS = [5, 6, 8, 10, 12] as const;
+
+export const DEFAULT_DASHBOARD: DashboardLayout = {
+  panelOrder: ["upcoming", "keys", "needs"],
+  upcomingLimit: 8,
+};
+
+export function mergeDashboard(stored: Partial<DashboardLayout> | undefined): DashboardLayout {
+  const raw = stored ?? {};
+  const order = (raw.panelOrder ?? []).filter((id): id is DashPanelId =>
+    DASH_PANELS.includes(id),
+  );
+  for (const id of DASH_PANELS) if (!order.includes(id)) order.push(id);
+  const limit = Number(raw.upcomingLimit);
+  return {
+    panelOrder: order,
+    upcomingLimit: (UPCOMING_LIMITS as readonly number[]).includes(limit)
+      ? limit
+      : DEFAULT_DASHBOARD.upcomingLimit,
+  };
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -161,6 +195,7 @@ export const useStore = create<Store>()(
       profile: mergeProfile(undefined),
       progress: emptyProgress(),
       lastMap: null,
+      dashboard: { ...DEFAULT_DASHBOARD },
 
       setLayer: (id, on) => set((s) => ({ layers: { ...s.layers, [id]: on } })),
       toggleLayer: (id) => set((s) => ({ layers: { ...s.layers, [id]: !s.layers[id] } })),
@@ -266,10 +301,29 @@ export const useStore = create<Store>()(
         })),
 
       setLastMap: (map) => set({ lastMap: map }),
+
+      moveDashPanel: (id, dir) =>
+        set((s) => {
+          const order = [...s.dashboard.panelOrder];
+          const i = order.indexOf(id);
+          const j = i + dir;
+          if (i < 0 || j < 0 || j >= order.length) return {};
+          [order[i], order[j]] = [order[j], order[i]];
+          return { dashboard: { ...s.dashboard, panelOrder: order } };
+        }),
+      setUpcomingLimit: (n) =>
+        set((s) => ({
+          dashboard: {
+            ...s.dashboard,
+            upcomingLimit: (UPCOMING_LIMITS as readonly number[]).includes(n)
+              ? n
+              : s.dashboard.upcomingLimit,
+          },
+        })),
     }),
     {
       name: "tarkov-maps",
-      version: 5,
+      version: 6,
       storage: createJSONStorage(() => localStorage),
       // An allowlist: a slice added to the store and forgotten here simply
       // never persists. Search, trader and Kappa narrowing are momentary and
@@ -283,6 +337,7 @@ export const useStore = create<Store>()(
         profile,
         progress,
         lastMap,
+        dashboard,
       }) => ({
         layers,
         customViews,
@@ -291,6 +346,7 @@ export const useStore = create<Store>()(
         profile,
         progress,
         lastMap,
+        dashboard,
       }),
       // Lives in ./lib/persist-migrate so it can be tested without stubbing
       // localStorage. See the rule at the top of that file: a migration may
@@ -310,6 +366,7 @@ export const useStore = create<Store>()(
           profile: mergeProfile(p.profile),
           progress: mergeProgress(p),
           quest: { ...DEFAULT_QUEST, showAll: p.quest?.showAll ?? DEFAULT_QUEST.showAll },
+          dashboard: mergeDashboard(p.dashboard),
         };
       },
     },

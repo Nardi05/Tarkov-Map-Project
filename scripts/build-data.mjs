@@ -110,6 +110,23 @@ async function getLocalised(feed) {
 
 /* ------------------------------------------------------------------- helpers */
 
+/** Knight / Rogue / the trio members are one chip on the map picker: Goons. */
+const GOON_ALIASES = new Set(["knight", "big pipe", "birdeye", "death knight", "rogue", "rogues"]);
+function collapseGoons(names) {
+  const out = [];
+  const seen = new Set();
+  for (const raw of names) {
+    const key = (raw ?? "").trim().toLowerCase();
+    if (key === "af") continue;
+    const label = GOON_ALIASES.has(key) ? "Goons" : raw;
+    const seenKey = label.toLowerCase();
+    if (seen.has(seenKey)) continue;
+    seen.add(seenKey);
+    out.push(label);
+  }
+  return out;
+}
+
 const slug = (s) =>
   (s ?? "")
     .toLowerCase()
@@ -844,7 +861,7 @@ for (const [name, cfg] of Object.entries(geo)) {
     description: api.description ?? null,
     players: api.players ?? null,
     raidDuration: api.raidDuration ?? null,
-    bosses: bossSummary.map((b) => b.name),
+    bosses: collapseGoons(bossSummary.map((b) => b.name)),
     styles: [cfg.svgPath ? "clean" : null, cfg.tilePath ? "satellite" : null].filter(Boolean),
     // Vector artwork doubles as the map-picker thumbnail: one lazy <img>, no
     // separate screenshot pipeline, and it stays sharp on any display.
@@ -980,10 +997,21 @@ await fs.writeFile(
  * Flattening them into a single set would claim you need all three.
  */
 const mapsByTask = new Map();
+const addTaskMap = (taskId, mapName) => {
+  if (!taskId || !mapName) return;
+  if (!mapsByTask.has(taskId)) mapsByTask.set(taskId, new Set());
+  mapsByTask.get(taskId).add(mapName);
+};
 for (const [mapName, markers] of questMarkers) {
-  for (const marker of markers) {
-    if (!mapsByTask.has(marker.task)) mapsByTask.set(marker.task, new Set());
-    mapsByTask.get(marker.task).add(mapName);
+  for (const marker of markers) addTaskMap(marker.task, mapName);
+}
+// Tasks that name a map without coordinates — extract, survive, kill-N — still
+// belong on that map. Marker-only assignment left ~300 progression rows with
+// an empty maps list, so the dashboard could not send you there.
+for (const [mapName, ids] of mapTaskIds) {
+  for (const id of ids) {
+    addTaskMap(id, mapName);
+    addTaskMap(canonicalOf(id), mapName);
   }
 }
 
@@ -1158,6 +1186,53 @@ for (const [canonicalId, members] of groupMembers) {
   };
   for (const id of Object.keys(progression)) if (!colour.has(id)) walk(id);
   if (broken) console.warn(`  broke ${broken} prerequisite cycle(s) introduced by task merging`);
+}
+
+/*
+ * Seasonal story line. Tarkov.dev does not publish KORD BREACH tasks, so they
+ * are vendored in src/data/kord-season.json and folded in here. A task the
+ * feed already has (same id) wins — we never overwrite a live record.
+ */
+{
+  try {
+    const season = JSON.parse(
+      await fs.readFile(path.join(ROOT, "src", "data", "kord-season.json"), "utf8"),
+    );
+    let added = 0;
+    for (const quest of season.questline ?? []) {
+      if (progression[quest.id]) continue;
+      const sets = quest.requireAny
+        ? (quest.requires ?? []).map((req) => [{ ...req, from: "wiki" }])
+        : quest.requires?.length
+          ? [(quest.requires ?? []).map((req) => ({ ...req, from: "wiki" }))]
+          : [];
+      progression[quest.id] = {
+        name: `${quest.name} [KORD BREACH]`,
+        trader: quest.trader,
+        minPlayerLevel: 0,
+        factionName: null,
+        kappaRequired: false,
+        lightkeeperRequired: false,
+        requires: sets,
+        maps: quest.maps ?? [],
+        traderGates:
+          typeof quest.traderLevel === "number"
+            ? [{ trader: quest.trader, kind: "level", value: quest.traderLevel }]
+            : [],
+        needs: [],
+        keys: [],
+        wiki: quest.wiki ?? null,
+      };
+      added++;
+    }
+    if (added) console.log(`  kord season: added ${added} story tasks the feed does not ship`);
+    await fs.copyFile(
+      path.join(ROOT, "src", "data", "kord-season.json"),
+      path.join(OUT, "kord-season.json"),
+    );
+  } catch (err) {
+    console.warn(`  no kord-season.json — seasonal story line omitted (${err.message})`);
+  }
 }
 
 {

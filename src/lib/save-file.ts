@@ -100,22 +100,21 @@ export function parseSave(text: string): ParsedSave {
   }
 
   const progressRaw = isRecord(raw.progress) ? raw.progress : {};
+  const slice = (key: GameMode) => ({
+    taskStatus: statuses(isRecord(progressRaw[key]) ? progressRaw[key].taskStatus : null),
+    markerDone: markers(isRecord(progressRaw[key]) ? progressRaw[key].markerDone : null),
+  });
   const progress = {
-    pvp: {
-      taskStatus: statuses(isRecord(progressRaw.pvp) ? progressRaw.pvp.taskStatus : null),
-      markerDone: markers(isRecord(progressRaw.pvp) ? progressRaw.pvp.markerDone : null),
-    },
-    pve: {
-      taskStatus: statuses(isRecord(progressRaw.pve) ? progressRaw.pve.taskStatus : null),
-      markerDone: markers(isRecord(progressRaw.pve) ? progressRaw.pve.markerDone : null),
-    },
+    pvp: slice("pvp"),
+    pve: slice("pve"),
+    season: slice("season"),
   };
 
-  const empty =
-    !Object.keys(progress.pvp.taskStatus).length &&
-    !Object.keys(progress.pvp.markerDone).length &&
-    !Object.keys(progress.pve.taskStatus).length &&
-    !Object.keys(progress.pve.markerDone).length;
+  const empty = (["pvp", "pve", "season"] as const).every(
+    (mode) =>
+      !Object.keys(progress[mode].taskStatus).length &&
+      !Object.keys(progress[mode].markerDone).length,
+  );
   if (empty) throw new SaveFileError("That save has no progress in it.");
 
   return {
@@ -129,6 +128,10 @@ export function parseSave(text: string): ParsedSave {
       pve: {
         tasks: Object.keys(progress.pve.taskStatus).length,
         markers: Object.keys(progress.pve.markerDone).length,
+      },
+      season: {
+        tasks: Object.keys(progress.season.taskStatus).length,
+        markers: Object.keys(progress.season.markerDone).length,
       },
     },
   };

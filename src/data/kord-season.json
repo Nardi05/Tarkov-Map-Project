@@ -1,0 +1,221 @@
+{
+  "id": "kord-breach",
+  "name": "KORD BREACH",
+  "starts": "2026-08-03",
+  "ends": "2026-12-07",
+  "wiki": "https://escapefromtarkov.fandom.com/wiki/Seasons#Season_1:_KORD_BREACH",
+  "notes": [
+    "Seasonal PvP is a separate character from PvP Zone and PvE — progress does not carry over.",
+    "The [KORD BREACH] questline is seasonal-only. It starts at Prapor after Tour, with Uninvited Guests.",
+    "Battle-pass documents drop in every mode. Daily pickup limits differ: 30 in Season, 20 in PvP Zone, 15 in PvE."
+  ],
+  "dailyDocumentLimit": { "season": 30, "pvp": 20, "pve": 15 },
+  "documentTypes": [
+    {
+      "name": "Blueprints and technical documentation",
+      "maps": ["interchange", "factory", "the-labyrinth"]
+    },
+    {
+      "name": "Financial documents",
+      "maps": ["customs", "streets-of-tarkov", "interchange"]
+    },
+    {
+      "name": "Medical documents",
+      "maps": ["the-lab", "ground-zero", "the-labyrinth"]
+    },
+    {
+      "name": "PMC personnel files",
+      "maps": ["reserve", "lighthouse", "icebreaker"]
+    },
+    {
+      "name": "User documentation",
+      "maps": ["ground-zero", "streets-of-tarkov", "the-lab"]
+    },
+    {
+      "name": "Test documentation",
+      "maps": ["shoreline", "woods", "icebreaker"]
+    },
+    {
+      "name": "Technical documentation",
+      "maps": ["shoreline", "woods", "lighthouse"]
+    },
+    {
+      "name": "Project documentation",
+      "maps": ["factory", "reserve", "customs"]
+    }
+  ],
+  "questline": [
+    {
+      "id": "kord:uninvited-guests-1",
+      "name": "Uninvited Guests - Part 1",
+      "trader": "Prapor",
+      "maps": ["shoreline"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Uninvited_Guests_-_Part_1",
+      "requires": [],
+      "acceptUnlocks": true,
+      "traderLevel": 2,
+      "summary": "Find the military equipment case on Shoreline. It sits in one of three places.",
+      "spots": [
+        "Shack next to Sordi tower",
+        "Weather station, second floor, by the drawers",
+        "Hydroelectric power station, next to the HEP storage key door"
+      ]
+    },
+    {
+      "id": "kord:uninvited-guests-2",
+      "name": "Uninvited Guests - Part 2",
+      "trader": "BTR Driver",
+      "maps": ["streets-of-tarkov", "woods"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Uninvited_Guests_-_Part_2",
+      "requires": [{ "task": "kord:uninvited-guests-1", "status": ["active", "complete"] }],
+      "summary": "Extract with the case and hand it to the BTR driver. Dying loses it — you will have to pick it up again."
+    },
+    {
+      "id": "kord:unanswered-calls",
+      "name": "Unanswered Calls",
+      "trader": "Therapist",
+      "maps": ["ground-zero"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Unanswered_Calls",
+      "requires": [{ "task": "kord:uninvited-guests-1", "status": ["active", "complete"] }],
+      "summary": "In one raid: stash Therapist's message at the TerraGroup office reception (2F), then extract via Nakatani Basement Stairs or Emercom Checkpoint."
+    },
+    {
+      "id": "kord:cast-the-net",
+      "name": "Cast the Net",
+      "trader": "Prapor",
+      "maps": ["shoreline", "streets-of-tarkov", "ground-zero"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Cast_the_Net",
+      "requires": [{ "task": "kord:uninvited-guests-2", "status": ["complete"] }],
+      "summary": "Plant WI-FI cameras at six sites across Shoreline, Streets and Ground Zero.",
+      "spots": [
+        "Shoreline — Ural truck by the hydro plant",
+        "Shoreline — excavator at the stream near smugglers' base",
+        "Streets — concrete mixer at the collapsed crane",
+        "Streets — bio toilet near Rodina cinema",
+        "Ground Zero — cargo truck cabin near Mira Ave",
+        "Ground Zero — yellow bus in the underground tunnel"
+      ]
+    },
+    {
+      "id": "kord:know-your-enemy",
+      "name": "Know Your Enemy",
+      "trader": "Prapor",
+      "maps": [],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Know_Your_Enemy",
+      "requires": [{ "task": "kord:cast-the-net", "status": ["complete"] }],
+      "summary": "Hand over 5 Black Division plate carriers. They drop off Black Division on Ground Zero (21+), Shoreline and Streets."
+    },
+    {
+      "id": "kord:reverse-gear",
+      "name": "Reverse Gear",
+      "trader": "Prapor",
+      "maps": ["shoreline", "streets-of-tarkov", "ground-zero"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Reverse_Gear",
+      "requires": [{ "task": "kord:know-your-enemy", "status": ["complete"] }],
+      "summary": "Go back to the cameras from Cast the Net, retrieve each one, and hand them in."
+    },
+    {
+      "id": "kord:key-to-understanding",
+      "name": "Key to Understanding",
+      "trader": "Fence",
+      "maps": [],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Key_to_Understanding",
+      "requires": [{ "task": "kord:reverse-gear", "status": ["complete"] }],
+      "summary": "Find and hand over the Black Division encryption keys."
+    },
+    {
+      "id": "kord:whats-in-the-bag",
+      "name": "What's in the Bag?",
+      "trader": "Fence",
+      "maps": [],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/What%27s_in_the_Bag%3F",
+      "requires": [{ "task": "kord:key-to-understanding", "status": ["complete"] }],
+      "summary": "Find and hand over the briefcase with documents."
+    },
+    {
+      "id": "kord:forbidden-knowledge",
+      "name": "Forbidden Knowledge",
+      "trader": "Fence",
+      "maps": [],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Forbidden_Knowledge",
+      "requires": [{ "task": "kord:whats-in-the-bag", "status": ["complete"] }],
+      "summary": "Find and hand over the 14-4 KORD SSD."
+    },
+    {
+      "id": "kord:sheep-in-wolfs-clothing",
+      "name": "Sheep in Wolf's Clothing",
+      "trader": "Fence",
+      "maps": ["shoreline", "streets-of-tarkov", "ground-zero"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Sheep_in_Wolf%27s_Clothing",
+      "requires": [{ "task": "kord:forbidden-knowledge", "status": ["complete"] }],
+      "summary": "While wearing a Black Division plate carrier, kill 6 Black Division on Shoreline, 6 on Streets, and 6 on Ground Zero."
+    },
+    {
+      "id": "kord:final-stretch",
+      "name": "Final Stretch",
+      "trader": "Fence",
+      "maps": ["streets-of-tarkov"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Final_Stretch",
+      "requires": [{ "task": "kord:sheep-in-wolfs-clothing", "status": ["complete"] }],
+      "summary": "Grab the laptop from Fence's stash on Streets and hand it over."
+    },
+    {
+      "id": "kord:consequences",
+      "name": "Consequences of Our Decisions",
+      "trader": "Mechanic",
+      "maps": ["streets-of-tarkov"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Consequences_of_Our_Decisions",
+      "requires": [{ "task": "kord:final-stretch", "status": ["active", "complete"] }],
+      "summary": "Decrypt and read the laptop, then hand it to Mechanic. Optional side of Final Stretch."
+    },
+    {
+      "id": "kord:desperate-assault",
+      "name": "Desperate Assault",
+      "trader": "Mechanic",
+      "maps": ["the-lab"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Desperate_Assault",
+      "requires": [
+        { "task": "kord:final-stretch", "status": ["complete"] },
+        { "task": "kord:consequences", "status": ["complete"] }
+      ],
+      "requireAny": true,
+      "summary": "Kill 15 Black Division operatives in The Lab. Unlocks after Final Stretch or Consequences."
+    },
+    {
+      "id": "kord:stay-clear",
+      "name": "Stay Clear of Blast Zone",
+      "trader": "Jaeger",
+      "maps": ["shoreline"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Stay_Clear_of_Blast_Zone",
+      "requires": [{ "task": "kord:desperate-assault", "status": ["active", "complete"] }],
+      "summary": "Plant TP-200 TNT at the Health Resort west, north and east fence breaches on Shoreline."
+    },
+    {
+      "id": "kord:break-the-chain",
+      "name": "Break the Chain",
+      "trader": "Mechanic",
+      "maps": ["customs", "woods"],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Break_the_Chain",
+      "requires": [{ "task": "kord:desperate-assault", "status": ["complete"] }],
+      "summary": "Destroy four transmitters: factory chimney and power-line tower on Customs; mountain top and cell tower on Woods."
+    },
+    {
+      "id": "kord:digital-puzzle",
+      "name": "Digital Puzzle",
+      "trader": "Mechanic",
+      "maps": [],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Digital_Puzzle",
+      "requires": [{ "task": "kord:break-the-chain", "status": ["complete"] }],
+      "summary": "Hand over the data taken from the Black Division rugged laptop."
+    },
+    {
+      "id": "kord:riding-the-wave",
+      "name": "Riding the Wave",
+      "trader": "Ragman",
+      "maps": [],
+      "wiki": "https://escapefromtarkov.fandom.com/wiki/Riding_the_Wave",
+      "requires": [{ "task": "kord:reverse-gear", "status": ["complete"] }],
+      "summary": "Found-in-raid hand-in of Black Division gear (plate carriers, packs, Avon M53A1). Side chain off Reverse Gear."
+    }
+  ]
+}

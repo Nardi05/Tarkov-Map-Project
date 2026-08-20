@@ -1,10 +1,12 @@
 import { createElement, useMemo, useState } from "react";
 import { groupQuests, type QuestGroup } from "../lib/build-layers";
 import { useDebouncedInput } from "../lib/use-debounced-input";
+import { displayName, visibleInMode } from "../lib/task-variant";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import type { KeyItem, MapData, TaskAvailability, TaskStatus, Vec3 } from "../types";
+import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
-import { EmptyState, Icon, icons } from "./ui";
+import { EmptyState, Icon, Tick, icons } from "./ui";
 
 /**
  * The task board for one map.
@@ -54,6 +56,7 @@ export default function TaskPanel({
   const toggleMarkerDone = useStore((s) => s.toggleMarkerDone);
   const layers = useStore((s) => s.layers);
   const setLayer = useStore((s) => s.setLayer);
+  const mode = useStore((s) => s.profile.mode);
 
   /*
    * The committed term lives in the store, which is what the map filters on —
@@ -81,6 +84,7 @@ export default function TaskPanel({
       groupQuests(data, data.markers.quests, true).map((g) => ({
         ...g,
         searchText: [
+          displayName(g.task.name),
           g.task.name,
           ...g.markers.map((m) => m.description),
           ...g.markers.map((m) => m.item?.name ?? ""),
@@ -91,16 +95,21 @@ export default function TaskPanel({
     [data],
   );
 
+  const modeGroups = useMemo(
+    () => allGroups.filter((g) => visibleInMode(g.task.name, mode)),
+    [allGroups, mode],
+  );
+
   /** Search / trader / Kappa narrowing. Status is handled by the sections. */
   const matching = useMemo(() => {
     const needle = quest.search.trim().toLowerCase();
-    return allGroups.filter((g) => {
+    return modeGroups.filter((g) => {
       if (quest.kappaOnly && !g.task.kappaRequired) return false;
       if (quest.trader && g.task.trader?.name !== quest.trader) return false;
       if (!needle) return true;
       return g.searchText.includes(needle);
     });
-  }, [allGroups, quest.search, quest.trader, quest.kappaOnly]);
+  }, [modeGroups, quest.search, quest.trader, quest.kappaOnly]);
 
   const buckets = useMemo(() => {
     const out = new Map<SectionKey, QuestGroup[]>();
@@ -116,24 +125,24 @@ export default function TaskPanel({
 
   const traders = useMemo(() => {
     const names = new Set<string>();
-    for (const g of allGroups) if (g.task.trader) names.add(g.task.trader.name);
+    for (const g of modeGroups) if (g.task.trader) names.add(g.task.trader.name);
     return [...names].sort();
-  }, [allGroups]);
+  }, [modeGroups]);
 
   const counts = useMemo(() => {
     let active = 0;
     let done = 0;
-    for (const g of allGroups) {
+    for (const g of modeGroups) {
       const s = taskStatus[g.task.id];
       if (s === "active") active++;
       else if (s === "completed") done++;
     }
     return { active, done };
-  }, [allGroups, taskStatus]);
+  }, [modeGroups, taskStatus]);
 
   const filtersActive = !!quest.search || !!quest.trader || quest.kappaOnly || !!quest.focusTask;
 
-  if (allGroups.length === 0) {
+  if (modeGroups.length === 0) {
     return (
       <EmptyState
         title="No task objectives on this map"
@@ -171,6 +180,7 @@ export default function TaskPanel({
             value={typedSearch}
             onChange={(e) => setTypedSearch(e.target.value)}
             aria-label="Search tasks on this map"
+            data-search
           />
         </div>
 
@@ -213,10 +223,10 @@ export default function TaskPanel({
             ticked, which is the point — this is the escape hatch for browsing
             a map you haven't started tracking yet. */}
         <label className="mt-2 flex cursor-pointer items-center gap-2 text-[0.7rem]">
-          <input
-            type="checkbox"
+          <Tick
             checked={quest.showAll}
-            onChange={(e) => setQuestFilter("showAll", e.target.checked)}
+            label="Show every task on the map"
+            onChange={() => setQuestFilter("showAll", !quest.showAll)}
           />
           <span style={{ color: "var(--text-dim)" }}>Show every task on the map</span>
         </label>
@@ -227,13 +237,13 @@ export default function TaskPanel({
             Say what it counts rather than quietly changing what it means. */}
         <p className="mt-2.5 text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
           <b style={{ color: "var(--accent)" }}>{counts.active} active</b> · {counts.done} of{" "}
-          {allGroups.length} tasks on {data.name} done
+          {modeGroups.length} tasks on {data.name} done
         </p>
         <div className="mt-1.5 h-1 overflow-hidden rounded-full" style={{ background: "var(--panel-3)" }}>
           <div
             className="h-full rounded-full transition-[width] duration-300"
             style={{
-              width: `${allGroups.length ? (counts.done / allGroups.length) * 100 : 0}%`,
+              width: `${modeGroups.length ? (counts.done / modeGroups.length) * 100 : 0}%`,
               background: "#22c55e",
             }}
           />
@@ -413,7 +423,9 @@ function TaskRow({
               ? { type: "button", onClick: () => onFocus(centre), className: "block w-full text-left" }
               : { className: "block w-full text-left" },
             <>
-              <span className="block truncate text-[0.8125rem] font-medium leading-tight">{task.name}</span>
+              <span className="block truncate text-[0.8125rem] font-medium leading-tight">
+                <TaskName name={task.name} />
+              </span>
               <span
                 className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[0.68rem]"
                 style={{ color: "var(--text-faint)" }}
@@ -471,21 +483,11 @@ function TaskRow({
                       className="flex items-start gap-2 rounded-lg px-1.5 py-1"
                       style={{ background: "var(--panel)" }}
                     >
-                      <button
-                        type="button"
-                        role="checkbox"
-                        aria-checked={done}
-                        aria-label={`Location ${i + 1}${done ? " done" : ""}`}
-                        onClick={() => onToggleMarker(marker.id)}
-                        className="tap-target mt-px grid h-4 w-4 flex-none place-items-center rounded border"
-                        style={{
-                          borderColor: done ? "#22c55e" : "var(--line)",
-                          background: done ? "#22c55e" : "transparent",
-                          color: done ? "#062b16" : "transparent",
-                        }}
-                      >
-                        <Icon path={icons.check} size={10} />
-                      </button>
+                      <Tick
+                        checked={done}
+                        label={`Location ${i + 1}${done ? ", done" : ""}`}
+                        onChange={() => onToggleMarker(marker.id)}
+                      />
                       <button
                         type="button"
                         className="min-w-0 flex-1 text-left text-[0.68rem] leading-snug"

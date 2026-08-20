@@ -30,8 +30,9 @@ export default function SavePanel({ compact = false }: { compact?: boolean } = {
   const counts = {
     pvp: Object.keys(progress.pvp.taskStatus).length,
     pve: Object.keys(progress.pve.taskStatus).length,
+    season: Object.keys(progress.season.taskStatus).length,
   };
-  const hasAnything = counts.pvp + counts.pve > 0;
+  const hasAnything = counts.pvp + counts.pve + counts.season > 0;
 
   const download = () => {
     const blob = new Blob([JSON.stringify(buildSave(profile, progress), null, 1)], {
@@ -64,7 +65,8 @@ export default function SavePanel({ compact = false }: { compact?: boolean } = {
   const confirmRestore = () => {
     if (!pending) return;
     restoreProgress(pending.progress, pending.profile ?? undefined);
-    const total = pending.counts.pvp.tasks + pending.counts.pve.tasks;
+    const total =
+      pending.counts.pvp.tasks + pending.counts.pve.tasks + pending.counts.season.tasks;
     setPending(null);
     setDone(`Restored ${total} task${total === 1 ? "" : "s"} from ${pending.name}.`);
   };
@@ -113,7 +115,7 @@ export default function SavePanel({ compact = false }: { compact?: boolean } = {
         />
         {!compact && (
           <span className="text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-            {counts.pvp} PvP · {counts.pve} PvE tracked
+            {counts.pvp} PvP · {counts.season} Season · {counts.pve} PvE tracked
           </span>
         )}
       </div>
@@ -122,14 +124,16 @@ export default function SavePanel({ compact = false }: { compact?: boolean } = {
         <div className="surface-2 mt-3 p-3">
           <p className="text-[0.78rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
             <strong style={{ color: "var(--text)" }}>{pending.name}</strong> holds{" "}
-            {pending.counts.pvp.tasks} PvP and {pending.counts.pve.tasks} PvE tasks
+            {pending.counts.pvp.tasks} PvP, {pending.counts.season.tasks} Season and{" "}
+            {pending.counts.pve.tasks} PvE tasks
             {pending.profile?.level ? `, at level ${pending.profile.level}` : ""}.
           </p>
           <p className="mt-1 text-[0.78rem] leading-relaxed" style={{ color: "var(--danger)" }}>
             {/* Named plainly. A restore is the one action here that can destroy
                 a wipe's worth of work, so the count that is about to be
                 overwritten is stated rather than implied. */}
-            This replaces everything you have now — {counts.pvp} PvP and {counts.pve} PvE tasks —
+            This replaces everything you have now — {counts.pvp} PvP, {counts.season} Season and{" "}
+            {counts.pve} PvE tasks —
             and cannot be undone.
           </p>
           <div className="mt-2 flex flex-wrap gap-2">

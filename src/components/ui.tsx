@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { href, onNavClick } from "../lib/router";
 
 /** Small shared pieces, kept here so the panels stay about their own logic. */
 
@@ -42,7 +43,7 @@ export function Section({
     <section className="px-3 py-3">
       <header className="mb-2 flex items-start justify-between gap-2">
         <div>
-          <h3 className="text-[0.7rem] font-semibold uppercase tracking-[0.09em]" style={{ color: "var(--text-dim)" }}>
+          <h3 className="eyebrow" style={{ color: "var(--text-dim)", letterSpacing: "0.12em" }}>
             {title}
           </h3>
           {hint && (
@@ -81,17 +82,113 @@ export const icons = {
   reset: "M3 12a9 9 0 1 0 3-6.7M3 4v5h5",
   stack: "M4 7h16M4 12h16M4 17h16",
   expand: "M9 3H3v6M3 3l7 7M15 21h6v-6M21 21l-7-7",
+  collapse: "M9 3H3v6M3 3l7 7M15 21v-6h6M21 21l-7-7",
+  fit: "M4 9V6a2 2 0 0 1 2-2h3M15 4h3a2 2 0 0 1 2 2v3M20 15v3a2 2 0 0 1-2 2h-3M9 20H6a2 2 0 0 1-2-2v-3",
 };
 
-export function EmptyState({ title, hint }: { title: string; hint?: string }) {
+export function Tick({
+  checked,
+  label,
+  onChange,
+}: {
+  checked: boolean;
+  label: string;
+  onChange: () => void;
+}) {
   return (
-    <div className="px-3 py-8 text-center">
-      <p className="text-sm font-medium">{title}</p>
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={checked}
+      aria-label={label}
+      title={label}
+      onClick={onChange}
+      className="tick tap-target"
+      data-on={checked}
+    >
+      <Icon path={icons.check} size={11} />
+    </button>
+  );
+}
+
+export function EmptyState({
+  title,
+  hint,
+  compact,
+}: {
+  title: string;
+  hint?: string;
+  compact?: boolean;
+}) {
+  return (
+    <div className={compact ? "px-0.5 py-1.5" : "px-3 py-10 text-center"}>
+      <p className={compact ? "text-[0.78rem]" : "text-sm font-semibold"}>{title}</p>
       {hint && (
-        <p className="mx-auto mt-1 max-w-[26ch] text-xs leading-relaxed" style={{ color: "var(--text-faint)" }}>
+        <p
+          className={
+            compact
+              ? "mt-0.5 text-[0.7rem] leading-snug"
+              : "mx-auto mt-2 max-w-[32ch] text-xs leading-relaxed"
+          }
+          style={{ color: "var(--text-faint)" }}
+        >
           {hint}
         </p>
       )}
     </div>
+  );
+}
+
+export function Wordmark({ href: to = href.dashboard() }: { href?: string } = {}) {
+  return (
+    <a className="wordmark" href={to} onClick={onNavClick(to)} aria-label="Tarkov Maps home">
+      <span className="wordmark-mark" aria-hidden="true">
+        <svg viewBox="0 0 16 16" width="12" height="12">
+          <path d="M8 1.5 14.5 14H1.5Z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <circle cx="8" cy="10.2" r="1.35" fill="currentColor" />
+        </svg>
+      </span>
+      <span className="wordmark-name">Tarkov Maps</span>
+    </a>
+  );
+}
+
+export function SiteNav({ current }: { current: "dashboard" | "maps" | "quests" }) {
+  const item = (id: "dashboard" | "maps" | "quests", label: string, to: string) =>
+    current === id ? (
+      <span className="is-active" aria-current="page">
+        {label}
+      </span>
+    ) : (
+      <a href={to} onClick={onNavClick(to)}>
+        {label}
+      </a>
+    );
+
+  return (
+    <nav className="site-nav" data-current={current} aria-label="Sections">
+      <span className="site-nav-pill" aria-hidden="true" />
+      {item("dashboard", "Dashboard", href.dashboard())}
+      {item("maps", "Maps", href.maps())}
+      {item("quests", "Quests", href.quests())}
+    </nav>
+  );
+}
+
+export function PageChrome({
+  current,
+  children,
+}: {
+  current: "dashboard" | "maps" | "quests";
+  children?: ReactNode;
+}) {
+  return (
+    <header className="page-chrome">
+      <div className="flex min-w-0 flex-nowrap items-center gap-2 sm:gap-3">
+        <Wordmark />
+        <SiteNav current={current} />
+      </div>
+      {children}
+    </header>
   );
 }

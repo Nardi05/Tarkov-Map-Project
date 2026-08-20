@@ -145,7 +145,8 @@ export function lockReasons(
       const missing = set
         .filter((req) => !satisfies(req.status, taskStatus[req.task]))
         .map((req) => {
-          const name = progression?.tasks[req.task]?.name ?? "another task";
+          const raw = progression?.tasks[req.task]?.name ?? "another task";
+          const name = raw.replace(/\s*\[(PVP ZONE|PVE ZONE|KORD BREACH)\]\s*$/i, "").trim();
           const wants = req.status.includes("failed") && !req.status.includes("complete") ? " (failed)" : "";
           // Where it came from travels with it. The feed states barely half of
           // these; the rest are the wiki's word, and a player deciding whether
@@ -200,6 +201,37 @@ export function prerequisiteClosure(progression: Progression | null, taskId: str
   }
 
   return [...collected];
+}
+
+/**
+ * Tasks that name this one as a prerequisite — what opening it unlocks.
+ *
+ * Immediate children only. The full tree is noise; "this leads to Shortage"
+ * is what you plan a raid around.
+ */
+export function unlocksAfter(progression: Progression | null, taskId: string): string[] {
+  if (!progression) return [];
+  const out: string[] = [];
+  for (const [id, task] of Object.entries(progression.tasks)) {
+    if (id === taskId) continue;
+    const hits = task.requires.some((set) =>
+      set.some(
+        (req) =>
+          req.task === taskId &&
+          req.status.some((s) => {
+            const n = s.toLowerCase();
+            return n.startsWith("complet") || n === "active";
+          }),
+      ),
+    );
+    if (hits) out.push(id);
+  }
+  return out;
+}
+
+/** How many completed-prereq hops sit behind this task. Earlier wipe = smaller. */
+export function chainDepth(progression: Progression | null, taskId: string): number {
+  return prerequisiteClosure(progression, taskId).length;
 }
 
 /** Tasks the graph says are ready to pick up, limited to one map. */

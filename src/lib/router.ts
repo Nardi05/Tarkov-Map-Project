@@ -1,20 +1,28 @@
-import { useSyncExternalStore, useCallback } from "react";
+import { useSyncExternalStore, useCallback, type MouseEvent } from "react";
 
 /**
  * Hash routing, hand-rolled. The site has a handful of routes, and hash URLs
  * mean the build drops onto any static host — including a subpath — with no
  * server rewrite rules.
  *
- *   #/            map picker
- *   #/m/<map>     one map, optionally ?q=<taskId> to deep-link a task
- *   #/quests      the quest tracker dashboard
+ *   #/              dashboard
+ *   #/maps          map picker
+ *   #/m/<map>       one map, optionally ?q=<taskId> to deep-link a task
+ *   #/quests        the quest tracker
  *   #/quests/setup  the first-run walkthrough of each trader
  */
 export type Route =
+  | { name: "dashboard" }
   | { name: "home" }
   | { name: "quests" }
   | { name: "setup" }
   | { name: "map"; map: string; task: string | null };
+
+const TAB_ORDER: Partial<Record<Route["name"], number>> = {
+  dashboard: 0,
+  home: 1,
+  quests: 2,
+};
 
 function parse(hash: string): Route {
   const raw = hash.replace(/^#/, "");
@@ -27,7 +35,8 @@ function parse(hash: string): Route {
   if (segments[0] === "quests") {
     return segments[1] === "setup" ? { name: "setup" } : { name: "quests" };
   }
-  return { name: "home" };
+  if (segments[0] === "maps") return { name: "home" };
+  return { name: "dashboard" };
 }
 
 let current = parse(typeof location === "undefined" ? "" : location.hash);
@@ -55,20 +64,72 @@ export function useRoute(): Route {
   );
 }
 
+function reducedMotion(): boolean {
+  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export function navigate(path: string, replace = false) {
   const target = path.startsWith("#") ? path : `#${path}`;
   if (location.hash === target) return;
-  if (replace) history.replaceState(null, "", target);
-  else location.hash = target;
-  onHashChange();
+
+  const next = parse(target);
+  const from = TAB_ORDER[current.name];
+  const to = TAB_ORDER[next.name];
+  const slide =
+    from != null && to != null && from !== to ? (to > from ? "fwd" : "back") : null;
+
+  const apply = () => {
+    if (location.hash !== target) {
+      if (replace) history.replaceState(null, "", target);
+      else location.hash = target;
+    }
+    onHashChange();
+  };
+
+  const doc = document as Document & {
+    startViewTransition?: (cb: () => void) => { ready?: Promise<unknown>; finished?: Promise<unknown> };
+  };
+  if (slide && !reducedMotion() && typeof doc.startViewTransition === "function") {
+    document.documentElement.dataset.slide = slide;
+    try {
+      const vt = doc.startViewTransition(apply);
+      const fallback = window.setTimeout(() => {
+        if (location.hash !== target) apply();
+      }, 120);
+      void vt?.ready?.then(() => window.clearTimeout(fallback)).catch(() => {
+        window.clearTimeout(fallback);
+        if (location.hash !== target) apply();
+      });
+      void vt?.finished?.finally(() => {
+        window.clearTimeout(fallback);
+        delete document.documentElement.dataset.slide;
+        if (location.hash !== target) apply();
+      });
+      return;
+    } catch {
+      delete document.documentElement.dataset.slide;
+    }
+  }
+  apply();
 }
 
 export function useNavigate() {
   return useCallback(navigate, []);
 }
 
+/** Same-tab hash navigation, leaving modifier-clicks to open a new tab. */
+export function onNavClick(to: string) {
+  return (e: MouseEvent<HTMLAnchorElement>) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault();
+    navigate(to);
+  };
+}
+
 export const href = {
-  home: () => "#/",
+  dashboard: () => "#/",
+  home: () => "#/maps",
+  maps: () => "#/maps",
   quests: () => "#/quests",
   setup: () => "#/quests/setup",
   map: (map: string, task?: string | null) => `#/m/${encodeURIComponent(map)}${task ? `?q=${task}` : ""}`,
