@@ -170,7 +170,7 @@ function SeasonRow({
               <button
                 key={map}
                 type="button"
-                className="chip chip-accent"
+                className="chip chip-accent chip-button"
                 onClick={() => navigate(href.map(map, quest.id))}
               >
                 {prettyMapName(map)}
@@ -210,7 +210,7 @@ function DocumentHunt({ mode }: { mode: GameMode }) {
                 <button
                   key={map}
                   type="button"
-                  className="chip"
+                  className="chip chip-button"
                   onClick={() => navigate(href.map(map))}
                 >
                   {prettyMapName(map)}

@@ -849,7 +849,7 @@ function TaskRow({
               <button
                 key={map}
                 type="button"
-                className="chip chip-accent"
+                className="chip chip-accent chip-button"
                 onClick={() => navigate(href.map(map, row.id))}
                 title={`Open ${displayName(row.name)} on this map`}
               >

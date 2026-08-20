@@ -376,6 +376,35 @@ body {
     color: #062b16;
   }
 
+  /*
+   * The raid clock. Tightened on a phone: at 360px the header is the map's
+   * back button, its name, and this — and the name is the one that has to
+   * stay readable, so the clock gives up the room rather than truncating
+   * "Streets of Tarkov" to "S…".
+   */
+  .raid-clock {
+    gap: 0.3rem;
+    padding: 0.2rem 0.35rem;
+    font-size: 0.7rem;
+  }
+
+  .raid-clock-face {
+    font-size: 0.66rem;
+    line-height: 1;
+  }
+
+  @media (min-width: 480px) {
+    .raid-clock {
+      gap: 0.4rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.78rem;
+    }
+
+    .raid-clock-face {
+      font-size: 0.7rem;
+    }
+  }
+
   .map-tools {
     position: absolute;
     right: 0.75rem;
