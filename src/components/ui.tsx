@@ -88,8 +88,8 @@ export const icons = {
      press will do next, not what the panel currently is. */
   layout: "M4 5h16v14H4zM4 10h16M12 10v9",
   grip: "M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01",
-  wide: "M4 6h16v12H4zM9 10l-2 2 2 2M15 10l2 2-2 2",
-  narrow: "M4 6h16v12H4zM12 6v12M8 10l2 2-2 2M16 10l-2 2 2 2",
+  /* One pane across the row. Pressed = the panel is full width. */
+  paneFull: "M4 6h16v12H4z",
   eye: "M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Zm10 2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
   keyboard: "M4 6h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm3 4h.01M11 10h.01M15 10h.01M17 10h.01M7 14h10",
 };
