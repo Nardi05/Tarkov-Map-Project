@@ -334,7 +334,11 @@ function DashPanelCard({
   return (
     <section
       ref={drag.register(index)}
-      className="surface dash-panel"
+      /* Fades in on mount. Panels are keyed by id, so reordering moves the
+         node rather than remounting it and nothing animates — but switching a
+         hidden panel back on does mount one, and it arriving without a word
+         in the middle of a list is easy to miss. */
+      className="surface dash-panel animate-in"
       data-wide={columns === 2 && panel.wide ? "true" : undefined}
       data-dragged={isDragged || undefined}
       data-target={isTarget || undefined}
