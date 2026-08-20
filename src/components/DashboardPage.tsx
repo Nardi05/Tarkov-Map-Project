@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useMapIndex, useProgression } from "../lib/data";
 import { KORD_SEASON, prettyMapName, seasonDaysLeft, seasonElapsed } from "../lib/kord-season";
 import { nextRaids, type RaidPick } from "../lib/next-raid";
+import { MODE_META } from "../lib/mode";
 import { chainDepth, computeAvailability, unlocksAfter } from "../lib/progression";
 import { collectKeys, collectNeeds } from "../lib/quest-lists";
 import { href, navigate, onNavClick } from "../lib/router";
@@ -584,13 +585,11 @@ function ProgressPanel({
         <Stat label="Level" value={level} />
       </ul>
 
-      <Meter label={`${pct}% of the ${mode === "pve" ? "PvE" : mode === "season" ? "season" : "PvP"} graph`} value={pct} />
+      {/* The figure is on the right of every meter, so the label says what is
+          being measured rather than repeating it. */}
+      <Meter label={`Tasks done · ${MODE_META[mode].label}`} value={pct} />
       {stats.kappaTotal > 0 && (
-        <Meter
-          label={`Kappa ${stats.kappaDone}/${stats.kappaTotal}`}
-          value={kappaPct}
-          tone="accent"
-        />
+        <Meter label={`Kappa · ${stats.kappaDone} of ${stats.kappaTotal}`} value={kappaPct} tone="accent" />
       )}
     </div>
   );

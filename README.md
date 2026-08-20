@@ -13,7 +13,8 @@ static site with no backend.
 Both are behind the same site password.
 
 - **Production** (`main`) — the stable build: https://tarkov-map-project.vercel.app
-- **Dev preview** (`claude/tarkov-maps-v2`) — in-progress work, ahead of production: https://tarkov-map-project-git-claude-tarkov-maps-v2-nardi05s-projects.vercel.app
+- **Dev previews** — every other branch gets its own Vercel preview URL, listed
+  on the deployment in the Vercel dashboard. They sit behind the same password.
 
 ## What's on the map
 
@@ -111,6 +112,24 @@ another click to come back. Neighbouring photos and the full-size copy are
 fetched while you look at the current one, so only the first costs a wait. It is
 usually the fastest way to turn "somewhere in this building" into "that shelf".
 
+### Keyboard, fullscreen and getting out of the way
+
+The map page has two different ways to give you more room, and they compose
+rather than fighting:
+
+- **Fullscreen** (`F`) hands the whole page to the browser — header, side panel
+  and all. The panels come with it, because a bigger map you can't pick a task
+  on is not what anyone was asking for.
+- **Hide the interface** (`H`) takes the site's own chrome away and leaves
+  nothing but map, in a window or out of one. One control stays behind to undo
+  it, so it is never a one-way door on a device with no keyboard.
+
+The rest: `L`, `T` and `S` open the layers, tasks and settings panels, `[`
+hides or shows the side panel, `0` fits the whole map on screen, `/` jumps to
+the search box, `Esc` closes whatever is open, and `?` lists all of it. Every
+shortcut pauses while you are typing, so searching a task list for "flash" does
+not send you fullscreen.
+
 ## Kord Breach (Season 1)
 
 The site now tracks three characters, because the game does: **PvP Zone**, **Season**,
@@ -129,6 +148,27 @@ page, a **Battle pass hunt** layer preset, and a "show documents" prompt on any
 map that has them. Daily pickup limits differ by mode (30 / 20 / 15).
 
 The quest tracker also ranks **which map to queue** from your active tasks.
+
+## The dashboard
+
+`#/` is the front page and the shortest answer to "what do I do next": which map
+to queue, the tasks that are open on it, the keys those tasks go through, and
+what to keep out of raid for a hand-in.
+
+It is assembled from eight panels — progress, next raid, upcoming, keys, find in
+raid, by trader, season, jump back in — and **you arrange it**. Press
+**Customise** and each panel grows a grip you can drag it by, arrows for the
+keyboard, a control for full or half width, and an × that puts it in a tray at
+the bottom. The tray remembers where a panel came from, so switching one back on
+returns it to its old place rather than the end. The grid itself is one column
+or two, and how many tasks Upcoming lists is yours to set.
+
+The layout is saved in your browser with the rest of your settings. A layout
+written before a panel existed picks the new panel up rather than being thrown
+away, and **Reset layout** puts everything back as it shipped.
+
+Dragging is pointer-based rather than HTML5 drag-and-drop, so it works with a
+finger. Everything it can do is also on a button, so it works without one.
 
 ## The quest tracker
 
@@ -174,7 +214,7 @@ traders you name. Leaving it blank gives exactly the list you would have had
 without the feature.
 
 **Your progress is yours.** It lives in your browser, kept separately for PvP
-and PvE, with no account and no server. Save it to a file to back it up or move
+Zone, Season and PvE, with no account and no server. Save it to a file to back it up or move
 it to another device; restoring replaces rather than merges, and tells you what
 is about to be overwritten first.
 
@@ -251,7 +291,19 @@ src/lib/layers.ts        the layer taxonomy: colour, shape, and the plain-Englis
                          explanation shown in the UI
 src/lib/build-layers.ts  data -> Leaflet layers, one builder per layer
 src/lib/tarkov-time.ts   the in-game clock: 7x real time, anchored at UTC+3
-src/components/          map canvas, layer panel, task panel, detail panel
+src/lib/dashboard.ts     the dashboard layout model — which panels, in what
+                         order, how wide — kept free of React so it can be
+                         tested without a browser, and able to read every
+                         shape this has ever stored
+src/lib/use-drag-reorder.ts
+                         pointer-based drag reordering, because HTML5
+                         drag-and-drop does not fire on touch at all
+src/lib/persist-migrate.ts
+                         the persisted-state migrations. The rule every
+                         version has to clear: a migration may never drop a
+                         task
+src/components/          map canvas, layer panel, task panel, detail panel,
+                         and the dashboard's panels
 ```
 
 Data is baked at build time rather than fetched at runtime: opening a map is one

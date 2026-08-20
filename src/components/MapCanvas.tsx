@@ -429,6 +429,7 @@ export default function MapCanvas(props: Props) {
       <div ref={containerRef} className="tk-map h-full w-full" role="application" aria-label={`${data.name} map`} />
 
       <div className="map-tools">
+        {onToggleFullscreen && (
         <button
           type="button"
           className="btn btn-icon"
@@ -442,6 +443,7 @@ export default function MapCanvas(props: Props) {
             {isFullscreen ? <path d={icons.collapse} /> : <path d={icons.expand} />}
           </svg>
         </button>
+        )}
         <button
           type="button"
           className="btn btn-icon"

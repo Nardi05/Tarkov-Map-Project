@@ -22,19 +22,21 @@ export default function RaidClock({ mapName }: { mapName: string }) {
 
   return (
     <div
-      className="flex flex-none items-center gap-1.5 rounded-lg px-2 py-1"
+      className="raid-clock flex flex-none items-center rounded-lg"
       style={{ background: "var(--panel-2)" }}
       title={title}
     >
       {clock.hasTime ? (
         <>
           <Face time={clock.left} day={clock.leftIsDay} />
-          <span style={{ color: "var(--text-faint)" }}>/</span>
+          <span aria-hidden="true" style={{ color: "var(--text-faint)" }}>
+          /
+        </span>
           <Face time={clock.right} day={!clock.leftIsDay} />
         </>
       ) : (
         // Sun/moon faces would be a lie on a map that has neither.
-        <span style={{ fontSize: "0.72rem", color: "var(--text-dim)" }}>{clock.note}</span>
+        <span style={{ color: "var(--text-dim)" }}>{clock.note}</span>
       )}
     </div>
   );
@@ -42,14 +44,11 @@ export default function RaidClock({ mapName }: { mapName: string }) {
 
 function Face({ time, day }: { time: string; day: boolean }) {
   return (
-    <span className="flex items-center gap-1">
-      <span aria-hidden="true" style={{ fontSize: "0.7rem", lineHeight: 1 }}>
+    <span className="flex items-center gap-0.5">
+      <span aria-hidden="true" className="raid-clock-face">
         {day ? "☀" : "☾"}
       </span>
-      <span
-        className="tabular-nums"
-        style={{ fontSize: "0.78rem", color: day ? "var(--text)" : "var(--text-dim)" }}
-      >
+      <span className="tabular-nums" style={{ color: day ? "var(--text)" : "var(--text-dim)" }}>
         {time}
       </span>
       <span className="sr-only">{day ? "day raid" : "night raid"}</span>

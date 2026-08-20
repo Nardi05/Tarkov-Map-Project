@@ -76,6 +76,8 @@ export default function MapPage({
   const [immersive, setImmersive] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
+  const canFullscreen =
+    typeof document !== "undefined" && typeof Element.prototype.requestFullscreen === "function";
 
   const floors = useMemo(() => floorsFor(data.geo), [data.geo]);
   const [floorId, setFloorId] = useState(floors[0]?.id ?? "ground");
@@ -241,6 +243,7 @@ export default function MapPage({
         setImmersive((v) => !v);
         setSheetOpen(false);
       } else if (key === "f") {
+        if (!canFullscreen) return;
         e.preventDefault();
         toggleFullscreen();
       } else if (key === "0") {
@@ -253,7 +256,16 @@ export default function MapPage({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [showHelp, sheetOpen, selection, quest.focusTask, immersive, setQuestFilter, toggleFullscreen]);
+  }, [
+    showHelp,
+    sheetOpen,
+    selection,
+    quest.focusTask,
+    immersive,
+    setQuestFilter,
+    toggleFullscreen,
+    canFullscreen,
+  ]);
 
   const panel = (
     <>
@@ -272,7 +284,7 @@ export default function MapPage({
       {/* ------------------------------------------------------------ header */}
       {!immersive && (
         <header
-          className="map-glass flex flex-none items-center gap-1.5 overflow-x-auto border-b px-2 py-2 md:overflow-visible md:px-3"
+          className="map-glass flex flex-none items-center gap-1.5 border-b px-2 py-2 md:px-3"
           style={{ borderColor: "var(--line)" }}
         >
           <a
@@ -307,7 +319,16 @@ export default function MapPage({
               Reset view
             </button>
             <a
-              className="btn inline-flex text-[0.72rem]"
+              className="btn btn-icon inline-flex flex-none sm:hidden"
+              href={href.dashboard()}
+              onClick={onNavClick(href.dashboard())}
+              title="Dashboard — what to run next"
+              aria-label="Dashboard"
+            >
+              <Icon path={icons.layout} size={16} />
+            </a>
+            <a
+              className="btn hidden text-[0.72rem] sm:inline-flex"
               style={{ padding: "0.28rem 0.6rem" }}
               href={href.dashboard()}
               onClick={onNavClick(href.dashboard())}
@@ -389,7 +410,7 @@ export default function MapPage({
         </header>
       )}
 
-      {showHelp && <ShortcutHelp onClose={() => setShowHelp(false)} />}
+      {showHelp && <ShortcutHelp onClose={() => setShowHelp(false)} canFullscreen={canFullscreen} />}
 
       <div className="flex min-h-0 flex-1">
         {/* ---------------------------------------------------- desktop rail */}
@@ -457,7 +478,7 @@ export default function MapPage({
             focus={focus}
             fitToken={fitToken}
             isFullscreen={isFullscreen}
-            onToggleFullscreen={toggleFullscreen}
+            onToggleFullscreen={canFullscreen ? toggleFullscreen : undefined}
           />
 
           {/* Rail handle. Lives in the canvas, not the rail, so it stays
