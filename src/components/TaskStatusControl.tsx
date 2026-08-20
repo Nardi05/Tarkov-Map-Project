@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import type { TaskStatus } from "../types";
 import { Icon, icons } from "./ui";
 
@@ -17,6 +18,29 @@ export default function TaskStatusControl({
   size?: number;
   onCycle: () => void;
 }) {
+  /*
+   * The pop plays when the status changes, not when the row mounts.
+   *
+   * The class used to sit in `className`, so the animation ran on first paint —
+   * five hundred boxes popping their way down the quest tracker on load, and
+   * nothing at all on the one event it was written for. A CSS animation does
+   * not restart when an attribute changes, so it is removed, the layout is
+   * flushed, and it goes back on.
+   */
+  const ref = useRef<HTMLButtonElement>(null);
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    el.classList.remove("status-pop");
+    void el.offsetWidth;
+    el.classList.add("status-pop");
+  }, [status]);
+
   const label =
     status === "completed"
       ? `${name}: done. Tap to reset.`
@@ -26,11 +50,12 @@ export default function TaskStatusControl({
 
   return (
     <button
+      ref={ref}
       type="button"
       aria-label={label}
       title={label}
       onClick={onCycle}
-      className="status-box status-pop tap-target"
+      className="status-box tap-target"
       data-state={status ?? "none"}
       style={{ width: size, height: size }}
     >

@@ -11,10 +11,12 @@ import { useStore, useTaskStatus } from "../store";
 import type { MapIndexEntry } from "../types";
 import ModeSwitch from "./ModeSwitch";
 import NextRaid from "./NextRaid";
+import { useSlashSearch } from "./ShortcutHelp";
 import { Icon, PageChrome, icons } from "./ui";
 
 export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
   const [query, setQuery] = useState("");
+  useSlashSearch();
   const lastMap = useStore((s) => s.lastMap);
   const profile = useStore((s) => s.profile);
   const setProfile = useStore((s) => s.setProfile);

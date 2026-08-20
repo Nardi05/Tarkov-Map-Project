@@ -19,6 +19,7 @@ import ModeSwitch from "./ModeSwitch";
 import NextRaid from "./NextRaid";
 import SavePanel from "./SavePanel";
 import SeasonPanel from "./SeasonPanel";
+import { useSlashSearch } from "./ShortcutHelp";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
 import { EmptyState, Icon, PageChrome, icons } from "./ui";
@@ -55,6 +56,7 @@ interface Row {
 const FACTIONS: Faction[] = ["Any", "USEC", "BEAR"];
 
 export default function QuestsPage() {
+  useSlashSearch();
   const progression = useProgression();
   const taskStatus = useTaskStatus();
   const markerDone = useMarkerDone();
@@ -200,7 +202,7 @@ export default function QuestsPage() {
       <section
         className={`surface flex flex-wrap items-center gap-4 p-4 ${trackedCount === 0 ? "mt-1" : "mt-4"}`}
       >
-        <div className="min-w-0 flex-1">
+        <div className="w-full min-w-0 sm:w-auto sm:flex-1">
           <h2 className="text-sm font-semibold">
             {trackedCount === 0 ? "Start by telling it where you are" : "Update your progress"}
           </h2>
@@ -212,7 +214,11 @@ export default function QuestsPage() {
             means everything behind it is done, so a couple of dozen ticks rebuild the whole wipe.
           </p>
         </div>
-        <a className="btn is-active flex-none" href={href.setup()} onClick={onNavClick(href.setup())}>
+        <a
+          className="btn is-active w-full flex-none sm:w-auto"
+          href={href.setup()}
+          onClick={onNavClick(href.setup())}
+        >
           {trackedCount === 0 ? "Set up my progress" : "Run the walkthrough"}
         </a>
       </section>
@@ -600,9 +606,15 @@ function ProfileBar({
         />
       </Field>
 
-      <p className="ml-auto text-[0.7rem] leading-snug" style={{ color: "var(--text-faint)" }}>
+      <p
+        className="w-full text-[0.7rem] leading-snug sm:ml-auto sm:w-auto sm:text-right"
+        style={{ color: "var(--text-faint)" }}
+      >
         {trackedCount} task{trackedCount === 1 ? "" : "s"} tracked
-        <br />
+        <span className="hidden sm:inline">
+          <br />
+        </span>
+        <span className="sm:hidden"> · </span>
         {markerCount} location{markerCount === 1 ? "" : "s"} ticked
       </p>
 

@@ -6,7 +6,7 @@ import SettingsPanel from "./SettingsPanel";
 import DetailPanel from "./DetailPanel";
 import MapSwitcher from "./MapSwitcher";
 import RaidClock from "./RaidClock";
-import { isTypingInto } from "./ShortcutHelp";
+import ShortcutHelp, { isTypingInto, useSlashSearch } from "./ShortcutHelp";
 import { Icon, icons } from "./ui";
 import { availableStyles, floorsFor } from "../lib/base-layer";
 import { filterQuests, type Selection } from "../lib/build-layers";
@@ -57,9 +57,25 @@ export default function MapPage({
    * somebody wants remembered next time they open the site.
    */
   const [railCollapsed, setRailCollapsed] = useState(false);
-  const [mapFullscreen, setMapFullscreen] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [fitToken, setFitToken] = useState(0);
-  const hideChrome = mapFullscreen;
+
+  /*
+   * Two separate ideas that used to be one, which is why fullscreen used to
+   * take the panels away with it:
+   *
+   *   immersive   the site's own chrome is hidden — header, side panel, tab
+   *               bar — leaving nothing but map. `H`.
+   *   fullscreen  the browser is showing this page and nothing else. `F`.
+   *
+   * They compose. Going fullscreen with the panels up is the normal case and
+   * the one this page is usually asked for: a bigger map *and* the task list.
+   * Wanting only map is a different request, and `H` is how you make it —
+   * in a window or out of one.
+   */
+  const [immersive, setImmersive] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const shellRef = useRef<HTMLDivElement>(null);
 
   const floors = useMemo(() => floorsFor(data.geo), [data.geo]);
   const [floorId, setFloorId] = useState(floors[0]?.id ?? "ground");
@@ -155,23 +171,89 @@ export default function MapPage({
     if (next) setSheetOpen(false);
   }, []);
 
+  /* ---------------------------------------------------------- fullscreen */
+
   /*
-   * Shortcuts for the panels. Fullscreen lives in MapCanvas, beside the thing
-   * it toggles.
-   *
+   * The *page* goes fullscreen, not the canvas. Fullscreening the canvas alone
+   * is what left the header, the side panel and the tab bar outside the
+   * fullscreen element — present in the document, invisible on screen, and
+   * unreachable until you came back out. Everything the map page owns is
+   * inside this element, so it all comes along.
+   */
+  const toggleFullscreen = useCallback(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+    if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+    else void shell.requestFullscreen?.().catch(() => {});
+  }, []);
+
+  // Tracked by event rather than by the click, because Escape and the browser's
+  // own chrome can leave fullscreen without going through the button.
+  useEffect(() => {
+    const sync = () => setIsFullscreen(document.fullscreenElement === shellRef.current);
+    document.addEventListener("fullscreenchange", sync);
+    return () => document.removeEventListener("fullscreenchange", sync);
+  }, []);
+
+  /* ----------------------------------------------------------- shortcuts */
+
+  useSlashSearch();
+
+  /*
    * Everything is guarded by isTypingInto, without which searching a task list
    * for "flash" would trip Fullscreen, Layers, Settings and hide-the-panel on
    * the way through.
    */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape" || isTypingInto(e.target)) return;
-      setSelection(null);
-      setSheetOpen(false);
+      if (e.key === "Escape") {
+        // One thing at a time, outermost first, so Escape never clears more
+        // than the user was looking at.
+        if (showHelp) setShowHelp(false);
+        else if (sheetOpen) setSheetOpen(false);
+        else if (selection) setSelection(null);
+        else if (quest.focusTask) setQuestFilter("focusTask", null);
+        else if (immersive) setImmersive(false);
+        return;
+      }
+      if (e.metaKey || e.ctrlKey || e.altKey || isTypingInto(e.target)) return;
+
+      const key = e.key.toLowerCase();
+      const openTab = (next: Tab) => {
+        e.preventDefault();
+        setTab(next);
+        // A shortcut has to bring the panel back with it, or pressing L while
+        // the rail is hidden looks like nothing happened.
+        setImmersive(false);
+        setRailCollapsed(false);
+        // On a phone the panel is a sheet, so a shortcut has to open it too.
+        setSheetOpen(true);
+      };
+
+      if (key === "l") openTab("layers");
+      else if (key === "t") openTab("tasks");
+      else if (key === "s") openTab("settings");
+      else if (key === "[") {
+        e.preventDefault();
+        setRailCollapsed((v) => !v);
+      } else if (key === "h") {
+        e.preventDefault();
+        setImmersive((v) => !v);
+        setSheetOpen(false);
+      } else if (key === "f") {
+        e.preventDefault();
+        toggleFullscreen();
+      } else if (key === "0") {
+        e.preventDefault();
+        setFitToken((n) => n + 1);
+      } else if (key === "?" || (key === "/" && e.shiftKey)) {
+        e.preventDefault();
+        setShowHelp((v) => !v);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [showHelp, sheetOpen, selection, quest.focusTask, immersive, setQuestFilter, toggleFullscreen]);
 
   const panel = (
     <>
@@ -186,142 +268,171 @@ export default function MapPage({
   );
 
   return (
-    <div className="flex h-full flex-col" style={{ background: "var(--bg)" }}>
+    <div ref={shellRef} className="map-shell flex h-full flex-col" style={{ background: "var(--bg)" }}>
       {/* ------------------------------------------------------------ header */}
-      {!hideChrome && (
-      <header
-        className="map-glass flex flex-none items-center gap-2 border-b px-2 py-2 md:px-3"
-        style={{ borderColor: "var(--line)" }}
-      >
-        <a
-          href={href.home()}
-          onClick={onNavClick(href.home())}
-          className="btn btn-ghost btn-icon flex-none"
-          aria-label="All maps"
+      {!immersive && (
+        <header
+          className="map-glass flex flex-none items-center gap-1.5 overflow-x-auto border-b px-2 py-2 md:overflow-visible md:px-3"
+          style={{ borderColor: "var(--line)" }}
         >
-          <Icon path={icons.back} size={18} />
-        </a>
-
-        <MapSwitcher maps={maps} current={data.normalizedName} onPick={(name) => navigate(href.map(name))} />
-
-        <div className="ml-auto flex items-center gap-1.5">
-          <button
-            type="button"
-            className="btn hidden text-[0.72rem] md:inline-flex"
-            style={{ padding: "0.28rem 0.6rem" }}
-            aria-pressed={!railCollapsed}
-            onClick={() => setRailCollapsed((v) => !v)}
-          >
-            {railCollapsed ? "Show panel" : "Hide panel"}
-          </button>
-          <button
-            type="button"
-            className="btn hidden text-[0.72rem] sm:inline-flex"
-            style={{ padding: "0.28rem 0.6rem" }}
-            onClick={() => setFitToken((n) => n + 1)}
-          >
-            Reset view
-          </button>
           <a
-            className="btn inline-flex text-[0.72rem]"
-            style={{ padding: "0.28rem 0.6rem" }}
-            href={href.dashboard()}
-            onClick={onNavClick(href.dashboard())}
-            title="What to run next"
+            href={href.home()}
+            onClick={onNavClick(href.home())}
+            className="btn btn-ghost btn-icon flex-none"
+            aria-label="All maps"
           >
-            Dashboard
-          </a>
-          <a
-            className="btn hidden text-[0.72rem] sm:inline-flex"
-            style={{ padding: "0.28rem 0.6rem" }}
-            href={href.quests()}
-            onClick={onNavClick(href.quests())}
-            title="Track your quests"
-          >
-            Quests
+            <Icon path={icons.back} size={18} />
           </a>
 
-          <RaidClock mapName={data.normalizedName} />
+          <MapSwitcher maps={maps} current={data.normalizedName} onPick={(name) => navigate(href.map(name))} />
 
-          {styles.length > 1 && (
-            <div className="hidden items-center gap-1 rounded-lg p-0.5 sm:flex" style={{ background: "var(--panel-2)" }}>
-              {styles.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  className="btn btn-ghost text-[0.72rem]"
-                  style={{ padding: "0.28rem 0.55rem" }}
-                  aria-pressed={style === s}
-                  onClick={() => setSetting("style", s)}
-                >
-                  {s === "clean" ? "Clean" : "Satellite"}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="ml-auto flex flex-none items-center gap-1.5">
+            <button
+              type="button"
+              className="btn hidden text-[0.72rem] md:inline-flex"
+              style={{ padding: "0.28rem 0.6rem" }}
+              aria-pressed={!railCollapsed}
+              onClick={() => setRailCollapsed((v) => !v)}
+              title="Hide or show the side panel ([)"
+            >
+              {railCollapsed ? "Show panel" : "Hide panel"}
+            </button>
+            <button
+              type="button"
+              className="btn hidden text-[0.72rem] lg:inline-flex"
+              style={{ padding: "0.28rem 0.6rem" }}
+              onClick={() => setFitToken((n) => n + 1)}
+              title="Fit the whole map on screen (0)"
+            >
+              Reset view
+            </button>
+            <a
+              className="btn inline-flex text-[0.72rem]"
+              style={{ padding: "0.28rem 0.6rem" }}
+              href={href.dashboard()}
+              onClick={onNavClick(href.dashboard())}
+              title="What to run next"
+            >
+              Dashboard
+            </a>
+            <a
+              className="btn hidden text-[0.72rem] lg:inline-flex"
+              style={{ padding: "0.28rem 0.6rem" }}
+              href={href.quests()}
+              onClick={onNavClick(href.quests())}
+              title="Track your quests"
+            >
+              Quests
+            </a>
 
-          {floors.length > 1 && (
-            <label className="hidden sm:block">
-              <span className="sr-only">Level</span>
-              <select
-                className="input"
-                style={{ width: "auto", paddingRight: "1.5rem" }}
-                value={floorId}
-                onChange={(e) => setFloorId(e.target.value)}
-              >
-                {floors.map((f) => (
-                  <option key={f.id} value={f.id}>
-                    {f.name}
-                  </option>
+            <RaidClock mapName={data.normalizedName} />
+
+            {styles.length > 1 && (
+              <div className="hidden items-center gap-1 rounded-lg p-0.5 lg:flex" style={{ background: "var(--panel-2)" }}>
+                {styles.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    className="btn btn-ghost text-[0.72rem]"
+                    style={{ padding: "0.28rem 0.55rem" }}
+                    aria-pressed={style === s}
+                    onClick={() => setSetting("style", s)}
+                  >
+                    {s === "clean" ? "Clean" : "Satellite"}
+                  </button>
                 ))}
-              </select>
-            </label>
-          )}
-        </div>
-      </header>
+              </div>
+            )}
+
+            {floors.length > 1 && (
+              <label className="hidden md:block">
+                <span className="sr-only">Level</span>
+                <select
+                  className="input"
+                  style={{ width: "auto", paddingRight: "1.5rem" }}
+                  value={floorId}
+                  onChange={(e) => setFloorId(e.target.value)}
+                >
+                  {floors.map((f) => (
+                    <option key={f.id} value={f.id}>
+                      {f.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+
+            {/* Hiding the interface has to be undoable from somewhere obvious,
+                and a keyboard shortcut nobody can find may as well not exist. */}
+            <button
+              type="button"
+              className="btn btn-ghost btn-icon hidden flex-none md:inline-flex"
+              aria-label="Hide the interface"
+              title="Hide the interface (H)"
+              onClick={() => {
+                setImmersive(true);
+                setSheetOpen(false);
+              }}
+            >
+              <Icon path={icons.eye} size={16} />
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost btn-icon hidden flex-none md:inline-flex"
+              aria-label="Keyboard shortcuts"
+              title="Keyboard shortcuts (?)"
+              onClick={() => setShowHelp(true)}
+            >
+              <Icon path={icons.keyboard} size={16} />
+            </button>
+          </div>
+        </header>
       )}
+
+      {showHelp && <ShortcutHelp onClose={() => setShowHelp(false)} />}
 
       <div className="flex min-h-0 flex-1">
         {/* ---------------------------------------------------- desktop rail */}
-        {!hideChrome && (
-        <aside
-          className="hidden w-[21rem] flex-none flex-col overflow-hidden border-r transition-[width] duration-200 md:flex lg:w-[23rem]"
-          // Inline width only kicks in while collapsed; expanded keeps the
-          // responsive Tailwind widths above.
-          style={{
-            borderColor: "var(--line)",
-            background: "var(--panel)",
-            // Border goes too, or a 1px sliver of panel stays on screen.
-            ...(railCollapsed ? { width: 0, borderRightWidth: 0 } : null),
-          }}
-          /* `inert`, not `aria-hidden`: the rail is hidden with width:0 and
-             overflow-hidden so it can animate, which leaves every control in it
-             still tabbable. aria-hidden only told assistive tech to ignore them,
-             so a keyboard user tabbed through dozens of invisible buttons.
-             `inert` removes them from the tab order and the a11y tree, and
-             unlike display:none it does not kill the width transition. */
-          inert={railCollapsed}
-        >
-          <nav
-            className="flex flex-none gap-1 border-b p-2"
-            style={{ borderColor: "var(--line-soft)" }}
-            aria-label="Map tools"
+        {!immersive && (
+          <aside
+            className="hidden w-[19rem] flex-none flex-col overflow-hidden border-r transition-[width] duration-200 md:flex lg:w-[22rem]"
+            // Inline width only kicks in while collapsed; expanded keeps the
+            // responsive Tailwind widths above.
+            style={{
+              borderColor: "var(--line)",
+              background: "var(--panel)",
+              // Border goes too, or a 1px sliver of panel stays on screen.
+              ...(railCollapsed ? { width: 0, borderRightWidth: 0 } : null),
+            }}
+            /* `inert`, not `aria-hidden`: the rail is hidden with width:0 and
+               overflow-hidden so it can animate, which leaves every control in it
+               still tabbable. aria-hidden only told assistive tech to ignore them,
+               so a keyboard user tabbed through dozens of invisible buttons.
+               `inert` removes them from the tab order and the a11y tree, and
+               unlike display:none it does not kill the width transition. */
+            inert={railCollapsed}
           >
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                className="btn flex-1"
-                aria-pressed={tab === t.id}
-                onClick={() => setTab(t.id)}
-              >
-                <Icon path={t.icon} size={15} />
-                {t.label}
-              </button>
-            ))}
-          </nav>
-          <div className="scroll-y min-h-0 flex-1">{panel}</div>
-        </aside>
+            <nav
+              className="flex flex-none gap-1 border-b p-2"
+              style={{ borderColor: "var(--line-soft)" }}
+              aria-label="Map tools"
+            >
+              {TABS.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className="btn flex-1"
+                  style={{ padding: "0.45rem 0.5rem" }}
+                  aria-pressed={tab === t.id}
+                  onClick={() => setTab(t.id)}
+                >
+                  <Icon path={t.icon} size={15} />
+                  {t.label}
+                </button>
+              ))}
+            </nav>
+            <div className="scroll-y min-h-0 flex-1">{panel}</div>
+          </aside>
         )}
 
         {/* ---------------------------------------------------------- canvas */}
@@ -345,48 +456,55 @@ export default function MapPage({
             onSelect={handleSelect}
             focus={focus}
             fitToken={fitToken}
-            onFullscreen={(on) => {
-              setMapFullscreen(on);
-              if (on) {
-                setRailCollapsed(true);
-                setSheetOpen(false);
-              } else {
-                setRailCollapsed(false);
-              }
-            }}
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={toggleFullscreen}
           />
 
           {/* Rail handle. Lives in the canvas, not the rail, so it stays
               reachable once the rail itself has no width left. */}
-          {!hideChrome && (
-          <button
-            type="button"
-            className="btn absolute left-0 top-1/2 z-[500] hidden -translate-y-1/2 md:flex"
-            style={{
-              boxShadow: "var(--shadow)",
-              padding: "0.9rem 0.1rem",
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-            }}
-            aria-expanded={!railCollapsed}
-            title={railCollapsed ? "Show the panel" : "Hide the panel"}
-            aria-label={railCollapsed ? "Show the panel" : "Hide the panel"}
-            onClick={() => setRailCollapsed((v) => !v)}
-          >
-            <span style={{ transform: `rotate(${railCollapsed ? -90 : 90}deg)`, display: "block" }}>
-              <Icon path={icons.chevron} size={15} />
-            </span>
-          </button>
+          {!immersive && (
+            <button
+              type="button"
+              className="btn absolute left-0 top-1/2 z-[500] hidden -translate-y-1/2 md:flex"
+              style={{
+                boxShadow: "var(--shadow)",
+                padding: "0.9rem 0.1rem",
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
+              aria-expanded={!railCollapsed}
+              title={railCollapsed ? "Show the panel ([)" : "Hide the panel ([)"}
+              aria-label={railCollapsed ? "Show the panel" : "Hide the panel"}
+              onClick={() => setRailCollapsed((v) => !v)}
+            >
+              <span style={{ transform: `rotate(${railCollapsed ? -90 : 90}deg)`, display: "block" }}>
+                <Icon path={icons.chevron} size={15} />
+              </span>
+            </button>
+          )}
+
+          {/* The one control that survives hiding the interface. Without it,
+              `H` on a device with no keyboard is a one-way door. */}
+          {immersive && (
+            <button
+              type="button"
+              className="btn animate-in absolute left-3 top-3 z-[600] text-[0.72rem]"
+              style={{ boxShadow: "var(--shadow)", padding: "0.34rem 0.6rem" }}
+              onClick={() => setImmersive(false)}
+            >
+              <Icon path={icons.eye} size={14} />
+              Show the interface
+            </button>
           )}
 
           {quest.focusTask && mapData.tasks[quest.focusTask] && (
             <button
               type="button"
               className="surface animate-in absolute left-1/2 top-3 z-[500] flex -translate-x-1/2 items-center gap-2 px-3 py-1.5 text-xs"
-              style={{ boxShadow: "var(--shadow)" }}
+              style={{ boxShadow: "var(--shadow)", maxWidth: "min(20rem, calc(100% - 1.5rem))" }}
               onClick={() => setQuestFilter("focusTask", null)}
             >
-              <span className="truncate" style={{ maxWidth: "16rem" }}>
+              <span className="truncate">
                 Showing only <b>{displayName(mapData.tasks[quest.focusTask].name)}</b>
               </span>
               <Icon path={icons.close} size={13} />
@@ -396,18 +514,18 @@ export default function MapPage({
           {!layers.documents && mapData.markers.documents.length > 0 && (
             <button
               type="button"
-              className="surface animate-in absolute bottom-3 left-1/2 z-[500] flex -translate-x-1/2 items-center gap-2 px-3 py-1.5 text-xs"
+              className="surface animate-in map-hint"
               style={{ boxShadow: "var(--shadow)" }}
               onClick={() => setLayer("documents", true)}
             >
-              <span>
+              <span className="truncate">
                 {mapData.markers.documents.length} document spawn
                 {mapData.markers.documents.length === 1 ? "" : "s"}
                 {docTypes.length > 0
                   ? ` · ${docTypes.map((d) => d.name.replace(/ documents?| documentation/gi, "")).join(", ")}`
                   : ""}
               </span>
-              <span style={{ color: "var(--accent)" }}>Show</span>
+              <span className="flex-none" style={{ color: "var(--accent)" }}>Show</span>
             </button>
           )}
 
@@ -432,36 +550,49 @@ export default function MapPage({
       </div>
 
       {/* ------------------------------------------------------- mobile bar */}
-      {!hideChrome && (
-      <nav
-        className="flex flex-none items-stretch gap-1 border-t p-1.5 md:hidden"
-        style={{
-          borderColor: "var(--line)",
-          background: "var(--panel)",
-          paddingBottom: "calc(0.375rem + env(safe-area-inset-bottom, 0px))",
-        }}
-        aria-label="Map tools (mobile)"
-      >
-        {TABS.map((t) => (
+      {!immersive && (
+        <nav
+          className="flex flex-none items-stretch gap-1 border-t p-1.5 md:hidden"
+          style={{
+            borderColor: "var(--line)",
+            background: "var(--panel)",
+            paddingBottom: "calc(0.375rem + env(safe-area-inset-bottom, 0px))",
+          }}
+          aria-label="Map tools (mobile)"
+        >
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              className="btn btn-ghost flex-1 flex-col gap-0.5 py-1.5 text-[0.65rem]"
+              aria-pressed={sheetOpen && tab === t.id}
+              onClick={() => {
+                if (sheetOpen && tab === t.id) setSheetOpen(false);
+                else {
+                  setTab(t.id);
+                  setSheetOpen(true);
+                  setSelection(null);
+                }
+              }}
+            >
+              <Icon path={t.icon} size={18} />
+              {t.label}
+            </button>
+          ))}
           <button
-            key={t.id}
             type="button"
             className="btn btn-ghost flex-1 flex-col gap-0.5 py-1.5 text-[0.65rem]"
-            aria-pressed={sheetOpen && tab === t.id}
+            aria-label="Hide the interface"
             onClick={() => {
-              if (sheetOpen && tab === t.id) setSheetOpen(false);
-              else {
-                setTab(t.id);
-                setSheetOpen(true);
-                setSelection(null);
-              }
+              setImmersive(true);
+              setSheetOpen(false);
+              setSelection(null);
             }}
           >
-            <Icon path={t.icon} size={18} />
-            {t.label}
+            <Icon path={icons.eye} size={18} />
+            Hide
           </button>
-        ))}
-      </nav>
+        </nav>
       )}
 
       {/* ----------------------------------------------------- mobile sheets */}
@@ -473,7 +604,7 @@ export default function MapPage({
             aria-hidden="true"
           />
           <div
-            className="animate-sheet fixed inset-x-0 bottom-0 z-[800] flex max-h-[72vh] flex-col rounded-t-2xl border-t md:hidden"
+            className="animate-sheet fixed inset-x-0 bottom-0 z-[800] flex max-h-[72dvh] flex-col rounded-t-2xl border-t md:hidden"
             style={{ borderColor: "var(--line)", background: "var(--panel)", boxShadow: "var(--shadow)" }}
             role="dialog"
             aria-label={TABS.find((t) => t.id === tab)?.label}
@@ -488,7 +619,7 @@ export default function MapPage({
 
       {selection && (
         <div
-          className="animate-sheet fixed inset-x-0 bottom-0 z-[800] max-h-[62vh] overflow-y-auto rounded-t-2xl border-t md:hidden"
+          className="animate-sheet fixed inset-x-0 bottom-0 z-[800] max-h-[62dvh] overflow-y-auto rounded-t-2xl border-t md:hidden"
           style={{
             borderColor: "var(--line)",
             background: "var(--panel)",

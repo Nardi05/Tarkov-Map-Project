@@ -60,11 +60,48 @@ export function useSlashSearch() {
 
 export default function ShortcutHelp({ onClose }: { onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
+  const opener = useRef<Element | null>(null);
 
   /* Focus moves in so Escape and Tab belong to the dialog, not the map. */
   useEffect(() => {
+    opener.current = document.activeElement;
     ref.current?.focus();
+    const returnTo = opener.current;
+    return () => {
+      // Back where it came from, so `?` twice in a row leaves the keyboard
+      // exactly where it started rather than at the top of the document.
+      if (returnTo instanceof HTMLElement && document.contains(returnTo)) {
+        returnTo.focus({ preventScroll: true });
+      }
+    };
   }, []);
+
+  /*
+   * Tab is kept inside the dialog. It is modal — `aria-modal` promises as much
+   * — and a Tab that walked out of it onto the map behind would be a promise
+   * the markup makes and the behaviour breaks.
+   */
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      onClose();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const focusable = ref.current?.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    if (!focusable?.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
 
   return (
     <div
@@ -81,6 +118,7 @@ export default function ShortcutHelp({ onClose }: { onClose: () => void }) {
         className="surface animate-in w-full max-w-sm p-4 outline-none"
         style={{ boxShadow: "var(--shadow)" }}
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={onKeyDown}
       >
         <div className="mb-3 flex items-center justify-between gap-2">
           <h2 className="text-sm font-semibold">Keyboard shortcuts</h2>

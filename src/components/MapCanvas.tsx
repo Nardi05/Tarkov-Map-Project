@@ -43,7 +43,13 @@ interface Props {
   focus: FocusRequest | null;
   /** Bumped to ask the map to fit the whole bounds again. */
   fitToken?: number;
-  onFullscreen?: (on: boolean) => void;
+  /*
+   * Fullscreen belongs to MapPage, which owns the element that goes fullscreen
+   * — the whole page, so the header and panels come along. This component only
+   * draws the button, because that is where the button belongs.
+   */
+  isFullscreen?: boolean;
+  onToggleFullscreen?: () => void;
 }
 
 /** Where the currently selected thing sits, so we can ring it on the map. */
@@ -72,8 +78,18 @@ function selectionPosition(selection: Selection | null): Vec3 | null {
 }
 
 export default function MapCanvas(props: Props) {
-  const { data, style, floor, layers, selection, onSelect, focus, fitToken, onFullscreen } = props;
-  const shellRef = useRef<HTMLDivElement>(null);
+  const {
+    data,
+    style,
+    floor,
+    layers,
+    selection,
+    onSelect,
+    focus,
+    fitToken,
+    isFullscreen,
+    onToggleFullscreen,
+  } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const rendererRef = useRef<L.Renderer | null>(null);
@@ -94,22 +110,8 @@ export default function MapCanvas(props: Props) {
   const refitRef = useRef<(() => void) | null>(null);
   const fitRef = useRef<(() => void) | null>(null);
   const [baseError, setBaseError] = useState<string | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const geo = data.geo;
-
-  /*
-   * Fullscreen puts the map shell — not the whole document — into the
-   * browser's fullscreen mode, so the floating detail card and the map
-   * controls come along with it. The map's ResizeObserver below picks up the
-   * size change on its own, so nothing has to tell Leaflet about it.
-   */
-  const toggleFullscreen = useCallback(() => {
-    const shell = shellRef.current;
-    if (!shell) return;
-    if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
-    else void shell.requestFullscreen().catch(() => {});
-  }, []);
 
   const fitMap = useCallback(() => {
     fitRef.current?.();
@@ -118,18 +120,6 @@ export default function MapCanvas(props: Props) {
   useEffect(() => {
     if (fitToken) fitMap();
   }, [fitToken, fitMap]);
-
-  // Tracked by event rather than by the click, because Escape and the browser's
-  // own chrome can leave fullscreen without going through the button.
-  useEffect(() => {
-    const sync = () => {
-      const on = document.fullscreenElement === shellRef.current;
-      setIsFullscreen(on);
-      onFullscreen?.(on);
-    };
-    document.addEventListener("fullscreenchange", sync);
-    return () => document.removeEventListener("fullscreenchange", sync);
-  }, [onFullscreen]);
 
   /* ------------------------------------------------------------ map instance */
   useEffect(() => {
@@ -435,7 +425,7 @@ export default function MapCanvas(props: Props) {
   }, []);
 
   return (
-    <div ref={shellRef} className="relative h-full w-full" style={{ background: "var(--bg)" }}>
+    <div className="relative h-full w-full" style={{ background: "var(--bg)" }}>
       <div ref={containerRef} className="tk-map h-full w-full" role="application" aria-label={`${data.name} map`} />
 
       <div className="map-tools">
@@ -444,9 +434,9 @@ export default function MapCanvas(props: Props) {
           className="btn btn-icon"
           style={{ boxShadow: "var(--shadow)" }}
           aria-pressed={isFullscreen}
-          title={isFullscreen ? "Leave fullscreen" : "Fullscreen"}
+          title={isFullscreen ? "Leave fullscreen (F)" : "Fullscreen (F)"}
           aria-label={isFullscreen ? "Leave fullscreen" : "Fullscreen"}
-          onClick={toggleFullscreen}
+          onClick={onToggleFullscreen}
         >
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             {isFullscreen ? <path d={icons.collapse} /> : <path d={icons.expand} />}
@@ -456,8 +446,8 @@ export default function MapCanvas(props: Props) {
           type="button"
           className="btn btn-icon"
           style={{ boxShadow: "var(--shadow)" }}
-          title="Reset view"
-          aria-label="Reset view"
+          title="Fit the whole map on screen (0)"
+          aria-label="Fit the whole map on screen"
           onClick={fitMap}
         >
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -1,7 +1,9 @@
 /**
  * End-to-end smoke test. Opens every map against a running preview server,
  * turns on every layer, walks every floor and every artwork style, and fails
- * if any map logs a console error or renders no base artwork.
+ * if any map logs a console error or renders no base artwork. Then opens the
+ * routes that are not maps — the dashboard, the quest tracker and its
+ * walkthrough — and fails the same way if any logs an error or never renders.
  *
  *   npm run build && npm run preview &
  *   npm run smoke
@@ -46,9 +48,42 @@ if (MIRROR) {
   });
 }
 
+/*
+ * What counts as a failure.
+ *
+ * Anything the app itself did: a thrown error, or something it logged. Not a
+ * third-party asset that would not load — map artwork and task photos are
+ * hotlinked from assets.tarkov.dev and the wiki, the web font comes from
+ * Google, and every one of them has a designed fallback. A machine with no
+ * outbound access to those hosts is not a broken build, and treating it as
+ * one makes the whole pass red for a reason nobody can act on.
+ *
+ * Same-origin requests are still held to the full standard: a 404 on our own
+ * JSON, or a missing bundle, is exactly what this exists to catch.
+ */
+const sameOrigin = (url) => {
+  try {
+    return new URL(url).origin === new URL(BASE).origin;
+  } catch {
+    return true;
+  }
+};
+
 const errors = [];
 page.on("pageerror", (e) => errors.push("PAGEERROR " + e.message));
-page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+page.on("console", (m) => {
+  if (m.type() !== "error") return;
+  // Resource failures are reported through the request events below, with the
+  // URL attached; the console copy carries no origin to judge them by.
+  if (/^Failed to load resource/.test(m.text()) && !sameOrigin(m.location()?.url ?? "")) return;
+  errors.push(m.text());
+});
+page.on("requestfailed", (r) => {
+  if (sameOrigin(r.url())) errors.push(`REQUEST FAILED ${r.url()} ${r.failure()?.errorText ?? ""}`);
+});
+page.on("response", (r) => {
+  if (r.status() >= 400 && sameOrigin(r.url())) errors.push(`HTTP ${r.status()} ${r.url()}`);
+});
 
 let failures = 0;
 
@@ -91,15 +126,117 @@ for (const map of maps) {
     await page.waitForTimeout(400);
   }
 
-  const bad = errors.length > 0 || !stats.base;
+  const why = [!stats.base ? "no base artwork" : null, ...errors.slice(0, 2)].filter(Boolean);
+  const bad = why.length > 0;
   if (bad) failures++;
   console.log(
     `${bad ? "FAIL" : "ok  "} ${map.normalizedName.padEnd(20)} ` +
       `markers:${String(stats.markers).padStart(5)} canvas:${stats.canvases} ` +
-      `floors:${floors} styles:${map.styles.join("/")} ${errors.slice(0, 2).join(" | ")}`,
+      `floors:${floors} styles:${map.styles.join("/")} ${why.join(" | ")}`,
   );
 }
 
-console.log(failures ? `\n${failures} map(s) failed` : "\nall maps ok");
+/*
+ * The routes that are not maps.
+ *
+ * The dashboard, the quest tracker and its walkthrough are two thirds of the
+ * app and none is reachable from the loop above, so without this the smoke
+ * pass could go green with all three of them throwing on load. They need no
+ * interaction to be worth checking: the tracker builds the whole 511-task
+ * graph on mount and the wizard resolves every trader, so simply rendering
+ * exercises most of what either can get wrong.
+ *
+ * Checked against a heading rather than a screenful of markup — it is the one
+ * thing that cannot be there unless the page got past its data load.
+ */
+const routes = [
+  { hash: "#/", heading: "Dashboard" },
+  { hash: "#/maps", heading: "Maps" },
+  { hash: "#/quests", heading: "Quests" },
+  { hash: "#/quests/setup", heading: "Set up your progress" },
+];
+
+for (const route of routes) {
+  errors.length = 0;
+  await page.goto(`${BASE}/${route.hash}`, { waitUntil: "load" });
+
+  let rendered = true;
+  try {
+    await page
+      .getByRole("heading", { level: 1, name: route.heading, exact: true })
+      .waitFor({ timeout: 10000 });
+  } catch {
+    rendered = false;
+  }
+  await page.waitForTimeout(500);
+
+  const bad = errors.length > 0 || !rendered;
+  if (bad) failures++;
+  console.log(
+    `${bad ? "FAIL" : "ok  "} ${route.hash.padEnd(20)} ` +
+      `${rendered ? "rendered" : "NO HEADING"} ${errors.slice(0, 2).join(" | ")}`,
+  );
+}
+
+/*
+ * The two things the map page promises that no static render can prove:
+ * that the panels are still there once it is fullscreen, and that the
+ * keyboard shortcuts are actually wired to something. Both have been shipped
+ * broken before — the shortcut list rendered a table of keys nothing
+ * listened for — so they are checked rather than assumed.
+ */
+{
+  errors.length = 0;
+  await page.goto(`${BASE}/#/m/customs`, { waitUntil: "load" });
+  await page.waitForTimeout(1500);
+
+  const railWidth = () =>
+    page.evaluate(() => {
+      const rail = document.querySelector("aside");
+      return rail ? Math.round(rail.getBoundingClientRect().width) : 0;
+    });
+
+  await page.keyboard.press("t");
+  await page.waitForTimeout(200);
+  const tasksOpen = await page.evaluate(
+    () =>
+      [...document.querySelectorAll("aside nav button")].find(
+        (b) => b.getAttribute("aria-pressed") === "true",
+      )?.textContent === "Tasks",
+  );
+
+  await page.keyboard.press("[");
+  await page.waitForTimeout(350);
+  const collapsed = (await railWidth()) === 0;
+  await page.keyboard.press("[");
+  await page.waitForTimeout(350);
+  const restored = (await railWidth()) > 0;
+
+  await page.keyboard.press("f");
+  await page.waitForTimeout(600);
+  const fullscreenKeepsPanels = await page.evaluate(() => {
+    const el = document.fullscreenElement;
+    if (!el) return false;
+    const rail = document.querySelector("aside");
+    // The panels must be inside the element the browser put fullscreen, or
+    // they are on screen in the DOM and nowhere at all on the display.
+    return !!rail && el.contains(rail) && rail.getBoundingClientRect().width > 0;
+  });
+  await page.keyboard.press("f");
+  await page.waitForTimeout(400);
+
+  const checks = { tasksOpen, collapsed, restored, fullscreenKeepsPanels };
+  const bad = errors.length > 0 || Object.values(checks).some((v) => !v);
+  if (bad) failures++;
+  console.log(
+    `${bad ? "FAIL" : "ok  "} ${"map shortcuts".padEnd(20)} ` +
+      Object.entries(checks)
+        .map(([k, v]) => `${k}:${v ? "y" : "N"}`)
+        .join(" ") +
+      ` ${errors.slice(0, 2).join(" | ")}`,
+  );
+}
+
+console.log(failures ? `\n${failures} check(s) failed` : "\nall maps and routes ok");
 await browser.close();
 process.exit(failures ? 1 : 0);

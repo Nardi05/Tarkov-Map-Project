@@ -30,13 +30,6 @@ export function loadIndex(): Promise<MapIndex> {
 
 
 /**
- * Task screenshots. Loaded on demand the first time a task panel wants one —
- * it is a quarter of a megabyte and most of a session never opens a photo, so
- * it has no business on the critical path.
- *
- * A failure here is not worth surfacing: the gallery just doesn't appear.
- */
-/**
  * The full task graph, including the ~165 tasks that never appear on a map.
  *
  * Separate from the per-map payloads by necessity, not preference: about half
@@ -79,6 +72,13 @@ export function useProgression() {
   return useAsync(loadProgression, []);
 }
 
+/**
+ * Task screenshots. Loaded on demand the first time a task panel wants one —
+ * it is a quarter of a megabyte and most of a session never opens a photo, so
+ * it has no business on the critical path.
+ *
+ * A failure here is not worth surfacing: the gallery just doesn't appear.
+ */
 export function loadTaskImages(): Promise<TaskImages> {
   imagesPromise ??= getJson<TaskImages>(`${BASE}/task-images.json`).catch((err) => {
     imagesPromise = null;

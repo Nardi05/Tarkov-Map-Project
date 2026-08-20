@@ -22,7 +22,7 @@ export default function RaidClock({ mapName }: { mapName: string }) {
 
   return (
     <div
-      className="hidden items-center gap-1.5 rounded-lg px-2 py-1 sm:flex"
+      className="flex flex-none items-center gap-1.5 rounded-lg px-2 py-1"
       style={{ background: "var(--panel-2)" }}
       title={title}
     >
