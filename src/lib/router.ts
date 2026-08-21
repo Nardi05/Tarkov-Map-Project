@@ -18,11 +18,27 @@ export type Route =
   | { name: "setup" }
   | { name: "map"; map: string; task: string | null };
 
-const TAB_ORDER: Partial<Record<Route["name"], number>> = {
+/**
+ * The three tab pages, left to right, as the section nav shows them.
+ *
+ * Exported because the shell animates the body in the direction you moved
+ * along this row, and both have to agree on which way that is.
+ */
+export type TabId = "dashboard" | "maps" | "quests";
+
+export const TAB_ORDER: Record<TabId, number> = {
   dashboard: 0,
-  home: 1,
+  maps: 1,
   quests: 2,
 };
+
+/** The tab a route belongs to, or null for the map and the walkthrough. */
+export function tabOf(route: Route): TabId | null {
+  if (route.name === "dashboard") return "dashboard";
+  if (route.name === "home") return "maps";
+  if (route.name === "quests") return "quests";
+  return null;
+}
 
 function parse(hash: string): Route {
   const raw = hash.replace(/^#/, "");
@@ -64,53 +80,14 @@ export function useRoute(): Route {
   );
 }
 
-function reducedMotion(): boolean {
-  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
 export function navigate(path: string, replace = false) {
   const target = path.startsWith("#") ? path : `#${path}`;
   if (location.hash === target) return;
-
-  const next = parse(target);
-  const from = TAB_ORDER[current.name];
-  const to = TAB_ORDER[next.name];
-  const slide =
-    from != null && to != null && from !== to ? (to > from ? "fwd" : "back") : null;
-
-  const apply = () => {
-    if (location.hash !== target) {
-      if (replace) history.replaceState(null, "", target);
-      else location.hash = target;
-    }
-    onHashChange();
-  };
-
-  const doc = document as Document & {
-    startViewTransition?: (cb: () => void) => { ready?: Promise<unknown>; finished?: Promise<unknown> };
-  };
-  if (slide && !reducedMotion() && typeof doc.startViewTransition === "function") {
-    document.documentElement.dataset.slide = slide;
-    try {
-      const vt = doc.startViewTransition(apply);
-      const fallback = window.setTimeout(() => {
-        if (location.hash !== target) apply();
-      }, 120);
-      void vt?.ready?.then(() => window.clearTimeout(fallback)).catch(() => {
-        window.clearTimeout(fallback);
-        if (location.hash !== target) apply();
-      });
-      void vt?.finished?.finally(() => {
-        window.clearTimeout(fallback);
-        delete document.documentElement.dataset.slide;
-        if (location.hash !== target) apply();
-      });
-      return;
-    } catch {
-      delete document.documentElement.dataset.slide;
-    }
-  }
-  apply();
+  if (replace) history.replaceState(null, "", target);
+  else location.hash = target;
+  // `hashchange` is asynchronous, and a caller that navigates then reads the
+  // route straight back should not see the old one.
+  onHashChange();
 }
 
 export function useNavigate() {

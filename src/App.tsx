@@ -4,8 +4,9 @@ import HomePage from "./components/HomePage";
 import MapPage from "./components/MapPage";
 import QuestsPage from "./components/QuestsPage";
 import SetupWizard from "./components/SetupWizard";
+import TabShell from "./components/TabShell";
 import { prefetchIdleMaps, prefetchProgression, useMapData, useMapIndex } from "./lib/data";
-import { href, navigate, useRoute } from "./lib/router";
+import { href, navigate, tabOf, useRoute } from "./lib/router";
 import { useStore } from "./store";
 
 export default function App() {
@@ -103,13 +104,24 @@ export default function App() {
     );
   }
 
-  if (route.name === "dashboard") return <DashboardPage />;
-  if (route.name === "quests") return <QuestsPage />;
   if (route.name === "setup") return <SetupWizard />;
 
-  if (route.name === "home") {
-    if (index.loading || !index.data) return <Loading label="Loading maps" />;
-    return <HomePage maps={index.data.maps} />;
+  /*
+   * The three tab pages share one frame, and it is mounted once out here so it
+   * survives the change between them — see TabShell for why that matters.
+   */
+  // Checked against the route rather than a `tabOf` result so the union
+  // narrows for the map case below.
+  if (route.name !== "map") {
+    const tab = tabOf(route)!;
+    return (
+      <TabShell current={tab}>
+        {tab === "dashboard" && <DashboardPage />}
+        {tab === "quests" && <QuestsPage />}
+        {tab === "maps" &&
+          (index.data ? <HomePage maps={index.data.maps} /> : <Loading label="Loading maps" inline />)}
+      </TabShell>
+    );
   }
 
   if (map.error) {
@@ -133,9 +145,9 @@ export default function App() {
   );
 }
 
-function Loading({ label }: { label: string }) {
+function Loading({ label, inline }: { label: string; inline?: boolean }) {
   return (
-    <div className="page grid h-full place-items-center">
+    <div className={inline ? "grid place-items-center py-24" : "page grid h-full place-items-center"}>
       <div className="flex flex-col items-center gap-4">
         <span
           className="h-8 w-8 animate-spin rounded-full border-2 border-transparent"

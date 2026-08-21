@@ -74,10 +74,18 @@ export default function MapPage({
    * in a window or out of one.
    */
   const [immersive, setImmersive] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [nativeFullscreen, setNativeFullscreen] = useState(false);
+  /*
+   * The fallback for when the browser will not hand over the screen: an iOS
+   * Safari that has no element fullscreen at all, or an iframe the embedder
+   * did not mark `allow="fullscreen"`. The page pins itself over the viewport
+   * instead. It is not quite fullscreen — the browser's own chrome stays — but
+   * it is the thing the button promises, and it beats a control that silently
+   * does nothing.
+   */
+  const [filled, setFilled] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
-  const canFullscreen =
-    typeof document !== "undefined" && typeof Element.prototype.requestFullscreen === "function";
+  const isFullscreen = nativeFullscreen || filled;
 
   const floors = useMemo(() => floorsFor(data.geo), [data.geo]);
   const [floorId, setFloorId] = useState(floors[0]?.id ?? "ground");
@@ -185,17 +193,44 @@ export default function MapPage({
   const toggleFullscreen = useCallback(() => {
     const shell = shellRef.current;
     if (!shell) return;
-    if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
-    else void shell.requestFullscreen?.().catch(() => {});
-  }, []);
+
+    if (document.fullscreenElement) {
+      void document.exitFullscreen().catch(() => {});
+      return;
+    }
+    if (filled) {
+      setFilled(false);
+      return;
+    }
+
+    const request = shell.requestFullscreen?.();
+    if (!request) {
+      setFilled(true);
+      return;
+    }
+    // The promise is the only place a refusal shows up. Swallowing it is what
+    // made the button look broken in an iframe: nothing happened, and nothing
+    // said why.
+    void request.catch(() => setFilled(true));
+  }, [filled]);
 
   // Tracked by event rather than by the click, because Escape and the browser's
   // own chrome can leave fullscreen without going through the button.
   useEffect(() => {
-    const sync = () => setIsFullscreen(document.fullscreenElement === shellRef.current);
+    const sync = () => setNativeFullscreen(document.fullscreenElement === shellRef.current);
     document.addEventListener("fullscreenchange", sync);
     return () => document.removeEventListener("fullscreenchange", sync);
   }, []);
+
+  /* Escape leaves the filled state, matching what it does to real fullscreen. */
+  useEffect(() => {
+    if (!filled) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setFilled(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [filled]);
 
   /* ----------------------------------------------------------- shortcuts */
 
@@ -243,7 +278,6 @@ export default function MapPage({
         setImmersive((v) => !v);
         setSheetOpen(false);
       } else if (key === "f") {
-        if (!canFullscreen) return;
         e.preventDefault();
         toggleFullscreen();
       } else if (key === "0") {
@@ -264,7 +298,6 @@ export default function MapPage({
     immersive,
     setQuestFilter,
     toggleFullscreen,
-    canFullscreen,
   ]);
 
   const panel = (
@@ -280,7 +313,12 @@ export default function MapPage({
   );
 
   return (
-    <div ref={shellRef} className="map-shell flex h-full flex-col" style={{ background: "var(--bg)" }}>
+    <div
+      ref={shellRef}
+      className="map-shell flex h-full flex-col"
+      data-filled={filled || undefined}
+      style={{ background: "var(--bg)" }}
+    >
       {/* ------------------------------------------------------------ header */}
       {!immersive && (
         <header
@@ -410,7 +448,7 @@ export default function MapPage({
         </header>
       )}
 
-      {showHelp && <ShortcutHelp onClose={() => setShowHelp(false)} canFullscreen={canFullscreen} />}
+      {showHelp && <ShortcutHelp onClose={() => setShowHelp(false)} />}
 
       <div className="flex min-h-0 flex-1">
         {/* ---------------------------------------------------- desktop rail */}
@@ -478,7 +516,7 @@ export default function MapPage({
             focus={focus}
             fitToken={fitToken}
             isFullscreen={isFullscreen}
-            onToggleFullscreen={canFullscreen ? toggleFullscreen : undefined}
+            onToggleFullscreen={toggleFullscreen}
           />
 
           {/* Rail handle. Lives in the canvas, not the rail, so it stays

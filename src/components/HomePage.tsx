@@ -9,17 +9,15 @@ import { LAYERS } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
 import { useStore, useTaskStatus } from "../store";
 import type { MapIndexEntry } from "../types";
-import ModeSwitch from "./ModeSwitch";
 import NextRaid from "./NextRaid";
 import { useSlashSearch } from "./ShortcutHelp";
-import { Icon, PageChrome, icons } from "./ui";
+import { Icon, icons } from "./ui";
 
 export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
   const [query, setQuery] = useState("");
   useSlashSearch();
   const lastMap = useStore((s) => s.lastMap);
   const profile = useStore((s) => s.profile);
-  const setProfile = useStore((s) => s.setProfile);
   const taskStatus = useTaskStatus();
   const progression = useProgression();
   const days = seasonDaysLeft();
@@ -50,13 +48,8 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
   const resume = maps.find((m) => m.normalizedName === lastMap);
 
   return (
-    <div className="page scroll-y h-full">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-14">
-        <PageChrome current="maps">
-          <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m)} size="sm" />
-        </PageChrome>
-
-        <header className="mb-8">
+    <>
+      <header className="mb-8">
           <h1 className="display text-2xl sm:text-3xl">Maps</h1>
           <p className="mt-1.5 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
             Spawns, extracts, keys and your active tasks. Pick a map or continue where you left off.
@@ -153,12 +146,11 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
             >
               the-hideout SVG map project
             </a>
-            . Escape from Tarkov is a trademark of Battlestate Games. This is an unofficial fan
-            project with no affiliation.
-          </p>
-        </footer>
-      </div>
-    </div>
+          . Escape from Tarkov is a trademark of Battlestate Games. This is an unofficial fan
+          project with no affiliation.
+        </p>
+      </footer>
+    </>
   );
 }
 

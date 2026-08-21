@@ -58,14 +58,7 @@ export function useSlashSearch() {
   }, []);
 }
 
-export default function ShortcutHelp({
-  onClose,
-  canFullscreen = true,
-}: {
-  onClose: () => void;
-  /** iOS Safari cannot put an element fullscreen, so `F` is left off there. */
-  canFullscreen?: boolean;
-}) {
+export default function ShortcutHelp({ onClose }: { onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const opener = useRef<Element | null>(null);
 
@@ -140,7 +133,7 @@ export default function ShortcutHelp({
         </div>
 
         <dl className="space-y-1.5">
-          {SHORTCUTS.filter((s) => canFullscreen || s.label !== "Fullscreen").map((s) => (
+          {SHORTCUTS.map((s) => (
             <div key={s.label} className="flex items-center justify-between gap-3">
               <dt className="text-[0.8125rem]" style={{ color: "var(--text-dim)" }}>
                 {s.label}

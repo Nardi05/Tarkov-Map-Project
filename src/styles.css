@@ -474,6 +474,18 @@ body {
     background: var(--bg);
   }
 
+  /*
+   * The fallback for a browser that refused the screen. Pinned over the
+   * viewport rather than handed the display, which is as close as CSS gets.
+   */
+  .map-shell[data-filled] {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    height: 100%;
+    background: var(--bg);
+  }
+
   .btn[aria-pressed="true"],
   .btn.is-active {
     background: var(--accent);
@@ -770,6 +782,46 @@ body {
   @keyframes tk-shimmer {
     to {
       background-position: -200% 0;
+    }
+  }
+
+  /*
+   * The body of a tab page, animated in from the direction you moved along the
+   * section nav. Only the incoming page moves: the nav above it is the same
+   * element throughout, so its highlight pill slides across for real, and that
+   * continuity is what stops a tab change reading as a reload. Sliding the
+   * outgoing page out as well would need both mounted at once, for a frame of
+   * motion nobody is looking at.
+   */
+  .tab-body {
+    animation: tab-in 0.34s var(--ease) both;
+  }
+
+  .tab-body[data-slide="fwd"] {
+    animation-name: tab-in-right;
+  }
+
+  .tab-body[data-slide="back"] {
+    animation-name: tab-in-left;
+  }
+
+  @keyframes tab-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes tab-in-right {
+    from {
+      opacity: 0;
+      transform: translate3d(2.5rem, 0, 0);
+    }
+  }
+
+  @keyframes tab-in-left {
+    from {
+      opacity: 0;
+      transform: translate3d(-2.5rem, 0, 0);
     }
   }
 
@@ -1215,11 +1267,11 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-nav-pill {
+  .site-nav-pill,
+  .segment-pill {
     transition: none;
   }
-  html[data-slide]::view-transition-old(root),
-  html[data-slide]::view-transition-new(root) {
+  .tab-body {
     animation: none;
   }
   .map-card:hover,
@@ -1242,42 +1294,6 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     transition: none;
     opacity: 1;
   }
-  .site-nav-pill,
-  .segment-pill {
-    transition: none;
-  }
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.3s;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-html[data-slide="fwd"]::view-transition-old(root) {
-  animation-name: page-out-left;
-}
-html[data-slide="fwd"]::view-transition-new(root) {
-  animation-name: page-in-right;
-}
-html[data-slide="back"]::view-transition-old(root) {
-  animation-name: page-out-right;
-}
-html[data-slide="back"]::view-transition-new(root) {
-  animation-name: page-in-left;
-}
-
-@keyframes page-out-left {
-  to { opacity: 0; transform: translateX(-22px); }
-}
-@keyframes page-in-right {
-  from { opacity: 0; transform: translateX(22px); }
-}
-@keyframes page-out-right {
-  to { opacity: 0; transform: translateX(22px); }
-}
-@keyframes page-in-left {
-  from { opacity: 0; transform: translateX(-22px); }
 }
 
 .btn:disabled {

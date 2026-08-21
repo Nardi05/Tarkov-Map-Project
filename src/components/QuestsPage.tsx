@@ -15,14 +15,13 @@ import { displayName, visibleInMode } from "../lib/task-variant";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import type { Faction, Profile } from "../lib/persist-migrate";
 import type { TaskAvailability } from "../types";
-import ModeSwitch from "./ModeSwitch";
 import NextRaid from "./NextRaid";
 import SavePanel from "./SavePanel";
 import SeasonPanel from "./SeasonPanel";
 import { useSlashSearch } from "./ShortcutHelp";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
-import { EmptyState, Icon, PageChrome, icons } from "./ui";
+import { EmptyState, Icon, icons } from "./ui";
 
 /**
  * The quest tracker.
@@ -489,19 +488,13 @@ export default function QuestsPage() {
 
 /* ------------------------------------------------------------------ layout */
 
+/*
+ * The page frame — the scroll container, the wordmark, the section nav and the
+ * mode switch — now belongs to TabShell, one level up, so it survives a change
+ * of tab. What is left here is only what this page puts inside it.
+ */
 function Shell({ children }: { children: React.ReactNode }) {
-  const mode = useStore((s) => s.profile.mode);
-  const setProfile = useStore((s) => s.setProfile);
-  return (
-    <div className="page scroll-y h-full">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-        <PageChrome current="quests">
-          <ModeSwitch value={mode} onChange={(m) => setProfile("mode", m)} size="sm" />
-        </PageChrome>
-        {children}
-      </div>
-    </div>
-  );
+  return <>{children}</>;
 }
 
 function Panel({
