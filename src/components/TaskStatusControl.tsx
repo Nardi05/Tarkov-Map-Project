@@ -44,9 +44,11 @@ export default function TaskStatusControl({
   const label =
     status === "completed"
       ? `${name}: done. Tap to reset.`
-      : status === "active"
-        ? `${name}: active. Tap to mark done.`
-        : `${name}: not started. Tap to mark active.`;
+      : status === "failed"
+        ? `${name}: failed. Tap to reset.`
+        : status === "active"
+          ? `${name}: active. Tap to mark done.`
+          : `${name}: not started. Tap to mark active.`;
 
   return (
     <button
@@ -61,6 +63,8 @@ export default function TaskStatusControl({
     >
       {status === "completed" ? (
         <Icon path={icons.check} size={Math.round(size * 0.62)} />
+      ) : status === "failed" ? (
+        <Icon path={icons.close} size={Math.round(size * 0.58)} />
       ) : status === "active" ? (
         // A filled dot rather than a tick: active means "in progress", and a
         // tick here would read as finished at a glance.

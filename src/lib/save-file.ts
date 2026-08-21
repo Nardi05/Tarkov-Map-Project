@@ -1,3 +1,4 @@
+import type { TaskStatus } from "../types";
 import type { GameMode, ModeProgress, Profile } from "./persist-migrate";
 
 /**
@@ -51,11 +52,11 @@ const isRecord = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === "object" && !Array.isArray(v);
 
 /** Statuses we still understand. Anything else is dropped rather than trusted. */
-const statuses = (raw: unknown): Record<string, "active" | "completed"> => {
-  const out: Record<string, "active" | "completed"> = {};
+const statuses = (raw: unknown): Record<string, TaskStatus> => {
+  const out: Record<string, TaskStatus> = {};
   if (!isRecord(raw)) return out;
   for (const [id, value] of Object.entries(raw)) {
-    if (value === "active" || value === "completed") out[id] = value;
+    if (value === "active" || value === "completed" || value === "failed") out[id] = value;
   }
   return out;
 };

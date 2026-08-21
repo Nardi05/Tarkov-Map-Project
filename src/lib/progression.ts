@@ -28,16 +28,22 @@ export interface LockReason {
 }
 
 /*
- * The store knows two player-declared states, "active" and "completed"; the
- * feed's requirement vocabulary has a third, "failed". There is no way to
- * declare a failure in this UI, so a "must have failed" prerequisite maps to
- * nothing and can never be satisfied — the task stays locked, which is the
- * honest answer rather than pretending we know.
+ * The feed's requirement vocabulary and the store's, reconciled.
+ *
+ * "failed" is here because the graph genuinely branches on it: `Hot Wheels -
+ * Let's Try Again` is offered precisely when you fail `Hot Wheels`, and
+ * `Loyalty Buyout` when you fail `Chemical - Part 4`. With no way to say so,
+ * those two were unsatisfiable — and because other quests follow on from them,
+ * six tasks across the BTR Driver, Ragman and Lightkeeper could never appear
+ * for anybody. Declaring a failure is the player's to make, like every other
+ * status here; see `failureUnlocks` for where the control is offered.
  */
 const STATUS_ALIASES: Record<string, TaskStatus> = {
   complete: "completed",
   completed: "completed",
   active: "active",
+  failed: "failed",
+  fail: "failed",
 };
 
 /** The feed says "complete"; the store says "completed". Reconcile the two. */
@@ -77,6 +83,24 @@ function unmetTraderGates(task: ProgressionTask, profile: ProfileInput): LockRea
     if (typeof known !== "number") continue;
     if (known < gate.value) {
       out.push({ kind: "trader", label: `${gate.trader} LL${gate.value}` });
+    }
+  }
+  return out;
+}
+
+/**
+ * Tasks whose *failure* opens something else, so the UI knows where offering
+ * "I failed this" is meaningful. Read from the graph rather than listed by
+ * hand: it is two tasks today and the data decides, not this file.
+ */
+export function failureUnlocks(progression: Progression | null): Set<string> {
+  const out = new Set<string>();
+  if (!progression) return out;
+  for (const task of Object.values(progression.tasks)) {
+    for (const set of task.requires) {
+      for (const req of set) {
+        if (req.status.some((s) => s.toLowerCase().startsWith("fail"))) out.add(req.task);
+      }
     }
   }
   return out;

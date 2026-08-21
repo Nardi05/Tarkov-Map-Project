@@ -167,7 +167,7 @@ export interface QuestMarker {
  * out that a task is *available*, but only the player can say it is active or
  * done, and what they say always wins. See `TaskAvailability`.
  */
-export type TaskStatus = "active" | "completed";
+export type TaskStatus = "active" | "completed" | "failed";
 
 /**
  * A task's state once the graph has had its say.
@@ -178,7 +178,7 @@ export type TaskStatus = "active" | "completed";
  * one — the previous version of this feature was removed because the inference
  * had no override, and that is the mistake this must not repeat.
  */
-export type TaskAvailability = "locked" | "available" | "active" | "completed";
+export type TaskAvailability = "locked" | "available" | "active" | "completed" | "failed";
 
 /** One requirement: a prior task that must be in one of these states. */
 export interface TaskRequirement {

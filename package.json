@@ -18,7 +18,8 @@
     "kord-docs": "node scripts/fetch-kord-documents.mjs",
     "quest-prereqs": "node scripts/fetch-quest-prereqs.mjs",
     "setup-ocr": "node scripts/setup-ocr.mjs",
-    "og": "node scripts/make-og-image.mjs"
+    "og": "node scripts/make-og-image.mjs",
+    "audit-graph": "node scripts/audit-graph.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
