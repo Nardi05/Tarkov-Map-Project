@@ -158,19 +158,49 @@ export default function MapCanvas(props: Props) {
     const MIN_LEGIBLE_WIDTH = 520;
 
     /**
+     * The zoom at which the whole map fits the container as it is right now.
+     *
+     * `getBoundsZoom` clamps its answer to the current min/max, so the floor is
+     * lifted for the measurement and put straight back. `options.minZoom` is
+     * assigned rather than `setMinZoom` called, because setMinZoom has a side
+     * effect — see `relaxMinZoom` below — and a measurement must not move the
+     * map.
+     */
+    const fitZoomNow = () => {
+      const floor = map.options.minZoom;
+      map.options.minZoom = -10;
+      const zoom = map.getBoundsZoom(bounds);
+      map.options.minZoom = floor;
+      return zoom;
+    };
+
+    /**
      * The configured minZoom assumes a desktop viewport. On a phone, fitting a
      * wide map like Customs needs a zoom below it, and Leaflet would otherwise
      * clamp and silently crop the map — so the floor becomes whatever it takes
      * to see the whole thing, and "fit map" is always available.
+     *
+     * The floor only ever comes *down*. Leaflet's `setMinZoom` zooms the map
+     * for you when the new floor is above where the user currently is, and the
+     * floor rises every time the container grows — so pressing Fullscreen on a
+     * map you had zoomed out to see whole made the view jump back in, which
+     * read as the button resetting the map rather than enlarging it. Enlarging
+     * the viewport is never a reason to take zoom-out range away from someone
+     * already using it.
      */
     const relaxMinZoom = () => {
-      map.setMinZoom(-10);
-      const fitZoom = map.getBoundsZoom(bounds);
-      map.setMinZoom(Math.min(geo.minZoom, fitZoom));
+      const fitZoom = fitZoomNow();
+      const floor = Math.min(geo.minZoom, fitZoom);
+      if (floor < map.options.minZoom!) {
+        map.options.minZoom = floor;
+        map.fire("zoomlevelschange");
+      }
       return fitZoom;
     };
 
-    let fittedZoom = relaxMinZoom();
+    // The opening floor, which may be either direction from the configured one.
+    map.options.minZoom = Math.min(geo.minZoom, fitZoomNow());
+    let fittedZoom = fitZoomNow();
 
     fitRef.current = () => map.fitBounds(bounds, { animate: true });
 

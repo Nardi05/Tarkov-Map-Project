@@ -119,7 +119,10 @@ rather than fighting:
 
 - **Fullscreen** (`F`) hands the whole page to the browser — header, side panel
   and all. The panels come with it, because a bigger map you can't pick a task
-  on is not what anyone was asking for.
+  on is not what anyone was asking for. Where the browser will not hand over
+  the screen — iOS Safari has no element fullscreen, and an iframe needs
+  `allow="fullscreen"` — the page pins itself over the viewport instead, so the
+  button always does the thing it says.
 - **Hide the interface** (`H`) takes the site's own chrome away and leaves
   nothing but map, in a window or out of one. One control stays behind to undo
   it, so it is never a one-way door on a device with no keyboard.
@@ -298,6 +301,11 @@ src/lib/dashboard.ts     the dashboard layout model — which panels, in what
 src/lib/use-drag-reorder.ts
                          pointer-based drag reordering, because HTML5
                          drag-and-drop does not fire on touch at all
+src/components/TabShell.tsx
+                         the frame the three tab pages share, mounted above
+                         the route switch so the section nav is the same
+                         element across a tab change — which is what lets its
+                         highlight slide instead of being redrawn in place
 src/lib/persist-migrate.ts
                          the persisted-state migrations. The rule every
                          version has to clear: a migration may never drop a
@@ -384,6 +392,20 @@ A few details worth knowing if you touch this code:
   interior nouns are refused outright: Streets labels a building "Office", which
   matched three descriptions of *other* buildings' offices. Proper nouns and
   distinctive landmarks are untouched — Shoreline's "Pier" means the pier.
+- Changing tab does not remount the section nav, and that is load-bearing
+  rather than an optimisation. When each page rendered its own, the highlight
+  pill was created already sitting under the new tab, so the `transition:
+  transform` it carries never had two positions to move between — the whole
+  change read as a reload. The body slides with a keyed CSS animation rather
+  than a View Transition: `startViewTransition` is not in every browser that
+  will open this, and where it is, it snapshots the document as soon as its
+  callback returns, while React has only *scheduled* the re-render.
+- Leaflet's `setMinZoom` zooms the map for you when the new floor is above
+  where you currently are. The floor is derived from the container size, so it
+  rises whenever the viewport grows — which meant pressing Fullscreen on a map
+  you had zoomed out to see whole jumped the view back in, and read as the
+  button resetting the map rather than enlarging it. The floor now only ever
+  comes down, and measurements are taken without touching map state.
 - Spawn clusters ignore the game's zone names. Zones overlap heavily in space,
   so one visible clump routinely carries three or four of them and grouping by
   name left the clump on screen.

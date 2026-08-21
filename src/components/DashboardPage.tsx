@@ -18,11 +18,10 @@ import {
   type DashPanelId,
 } from "../store";
 import type { MapIndexEntry, Progression, TaskAvailability } from "../types";
-import ModeSwitch from "./ModeSwitch";
 import NextRaid from "./NextRaid";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
-import { EmptyState, Icon, PageChrome, icons } from "./ui";
+import { EmptyState, Icon, icons } from "./ui";
 
 /**
  * The dashboard: one screen answering "what do I do next", assembled from
@@ -74,7 +73,6 @@ export default function DashboardPage() {
   const maps = useMapIndex();
   const taskStatus = useTaskStatus();
   const profile = useStore((s) => s.profile);
-  const setProfile = useStore((s) => s.setProfile);
   const dashboard = useStore((s) => s.dashboard);
   const lastMap = useStore((s) => s.lastMap);
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
@@ -136,13 +134,8 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="page scroll-y h-full">
-      <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-12">
-        <PageChrome current="dashboard">
-          <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m)} size="sm" />
-        </PageChrome>
-
-        <header className="mb-4 flex flex-wrap items-end justify-between gap-3">
+    <>
+      <header className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div className="min-w-0">
             <h1 className="display text-2xl sm:text-3xl">Dashboard</h1>
             <p className="mt-1.5 max-w-xl text-sm" style={{ color: "var(--text-dim)" }}>
@@ -198,11 +191,10 @@ export default function DashboardPage() {
           </section>
         )}
 
-        {data && editing && <CustomiseBar />}
+      {data && editing && <CustomiseBar />}
 
-        {data && <PanelGrid editing={editing} fresh={fresh} body={body} />}
-      </div>
-    </div>
+      {data && <PanelGrid editing={editing} fresh={fresh} body={body} />}
+    </>
   );
 }
 
