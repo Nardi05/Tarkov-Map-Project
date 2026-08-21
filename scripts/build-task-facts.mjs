@@ -95,8 +95,39 @@ console.log(
     `${(noLevelShare * 100).toFixed(0)}% ungated`,
 );
 
-// Refuse to bake a fallback out of data that is itself degraded — that would
-// quietly turn the safety net into a copy of the problem.
+/*
+ * Refuse to bake a fallback out of data that is itself degraded — that would
+ * quietly turn the safety net into a copy of the problem.
+ *
+ * The build's own verdict is what decides it, read from index.json. Measuring
+ * the snapshot's shape here cannot work and used to be the whole check: when
+ * the feed is thin, build-data patches it *from this very file*, so the
+ * snapshot on disk reads healthy again and the ratios sail past. The guard
+ * therefore passed in exactly the case it existed to catch, and a run would
+ * write the feed's blanks back out as asserted facts — 63 tasks recorded as
+ * "no level gate, not Kappa" on the strength of a feed that had said nothing.
+ * Those assertions then outlive the outage, because a fill-only patch never
+ * revisits a value that is already there.
+ */
+let feedDegraded = false;
+try {
+  feedDegraded = !!JSON.parse(await fs.readFile(path.join(ROOT, "public", "data", "index.json"), "utf8"))
+    .feedDegraded;
+} catch {
+  console.error("\nNo public/data/index.json — run `npm run data` first.");
+  process.exit(1);
+}
+
+if (feedDegraded) {
+  console.error(
+    "\npublic/data was built while the upstream feed was degraded, so its level\n" +
+      "and Kappa values are this file's own patches reflected back. Regenerating\n" +
+      "now would promote the feed's blanks to asserted facts.\n\n" +
+      "Rebuild with `npm run data` once upstream is healthy, then re-run this.",
+  );
+  process.exit(1);
+}
+
 if (tasks.length < 100 || kappaShare < 0.2 || noLevelShare > 0.35) {
   console.error(
     "\npublic/data looks like it was built from a degraded feed.\n" +

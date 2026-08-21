@@ -201,8 +201,16 @@ browser; the image is not uploaded anywhere.
 
 **What it infers, and what it never does.** The graph works out `locked` and
 `available` from prerequisites, level, faction and trader loyalty. It never
-invents `active` or `done` — those only ever come from you, and what you say
-always wins over what it worked out. Every row carries the same control as the
+invents `active`, `done` or `failed` — those only ever come from you, and what
+you say always wins over what it worked out.
+
+**Failing a quest is a state too.** Six tasks across the BTR Driver, Ragman and
+Lightkeeper sit behind a failure: `Hot Wheels - Let's Try Again` is offered
+precisely when you fail `Hot Wheels`, and `Loyalty Buyout` when you fail
+`Chemical - Part 4`. With no way to say so, none of the six could ever appear
+for anybody. A **Failed** button shows on the handful of quests the graph
+actually branches on failing — read from the data, not listed by hand — and
+those tasks then sit in Finished, where you can undo them. Every row carries the same control as the
 map panels, so a wrong inference is one click from corrected.
 
 Prerequisites come from two sources. The tarkov.dev feed states them for barely
@@ -283,6 +291,10 @@ scripts/fetch-kord-documents.mjs
                          data/kord-documents.json (committed; not run on deploy)
 scripts/check-quests.mjs cross-checks trader/level/Kappa against the wiki and
                          prints disagreements; changes nothing
+scripts/audit-graph.mjs  structural audit of the built graph — dangling edges,
+                         cycles, and a playthrough that proves every task can
+                         be reached by somebody. No network, so it runs in the
+                         tests too (src/lib/graph-integrity.test.ts)
 scripts/build-task-facts.mjs
                          vendors a known-good level/Kappa fallback into
                          data/task-facts.json for build-data to fall back on
@@ -410,8 +422,27 @@ A few details worth knowing if you touch this code:
   so one visible clump routinely carries three or four of them and grouping by
   name left the clump on screen.
 
+- Task names are cleaned before anything keys off them, and both reasons cost
+  real data rather than looking untidy. "Arena Business [PVP ZONE]" arrives
+  with a trailing newline — the zone suffix is matched at end-of-string, the
+  wiki is asked for a page by that title, and edges from other quests are
+  matched by name, so one invisible character cost that quest its wiki page and
+  cost "Balancing - Part 1" the edge pointing at it. Separately, the English
+  dictionary answers three of the four Prestige quests with the German
+  "Neuanfang"; a name that collides with another task's is rebuilt from
+  `normalizedName`, the feed's own English slug, which stays distinct.
+- `npm run task-facts` refuses to run against a `public/data` that was built
+  while the feed was degraded, and it reads that verdict from `index.json`
+  rather than measuring the snapshot. Measuring cannot work: when the feed is
+  thin, `npm run data` patches it *from task-facts.json*, so the snapshot on
+  disk reads healthy again and the old ratio check sailed past — in exactly the
+  case it existed to catch. A run in that state wrote the feed's blanks back
+  out as asserted facts, and a fill-only patch never revisits a value that is
+  already there.
+
 To refresh game data after a wipe or patch, re-run `npm run data` and commit the
-regenerated `public/data`.
+regenerated `public/data`. Then run `npm run audit-graph` and read the report —
+`npm test` enforces the parts of it that must never regress.
 
 ## Credits
 

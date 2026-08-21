@@ -3,6 +3,7 @@ import { useMapIndex, useProgression } from "../lib/data";
 import { useDebouncedInput } from "../lib/use-debounced-input";
 import {
   computeAvailability,
+  failureUnlocks,
   lockReasons,
   prerequisiteClosure,
   type LockReason,
@@ -14,7 +15,7 @@ import { nextRaids } from "../lib/next-raid";
 import { displayName, visibleInMode } from "../lib/task-variant";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import type { Faction, Profile } from "../lib/persist-migrate";
-import type { TaskAvailability } from "../types";
+import type { TaskAvailability, TaskStatus } from "../types";
 import NextRaid from "./NextRaid";
 import SavePanel from "./SavePanel";
 import SeasonPanel from "./SeasonPanel";
@@ -48,6 +49,8 @@ interface Row {
   maps: string[];
   gates: string[];
   wiki: string | null;
+  /** True when some other quest is offered only if you fail this one. */
+  failable: boolean;
   /** Populated only for locked rows — computing it for all 511 is wasted work. */
   blockers: LockReason[];
 }
@@ -76,6 +79,13 @@ export default function QuestsPage() {
     [data, taskStatus, profile],
   );
 
+  /*
+   * The handful of quests whose *failure* the graph branches on. Two today —
+   * Hot Wheels and Chemical - Part 4 — and between them they gate six tasks
+   * that no player could otherwise ever be shown.
+   */
+  const failable = useMemo(() => failureUnlocks(data), [data]);
+
   const rows = useMemo<Row[]>(() => {
     if (!data) return [];
     return Object.entries(data.tasks)
@@ -92,9 +102,10 @@ export default function QuestsPage() {
           .filter((g) => g.kind === "level")
           .map((g) => `${g.trader} LL${g.value}`),
         wiki: task.wiki,
+        failable: failable.has(id),
         blockers: [],
       }));
-  }, [data, availability, profile.mode]);
+  }, [data, availability, profile.mode, failable]);
 
   /*
    * Only traders that actually gate something get a control. Offering all
@@ -129,7 +140,11 @@ export default function QuestsPage() {
       if (!matches(row)) continue;
       if (row.availability === "active") out.active.push(row);
       else if (row.availability === "available") out.available.push(row);
-      else if (row.availability === "completed") out.completed.push(row);
+      // Failed sits with finished so it stays on screen and can be undone. It
+      // is a state you set by hand, so there has to be somewhere to unset it.
+      else if (row.availability === "completed" || row.availability === "failed") {
+        out.completed.push(row);
+      }
     }
     return out;
     // `matches` closes over `needle`, which is the dependency that matters.
@@ -260,14 +275,22 @@ export default function QuestsPage() {
           <span>
             {/* Numbers, not a vague warning. The old banner said "data may be
                 incomplete" on every visit, which tells nobody anything and is
-                easy to stop reading. This says how much is actually known. */}
+                easy to stop reading. This says how much is actually known.
+
+                "The remaining" used to introduce the ungated count, which is a
+                different and much smaller set than the tasks without a
+                prerequisite — 372 of 528 followed by "the remaining 58" simply
+                does not add up, and the one number a reader can check was the
+                one that was wrong. */}
             Prerequisites are known for{" "}
             <strong style={{ color: "var(--text)" }}>
               {data.coverage.withPrereq} of {data.coverage.tasks}
             </strong>{" "}
-            tasks. The remaining {data.coverage.ungated} have nothing recorded gating them at all,
-            so they show as available from the start — the game may not offer them yet. Your own
-            ticks are never affected.
+            tasks. Of the {data.coverage.tasks - data.coverage.withPrereq} without one,{" "}
+            <strong style={{ color: "var(--text)" }}>{data.coverage.ungated}</strong> have nothing
+            recorded gating them at all — no prerequisite, no level, no loyalty — so they show as
+            available from the start and the game may not offer them yet. Your own ticks are never
+            affected.
           </span>
         </p>
       )}
@@ -341,6 +364,7 @@ export default function QuestsPage() {
                 rows={active}
                 onCycle={cycleTaskStatus}
                 onCompleteChain={completeWithHistory}
+                onFail={(id) => setTaskStatus(id, "failed")}
               />
             )}
           </Panel>
@@ -361,6 +385,7 @@ export default function QuestsPage() {
                 rows={available}
                 onCycle={cycleTaskStatus}
                 onCompleteChain={completeWithHistory}
+                onFail={(id) => setTaskStatus(id, "failed")}
               />
             )}
           </Panel>
@@ -454,6 +479,7 @@ export default function QuestsPage() {
                     status={undefined}
                     onCycle={() => cycleTaskStatus(row.id)}
                     onCompleteChain={() => completeWithHistory(row.id)}
+                    onFail={row.failable ? () => setTaskStatus(row.id, "failed") : undefined}
                   />
                 ))}
               </ul>
@@ -464,7 +490,7 @@ export default function QuestsPage() {
             <Panel
               title="Finished"
               count={completed.length}
-              hint="Untick anything here that you have not actually done."
+              hint="Everything you have closed out, done or failed. Untick anything you have not actually done."
               className="lg:col-span-2"
               collapsed
             >
@@ -472,6 +498,7 @@ export default function QuestsPage() {
                 rows={completed}
                 onCycle={cycleTaskStatus}
                 onCompleteChain={completeWithHistory}
+                onFail={(id) => setTaskStatus(id, "failed")}
               />
             </Panel>
           )}
@@ -697,10 +724,12 @@ function ByTrader({
   rows,
   onCycle,
   onCompleteChain,
+  onFail,
 }: {
   rows: Row[];
   onCycle: (id: string) => void;
   onCompleteChain: (id: string) => void;
+  onFail?: (id: string) => void;
 }) {
   const groups = useMemo(() => {
     const byTrader = new Map<string, Row[]>();
@@ -737,9 +766,14 @@ function ByTrader({
               <TaskRow
                 key={row.id}
                 row={row}
-                status={row.availability === "completed" ? "completed" : undefined}
+                status={
+                  row.availability === "completed" || row.availability === "failed"
+                    ? row.availability
+                    : undefined
+                }
                 onCycle={() => onCycle(row.id)}
                 onCompleteChain={() => onCompleteChain(row.id)}
+                onFail={row.failable && onFail ? () => onFail(row.id) : undefined}
               />
             ))}
           </ul>
@@ -753,10 +787,12 @@ function TaskList({
   rows,
   onCycle,
   onCompleteChain,
+  onFail,
 }: {
   rows: Row[];
   onCycle: (id: string) => void;
   onCompleteChain: (id: string) => void;
+  onFail?: (id: string) => void;
 }) {
   return (
     <ul className="space-y-1">
@@ -769,6 +805,7 @@ function TaskList({
             status="active"
             onCycle={() => onCycle(row.id)}
             onCompleteChain={() => onCompleteChain(row.id)}
+            onFail={row.failable && onFail ? () => onFail(row.id) : undefined}
           />
         ))}
     </ul>
@@ -780,11 +817,14 @@ function TaskRow({
   status,
   onCycle,
   onCompleteChain,
+  onFail,
 }: {
   row: Row;
-  status: "active" | "completed" | undefined;
+  status: TaskStatus | undefined;
   onCycle: () => void;
   onCompleteChain: () => void;
+  /** Only passed for a quest the graph branches on failing. */
+  onFail?: () => void;
 }) {
   return (
     <li className="surface-2 flex items-start gap-2.5 p-2">
@@ -854,7 +894,7 @@ function TaskRow({
       </div>
 
       <div className="flex flex-none items-center gap-1">
-        {status !== "completed" && (
+        {status !== "completed" && status !== "failed" && (
           <button
             type="button"
             className="btn btn-ghost text-[0.68rem]"
@@ -863,6 +903,19 @@ function TaskRow({
             title={`Mark ${displayName(row.name)} done, and everything it needed before it`}
           >
             Done + earlier
+          </button>
+        )}
+        {/* Offered only where failing actually leads somewhere, which keeps a
+            destructive-sounding button off 500 rows that have no use for it. */}
+        {onFail && status !== "failed" && (
+          <button
+            type="button"
+            className="btn btn-ghost text-[0.68rem]"
+            style={{ padding: "0.25rem 0.5rem", color: "var(--danger)" }}
+            onClick={onFail}
+            title={`Mark ${displayName(row.name)} failed — that is what unlocks the quests that follow a failure`}
+          >
+            Failed
           </button>
         )}
         {row.wiki && (

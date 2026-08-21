@@ -38,12 +38,27 @@ test("a save from a newer site version is refused rather than half-read", () => 
 });
 
 test("statuses we no longer understand are dropped, not trusted", () => {
+  // "failed" used to be the sample here, and stopped being a good one when the
+  // graph turned out to branch on it — see failureUnlocks. The invariant is
+  // unchanged: a status this version cannot act on is not carried forward.
   const file = {
     kind: SAVE_KIND,
     version: 1,
-    progress: { pvp: { taskStatus: { a: "failed", b: "completed", c: 7 }, markerDone: {} } },
+    progress: { pvp: { taskStatus: { a: "abandoned", b: "completed", c: 7 }, markerDone: {} } },
   };
   assert.deepEqual(parseSave(JSON.stringify(file)).progress.pvp.taskStatus, { b: "completed" });
+});
+
+test("a failed quest survives a save round trip", () => {
+  // Two quests are only ever offered after a failure, and six more sit behind
+  // those, so losing a declared failure on restore loses that whole branch.
+  const progress = {
+    ...emptyProgress(),
+    pvp: { taskStatus: { hotWheels: "failed" as const }, markerDone: {} },
+  };
+  const restored = parseSave(JSON.stringify(buildSave(DEFAULT_PROFILE, progress)));
+  assert.equal(restored.progress.pvp.taskStatus.hotWheels, "failed");
+  assert.equal(restored.counts.pvp.tasks, 1);
 });
 
 test("an empty save is refused, so a mis-click cannot look like success", () => {

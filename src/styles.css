@@ -377,6 +377,16 @@ body {
   }
 
   /*
+   * Failed. Not a state the cycle can reach — it is only ever set deliberately,
+   * on the two quests whose failure the graph actually branches on.
+   */
+  .status-box[data-state="failed"] {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: #2b0606;
+  }
+
+  /*
    * The raid clock. Tightened on a phone: at 360px the header is the map's
    * back button, its name, and this — and the name is the one that has to
    * stay readable, so the clock gives up the room rather than truncating

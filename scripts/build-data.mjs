@@ -205,6 +205,84 @@ const traders = tradersData; // the traders feed's `data` is the trader map itse
 const tasks = Object.values(tasksData.tasks ?? {});
 const questItems = tasksData.questItems ?? {};
 
+/*
+ * Clean the task names before anything keys off them.
+ *
+ * Two upstream problems, both of which cost real data rather than just looking
+ * untidy:
+ *
+ *   Stray whitespace. "Arena Business [PVP ZONE]" arrives with a trailing
+ *   newline. The zone suffix is matched at end-of-string, the wiki is asked
+ *   for a page by that title, and edges from other quests are matched by name
+ *   — so one invisible character lost the quest its wiki page, and lost
+ *   "Balancing - Part 1" the edge pointing at it.
+ *
+ *   Untranslated names. The English dictionary answers three of the four
+ *   Prestige quests with the German "Neuanfang", so the tracker showed four
+ *   identical rows with no way to tell them apart. `normalizedName` is the
+ *   feed's own English slug and stays distinct, so a name that collides with
+ *   another task's is rebuilt from that instead. It is derived from upstream
+ *   rather than invented here: the alternative is guessing at wiki titles for
+ *   quests the wiki files under a different name again.
+ */
+{
+  const titleCase = (slug) =>
+    slug
+      .split("-")
+      .map((w) => (/^\d+$/.test(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
+      .join(" ");
+
+  let trimmed = 0;
+  for (const task of tasks) {
+    if (typeof task.name !== "string") continue;
+    const clean = task.name.replace(/\s+/g, " ").trim();
+    if (clean !== task.name) {
+      task.name = clean;
+      trimmed++;
+    }
+  }
+
+  /*
+   * Only a collision that survives the merge is ambiguous on screen.
+   *
+   * The merge below collapses tasks sharing name, trader, level and faction —
+   * that is how the Factory / Night Factory and Ground Zero variants become
+   * one row — so a group that differs only in ways the merge ignores is about
+   * to become a single task and must not be renamed apart first. What is left
+   * after that is a group whose members differ by level, which is the Prestige
+   * case: several rows that really do coexist under one name.
+   *
+   * Faction is part of the key on purpose. The USEC and BEAR variants of
+   * Textile and Drip-Out share a name deliberately and already carry a faction
+   * chip to tell them apart.
+   */
+  const byName = new Map();
+  for (const task of tasks) {
+    const key = `${task.name}|${task.trader ?? ""}|${task.factionName ?? "Any"}`;
+    let group = byName.get(key);
+    if (!group) byName.set(key, (group = []));
+    group.push(task);
+  }
+
+  let renamed = 0;
+  for (const group of byName.values()) {
+    if (group.length < 2) continue;
+    const levels = new Set(group.map((t) => t.minPlayerLevel ?? 0));
+    if (levels.size < 2) continue; // the merge will make these one task
+    for (const task of group) {
+      const derived = task.normalizedName ? titleCase(task.normalizedName) : "";
+      if (derived && derived !== task.name) {
+        task.name = derived;
+        renamed++;
+      }
+    }
+  }
+
+  if (trimmed || renamed) {
+    console.log(`  names: trimmed ${trimmed}, disambiguated ${renamed} from the feed's own slugs`);
+  }
+}
+
 /** Set when the feed-health check below finds the task feed thin. */
 let feedDegraded = false;
 
@@ -874,7 +952,11 @@ for (const [name, cfg] of Object.entries(geo)) {
 index.sort((a, b) => a.name.localeCompare(b.name));
 await fs.writeFile(
   path.join(OUT, "index.json"),
-  JSON.stringify({ generated: new Date().toISOString(), gameMode: GAME_MODE, maps: index }, null, 1),
+  JSON.stringify(
+    { generated: new Date().toISOString(), gameMode: GAME_MODE, feedDegraded, maps: index },
+    null,
+    1,
+  ),
 );
 
 /*
@@ -965,7 +1047,11 @@ await fs.writeFile(
     );
     await fs.writeFile(
       path.join(OUT, "index.json"),
-      JSON.stringify({ generated: new Date().toISOString(), gameMode: GAME_MODE, maps: index }, null, 1),
+      JSON.stringify(
+        { generated: new Date().toISOString(), gameMode: GAME_MODE, feedDegraded, maps: index },
+        null,
+        1,
+      ),
     );
   }
 }

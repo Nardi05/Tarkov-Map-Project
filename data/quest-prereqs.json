@@ -1,42 +1,41 @@
 {
- "generated": "2026-08-17T15:31:49.306Z",
+ "generated": "2026-08-21T05:36:28.294Z",
  "source": "https://escapefromtarkov.fandom.com — Infobox quest `previous` / `leads to`",
- "pages": 511,
- "edges": 350,
- "agreement": 66,
- "tasksWithPrereqs": 312,
+ "pages": 528,
+ "edges": 359,
+ "agreement": 64,
+ "tasksWithPrereqs": 319,
  "unfetched": [
-  "Developer's Secrets - Part 1",
   "Neuanfang",
   "Neuanfang",
   "Neuanfang",
-  "Neuanfang",
+  "Arena Business [PVP ZONE]\n",
   "The Huntsman Path - Control",
   "Secret Message",
   "Demonstration Model"
  ],
- "unmatched": [],
+ "unmatched": [
+  {
+   "name": "Arena Business",
+   "count": 1,
+   "examples": [
+    "Balancing - Part 1 [PVP ZONE]"
+   ]
+  },
+  {
+   "name": "Tour",
+   "count": 1,
+   "examples": [
+    "Uninvited Guests - Part 1 [KORD BREACH]"
+   ]
+  }
+ ],
  "requires": {
   "5936da9e86f7742d65037edf": [
    "657315e1dccd301f1301416a"
   ],
-  "59674cd986f7744ab26e32f2": [
-   "5936da9e86f7742d65037edf"
-  ],
-  "59674eb386f774539f14813a": [
-   "5936da9e86f7742d65037edf"
-  ],
-  "59675d6c86f7740a842fc482": [
-   "5967530a86f77462ba22226b"
-  ],
-  "59675ea386f77414b32bded2": [
-   "59675d6c86f7740a842fc482"
-  ],
   "596760e186f7741e11214d58": [
    "59675ea386f77414b32bded2"
-  ],
-  "5967725e86f774601a446662": [
-   "59675d6c86f7740a842fc482"
   ],
   "5969f9e986f7741dde183a50": [
    "5969f90786f77420d2328015"
@@ -79,9 +78,6 @@
   ],
   "59c50c8886f7745fed3193bf": [
    "59c50a9e86f7745fef66f4ff"
-  ],
-  "59c512ad86f7741f0d09de9b": [
-   "5967725e86f774601a446662"
   ],
   "59c9392986f7742f6923add2": [
    "597a0f5686f774273b74f676",
@@ -280,9 +276,6 @@
   ],
   "5d25e4d586f77443e625e388": [
    "63a88045abf76d719f42d715"
-  ],
-  "5d4bec3486f7743cac246665": [
-   "5979f8bb86f7743ec214c7a6"
   ],
   "5d6fbc2886f77449d825f9d3": [
    "5a27bc6986f7741c7358402b"
@@ -916,22 +909,20 @@
    "67a097379f2068e74603c6ac",
    "67d03be712fb5f8fd2096332"
   ],
-  "67af4c169d95ad16e004fd86": [
-   "67af4c1405c58dc6f7056667"
-  ],
   "67af4c17f4f1fb58a907f8f6": [
-   "67af4c169d95ad16e004fd86"
+   "67af4c1405c58dc6f7056667"
   ],
   "67af4c1991ee75c6d7060a16": [
    "67af4c17f4f1fb58a907f8f6"
   ],
   "67af4c1a6c3ebfd8e6034916": [
-   "67af4c1991ee75c6d7060a16"
+   "67af4c169d95ad16e004fd86"
   ],
   "67af4c1cc0e59d55e2010b97": [
    "67af4c1a6c3ebfd8e6034916"
   ],
   "67af4c1d8c9482eca103e477": [
+   "67af4c1991ee75c6d7060a16",
    "67af4c1cc0e59d55e2010b97"
   ],
   "67b45467814ab0ffa000c7e7": [
@@ -957,9 +948,6 @@
   ],
   "6942b44f891369fc790e385a": [
    "61958c366726521dd96828ec"
-  ],
-  "697877e0c639962b2e0cf24f": [
-   "66058cb7c7f3584787181476"
   ],
   "69788c2bac719606e40b4e77": [
    "66058cb7c7f3584787181476"
@@ -990,6 +978,55 @@
   ],
   "69e5583240c3e6c8ba0edbd5": [
    "69ce1f84ebbdbf36a200627c"
+  ],
+  "kord:break-the-chain": [
+   "kord:desperate-assault"
+  ],
+  "kord:cast-the-net": [
+   "kord:uninvited-guests-2"
+  ],
+  "kord:consequences": [
+   "kord:final-stretch"
+  ],
+  "kord:desperate-assault": [
+   "kord:consequences",
+   "kord:final-stretch"
+  ],
+  "kord:digital-puzzle": [
+   "kord:break-the-chain"
+  ],
+  "kord:final-stretch": [
+   "kord:sheep-in-wolfs-clothing"
+  ],
+  "kord:forbidden-knowledge": [
+   "kord:whats-in-the-bag"
+  ],
+  "kord:key-to-understanding": [
+   "kord:reverse-gear"
+  ],
+  "kord:know-your-enemy": [
+   "kord:cast-the-net"
+  ],
+  "kord:reverse-gear": [
+   "kord:know-your-enemy"
+  ],
+  "kord:riding-the-wave": [
+   "kord:reverse-gear"
+  ],
+  "kord:sheep-in-wolfs-clothing": [
+   "kord:forbidden-knowledge"
+  ],
+  "kord:stay-clear": [
+   "kord:desperate-assault"
+  ],
+  "kord:unanswered-calls": [
+   "kord:uninvited-guests-1"
+  ],
+  "kord:uninvited-guests-2": [
+   "kord:uninvited-guests-1"
+  ],
+  "kord:whats-in-the-bag": [
+   "kord:key-to-understanding"
   ]
  }
 }
