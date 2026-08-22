@@ -1162,6 +1162,7 @@ for (const [canonicalId, members] of groupMembers) {
     factionName: primary.factionName && primary.factionName !== "Any" ? primary.factionName : null,
     kappaRequired: !!primary.kappaRequired,
     lightkeeperRequired: !!primary.lightkeeperRequired,
+    experience: primary.experience ?? 0,
     requires,
     maps: [...(mapsByTask.get(canonicalId) ?? [])].sort(),
     traderGates,
@@ -1371,6 +1372,89 @@ for (const [canonicalId, members] of groupMembers) {
   );
   const kb = ((await fs.stat(progressionFile)).size / 1024).toFixed(0);
   console.log(`  wrote progression.json (${kb}KB, ${progressionKeyIds.size} keys)`);
+}
+
+/* --------------------------------------------------------- hideout + items */
+
+{
+  const neededIds = new Set(progressionKeyIds);
+  for (const task of Object.values(progression)) {
+    for (const need of task.needs ?? []) for (const id of need.items ?? []) neededIds.add(id);
+  }
+
+  let hideoutStations = [];
+  try {
+    const raw = await getLocalised(`${GAME_MODE}/hideout_stations`);
+    const bag = raw.hideoutStations ?? raw.stations ?? raw;
+    hideoutStations = Array.isArray(bag) ? bag : Object.values(bag ?? {});
+  } catch (err) {
+    console.warn(`  hideout stations unavailable (${err.message})`);
+  }
+
+  const stations = hideoutStations.map((station) => {
+    const levels = (station.levels ?? []).map((level) => {
+      const reqs = (level.itemRequirements ?? [])
+        .map((r) => {
+          const itemId = typeof r.item === "string" ? r.item : r.item?.id ?? r.itemId;
+          if (itemId) neededIds.add(itemId);
+          return {
+            itemId: itemId ?? "",
+            count: r.count ?? 1,
+            foundInRaid: !!r.foundInRaid,
+          };
+        })
+        .filter((r) => r.itemId);
+      const stationReqs = (level.stationLevelRequirements ?? [])
+        .map((r) => ({
+          stationId: typeof r.station === "string" ? r.station : r.station?.id ?? r.stationId,
+          level: r.level ?? 1,
+        }))
+        .filter((r) => r.stationId);
+      return {
+        id: level.id ?? `${station.id}-${level.level}`,
+        level: level.level ?? 0,
+        itemRequirements: reqs,
+        stationLevelRequirements: stationReqs,
+      };
+    });
+    return {
+      id: station.id,
+      name: station.name,
+      image: station.imageLink ?? null,
+      levels,
+    };
+  });
+
+  await fs.writeFile(
+    path.join(OUT, "hideout.json"),
+    JSON.stringify({ generated: new Date().toISOString(), stations }),
+  );
+  console.log(`  wrote hideout.json (${stations.length} stations)`);
+
+  const catalog = {};
+  for (const id of neededIds) {
+    const it = items[id];
+    if (!it) continue;
+    const crafts = [];
+    for (const c of it.craftedBy ?? it.crafts ?? []) {
+      const name = c.stationName ?? c.station?.name;
+      if (name && !crafts.includes(name)) crafts.push(name);
+    }
+    catalog[id] = {
+      id,
+      name: it.name,
+      shortName: it.shortName ?? it.name,
+      icon: it.iconLink ?? it.gridImageLink ?? null,
+      width: it.width ?? 1,
+      height: it.height ?? 1,
+      craftableStations: crafts,
+    };
+  }
+  await fs.writeFile(
+    path.join(OUT, "items.json"),
+    JSON.stringify({ generated: new Date().toISOString(), items: catalog }),
+  );
+  console.log(`  wrote items.json (${Object.keys(catalog).length} items)`);
 }
 
 const imagesSrc = path.join(ROOT, "data", "task-images.json");

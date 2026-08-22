@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMapIndex, useProgression } from "../lib/data";
 import { useDebouncedInput } from "../lib/use-debounced-input";
 import {
@@ -10,15 +10,17 @@ import {
 } from "../lib/progression";
 import { prettyMapName } from "../lib/kord-season";
 import { collectKeys, collectNeeds } from "../lib/quest-lists";
-import { href, navigate, onNavClick } from "../lib/router";
+import { href, navigate, onNavClick, type QuestView } from "../lib/router";
 import { nextRaids } from "../lib/next-raid";
 import { displayName, visibleInMode } from "../lib/task-variant";
-import { useMarkerDone, useStore, useTaskStatus } from "../store";
-import type { Faction, Profile } from "../lib/persist-migrate";
+import { useItemCounts, useKeysOwned, useMarkerDone, useStore, useTaskStatus } from "../store";
+import { GAME_EDITIONS, type Faction, type GameEdition, type Profile } from "../lib/persist-migrate";
 import type { TaskAvailability, TaskStatus } from "../types";
+import ItemAudit from "./ItemAudit";
 import NextRaid from "./NextRaid";
 import SavePanel from "./SavePanel";
 import SeasonPanel from "./SeasonPanel";
+import TaskGraphPage from "./TaskGraphPage";
 import { useSlashSearch } from "./ShortcutHelp";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
@@ -57,15 +59,39 @@ interface Row {
 
 const FACTIONS: Faction[] = ["Any", "USEC", "BEAR"];
 
-export default function QuestsPage() {
+const QUEST_VIEWS: { id: QuestView; label: string }[] = [
+  { id: "list", label: "List" },
+  { id: "graph", label: "Graph" },
+  { id: "items", label: "Items" },
+];
+
+const EDITION_LABEL: Record<GameEdition, string> = {
+  standard: "Standard",
+  leftBehind: "Left Behind",
+  prepareToEscape: "Prepare for Escape",
+  edgeOfDarkness: "Edge of Darkness",
+  unheard: "The Unheard",
+};
+
+export default function QuestsPage({
+  view = "list",
+  focus = null,
+}: {
+  view?: QuestView;
+  focus?: string | null;
+}) {
   useSlashSearch();
   const progression = useProgression();
   const taskStatus = useTaskStatus();
   const markerDone = useMarkerDone();
+  const itemCounts = useItemCounts();
+  const keysOwned = useKeysOwned();
   const profile = useStore((s) => s.profile);
   const setProfile = useStore((s) => s.setProfile);
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const setTaskStatus = useStore((s) => s.setTaskStatus);
+  const fillCompleted = useStore((s) => s.fillCompleted);
+  const setKeyOwned = useStore((s) => s.setKeyOwned);
 
   /* Committed search term; `typed` is what the box shows while you type. */
   const [query, setQuery] = useState("");
@@ -73,6 +99,13 @@ export default function QuestsPage() {
 
   const data = progression.data;
   const maps = useMapIndex();
+
+  useEffect(() => {
+    if (!focus || !data) return;
+    const task = data.tasks[focus];
+    const label = task ? displayName(task.name) : focus;
+    setQuery(label);
+  }, [focus, data, setQuery]);
 
   const availability = useMemo(
     () => computeAvailability(data, taskStatus, profile),
@@ -172,20 +205,21 @@ export default function QuestsPage() {
   const upcoming = useMemo(() => [...active, ...available], [active, available]);
   const upcomingIds = useMemo(() => upcoming.map((r) => r.id), [upcoming]);
   const keys = useMemo(() => collectKeys(data, upcomingIds), [data, upcomingIds]);
-  const needs = useMemo(() => collectNeeds(data, upcomingIds), [data, upcomingIds]);
+  const needs = useMemo(
+    () => collectNeeds(data, upcomingIds, itemCounts),
+    [data, upcomingIds, itemCounts],
+  );
 
   /** "I finished this one" also means everything behind it is finished. */
   const completeWithHistory = (taskId: string) => {
+    fillCompleted(prerequisiteClosure(data, taskId));
     setTaskStatus(taskId, "completed");
-    for (const prior of prerequisiteClosure(data, taskId)) {
-      if (!taskStatus[prior]) setTaskStatus(prior, "completed");
-    }
   };
 
   const trackedCount = Object.keys(taskStatus).length;
   const raidPicks = useMemo(
-    () => nextRaids(maps.data?.maps ?? [], data, taskStatus, 4),
-    [maps.data, data, taskStatus],
+    () => nextRaids(maps.data?.maps ?? [], data, taskStatus, 4, upcomingIds),
+    [maps.data, data, taskStatus, upcomingIds],
   );
 
   if (progression.error) {
@@ -207,7 +241,25 @@ export default function QuestsPage() {
           Tick what you have accepted. The graph fills in what that unlocks, which map to queue,
           which keys to bring, and what to find in raid.
         </p>
+        <nav className="mt-4 flex flex-wrap gap-1.5" aria-label="Quest views">
+          {QUEST_VIEWS.map((v) => (
+            <a
+              key={v.id}
+              href={href.quests(v.id)}
+              onClick={onNavClick(href.quests(v.id))}
+              className={view === v.id ? "chip chip-accent" : "chip chip-button"}
+              aria-current={view === v.id ? "page" : undefined}
+            >
+              {v.label}
+            </a>
+          ))}
+        </nav>
       </header>
+
+      {view === "graph" ? <TaskGraphPage /> : view === "items" ? <ItemAudit /> : null}
+      {view !== "list" ? null : (
+      <>
+
 
       {/* The call to action comes first on a fresh visit. It used to sit third,
           below seven optional trader-loyalty selects — which also made it the
@@ -392,14 +444,16 @@ export default function QuestsPage() {
 
           <Panel
             title="Keys you'll need"
-            count={keys.length}
-            hint="Doors your active and available tasks go through."
+            count={keys.filter((k) => !keysOwned[k.item.id]).length}
+            hint="Doors your active and available tasks go through. Tick one when you have it."
           >
-            {keys.length === 0 ? (
+            {keys.filter((k) => !keysOwned[k.item.id]).length === 0 ? (
               <EmptyState compact title="No keys needed" hint="Nothing coming up is behind a locked door." />
             ) : (
               <ul className="space-y-1">
-                {keys.map((k) => (
+                {keys
+                  .filter((k) => !keysOwned[k.item.id])
+                  .map((k) => (
                   <li key={k.item.id} className="surface-2 flex items-center gap-2.5 p-2">
                     {k.item.icon && (
                       <img
@@ -418,6 +472,15 @@ export default function QuestsPage() {
                         {k.maps.length ? ` · ${k.maps.join(", ")}` : ""}
                       </p>
                     </div>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-icon flex-none"
+                      aria-label={`Mark ${k.item.name} acquired`}
+                      title="Mark acquired"
+                      onClick={() => setKeyOwned(k.item.id, true)}
+                    >
+                      <span className="key-acquire" aria-hidden="true" />
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -455,7 +518,13 @@ export default function QuestsPage() {
                         {n.tasks.join(", ")}
                       </p>
                     </div>
-                    <span className="chip flex-none tabular-nums">×{n.count}</span>
+                    <span
+                      className="chip flex-none tabular-nums"
+                      title={`${n.count - n.remaining} in stash, ${n.count} needed`}
+                      style={n.remaining === 0 ? { color: "var(--ok)" } : undefined}
+                    >
+                      {n.remaining === 0 ? "have" : `×${n.remaining}`}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -509,6 +578,8 @@ export default function QuestsPage() {
           empty profile is noise on the one screen a new player most needs to
           be able to read. */}
       {trackedCount > 0 && <SavePanel />}
+      </>
+      )}
     </Shell>
   );
 }
@@ -605,6 +676,22 @@ function ProfileBar({
           {FACTIONS.map((f) => (
             <option key={f} value={f}>
               {f}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      <Field label="Edition" hint="Which game edition this character is.">
+        <select
+          className="input"
+          style={{ width: "auto", paddingRight: "1.75rem" }}
+          value={profile.gameEdition}
+          onChange={(e) => setProfile("gameEdition", e.target.value as GameEdition)}
+          aria-label="Game edition"
+        >
+          {GAME_EDITIONS.map((ed) => (
+            <option key={ed} value={ed}>
+              {EDITION_LABEL[ed]}
             </option>
           ))}
         </select>

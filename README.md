@@ -164,7 +164,31 @@ raid, by trader, season, jump back in — and **you arrange it**. Press
 keyboard, a control for full or half width, and an × that puts it in a tray at
 the bottom. The tray remembers where a panel came from, so switching one back on
 returns it to its old place rather than the end. The grid itself is one column
-or two, and how many tasks Upcoming lists is yours to set.
+or two. Upcoming and keys paginate 10 or 20 at a time: ticking a quest done or a
+key acquired drops it from the list and the next row fills in.
+
+The header bar holds the raid clocks and the target task, so those are not
+separate dashboard tiles.
+
+**Kord Breach** is listed in full on the seasonal panel, from Uninvited Guests
+through Digital Puzzle (and Riding the Wave). Tick the story line on a Season
+character.
+
+## Settings, hideout and a save file
+
+`#/settings` is the profile page: switch between the three characters, set
+faction / level / edition / trader loyalty, aim the planner at a target (usually
+Collector), recalculate the plan from the quests you currently have accepted,
+reset tasks or stash, or wipe the character. The other two modes are left alone.
+
+`#/hideout` tracks station levels on the same stash counts the item list uses.
+Marking a level done also ticks every level below it.
+
+Progress lives in this browser only. **Save to a file** on settings (or after
+task sync) writes quests, item counts, keys and hideout for all three characters
+as readable JSON; **Restore** replaces rather than merges, and asks first.
+
+`⌘K` / `Ctrl+K` jumps to a map, a task, hideout, or any of the pages.
 
 The layout is saved in your browser with the rest of your settings. A layout
 written before a panel existed picks the new panel up rather than being thrown

@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useProgression } from "../lib/data";
 import { disposeOcr } from "../lib/ocr";
 import { prerequisiteClosure } from "../lib/progression";
-import { href, navigate, onNavClick } from "../lib/router";
+import { href, onNavClick } from "../lib/router";
 import { displayName, visibleInMode } from "../lib/task-variant";
 import { useStore, useTaskStatus } from "../store";
 import type { Faction, GameMode } from "../lib/persist-migrate";
 import type { Progression, TaskStatus } from "../types";
 import ModeSwitch from "./ModeSwitch";
+import SavePanel from "./SavePanel";
 import ScreenshotImport from "./ScreenshotImport";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
@@ -67,6 +68,7 @@ export default function SetupWizard() {
   const [staged, setStaged] = useState<Record<string, TaskStatus>>({});
   const [step, setStep] = useState(0);
   const [query, setQuery] = useState("");
+  const [finished, setFinished] = useState(false);
 
   const data = progression.data;
 
@@ -164,7 +166,7 @@ export default function SetupWizard() {
     const toWrite: Record<string, TaskStatus> = { ...staged };
     for (const id of implied) toWrite[id] = "completed";
     importTaskStatus(toWrite);
-    navigate(href.dashboard());
+    setFinished(true);
   };
 
   if (progression.error) {
@@ -188,6 +190,27 @@ export default function SetupWizard() {
   const onProfile = step === 0;
   const onSummary = step === steps.length + 1;
   const trader = steps[step - 1];
+
+  if (finished) {
+    return (
+      <Shell step={total} total={total}>
+        <h1 className="display text-2xl sm:text-3xl">Wipe reconstructed</h1>
+        <p className="mt-2 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
+          {activeCount} active and {doneCount + implied.size} done are stored in this browser.
+          Download a file now if you want to restore this wipe later or on another phone or PC.
+        </p>
+        <SavePanel />
+        <div className="mt-4 flex flex-wrap gap-2">
+          <a className="btn is-active" href={href.dashboard()} onClick={onNavClick(href.dashboard())}>
+            Open the dashboard
+          </a>
+          <a className="btn" href={href.quests("items")} onClick={onNavClick(href.quests("items"))}>
+            Open the item list
+          </a>
+        </div>
+      </Shell>
+    );
+  }
 
   return (
     <Shell step={step} total={total}>
@@ -251,7 +274,7 @@ export default function SetupWizard() {
             disabled={activeCount === 0 && doneCount === 0}
             onClick={finish}
           >
-            Finish and save
+            Finish
           </button>
         )}
 

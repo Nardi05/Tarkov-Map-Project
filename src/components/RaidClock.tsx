@@ -7,7 +7,14 @@ import { raidClock } from "../lib/tarkov-time";
  * Ticks once a second: the world clock runs at 7x, so a minute of game time
  * passes every ~8.6 real seconds and a slower tick would visibly stutter.
  */
-export default function RaidClock({ mapName }: { mapName: string }) {
+export default function RaidClock({
+  mapName,
+  variant = "compact",
+}: {
+  mapName: string;
+  /** `board` is the dashboard header pair, labelled like Kappa's raid time. */
+  variant?: "compact" | "board";
+}) {
   const [clock, setClock] = useState(() => raidClock(mapName));
 
   useEffect(() => {
@@ -19,6 +26,24 @@ export default function RaidClock({ mapName }: { mapName: string }) {
   const title = clock.note
     ? `${clock.note}. Raids run at these two times.`
     : "The two raids you can queue into now, 12 hours apart. Tarkov time runs 7x real time.";
+
+  if (variant === "board") {
+    return (
+      <div className="raid-board" title={title}>
+        <p className="raid-board-label">Raid time</p>
+        {clock.hasTime ? (
+          <div className="raid-board-pair">
+            <span className="raid-board-face tabular-nums">{clock.left}</span>
+            <span className="raid-board-face tabular-nums">{clock.right}</span>
+          </div>
+        ) : (
+          <p className="text-[0.75rem]" style={{ color: "var(--text-dim)" }}>
+            {clock.note}
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div

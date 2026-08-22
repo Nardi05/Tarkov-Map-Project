@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import type { MapData, MapIndex, TaskImage, TaskImages, Progression } from "../types";
+import type {
+  HideoutData,
+  ItemCatalog,
+  MapData,
+  MapIndex,
+  Progression,
+  TaskImage,
+  TaskImages,
+} from "../types";
 import { kordProgressionTasks } from "./kord-season";
 
 /**
@@ -13,6 +21,8 @@ const mapCache = new Map<string, Promise<MapData>>();
 let indexPromise: Promise<MapIndex> | null = null;
 let progressionPromise: Promise<Progression> | null = null;
 let imagesPromise: Promise<TaskImages> | null = null;
+let hideoutPromise: Promise<HideoutData> | null = null;
+let itemsPromise: Promise<ItemCatalog> | null = null;
 
 async function getJson<T>(url: string): Promise<T> {
   const res = await fetch(url);
@@ -70,6 +80,30 @@ function withKordSeason(progression: Progression): Progression {
 
 export function useProgression() {
   return useAsync(loadProgression, []);
+}
+
+export function loadHideout(): Promise<HideoutData> {
+  hideoutPromise ??= getJson<HideoutData>(`${BASE}/hideout.json`).catch(() => ({
+    generated: "",
+    stations: [],
+  }));
+  return hideoutPromise;
+}
+
+export function useHideoutData() {
+  return useAsync(loadHideout, []);
+}
+
+export function loadItems(): Promise<ItemCatalog> {
+  itemsPromise ??= getJson<ItemCatalog>(`${BASE}/items.json`).catch(() => ({
+    generated: "",
+    items: {},
+  }));
+  return itemsPromise;
+}
+
+export function useItemCatalog() {
+  return useAsync(loadItems, []);
 }
 
 /**

@@ -55,19 +55,19 @@ export const DASH_PANEL_META: Record<DashPanelId, DashPanelMeta> = {
     blurb: "Which map to queue into next.",
   },
   upcoming: {
-    title: "Upcoming",
-    hint: "Active first, then what the graph unlocks next — in chain order.",
+    title: "What to do next",
+    hint: "Doable tasks on your target path, with maps and a complete action.",
     blurb: "The tasks to run next, with the maps they are on.",
   },
   keys: {
-    title: "Keys you'll need",
+    title: "Upcoming keys",
     hint: "Doors those upcoming tasks go through.",
     blurb: "Keys to bring for what is coming up.",
   },
   needs: {
-    title: "Find in raid",
-    hint: "Found-in-raid hand-ins for those upcoming tasks.",
-    blurb: "Items to pick up and keep for hand-ins.",
+    title: "Upcoming items",
+    hint: "Stash of what those tasks still want, sized like the grid.",
+    blurb: "Quest items to keep, with remaining counts.",
   },
   traders: {
     title: "By trader",
@@ -75,9 +75,9 @@ export const DASH_PANEL_META: Record<DashPanelId, DashPanelMeta> = {
     blurb: "The next task from every trader, side by side.",
   },
   season: {
-    title: "Season",
-    hint: "Kord Breach story line and daily documents.",
-    blurb: "How far into the season you are, and what is next in the line.",
+    title: "Kord Breach",
+    hint: "The seasonal story line, from Uninvited Guests to Digital Puzzle.",
+    blurb: "Tick the Kord Breach quests on a Season character.",
   },
   maps: {
     title: "Jump back in",
@@ -88,7 +88,7 @@ export const DASH_PANEL_META: Record<DashPanelId, DashPanelMeta> = {
 
 export const DASH_PANELS = Object.keys(DASH_PANEL_META) as DashPanelId[];
 
-export const UPCOMING_LIMITS = [5, 6, 8, 10, 12, 16] as const;
+export const UPCOMING_LIMITS = [5, 6, 8, 10, 12, 16, 20] as const;
 
 /**
  * The out-of-the-box dashboard.
@@ -100,14 +100,14 @@ export const DEFAULT_DASHBOARD: DashboardLayout = {
   panels: [
     { id: "progress", visible: true, wide: true },
     { id: "raid", visible: true, wide: true },
-    { id: "upcoming", visible: true, wide: true },
+    { id: "upcoming", visible: true, wide: false },
     { id: "keys", visible: true, wide: false },
-    { id: "needs", visible: true, wide: false },
+    { id: "needs", visible: true, wide: true },
     { id: "traders", visible: true, wide: true },
     { id: "season", visible: true, wide: false },
     { id: "maps", visible: true, wide: false },
   ],
-  upcomingLimit: 8,
+  upcomingLimit: 20,
   columns: 2,
 };
 

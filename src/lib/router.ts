@@ -9,27 +9,36 @@ import { useSyncExternalStore, useCallback, type MouseEvent } from "react";
  *   #/maps          map picker
  *   #/m/<map>       one map, optionally ?q=<taskId> to deep-link a task
  *   #/quests        the quest tracker
+ *   #/quests/graph  task dependency graph
+ *   #/quests/items  item tracker + stash audit
  *   #/quests/setup  the first-run walkthrough of each trader
+ *   #/hideout       hideout stations
+ *   #/settings      profile, reset, backup
  */
+export type QuestView = "list" | "graph" | "items";
+
 export type Route =
   | { name: "dashboard" }
   | { name: "home" }
-  | { name: "quests" }
+  | { name: "quests"; view: QuestView; focus: string | null }
   | { name: "setup" }
+  | { name: "hideout" }
+  | { name: "settings" }
   | { name: "map"; map: string; task: string | null };
 
 /**
- * The three tab pages, left to right, as the section nav shows them.
+ * The tab pages, left to right, as the section nav shows them.
  *
  * Exported because the shell animates the body in the direction you moved
  * along this row, and both have to agree on which way that is.
  */
-export type TabId = "dashboard" | "maps" | "quests";
+export type TabId = "dashboard" | "maps" | "quests" | "hideout";
 
 export const TAB_ORDER: Record<TabId, number> = {
   dashboard: 0,
   maps: 1,
   quests: 2,
+  hideout: 3,
 };
 
 /** The tab a route belongs to, or null for the map and the walkthrough. */
@@ -37,6 +46,7 @@ export function tabOf(route: Route): TabId | null {
   if (route.name === "dashboard") return "dashboard";
   if (route.name === "home") return "maps";
   if (route.name === "quests") return "quests";
+  if (route.name === "hideout") return "hideout";
   return null;
 }
 
@@ -49,8 +59,14 @@ function parse(hash: string): Route {
     return { name: "map", map: decodeURIComponent(segments[1]), task };
   }
   if (segments[0] === "quests") {
-    return segments[1] === "setup" ? { name: "setup" } : { name: "quests" };
+    const focus = new URLSearchParams(queryPart ?? "").get("q");
+    if (segments[1] === "setup") return { name: "setup" };
+    if (segments[1] === "graph") return { name: "quests", view: "graph", focus };
+    if (segments[1] === "items") return { name: "quests", view: "items", focus };
+    return { name: "quests", view: "list", focus };
   }
+  if (segments[0] === "hideout") return { name: "hideout" };
+  if (segments[0] === "settings") return { name: "settings" };
   if (segments[0] === "maps") return { name: "home" };
   return { name: "dashboard" };
 }
@@ -107,7 +123,12 @@ export const href = {
   dashboard: () => "#/",
   home: () => "#/maps",
   maps: () => "#/maps",
-  quests: () => "#/quests",
+  quests: (view: QuestView = "list", focus?: string | null) => {
+    const base = view === "list" ? "#/quests" : `#/quests/${view}`;
+    return focus ? `${base}?q=${encodeURIComponent(focus)}` : base;
+  },
   setup: () => "#/quests/setup",
+  hideout: () => "#/hideout",
+  settings: () => "#/settings",
   map: (map: string, task?: string | null) => `#/m/${encodeURIComponent(map)}${task ? `?q=${task}` : ""}`,
 };

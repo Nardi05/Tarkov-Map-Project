@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { href, onNavClick } from "../lib/router";
+import { href, onNavClick, type TabId } from "../lib/router";
 
 /** Small shared pieces, kept here so the panels stay about their own logic. */
 
@@ -92,6 +92,7 @@ export const icons = {
   paneFull: "M4 6h16v12H4z",
   eye: "M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Zm10 2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
   keyboard: "M4 6h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm3 4h.01M11 10h.01M15 10h.01M17 10h.01M7 14h10",
+  pin: "M12 17v5M8 3h8l-1 7h3l-6 6-6-6h3L8 3z",
 };
 
 export function Tick({
@@ -161,8 +162,8 @@ export function Wordmark({ href: to = href.dashboard() }: { href?: string } = {}
   );
 }
 
-export function SiteNav({ current }: { current: "dashboard" | "maps" | "quests" }) {
-  const item = (id: "dashboard" | "maps" | "quests", label: string, to: string) =>
+export function SiteNav({ current }: { current: TabId }) {
+  const item = (id: TabId, label: string, to: string) =>
     current === id ? (
       <span className="is-active" aria-current="page">
         {label}
@@ -179,6 +180,7 @@ export function SiteNav({ current }: { current: "dashboard" | "maps" | "quests" 
       {item("dashboard", "Dashboard", href.dashboard())}
       {item("maps", "Maps", href.maps())}
       {item("quests", "Quests", href.quests())}
+      {item("hideout", "Hideout", href.hideout())}
     </nav>
   );
 }
@@ -187,7 +189,7 @@ export function PageChrome({
   current,
   children,
 }: {
-  current: "dashboard" | "maps" | "quests";
+  current: TabId;
   children?: ReactNode;
 }) {
   return (

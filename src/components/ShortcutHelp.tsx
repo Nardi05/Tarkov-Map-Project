@@ -15,6 +15,7 @@ export interface Shortcut {
 }
 
 export const SHORTCUTS: Shortcut[] = [
+  { keys: ["⌘", "K"], label: "Jump to a page, map or task" },
   { keys: ["/"], label: "Search" },
   { keys: ["0"], label: "Reset map zoom" },
   { keys: ["F"], label: "Fullscreen" },

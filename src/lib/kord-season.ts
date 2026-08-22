@@ -1,5 +1,5 @@
 import type { MapData, ProgressionTask, Task } from "../types";
-import season from "../data/kord-season.json";
+import season from "../data/kord-season.json" with { type: "json" };
 import type { GameMode } from "./persist-migrate";
 
 export interface SeasonQuest {

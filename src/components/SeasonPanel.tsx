@@ -19,11 +19,13 @@ export default function SeasonPanel({
   taskStatus,
   availability,
   onCycle,
+  compact = false,
 }: {
   mode: GameMode;
   taskStatus: Record<string, TaskStatus>;
   availability: Record<string, TaskAvailability>;
   onCycle: (taskId: string) => void;
+  compact?: boolean;
 }) {
   const [showAll, setShowAll] = useState(false);
   const days = seasonDaysLeft();
@@ -43,7 +45,7 @@ export default function SeasonPanel({
   const visibleLine = showAll ? line : line.filter((q) => nextUp.includes(q));
 
   return (
-    <section className="season-banner surface p-4 sm:p-5">
+    <section className={compact ? "" : "season-banner surface p-4 sm:p-5"}>
       <header className="mb-3 flex flex-wrap items-start justify-between gap-2">
         <div>
           <p className="eyebrow" style={{ color: "var(--season)" }}>
@@ -83,10 +85,15 @@ export default function SeasonPanel({
           : "The story line is seasonal-only. Switch to Season to track it. Battle-pass documents drop in every mode."}
       </p>
 
-      {mode === "season" && (
+      {(mode === "season" || compact) && (
         <>
+          {mode !== "season" && compact && (
+            <p className="mb-2 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
+              Switch to Season (top right) to tick these. The line is still listed so you can see what is coming.
+            </p>
+          )}
           <ol className="mb-2 space-y-1">
-            {(showAll ? line : visibleLine).map((quest) => (
+            {(showAll || compact ? line : visibleLine).map((quest) => (
               <SeasonRow
                 key={quest.id}
                 quest={quest}
@@ -94,26 +101,30 @@ export default function SeasonPanel({
                 status={taskStatus[quest.id]}
                 availability={availability[quest.id] ?? "locked"}
                 onCycle={() => onCycle(quest.id)}
+                compact={compact}
+                disabled={mode !== "season"}
               />
             ))}
           </ol>
-          {visibleLine.length === 0 && !showAll && (
+          {visibleLine.length === 0 && !showAll && !compact && (
             <p className="mb-2 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
               Nothing in this line is active or available yet. Tick Uninvited Guests if Prapor has given it to you.
             </p>
           )}
-          <button
-            type="button"
-            className="btn btn-ghost mb-3 text-[0.72rem]"
-            style={{ padding: "0.2rem 0.45rem" }}
-            onClick={() => setShowAll((v) => !v)}
-          >
-            {showAll ? "Show only what's next" : `Show all ${line.length} story tasks`}
-          </button>
+          {!compact && (
+            <button
+              type="button"
+              className="btn btn-ghost mb-3 text-[0.72rem]"
+              style={{ padding: "0.2rem 0.45rem" }}
+              onClick={() => setShowAll((v) => !v)}
+            >
+              {showAll ? "Show only what's next" : `Show all ${line.length} story tasks`}
+            </button>
+          )}
         </>
       )}
 
-      <DocumentHunt mode={mode} />
+      {!compact && <DocumentHunt mode={mode} />}
     </section>
   );
 }
@@ -124,12 +135,16 @@ function SeasonRow({
   status,
   availability,
   onCycle,
+  compact = false,
+  disabled = false,
 }: {
   quest: SeasonQuest;
   index: number;
   status: TaskStatus | undefined;
   availability: TaskAvailability;
   onCycle: () => void;
+  compact?: boolean;
+  disabled?: boolean;
 }) {
   const locked = !status && availability === "locked";
   const prior = quest.requires
@@ -145,7 +160,7 @@ function SeasonRow({
         {index}
       </span>
       <span className="mt-0.5">
-        <TaskStatusControl status={status} name={quest.name} onCycle={onCycle} />
+        <TaskStatusControl status={status} name={quest.name} onCycle={onCycle} disabled={disabled} />
       </span>
       <div className="min-w-0 flex-1">
         <p className="text-[0.8125rem] font-medium leading-tight">{quest.name}</p>
@@ -154,9 +169,11 @@ function SeasonRow({
           {quest.traderLevel ? ` LL${quest.traderLevel}` : ""}
           {locked && prior.length > 0 ? ` · needs ${prior.join(" or ")}` : ""}
         </p>
+        {!compact && (
         <p className="mt-1 text-[0.72rem] leading-snug" style={{ color: "var(--text-dim)" }}>
           {quest.summary}
         </p>
+        )}
         {quest.spots && quest.spots.length > 0 && (status === "active" || !locked) && (
           <ul className="mt-1 space-y-0.5 text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
             {quest.spots.map((spot) => (

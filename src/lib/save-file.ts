@@ -1,5 +1,5 @@
 import type { TaskStatus } from "../types";
-import type { GameMode, ModeProgress, Profile } from "./persist-migrate";
+import type { GameMode, HideoutStatus, ModeProgress, Profile } from "./persist-migrate";
 
 /**
  * Reading and writing a progress save file.
@@ -18,7 +18,21 @@ import type { GameMode, ModeProgress, Profile } from "./persist-migrate";
  */
 
 export const SAVE_KIND = "tarkov-maps-progress";
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
+
+/** Human-readable copy of a mode's quests, so a save file can be opened and read. */
+export interface QuestLogEntry {
+  id: string;
+  name: string;
+  trader: string | null;
+  status: TaskStatus;
+}
+
+export interface SaveLog {
+  pvp: QuestLogEntry[];
+  pve: QuestLogEntry[];
+  season: QuestLogEntry[];
+}
 
 export interface SaveFile {
   kind: typeof SAVE_KIND;
@@ -26,6 +40,8 @@ export interface SaveFile {
   exported: string;
   profile: Profile;
   progress: Record<GameMode, ModeProgress>;
+  /** Names for the statuses in `progress`. Ignored on import — ids are the truth. */
+  log?: SaveLog;
 }
 
 export class SaveFileError extends Error {}
@@ -33,6 +49,7 @@ export class SaveFileError extends Error {}
 export function buildSave(
   profile: Profile,
   progress: Record<GameMode, ModeProgress>,
+  log?: SaveLog,
 ): SaveFile {
   return {
     kind: SAVE_KIND,
@@ -40,7 +57,25 @@ export function buildSave(
     exported: new Date().toISOString(),
     profile,
     progress,
+    ...(log ? { log } : {}),
   };
+}
+
+export function buildQuestLog(
+  tasks: Record<string, { name: string; trader: string | null }> | null | undefined,
+  progress: Record<GameMode, ModeProgress>,
+): SaveLog | undefined {
+  if (!tasks) return undefined;
+  const slice = (mode: GameMode): QuestLogEntry[] =>
+    Object.entries(progress[mode].taskStatus)
+      .map(([id, status]) => ({
+        id,
+        name: tasks[id]?.name ?? id,
+        trader: tasks[id]?.trader ?? null,
+        status,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  return { pvp: slice("pvp"), pve: slice("pve"), season: slice("season") };
 }
 
 /** `tarkov-progress-pvp-2026-08-17.json` — sortable, and says which mode it holds. */
@@ -56,7 +91,15 @@ const statuses = (raw: unknown): Record<string, TaskStatus> => {
   const out: Record<string, TaskStatus> = {};
   if (!isRecord(raw)) return out;
   for (const [id, value] of Object.entries(raw)) {
-    if (value === "active" || value === "completed" || value === "failed") out[id] = value;
+    if (
+      value === "active" ||
+      value === "completed" ||
+      value === "failed" ||
+      value === "ignored" ||
+      value === "pinned"
+    ) {
+      out[id] = value;
+    }
   }
   return out;
 };
@@ -68,10 +111,44 @@ const markers = (raw: unknown): Record<string, true> => {
   return out;
 };
 
+const counts = (raw: unknown): Record<string, number> => {
+  const out: Record<string, number> = {};
+  if (!isRecord(raw)) return out;
+  for (const [id, value] of Object.entries(raw)) {
+    if (typeof value === "number" && Number.isFinite(value) && value > 0) out[id] = Math.floor(value);
+  }
+  return out;
+};
+
+const tally = (slice: ModeProgress): ModeCounts => ({
+  tasks: Object.keys(slice.taskStatus).length,
+  markers: Object.keys(slice.markerDone).length,
+  items: Object.keys(slice.itemCounts).length,
+  keys: Object.keys(slice.keysOwned).length,
+  hideout: Object.keys(slice.hideout).length,
+});
+
+const hideout = (raw: unknown): Record<string, HideoutStatus> => {
+  const out: Record<string, HideoutStatus> = {};
+  if (!isRecord(raw)) return out;
+  for (const [id, value] of Object.entries(raw)) {
+    if (value === "active" || value === "completed" || value === "ignored") out[id] = value;
+  }
+  return out;
+};
+
+export interface ModeCounts {
+  tasks: number;
+  markers: number;
+  items: number;
+  keys: number;
+  hideout: number;
+}
+
 export interface ParsedSave {
   profile: Partial<Profile> | null;
   progress: Record<GameMode, ModeProgress>;
-  counts: Record<GameMode, { tasks: number; markers: number }>;
+  counts: Record<GameMode, ModeCounts>;
 }
 
 /**
@@ -101,10 +178,16 @@ export function parseSave(text: string): ParsedSave {
   }
 
   const progressRaw = isRecord(raw.progress) ? raw.progress : {};
-  const slice = (key: GameMode) => ({
-    taskStatus: statuses(isRecord(progressRaw[key]) ? progressRaw[key].taskStatus : null),
-    markerDone: markers(isRecord(progressRaw[key]) ? progressRaw[key].markerDone : null),
-  });
+  const slice = (key: GameMode): ModeProgress => {
+    const row = isRecord(progressRaw[key]) ? progressRaw[key] : {};
+    return {
+      taskStatus: statuses(row.taskStatus),
+      markerDone: markers(row.markerDone),
+      itemCounts: counts(row.itemCounts),
+      keysOwned: markers(row.keysOwned),
+      hideout: hideout(row.hideout),
+    };
+  };
   const progress = {
     pvp: slice("pvp"),
     pve: slice("pve"),
@@ -114,7 +197,10 @@ export function parseSave(text: string): ParsedSave {
   const empty = (["pvp", "pve", "season"] as const).every(
     (mode) =>
       !Object.keys(progress[mode].taskStatus).length &&
-      !Object.keys(progress[mode].markerDone).length,
+      !Object.keys(progress[mode].markerDone).length &&
+      !Object.keys(progress[mode].itemCounts).length &&
+      !Object.keys(progress[mode].keysOwned).length &&
+      !Object.keys(progress[mode].hideout).length,
   );
   if (empty) throw new SaveFileError("That save has no progress in it.");
 
@@ -122,18 +208,9 @@ export function parseSave(text: string): ParsedSave {
     profile: isRecord(raw.profile) ? (raw.profile as Partial<Profile>) : null,
     progress,
     counts: {
-      pvp: {
-        tasks: Object.keys(progress.pvp.taskStatus).length,
-        markers: Object.keys(progress.pvp.markerDone).length,
-      },
-      pve: {
-        tasks: Object.keys(progress.pve.taskStatus).length,
-        markers: Object.keys(progress.pve.markerDone).length,
-      },
-      season: {
-        tasks: Object.keys(progress.season.taskStatus).length,
-        markers: Object.keys(progress.season.markerDone).length,
-      },
+      pvp: tally(progress.pvp),
+      pve: tally(progress.pve),
+      season: tally(progress.season),
     },
   };
 }
