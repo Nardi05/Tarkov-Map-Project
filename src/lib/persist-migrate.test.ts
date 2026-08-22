@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { DEFAULT_PROFILE, migrate, mergeProfile, mergeProgress } from "./persist-migrate.ts";
+import { DEFAULT_PROFILE, emptyMode, migrate, mergeProfile, mergeProgress } from "./persist-migrate.ts";
 
 /**
  * These exist for one reason: a migration bug silently destroys progress that
@@ -20,7 +20,7 @@ test("v3 -> v4 moves every task status into the PvP progression", () => {
   assert.equal(out.progress.pvp.taskStatus.b, "completed");
   assert.deepEqual(Object.keys(out.progress.pvp.markerDone).sort(), ["m1", "m2"]);
   // PvE starts empty rather than inheriting — it is a different progression.
-  assert.deepEqual(out.progress.pve, { taskStatus: {}, markerDone: {} });
+  assert.deepEqual(out.progress.pve, emptyMode());
   assert.equal(out.lastMap, "customs");
   // The flat records are gone, so nothing can read them by accident.
   assert.equal(out.taskStatus, undefined);
@@ -60,17 +60,20 @@ test("merge fills in slices a stored state predates", () => {
   assert.equal(mergeProfile({ level: 30 }).level, 30);
 
   const empty = mergeProgress(undefined);
-  assert.deepEqual(empty.pvp, { taskStatus: {}, markerDone: {} });
-  assert.deepEqual(empty.pve, { taskStatus: {}, markerDone: {} });
-  assert.deepEqual(empty.season, { taskStatus: {}, markerDone: {} });
+  assert.deepEqual(empty.pvp, emptyMode());
+  assert.deepEqual(empty.pve, emptyMode());
+  assert.deepEqual(empty.season, emptyMode());
 
   // A save written before PvE existed must not come back with pve undefined.
   const partial = mergeProgress({ progress: { pvp: { taskStatus: { a: "active" } } } });
   assert.equal(partial.pvp.taskStatus.a, "active");
   assert.deepEqual(partial.pvp.markerDone, {});
-  assert.deepEqual(partial.pve, { taskStatus: {}, markerDone: {} });
+  assert.deepEqual(partial.pvp.itemCounts, {});
+  assert.deepEqual(partial.pvp.keysOwned, {});
+  assert.deepEqual(partial.pvp.hideout, {});
+  assert.deepEqual(partial.pve, emptyMode());
   // Same rule for the season slice — it must not inherit PvP ticks.
-  assert.deepEqual(partial.season, { taskStatus: {}, markerDone: {} });
+  assert.deepEqual(partial.season, emptyMode());
 });
 
 test("a junk mode falls back to the default rather than breaking lookups", () => {
@@ -92,6 +95,23 @@ test("a save from before trader levels gets an object, never undefined", () => {
     {},
   );
   assert.deepEqual(mergeProfile({ traderLevels: { Prapor: 3 } }).traderLevels, { Prapor: 3 });
+});
+
+test("a save from before the planner still has every task, and empty stash slices", () => {
+  const v6 = {
+    profile: { mode: "pve", faction: "USEC", level: 42, traderLevels: { Prapor: 2 } },
+    progress: { pvp: { taskStatus: { a: "active", b: "completed" }, markerDone: { m: true } } },
+  };
+  const out = migrate(structuredClone(v6), 6) as Record<string, any>;
+  assert.deepEqual(out.progress.pvp.taskStatus, { a: "active", b: "completed" });
+  const merged = mergeProgress(out);
+  assert.equal(merged.pvp.taskStatus.a, "active");
+  assert.deepEqual(merged.pvp.itemCounts, {});
+  assert.deepEqual(merged.pve, emptyMode());
+  const profile = mergeProfile(out.profile);
+  assert.equal(profile.targetTaskId, null);
+  assert.equal(profile.gameEdition, DEFAULT_PROFILE.gameEdition);
+  assert.deepEqual(profile.traderLevels, { Prapor: 2 });
 });
 
 test("v5 deletes the stored TarkovTracker token, and nothing else", () => {

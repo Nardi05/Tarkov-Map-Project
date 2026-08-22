@@ -105,3 +105,27 @@ test("documents only appear as a tie-break, never above an active task", () => {
   assert.equal(picks[0].map.normalizedName, "shoreline");
   assert.equal(picks[0].active[0].name, "Uninvited Guests - Part 1");
 });
+
+test("with no active tasks, fallback ids still rank a map", () => {
+  const customs = map("customs", 0);
+  const woods = map("woods", 0);
+  const progression = graph({
+    c: {
+      name: "The Survivalist Path",
+      trader: "Jaeger",
+      minPlayerLevel: 1,
+      factionName: null,
+      kappaRequired: false,
+      lightkeeperRequired: false,
+      requires: [],
+      maps: ["woods"],
+      traderGates: [],
+      needs: [],
+      keys: [],
+      wiki: null,
+    },
+  });
+  const picks = nextRaids([customs, woods], progression, {}, 2, ["c"]);
+  assert.equal(picks[0].map.normalizedName, "woods");
+  assert.equal(picks[0].active[0].id, "c");
+});

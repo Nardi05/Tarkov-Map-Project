@@ -30,9 +30,11 @@ type SectionKey = TaskStatus | "available" | "locked" | "none";
 
 const SECTIONS: { key: SectionKey; label: string; startsOpen: boolean }[] = [
   { key: "active", label: "Active", startsOpen: true },
+  { key: "pinned", label: "Pinned", startsOpen: true },
   { key: "available", label: "Available now", startsOpen: true },
   { key: "none", label: "Not started", startsOpen: true },
   { key: "locked", label: "Locked", startsOpen: false },
+  { key: "ignored", label: "Ignored", startsOpen: false },
   { key: "completed", label: "Done", startsOpen: false },
 ];
 
@@ -141,6 +143,21 @@ export default function TaskPanel({
   }, [modeGroups, taskStatus]);
 
   const filtersActive = !!quest.search || !!quest.trader || quest.kappaOnly || !!quest.focusTask;
+
+  const bring = useMemo(() => {
+    const names: string[] = [];
+    const seen = new Set<string>();
+    for (const g of matching) {
+      if (taskStatus[g.task.id] !== "active" && taskStatus[g.task.id] !== "pinned") continue;
+      for (const id of g.task.keys) {
+        const key = data.keys[id];
+        if (!key || seen.has(key.id)) continue;
+        seen.add(key.id);
+        names.push(key.shortName || key.name);
+      }
+    }
+    return names;
+  }, [matching, taskStatus, data.keys]);
 
   if (modeGroups.length === 0) {
     return (
@@ -253,6 +270,18 @@ export default function TaskPanel({
       <div className="scroll-y mt-2 min-h-0 flex-1 px-2 pb-3">
         {matching.length === 0 && (
           <EmptyState title="Nothing matches" hint="Loosen the filters above to see more tasks." />
+        )}
+
+        {bring.length > 0 && (
+          <div
+            className="mb-2 rounded-lg px-2.5 py-2 text-[0.7rem] leading-snug"
+            style={{ background: "var(--panel-3)", color: "var(--text-dim)" }}
+          >
+            <p className="font-semibold" style={{ color: "var(--text)" }}>
+              Bring
+            </p>
+            <p className="mt-0.5">{bring.join(" · ")}</p>
+          </div>
         )}
 
         {counts.active === 0 && matching.length > 0 && !quest.showAll && (

@@ -12,11 +12,13 @@ export default function TaskStatusControl({
   name,
   size = 20,
   onCycle,
+  disabled = false,
 }: {
   status: TaskStatus | undefined;
   name: string;
   size?: number;
   onCycle: () => void;
+  disabled?: boolean;
 }) {
   /*
    * The pop plays when the status changes, not when the row mounts.
@@ -46,7 +48,11 @@ export default function TaskStatusControl({
       ? `${name}: done. Tap to reset.`
       : status === "failed"
         ? `${name}: failed. Tap to reset.`
-        : status === "active"
+        : status === "ignored"
+          ? `${name}: ignored. Tap to reset.`
+          : status === "pinned"
+            ? `${name}: pinned. Tap to mark done.`
+          : status === "active"
           ? `${name}: active. Tap to mark done.`
           : `${name}: not started. Tap to mark active.`;
 
@@ -54,17 +60,22 @@ export default function TaskStatusControl({
     <button
       ref={ref}
       type="button"
-      aria-label={label}
-      title={label}
+      aria-label={disabled ? `${name}: switch to Season to tick this` : label}
+      title={disabled ? "Switch to Season to tick the story line" : label}
       onClick={onCycle}
+      disabled={disabled}
       className="status-box tap-target"
       data-state={status ?? "none"}
-      style={{ width: size, height: size }}
+      style={{ width: size, height: size, opacity: disabled ? 0.4 : undefined }}
     >
       {status === "completed" ? (
         <Icon path={icons.check} size={Math.round(size * 0.62)} />
       ) : status === "failed" ? (
         <Icon path={icons.close} size={Math.round(size * 0.58)} />
+      ) : status === "ignored" ? (
+        <Icon path={icons.close} size={Math.round(size * 0.5)} />
+      ) : status === "pinned" ? (
+        <Icon path={icons.pin} size={Math.round(size * 0.58)} />
       ) : status === "active" ? (
         // A filled dot rather than a tick: active means "in progress", and a
         // tick here would read as finished at a glance.

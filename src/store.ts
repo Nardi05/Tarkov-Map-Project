@@ -12,11 +12,13 @@ import {
 } from "./lib/dashboard";
 import { DEFAULT_LAYER_STATE, LAYERS, PRESETS, type LayerId } from "./lib/layers";
 import {
+  emptyMode,
   emptyProgress,
   mergeProfile,
   mergeProgress,
   migrate,
   type GameMode,
+  type HideoutStatus,
   type ModeProgress,
   type Profile,
 } from "./lib/persist-migrate";
@@ -114,10 +116,25 @@ interface Store {
   setTaskStatus: (taskId: string, status: TaskStatus | null) => void;
   /** Steps a task through not started -> active -> done -> not started. */
   cycleTaskStatus: (taskId: string) => void;
+  /** Marks a task done and every prerequisite behind it, the same way setup does. */
+  completeWithPrereqs: (taskId: string, prereqIds: string[]) => void;
   toggleMarkerDone: (markerId: string) => void;
   setMarkersDone: (markerIds: string[], done: boolean) => void;
+  setItemCount: (itemId: string, count: number) => void;
+  bumpItemCount: (itemId: string, delta: number) => void;
+  setKeyOwned: (keyId: string, owned: boolean) => void;
+  setHideoutStatus: (levelId: string, status: HideoutStatus | null) => void;
   /** Wipes the current mode only — the other mode's progress is untouched. */
   clearProgress: () => void;
+  /** Clears quest statuses and location ticks; stash and hideout stay. */
+  resetTasks: () => void;
+  /** Clears item counts and acquired keys; quests stay. */
+  resetItems: () => void;
+  /**
+   * Marks these tasks completed only if they have no status yet.
+   * Used to fill in prereqs behind currently active tasks when recalculating.
+   */
+  fillCompleted: (ids: string[]) => void;
   /**
    * Folds a set of statuses in over the current mode.
    *
@@ -258,8 +275,20 @@ export const useStore = create<Store>()(
             const taskStatus = { ...p.taskStatus };
             const current = taskStatus[taskId];
             if (!current) taskStatus[taskId] = "active";
-            else if (current === "active") taskStatus[taskId] = "completed";
+            else if (current === "active" || current === "pinned") taskStatus[taskId] = "completed";
             else delete taskStatus[taskId];
+            return { ...p, taskStatus };
+          }),
+        ),
+
+      completeWithPrereqs: (taskId, prereqIds) =>
+        set((s) =>
+          editMode(s, (p) => {
+            const taskStatus = { ...p.taskStatus };
+            for (const id of prereqIds) {
+              if (!taskStatus[id]) taskStatus[id] = "completed";
+            }
+            taskStatus[taskId] = "completed";
             return { ...p, taskStatus };
           }),
         ),
@@ -286,7 +315,82 @@ export const useStore = create<Store>()(
           }),
         ),
 
-      clearProgress: () => set((s) => editMode(s, () => ({ taskStatus: {}, markerDone: {} }))),
+      setItemCount: (itemId, count) =>
+        set((s) =>
+          editMode(s, (p) => {
+            const itemCounts = { ...p.itemCounts };
+            const next = Math.max(0, Math.floor(count));
+            if (next) itemCounts[itemId] = next;
+            else delete itemCounts[itemId];
+            return { ...p, itemCounts };
+          }),
+        ),
+
+      bumpItemCount: (itemId, delta) =>
+        set((s) =>
+          editMode(s, (p) => {
+            const itemCounts = { ...p.itemCounts };
+            const next = Math.max(0, (itemCounts[itemId] ?? 0) + delta);
+            if (next) itemCounts[itemId] = next;
+            else delete itemCounts[itemId];
+            return { ...p, itemCounts };
+          }),
+        ),
+
+      setKeyOwned: (keyId, owned) =>
+        set((s) =>
+          editMode(s, (p) => {
+            const keysOwned = { ...p.keysOwned };
+            if (owned) keysOwned[keyId] = true;
+            else delete keysOwned[keyId];
+            return { ...p, keysOwned };
+          }),
+        ),
+
+      setHideoutStatus: (levelId, status) =>
+        set((s) =>
+          editMode(s, (p) => {
+            const hideout = { ...p.hideout };
+            if (status) hideout[levelId] = status;
+            else delete hideout[levelId];
+            return { ...p, hideout };
+          }),
+        ),
+
+      clearProgress: () => set((s) => editMode(s, () => emptyMode())),
+
+      resetTasks: () =>
+        set((s) =>
+          editMode(s, (p) => ({
+            ...p,
+            taskStatus: {},
+            markerDone: {},
+          })),
+        ),
+
+      resetItems: () =>
+        set((s) =>
+          editMode(s, (p) => ({
+            ...p,
+            itemCounts: {},
+            keysOwned: {},
+          })),
+        ),
+
+      fillCompleted: (ids) =>
+        set((s) =>
+          editMode(s, (p) => {
+            const taskStatus = { ...p.taskStatus };
+            let changed = false;
+            for (const id of ids) {
+              if (!taskStatus[id]) {
+                taskStatus[id] = "completed";
+                changed = true;
+              }
+            }
+            return changed ? { ...p, taskStatus } : p;
+          }),
+        ),
 
       importTaskStatus: (statuses) =>
         set((s) => editMode(s, (p) => ({ ...p, taskStatus: { ...p.taskStatus, ...statuses } }))),
@@ -333,7 +437,7 @@ export const useStore = create<Store>()(
     }),
     {
       name: "tarkov-maps",
-      version: 6,
+      version: 7,
       storage: createJSONStorage(() => localStorage),
       // An allowlist: a slice added to the store and forgotten here simply
       // never persists. Search, trader and Kappa narrowing are momentary and
@@ -398,4 +502,16 @@ export function useTaskStatus(): Record<string, TaskStatus> {
 
 export function useMarkerDone(): Record<string, true> {
   return useStore((s) => s.progress[s.profile.mode].markerDone);
+}
+
+export function useItemCounts(): Record<string, number> {
+  return useStore((s) => s.progress[s.profile.mode].itemCounts);
+}
+
+export function useKeysOwned(): Record<string, true> {
+  return useStore((s) => s.progress[s.profile.mode].keysOwned);
+}
+
+export function useHideout(): Record<string, HideoutStatus> {
+  return useStore((s) => s.progress[s.profile.mode].hideout);
 }

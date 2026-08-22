@@ -1,10 +1,13 @@
 import { useEffect, useRef } from "react";
 import DashboardPage from "./components/DashboardPage";
+import HideoutPage from "./components/HideoutPage";
 import HomePage from "./components/HomePage";
 import MapPage from "./components/MapPage";
 import QuestsPage from "./components/QuestsPage";
+import SettingsPage from "./components/SettingsPage";
 import SetupWizard from "./components/SetupWizard";
 import TabShell from "./components/TabShell";
+import CommandPalette from "./components/CommandPalette";
 import { prefetchIdleMaps, prefetchProgression, useMapData, useMapIndex } from "./lib/data";
 import { href, navigate, tabOf, useRoute } from "./lib/router";
 import { useStore } from "./store";
@@ -38,6 +41,10 @@ export default function App() {
         ? `${map.data.name} — Tarkov Maps`
         : route.name === "quests"
           ? "Quests — Tarkov Maps"
+          : route.name === "hideout"
+            ? "Hideout — Tarkov Maps"
+          : route.name === "settings"
+            ? "Settings — Tarkov Maps"
           : route.name === "setup"
             ? "Set up your progress — Tarkov Maps"
             : route.name === "dashboard"
@@ -76,7 +83,12 @@ export default function App() {
    * from a fresh load would be rude rather than helpful.
    */
   const firstRoute = useRef(true);
-  const routeKey = route.name === "map" ? `map:${route.map}` : route.name;
+  const routeKey =
+    route.name === "map"
+      ? `map:${route.map}`
+      : route.name === "quests"
+        ? `quests:${route.view}`
+        : route.name;
   useEffect(() => {
     if (firstRoute.current) {
       firstRoute.current = false;
@@ -105,6 +117,14 @@ export default function App() {
   }
 
   if (route.name === "setup") return <SetupWizard />;
+  if (route.name === "settings") {
+    return (
+      <>
+        <SettingsPage />
+        <CommandPalette />
+      </>
+    );
+  }
 
   /*
    * The three tab pages share one frame, and it is mounted once out here so it
@@ -115,12 +135,21 @@ export default function App() {
   if (route.name !== "map") {
     const tab = tabOf(route)!;
     return (
-      <TabShell current={tab}>
-        {tab === "dashboard" && <DashboardPage />}
-        {tab === "quests" && <QuestsPage />}
-        {tab === "maps" &&
-          (index.data ? <HomePage maps={index.data.maps} /> : <Loading label="Loading maps" inline />)}
-      </TabShell>
+      <>
+        <TabShell current={tab}>
+          {tab === "dashboard" && <DashboardPage />}
+          {tab === "quests" && (
+            <QuestsPage
+              view={route.name === "quests" ? route.view : "list"}
+              focus={route.name === "quests" ? route.focus : null}
+            />
+          )}
+          {tab === "hideout" && <HideoutPage />}
+          {tab === "maps" &&
+            (index.data ? <HomePage maps={index.data.maps} /> : <Loading label="Loading maps" inline />)}
+        </TabShell>
+        <CommandPalette />
+      </>
     );
   }
 
@@ -137,11 +166,14 @@ export default function App() {
   if (!map.data || !index.data) return <Loading label="Loading map" />;
 
   return (
-    <MapPage
-      data={map.data}
-      maps={index.data.maps}
-      deepLinkTask={route.task}
-    />
+    <>
+      <MapPage
+        data={map.data}
+        maps={index.data.maps}
+        deepLinkTask={route.task}
+      />
+      <CommandPalette />
+    </>
   );
 }
 

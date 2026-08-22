@@ -182,7 +182,7 @@ body {
   .site-nav {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     align-items: center;
     padding: 3px;
     border-radius: 999px;
@@ -197,7 +197,7 @@ body {
     top: 3px;
     bottom: 3px;
     left: 3px;
-    width: calc(33.333% - 2px);
+    width: calc(25% - 2px);
     border-radius: 999px;
     background: var(--accent);
     transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
@@ -210,6 +210,10 @@ body {
 
   .site-nav[data-current="quests"] .site-nav-pill {
     transform: translateX(200%);
+  }
+
+  .site-nav[data-current="hideout"] .site-nav-pill {
+    transform: translateX(300%);
   }
 
   .site-nav a,
@@ -386,12 +390,134 @@ body {
     color: #2b0606;
   }
 
+  .status-box[data-state="ignored"] {
+    background: var(--panel-2);
+    border-color: var(--line);
+    color: var(--text-faint);
+  }
+
+  .status-box[data-state="pinned"] {
+    background: color-mix(in srgb, var(--warn, #facc15) 85%, black);
+    border-color: var(--warn, #facc15);
+    color: #2b2206;
+  }
+
   /*
    * The raid clock. Tightened on a phone: at 360px the header is the map's
    * back button, its name, and this — and the name is the one that has to
    * stay readable, so the clock gives up the room rather than truncating
    * "Streets of Tarkov" to "S…".
    */
+  .raid-board-label {
+    margin: 0 0 0.35rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .raid-board-pair {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .raid-board-face {
+    min-width: 4.4rem;
+    padding: 0.35rem 0.55rem;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .dash-command {
+    display: grid;
+    gap: 0.85rem;
+    margin-bottom: 0.85rem;
+    padding: 0.9rem 1rem;
+  }
+
+  @media (min-width: 800px) {
+    .dash-command {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: start;
+    }
+  }
+
+  .dash-command-char {
+    text-align: center;
+  }
+
+  .level-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    margin-top: 0.35rem;
+  }
+
+  .item-mosaic {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 52px);
+    grid-auto-rows: 52px;
+    gap: 3px;
+  }
+
+  .item-mosaic-cell {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--panel-2);
+    border: 1px solid var(--line-soft);
+  }
+
+  .item-mosaic-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 3px;
+  }
+
+  .item-mosaic-badge {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    min-width: 1.1rem;
+    padding: 0 0.25rem;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.72);
+    font-size: 0.68rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.25;
+  }
+
+  .pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    margin-top: 0.65rem;
+  }
+
+  .pager .btn {
+    min-width: 2rem;
+    padding: 0.22rem 0.45rem;
+    font-size: 0.75rem;
+  }
+
+  .key-acquire {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: transparent;
+  }
+
   .raid-clock {
     gap: 0.3rem;
     padding: 0.2rem 0.35rem;

@@ -1,5 +1,13 @@
 import { useRef, useState } from "react";
-import { buildSave, parseSave, saveFileName, SaveFileError, type ParsedSave } from "../lib/save-file";
+import { useProgression } from "../lib/data";
+import {
+  buildQuestLog,
+  buildSave,
+  parseSave,
+  saveFileName,
+  SaveFileError,
+  type ParsedSave,
+} from "../lib/save-file";
 import { useStore } from "../store";
 import { Icon, icons } from "./ui";
 
@@ -21,6 +29,7 @@ export default function SavePanel({ compact = false }: { compact?: boolean } = {
   const profile = useStore((s) => s.profile);
   const progress = useStore((s) => s.progress);
   const restoreProgress = useStore((s) => s.restoreProgress);
+  const progression = useProgression();
 
   const fileInput = useRef<HTMLInputElement>(null);
   const [pending, setPending] = useState<(ParsedSave & { name: string }) | null>(null);
@@ -32,10 +41,15 @@ export default function SavePanel({ compact = false }: { compact?: boolean } = {
     pve: Object.keys(progress.pve.taskStatus).length,
     season: Object.keys(progress.season.taskStatus).length,
   };
-  const hasAnything = counts.pvp + counts.pve + counts.season > 0;
+  const extras =
+    Object.keys(progress[profile.mode].itemCounts).length +
+    Object.keys(progress[profile.mode].keysOwned).length +
+    Object.keys(progress[profile.mode].hideout).length;
+  const hasAnything = counts.pvp + counts.pve + counts.season + extras > 0;
 
   const download = () => {
-    const blob = new Blob([JSON.stringify(buildSave(profile, progress), null, 1)], {
+    const log = buildQuestLog(progression.data?.tasks, progress);
+    const blob = new Blob([JSON.stringify(buildSave(profile, progress, log), null, 1)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
@@ -82,8 +96,9 @@ export default function SavePanel({ compact = false }: { compact?: boolean } = {
         <>
           <h2 className="text-sm font-semibold">Back up or move your progress</h2>
           <p className="mt-0.5 text-[0.72rem] leading-relaxed" style={{ color: "var(--text-faint)" }}>
-            Everything is stored in this browser only, so clearing site data loses it. Save a file
-            to keep a copy, or to carry a wipe over to another device.
+            Everything is stored in this browser only, so clearing site data loses it. The file
+            holds quest statuses, item counts, keys and hideout — restore it on another device
+            after a sync, or keep a backup.
           </p>
         </>
       )}
@@ -117,7 +132,8 @@ export default function SavePanel({ compact = false }: { compact?: boolean } = {
         />
         {!compact && (
           <span className="text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-            {counts.pvp} PvP · {counts.season} Season · {counts.pve} PvE tracked
+            {counts.pvp} PvP · {counts.season} Season · {counts.pve} PvE
+            {extras > 0 ? ` · ${extras} stash/hideout` : ""}
           </span>
         )}
       </div>

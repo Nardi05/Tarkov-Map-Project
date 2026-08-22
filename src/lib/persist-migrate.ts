@@ -20,6 +20,12 @@ import type { TaskStatus } from "../types";
 
 export type GameMode = "pvp" | "pve" | "season";
 export type Faction = "Any" | "USEC" | "BEAR";
+export type GameEdition =
+  | "standard"
+  | "leftBehind"
+  | "prepareToEscape"
+  | "edgeOfDarkness"
+  | "unheard";
 
 export interface Profile {
   mode: GameMode;
@@ -32,26 +38,58 @@ export interface Profile {
    * feature at all.
    */
   traderLevels: Record<string, number>;
+  /**
+   * The task the planner aims at — usually Collector. Null means no target,
+   * and the plan is "everything currently doable" rather than a Kappa path.
+   */
+  targetTaskId: string | null;
+  gameEdition: GameEdition;
 }
+
+export type HideoutStatus = "active" | "completed" | "ignored";
 
 export interface ModeProgress {
   taskStatus: Record<string, TaskStatus>;
   markerDone: Record<string, true>;
+  /** Global stash: itemId -> how many you have. Remaining on a task is need − have. */
+  itemCounts: Record<string, number>;
+  /** Keys marked found. */
+  keysOwned: Record<string, true>;
+  /** Hideout station-level id -> status. Absent means not started. */
+  hideout: Record<string, HideoutStatus>;
 }
 
 export const GAME_MODES: GameMode[] = ["pvp", "pve", "season"];
+
+export const GAME_EDITIONS: GameEdition[] = [
+  "standard",
+  "leftBehind",
+  "prepareToEscape",
+  "edgeOfDarkness",
+  "unheard",
+];
 
 export const DEFAULT_PROFILE: Profile = {
   mode: "pvp",
   faction: "Any",
   level: 15,
   traderLevels: {},
+  targetTaskId: null,
+  gameEdition: "unheard",
 };
 
+export const emptyMode = (): ModeProgress => ({
+  taskStatus: {},
+  markerDone: {},
+  itemCounts: {},
+  keysOwned: {},
+  hideout: {},
+});
+
 export const emptyProgress = (): Record<GameMode, ModeProgress> => ({
-  pvp: { taskStatus: {}, markerDone: {} },
-  pve: { taskStatus: {}, markerDone: {} },
-  season: { taskStatus: {}, markerDone: {} },
+  pvp: emptyMode(),
+  pve: emptyMode(),
+  season: emptyMode(),
 });
 
 const isStatus = (v: unknown): v is TaskStatus => v === "active" || v === "completed";
@@ -75,6 +113,9 @@ const isStatus = (v: unknown): v is TaskStatus => v === "active" || v === "compl
  *   is a third character: copying PvP Zone ticks into it would be inventing a
  *   wipe they have not played. The slice starts empty; `mergeProgress` is what
  *   actually creates it for older saves.
+ * - v7 adds item counts, owned keys, hideout status, a target task and game
+ *   edition. `mergeProgress` / `mergeProfile` fill those; this function does
+ *   not rewrite `taskStatus`, so every previously stored task survives.
  */
 export function migrate(persisted: unknown, version: number): Record<string, unknown> {
   const state = (persisted ?? {}) as Record<string, unknown>;
@@ -119,6 +160,9 @@ export function migrate(persisted: unknown, version: number): Record<string, unk
   // v6 does not rewrite `progress`. A save that predates the season slice is
   // missing the key; `mergeProgress` fills it with empty records so a later
   // migration cannot accidentally clone PvP ticks into a wipe that never ran.
+  //
+  // v7 is the same idea for itemCounts / keysOwned / hideout / targetTaskId /
+  // gameEdition — named in merge, not copied from another slice.
 
   return state;
 }
@@ -138,9 +182,13 @@ export function mergeProgress(
   const p = stored?.progress;
   if (!p) return base;
   for (const mode of GAME_MODES) {
+    const slice = p[mode];
     base[mode] = {
-      taskStatus: p[mode]?.taskStatus ?? {},
-      markerDone: p[mode]?.markerDone ?? {},
+      taskStatus: slice?.taskStatus ?? {},
+      markerDone: slice?.markerDone ?? {},
+      itemCounts: slice?.itemCounts ?? {},
+      keysOwned: slice?.keysOwned ?? {},
+      hideout: slice?.hideout ?? {},
     };
   }
   return base;
@@ -148,6 +196,13 @@ export function mergeProgress(
 
 const isMode = (v: unknown): v is GameMode =>
   v === "pvp" || v === "pve" || v === "season";
+
+const isEdition = (v: unknown): v is GameEdition =>
+  v === "standard" ||
+  v === "leftBehind" ||
+  v === "prepareToEscape" ||
+  v === "edgeOfDarkness" ||
+  v === "unheard";
 
 export function mergeProfile(stored: Partial<Profile> | undefined): Profile {
   const raw = stored ?? {};
@@ -161,5 +216,7 @@ export function mergeProfile(stored: Partial<Profile> | undefined): Profile {
     // stored state but null, or absent from a save that predates it, must come
     // back as an object rather than undefined — every read site indexes it.
     traderLevels: raw.traderLevels ?? {},
+    targetTaskId: typeof raw.targetTaskId === "string" ? raw.targetTaskId : null,
+    gameEdition: isEdition(raw.gameEdition) ? raw.gameEdition : DEFAULT_PROFILE.gameEdition,
   };
 }

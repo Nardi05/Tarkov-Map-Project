@@ -153,7 +153,11 @@ const routes = [
   { hash: "#/", heading: "Dashboard" },
   { hash: "#/maps", heading: "Maps" },
   { hash: "#/quests", heading: "Quests" },
+  { hash: "#/quests/graph", heading: "Quests" },
+  { hash: "#/quests/items", heading: "Quests" },
   { hash: "#/quests/setup", heading: "Set up your progress" },
+  { hash: "#/hideout", heading: "Hideout" },
+  { hash: "#/settings", heading: "Settings" },
 ];
 
 for (const route of routes) {

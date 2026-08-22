@@ -167,7 +167,7 @@ export interface QuestMarker {
  * out that a task is *available*, but only the player can say it is active or
  * done, and what they say always wins. See `TaskAvailability`.
  */
-export type TaskStatus = "active" | "completed" | "failed";
+export type TaskStatus = "active" | "completed" | "failed" | "ignored" | "pinned";
 
 /**
  * A task's state once the graph has had its say.
@@ -178,7 +178,14 @@ export type TaskStatus = "active" | "completed" | "failed";
  * one — the previous version of this feature was removed because the inference
  * had no override, and that is the mistake this must not repeat.
  */
-export type TaskAvailability = "locked" | "available" | "active" | "completed" | "failed";
+export type TaskAvailability =
+  | "locked"
+  | "available"
+  | "active"
+  | "completed"
+  | "failed"
+  | "ignored"
+  | "pinned";
 
 /** One requirement: a prior task that must be in one of these states. */
 export interface TaskRequirement {
@@ -218,6 +225,8 @@ export interface ProgressionTask {
   factionName: string | null;
   kappaRequired: boolean;
   lightkeeperRequired: boolean;
+  /** XP the task pays. Absent on payloads built before this was recorded. */
+  experience?: number;
   /** Alternative requirement sets — satisfied when any one set is fully met. */
   requires: TaskRequirement[][];
   /** Maps this task has markers on; empty for tasks handled purely at a trader. */
@@ -229,6 +238,42 @@ export interface ProgressionTask {
   /** Keys the task's objectives need, by map. */
   keys: { map: string | null; keys: string[] }[];
   wiki: string | null;
+}
+
+/** One hideout station, baked from tarkov.dev at build time. */
+export interface HideoutStation {
+  id: string;
+  name: string;
+  image: string | null;
+  levels: HideoutLevel[];
+}
+
+export interface HideoutLevel {
+  id: string;
+  level: number;
+  itemRequirements: { itemId: string; count: number; foundInRaid: boolean }[];
+  stationLevelRequirements: { stationId: string; level: number }[];
+}
+
+export interface HideoutData {
+  generated: string;
+  stations: HideoutStation[];
+}
+
+/** Items the planner, audit grid and hideout actually name — not the whole flea. */
+export interface CatalogItem {
+  id: string;
+  name: string;
+  shortName: string;
+  icon: string | null;
+  width: number;
+  height: number;
+  craftableStations: string[];
+}
+
+export interface ItemCatalog {
+  generated: string;
+  items: Record<string, CatalogItem>;
 }
 
 /**

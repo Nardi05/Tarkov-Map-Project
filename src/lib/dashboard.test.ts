@@ -86,10 +86,25 @@ test("movePanel steps over hidden panels so the button always looks like it work
   assert.deepEqual(ids(movePanel(panels, "nope" as never, 1)), ids(panels));
 });
 
+test("retired header panels do not come back as addable tiles", () => {
+  const out = mergeDashboard({
+    panels: [
+      { id: "target" as never, visible: false, wide: false },
+      { id: "clocks" as never, visible: false, wide: false },
+      { id: "upcoming", visible: true, wide: false },
+    ],
+  });
+  assert.equal(out.panels.some((p) => (p.id as string) === "target"), false);
+  assert.equal(out.panels.some((p) => (p.id as string) === "clocks"), false);
+});
+
 test("setPanelFlag touches one panel and copies rather than mutates", () => {
   const panels = mergeDashboard(undefined).panels;
   const hidden = setPanelFlag(panels, "keys", "visible", false);
   assert.equal(hidden.find((p) => p.id === "keys")!.visible, false);
   assert.equal(panels.find((p) => p.id === "keys")!.visible, true);
-  assert.equal(hidden.filter((p) => !p.visible).length, 1);
+  assert.equal(
+    hidden.filter((p) => !p.visible).length,
+    panels.filter((p) => !p.visible).length + 1,
+  );
 });

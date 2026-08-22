@@ -1,8 +1,8 @@
 import { useEffect, useRef, type ReactNode } from "react";
-import { TAB_ORDER, type TabId } from "../lib/router";
+import { href, onNavClick, TAB_ORDER, type TabId } from "../lib/router";
 import { useStore } from "../store";
 import ModeSwitch from "./ModeSwitch";
-import { PageChrome } from "./ui";
+import { Icon, icons, PageChrome } from "./ui";
 
 /**
  * The frame the three tab pages — dashboard, maps, quests — share.
@@ -60,6 +60,15 @@ export default function TabShell({
       <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-12">
         <PageChrome current={current}>
           <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m)} size="sm" />
+          <a
+            href={href.settings()}
+            onClick={onNavClick(href.settings())}
+            className="btn btn-ghost btn-icon"
+            aria-label="Settings and profiles"
+            title="Settings"
+          >
+            <Icon path={icons.settings} size={16} />
+          </a>
         </PageChrome>
 
         {/* Keyed on the tab so React replaces the subtree, which is what

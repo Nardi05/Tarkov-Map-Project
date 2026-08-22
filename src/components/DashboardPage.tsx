@@ -1,17 +1,19 @@
 import { useCallback, useId, useMemo, useState } from "react";
-import { useMapIndex, useProgression } from "../lib/data";
-import { KORD_SEASON, prettyMapName, seasonDaysLeft, seasonElapsed } from "../lib/kord-season";
+import { useItemCatalog, useMapIndex, useProgression } from "../lib/data";
+import { prettyMapName } from "../lib/kord-season";
 import { nextRaids, type RaidPick } from "../lib/next-raid";
+import { buildPlan } from "../lib/plan";
 import { MODE_META } from "../lib/mode";
 import { chainDepth, computeAvailability, unlocksAfter } from "../lib/progression";
-import { collectKeys, collectNeeds } from "../lib/quest-lists";
+import { collectKeys, collectTaskItems } from "../lib/quest-lists";
 import { href, navigate, onNavClick } from "../lib/router";
 import { displayName, visibleInMode } from "../lib/task-variant";
 import { useDragReorder } from "../lib/use-drag-reorder";
 import type { GameMode } from "../lib/persist-migrate";
 import {
   DASH_PANEL_META,
-  UPCOMING_LIMITS,
+  useItemCounts,
+  useKeysOwned,
   useStore,
   useTaskStatus,
   type DashPanel,
@@ -19,8 +21,11 @@ import {
 } from "../store";
 import type { MapIndexEntry, Progression, TaskAvailability } from "../types";
 import NextRaid from "./NextRaid";
+import SeasonPanel from "./SeasonPanel";
+import RaidClock from "./RaidClock";
+import TargetPicker from "./TargetPicker";
 import TaskName from "./TaskName";
-import TaskStatusControl from "./TaskStatusControl";
+import TaskSheet from "./TaskSheet";
 import { EmptyState, Icon, icons } from "./ui";
 
 /**
@@ -75,7 +80,13 @@ export default function DashboardPage() {
   const profile = useStore((s) => s.profile);
   const dashboard = useStore((s) => s.dashboard);
   const lastMap = useStore((s) => s.lastMap);
+  const setTaskStatus = useStore((s) => s.setTaskStatus);
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
+  const setProfile = useStore((s) => s.setProfile);
+  const itemCounts = useItemCounts();
+  const keysOwned = useKeysOwned();
+  const setKeyOwned = useStore((s) => s.setKeyOwned);
+  const catalog = useItemCatalog();
 
   const [editing, setEditing] = useState(false);
 
@@ -88,14 +99,37 @@ export default function DashboardPage() {
     [data, taskStatus, profile],
   );
 
-  const upcoming = useMemo(
-    () => pickUpcoming(data, availability, profile.mode, dashboard.upcomingLimit),
-    [data, availability, profile.mode, dashboard.upcomingLimit],
+  const plan = useMemo(
+    () => buildPlan(data, taskStatus, profile),
+    [data, taskStatus, profile],
   );
 
-  const upcomingIds = useMemo(() => upcoming.map((r) => r.id), [upcoming]);
-  const keys = useMemo(() => collectKeys(data, upcomingIds), [data, upcomingIds]);
-  const needs = useMemo(() => collectNeeds(data, upcomingIds), [data, upcomingIds]);
+  const upcoming = useMemo(() => {
+    const cap = Math.max(80, dashboard.upcomingLimit);
+    const planned = rowsFromPlan(data, availability, profile.mode, plan.current, cap);
+    return planned.length
+      ? planned
+      : pickUpcoming(data, availability, profile.mode, cap);
+  }, [data, availability, profile.mode, plan.current, dashboard.upcomingLimit]);
+
+  const planIds = plan.current;
+  const keys = useMemo(() => collectKeys(data, planIds), [data, planIds]);
+  const mosaic = useMemo(() => {
+    const wanted = new Set(planIds);
+    const rows = collectTaskItems(data, itemCounts).filter(
+      (row) => wanted.has(row.taskId) && row.remaining > 0,
+    );
+    const byItem = new Map<string, (typeof rows)[number]>();
+    for (const row of rows) {
+      const prev = byItem.get(row.itemId);
+      if (!prev) byItem.set(row.itemId, { ...row });
+      else {
+        prev.need += row.need;
+        prev.remaining = Math.max(0, prev.need - prev.have);
+      }
+    }
+    return [...byItem.values()];
+  }, [data, itemCounts, planIds]);
   const stats = useMemo(
     () => summarise(data, availability, profile.mode),
     [data, availability, profile.mode],
@@ -105,8 +139,8 @@ export default function DashboardPage() {
     [data, availability, profile.mode],
   );
   const raidPicks = useMemo(
-    () => nextRaids(maps.data?.maps ?? [], data, taskStatus, 4),
-    [maps.data, data, taskStatus],
+    () => nextRaids(maps.data?.maps ?? [], data, taskStatus, 4, plan.current),
+    [maps.data, data, taskStatus, plan.current],
   );
 
   const body = useCallback(
@@ -117,20 +151,41 @@ export default function DashboardPage() {
         case "raid":
           return <NextRaid picks={raidPicks} />;
         case "upcoming":
-          return <UpcomingList rows={upcoming} onCycle={cycleTaskStatus} fresh={fresh} />;
+          return (
+            <UpcomingList
+              rows={upcoming}
+              onComplete={(id) => setTaskStatus(id, "completed")}
+              fresh={fresh}
+            />
+          );
         case "keys":
-          return <KeyList rows={keys} />;
+          return <KeyList rows={keys} owned={keysOwned} onOwned={setKeyOwned} />;
         case "needs":
-          return <NeedList rows={needs} />;
+          return (
+            <ItemMosaic
+              rows={mosaic}
+              catalog={catalog.data?.items ?? {}}
+            />
+          );
         case "traders":
           return <TraderList rows={traders} />;
         case "season":
-          return <SeasonSummary mode={profile.mode} />;
+          return (
+            <SeasonPanel
+              mode={profile.mode}
+              taskStatus={taskStatus}
+              availability={availability}
+              onCycle={(id) => {
+                if (profile.mode === "season") cycleTaskStatus(id);
+              }}
+              compact
+            />
+          );
         case "maps":
           return <MapList maps={maps.data?.maps ?? []} resume={resume ?? null} picks={raidPicks} />;
       }
     },
-    [stats, profile.level, profile.mode, raidPicks, upcoming, cycleTaskStatus, fresh, keys, needs, traders, maps.data, resume],
+    [stats, profile.level, profile.mode, raidPicks, upcoming, setTaskStatus, cycleTaskStatus, taskStatus, availability, fresh, keys, keysOwned, setKeyOwned, mosaic, catalog.data, traders, maps.data, resume, plan.remainingToTarget],
   );
 
   return (
@@ -165,6 +220,38 @@ export default function DashboardPage() {
             </button>
           </div>
         </header>
+
+        <section className="surface dash-command">
+          <RaidClock mapName={resume?.normalizedName ?? "customs"} variant="board" />
+          <div className="dash-command-char">
+            <p className="text-lg font-semibold">{MODE_META[profile.mode].label}</p>
+            <div className="level-step">
+              <button
+                type="button"
+                className="btn btn-ghost btn-icon"
+                aria-label="Lower level"
+                disabled={profile.level <= 1}
+                onClick={() => setProfile("level", Math.max(1, profile.level - 1))}
+              >
+                −
+              </button>
+              <span className="tabular-nums text-2xl font-semibold">{profile.level}</span>
+              <button
+                type="button"
+                className="btn btn-ghost btn-icon"
+                aria-label="Raise level"
+                disabled={profile.level >= 79}
+                onClick={() => setProfile("level", Math.min(79, profile.level + 1))}
+              >
+                +
+              </button>
+            </div>
+            <p className="mt-1 text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
+              {profile.faction === "Any" ? "Either faction" : profile.faction}
+            </p>
+          </div>
+          <TargetPicker remaining={plan.remainingToTarget} variant="bar" />
+        </section>
 
         {progression.error && (
           <EmptyState title="The task graph could not be loaded" hint={progression.error.message} />
@@ -466,9 +553,7 @@ function HiddenTray({
 function CustomiseBar() {
   const columnsId = useId();
   const columns = useStore((s) => s.dashboard.columns);
-  const upcomingLimit = useStore((s) => s.dashboard.upcomingLimit);
   const setDashColumns = useStore((s) => s.setDashColumns);
-  const setUpcomingLimit = useStore((s) => s.setUpcomingLimit);
   const resetDashboard = useStore((s) => s.resetDashboard);
 
   return (
@@ -511,26 +596,6 @@ function CustomiseBar() {
           one. They are saved either way.
         </span>
       </div>
-
-      <label className="flex flex-col gap-1">
-        <span className="eyebrow" style={{ color: "var(--text-dim)", letterSpacing: "0.1em" }}>
-          Upcoming
-        </span>
-        {/* One control, so the wrapping label names it — and names it with the
-            words on screen rather than a second, different sentence. */}
-        <select
-          className="input tabular-nums"
-          style={{ width: "auto", padding: "0.3rem 1.6rem 0.3rem 0.6rem" }}
-          value={upcomingLimit}
-          onChange={(e) => setUpcomingLimit(Number(e.target.value))}
-        >
-          {UPCOMING_LIMITS.map((n) => (
-            <option key={n} value={n}>
-              {n} tasks
-            </option>
-          ))}
-        </select>
-      </label>
 
       <div className="flex gap-1.5">
         <button
@@ -646,13 +711,14 @@ function Meter({ label, value, tone }: { label: string; value: number; tone?: "a
 
 function UpcomingList({
   rows,
-  onCycle,
+  onComplete,
   fresh,
 }: {
   rows: UpcomingRow[];
-  onCycle: (id: string) => void;
+  onComplete: (id: string) => void;
   fresh: boolean;
 }) {
+  const pager = usePager(rows.length, 20);
   if (rows.length === 0) {
     return (
       <EmptyState
@@ -663,17 +729,13 @@ function UpcomingList({
     );
   }
 
+  const slice = rows.slice(pager.start, pager.end);
+
   return (
+    <>
     <ul className="space-y-1">
-      {rows.map((row) => (
+      {slice.map((row) => (
         <li key={row.id} className="surface-2 flex items-start gap-2.5 p-2">
-          <span className="mt-0.5">
-            <TaskStatusControl
-              status={row.availability === "active" ? "active" : undefined}
-              name={row.name}
-              onCycle={() => onCycle(row.id)}
-            />
-          </span>
           <div className="min-w-0 flex-1">
             <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
               <span className="text-[0.8125rem] font-medium">
@@ -707,30 +769,43 @@ function UpcomingList({
               </p>
             )}
           </div>
-          {row.wiki && (
-            <a
-              className="btn btn-ghost btn-icon flex-none"
-              href={row.wiki}
-              target="_blank"
-              rel="noreferrer noopener"
-              aria-label={`${displayName(row.name)} on the wiki`}
-            >
-              <Icon path={icons.external} size={15} />
-            </a>
-          )}
+          <button
+            type="button"
+            className="btn btn-ghost btn-icon flex-none"
+            style={{ color: "var(--ok)" }}
+            aria-label={`Mark ${displayName(row.name)} done`}
+            title="Mark done — it leaves this list and the next quest fills in"
+            onClick={() => onComplete(row.id)}
+          >
+            <Icon path={icons.check} size={16} />
+          </button>
         </li>
       ))}
     </ul>
+    <Pager {...pager} noun="quests" />
+    </>
   );
 }
 
-function KeyList({ rows }: { rows: ReturnType<typeof collectKeys> }) {
-  if (rows.length === 0) {
+function KeyList({
+  rows,
+  owned,
+  onOwned,
+}: {
+  rows: ReturnType<typeof collectKeys>;
+  owned: Record<string, true>;
+  onOwned: (id: string, have: boolean) => void;
+}) {
+  const open = rows.filter((k) => !owned[k.item.id]);
+  const pager = usePager(open.length, 20);
+  if (open.length === 0) {
     return <EmptyState compact title="No keys needed" hint="Nothing coming up is behind a locked door." />;
   }
+  const slice = open.slice(pager.start, pager.end);
   return (
+    <>
     <ul className="space-y-1">
-      {rows.map((k) => (
+      {slice.map((k) => (
         <li key={k.item.id} className="surface-2 flex items-center gap-2.5 p-2">
           {k.item.icon && (
             <img src={k.item.icon} alt="" width={28} height={28} loading="lazy" className="flex-none rounded" />
@@ -742,35 +817,164 @@ function KeyList({ rows }: { rows: ReturnType<typeof collectKeys> }) {
               {k.maps.length ? ` · ${k.maps.join(", ")}` : ""}
             </p>
           </div>
+          <button
+            type="button"
+            className="btn btn-ghost btn-icon flex-none"
+            aria-label={`Mark ${k.item.name} acquired`}
+            title="Mark acquired — it leaves this list and the next key fills in"
+            onClick={() => onOwned(k.item.id, true)}
+          >
+            <span className="key-acquire" aria-hidden="true" />
+          </button>
         </li>
       ))}
     </ul>
+    <Pager {...pager} noun="keys" />
+    </>
   );
 }
 
-function NeedList({ rows }: { rows: ReturnType<typeof collectNeeds> }) {
+function ItemMosaic({
+  rows,
+  catalog,
+}: {
+  rows: ReturnType<typeof collectTaskItems>;
+  catalog: Record<string, { width?: number; height?: number }>;
+}) {
+  const [openId, setOpenId] = useState<string | null>(null);
   if (rows.length === 0) {
     return (
-      <EmptyState compact title="Nothing to find" hint="No found-in-raid hand-ins among the upcoming tasks." />
+      <EmptyState compact title="Nothing to find" hint="No remaining hand-ins on the current plan." />
     );
   }
   return (
-    <ul className="space-y-1">
-      {rows.map((n) => (
-        <li key={n.name} className="surface-2 flex items-center gap-2.5 p-2">
-          {n.icon && (
-            <img src={n.icon} alt="" width={28} height={28} loading="lazy" className="flex-none rounded" />
-          )}
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[0.8125rem] font-medium">{n.name}</p>
-            <p className="truncate text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-              {n.tasks.join(", ")}
-            </p>
-          </div>
-          <span className="chip flex-none tabular-nums">×{n.count}</span>
-        </li>
+    <>
+      <div className="item-mosaic">
+        {rows.map((row) => {
+          const w = Math.min(4, Math.max(1, catalog[row.itemId]?.width ?? 1));
+          const h = Math.min(4, Math.max(1, catalog[row.itemId]?.height ?? 1));
+          return (
+            <button
+              key={row.itemId}
+              type="button"
+              className="item-mosaic-cell"
+              style={{ gridColumn: `span ${w}`, gridRow: `span ${h}` }}
+              title={`${row.itemName} · ${row.remaining} left · ${row.taskName}`}
+              onClick={() => setOpenId(row.taskId)}
+            >
+              {row.icon && <img src={row.icon} alt="" />}
+              <span className="item-mosaic-badge">{row.remaining}</span>
+            </button>
+          );
+        })}
+      </div>
+      {openId && <TaskSheet taskId={openId} onClose={() => setOpenId(null)} />}
+    </>
+  );
+}
+
+const PAGE_SIZES = [10, 20] as const;
+
+function usePager(total: number, initialSize: number) {
+  const [size, setSize] = useState(initialSize);
+  const [page, setPage] = useState(0);
+  const pages = Math.max(1, Math.ceil(total / size) || 1);
+  const current = Math.min(page, pages - 1);
+  return {
+    page: current,
+    pages,
+    size,
+    start: current * size,
+    end: Math.min(total, (current + 1) * size),
+    total,
+    setPage,
+    setSize: (n: number) => {
+      setSize(n);
+      setPage(0);
+    },
+  };
+}
+
+function pageWindow(current: number, pages: number): number[] {
+  const span = 5;
+  let from = Math.max(0, current - 2);
+  let to = Math.min(pages, from + span);
+  from = Math.max(0, to - span);
+  return Array.from({ length: to - from }, (_, i) => from + i);
+}
+
+function Pager({
+  page,
+  pages,
+  size,
+  start,
+  end,
+  total,
+  setPage,
+  setSize,
+  noun,
+}: ReturnType<typeof usePager> & { noun: string }) {
+  if (total === 0) return null;
+  return (
+    <div className="pager">
+      <button type="button" className="btn btn-ghost" disabled={page === 0} onClick={() => setPage(0)} aria-label="First page">
+        «
+      </button>
+      <button
+        type="button"
+        className="btn btn-ghost"
+        disabled={page === 0}
+        onClick={() => setPage(page - 1)}
+        aria-label="Previous page"
+      >
+        ‹
+      </button>
+      {pageWindow(page, pages).map((n) => (
+        <button
+          key={n}
+          type="button"
+          className={n === page ? "btn is-active" : "btn btn-ghost"}
+          aria-current={n === page ? "page" : undefined}
+          onClick={() => setPage(n)}
+        >
+          {n + 1}
+        </button>
       ))}
-    </ul>
+      <button
+        type="button"
+        className="btn btn-ghost"
+        disabled={page >= pages - 1}
+        onClick={() => setPage(page + 1)}
+        aria-label="Next page"
+      >
+        ›
+      </button>
+      <button
+        type="button"
+        className="btn btn-ghost"
+        disabled={page >= pages - 1}
+        onClick={() => setPage(pages - 1)}
+        aria-label="Last page"
+      >
+        »
+      </button>
+      <select
+        className="input"
+        style={{ width: "auto", paddingRight: "1.6rem" }}
+        aria-label={`${noun} per page`}
+        value={size}
+        onChange={(e) => setSize(Number(e.target.value))}
+      >
+        {PAGE_SIZES.map((n) => (
+          <option key={n} value={n}>
+            {n}
+          </option>
+        ))}
+      </select>
+      <span className="text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
+        {start + 1}–{end} of {total} {noun}
+      </span>
+    </div>
   );
 }
 
@@ -802,34 +1006,6 @@ function TraderList({ rows }: { rows: TraderRow[] }) {
         </li>
       ))}
     </ul>
-  );
-}
-
-function SeasonSummary({ mode }: { mode: GameMode }) {
-  const days = seasonDaysLeft();
-  const elapsed = seasonElapsed();
-  const to = href.quests();
-
-  return (
-    <div>
-      <p className="flex flex-wrap items-baseline gap-x-2">
-        <span className="text-sm font-semibold">{KORD_SEASON.name}</span>
-        <span className="text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
-          {days > 0 ? `${days} day${days === 1 ? "" : "s"} left` : "ended"} · ends {KORD_SEASON.ends}
-        </span>
-      </p>
-      <span className="season-meter" style={{ ["--p" as string]: elapsed }}>
-        <i />
-      </span>
-      <p className="mt-2.5 text-[0.75rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-        {mode === "season"
-          ? "The story line runs on this character. Daily documents drop in every mode."
-          : "Daily documents drop in every mode. The story line is offered on a seasonal character only."}
-      </p>
-      <a className="btn mt-2.5 inline-flex" href={to} onClick={onNavClick(to)}>
-        Open the season line
-      </a>
-    </div>
   );
 }
 
@@ -887,6 +1063,43 @@ function MapList({
 }
 
 /* -------------------------------------------------------------------- data */
+
+function rowsFromPlan(
+  data: Progression | null,
+  availability: Record<string, TaskAvailability>,
+  mode: GameMode,
+  ids: string[],
+  limit: number,
+): UpcomingRow[] {
+  if (!data) return [];
+  const rows: UpcomingRow[] = [];
+  for (const id of ids) {
+    const task = data.tasks[id];
+    if (!task || !visibleInMode(task.name, mode)) continue;
+    const state = availability[id];
+    if (!state) continue;
+    rows.push({
+      id,
+      name: task.name,
+      trader: task.trader ?? "Unknown",
+      level: task.minPlayerLevel,
+      availability: state,
+      maps: task.maps,
+      wiki: task.wiki,
+      next: unlocksAfter(data, id)
+        .filter((nid) => {
+          const child = data.tasks[nid];
+          return !!child && visibleInMode(child.name, mode);
+        })
+        .map((nid) => ({
+          id: nid,
+          name: displayName(data.tasks[nid]?.name ?? nid),
+        })),
+    });
+    if (rows.length >= limit) break;
+  }
+  return rows;
+}
 
 function pickUpcoming(
   data: Progression | null,

@@ -22,15 +22,17 @@ export function nextRaids(
   progression: Progression | null,
   taskStatus: Record<string, TaskStatus>,
   limit = 4,
+  fallbackIds: string[] = [],
 ): RaidPick[] {
   const activeIds = Object.entries(taskStatus)
     .filter(([, status]) => status === "active")
     .map(([id]) => id);
+  const ids = activeIds.length ? activeIds : fallbackIds;
 
   const picks: RaidPick[] = maps.map((map) => {
     const active: { id: string; name: string }[] = [];
     if (progression) {
-      for (const id of activeIds) {
+      for (const id of ids) {
         const task = progression.tasks[id];
         if (task?.maps.includes(map.normalizedName)) {
           active.push({ id, name: stripTag(task.name) });
