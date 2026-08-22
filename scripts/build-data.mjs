@@ -726,6 +726,28 @@ const previousByMap = await (async () => {
 })();
 const previousQuests = [...previousByMap.values()].reduce((n, m) => n + m.quests.length, 0);
 
+const previousHideout = await (async () => {
+  try {
+    return JSON.parse(await fs.readFile(path.join(OUT, "hideout.json"), "utf8"));
+  } catch {
+    return null;
+  }
+})();
+const previousItems = await (async () => {
+  try {
+    return JSON.parse(await fs.readFile(path.join(OUT, "items.json"), "utf8"));
+  } catch {
+    return null;
+  }
+})();
+const vendorHideout = await (async () => {
+  try {
+    return JSON.parse(await fs.readFile(path.join(ROOT, "data", "hideout.json"), "utf8"));
+  } catch {
+    return null;
+  }
+})();
+
 await fs.rm(OUT, { recursive: true, force: true });
 await fs.mkdir(path.join(OUT, "maps"), { recursive: true });
 
@@ -1391,7 +1413,7 @@ for (const [canonicalId, members] of groupMembers) {
     console.warn(`  hideout stations unavailable (${err.message})`);
   }
 
-  const stations = hideoutStations.map((station) => {
+  let stations = hideoutStations.map((station) => {
     const levels = (station.levels ?? []).map((level) => {
       const reqs = (level.itemRequirements ?? [])
         .map((r) => {
@@ -1425,6 +1447,23 @@ for (const [canonicalId, members] of groupMembers) {
     };
   });
 
+  // json.tarkov.dev/hideout_stations 404s. An empty write would wipe the
+  // committed snapshot on every deploy (`npm run data` is the Vercel build).
+  // Keep the previous file, then the vendored Kappa snapshot, never `[]`.
+  if (!stations.length) {
+    const fallback =
+      previousHideout?.stations?.length ? previousHideout : vendorHideout;
+    if (fallback?.stations?.length) {
+      stations = fallback.stations;
+      console.warn(`  hideout feed empty; kept ${stations.length} stations from snapshot`);
+    }
+  }
+  for (const station of stations) {
+    for (const level of station.levels ?? []) {
+      for (const req of level.itemRequirements ?? []) if (req.itemId) neededIds.add(req.itemId);
+    }
+  }
+
   await fs.writeFile(
     path.join(OUT, "hideout.json"),
     JSON.stringify({ generated: new Date().toISOString(), stations }),
@@ -1449,6 +1488,10 @@ for (const [canonicalId, members] of groupMembers) {
       height: it.height ?? 1,
       craftableStations: crafts,
     };
+  }
+  const prevCatalog = previousItems?.items ?? {};
+  for (const id of neededIds) {
+    if (!catalog[id] && prevCatalog[id]) catalog[id] = prevCatalog[id];
   }
   await fs.writeFile(
     path.join(OUT, "items.json"),

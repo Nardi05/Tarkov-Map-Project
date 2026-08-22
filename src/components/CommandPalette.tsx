@@ -31,11 +31,15 @@ export default function CommandPalette() {
         setOpen((v) => !v);
         return;
       }
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape" && open) {
+        e.preventDefault();
+        e.stopPropagation();
+        setOpen(false);
+      }
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;

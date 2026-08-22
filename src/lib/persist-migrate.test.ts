@@ -81,6 +81,13 @@ test("a junk mode falls back to the default rather than breaking lookups", () =>
   assert.equal(mergeProfile({ mode: "season" }).mode, "season");
 });
 
+test("junk faction and non-finite level cannot lock or ungated the graph", () => {
+  assert.equal(mergeProfile({ faction: "Scav" as never }).faction, DEFAULT_PROFILE.faction);
+  assert.equal(mergeProfile({ level: Number.NaN }).level, DEFAULT_PROFILE.level);
+  assert.equal(mergeProfile({ level: 200 }).level, 79);
+  assert.equal(mergeProfile({ level: 0 }).level, 1);
+});
+
 test("migrating twice is a no-op, not a second move", () => {
   const once = migrate({ taskStatus: { a: "active" }, markerDone: {} }, 3) as Record<string, any>;
   const twice = migrate(structuredClone(once), 4) as Record<string, any>;

@@ -16,11 +16,12 @@ export function hideoutRows(
   if (!data) return [];
   const completedLevel = new Map<string, number>();
   for (const station of data.stations) {
-    let max = 0;
-    for (const level of station.levels) {
-      if (hideout[level.id] === "completed") max = Math.max(max, level.level);
+    let prefix = 0;
+    for (const level of [...station.levels].sort((a, b) => a.level - b.level)) {
+      if (hideout[level.id] === "completed") prefix = level.level;
+      else break;
     }
-    completedLevel.set(station.id, max);
+    completedLevel.set(station.id, prefix);
   }
 
   return data.stations.map((station) => {

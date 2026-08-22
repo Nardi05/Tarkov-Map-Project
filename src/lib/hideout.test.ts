@@ -58,8 +58,11 @@ test("a station-level requirement locks the next upgrade", () => {
   assert.equal(unlocked.find((r) => r.station.id === "gen")?.status, "available");
 });
 
-test("a stated completed status always wins over the graph", () => {
-  const [row] = hideoutRows(data([station()]), { "med-2": "completed" });
-  assert.equal(row.completedLevel, 2);
-  assert.equal(row.next?.level, 3);
+test("completed level is the consecutive prefix, not the highest tick", () => {
+  const [skipped] = hideoutRows(data([station()]), { "med-2": "completed" });
+  assert.equal(skipped.completedLevel, 0);
+  assert.equal(skipped.next?.level, 1);
+  const [prefix] = hideoutRows(data([station()]), { "med-1": "completed", "med-2": "completed" });
+  assert.equal(prefix.completedLevel, 2);
+  assert.equal(prefix.next?.level, 3);
 });

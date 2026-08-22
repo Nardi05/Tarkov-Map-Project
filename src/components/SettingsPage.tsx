@@ -65,12 +65,12 @@ export default function SettingsPage() {
     const ids = new Set<string>();
     for (const [id, status] of Object.entries(taskStatus)) {
       if (status !== "active" && status !== "pinned") continue;
-      for (const prior of prerequisiteClosure(progression.data, id)) ids.add(prior);
+      for (const prior of prerequisiteClosure(progression.data, id, taskStatus)) ids.add(prior);
     }
-    fillCompleted([...ids]);
+    const filled = fillCompleted([...ids]);
     setNote(
-      ids.size
-        ? `Filled in ${ids.size} earlier task${ids.size === 1 ? "" : "s"} behind what you have accepted. The plan re-ranks toward your target.`
+      filled
+        ? `Filled in ${filled} earlier task${filled === 1 ? "" : "s"} behind what you have accepted. The plan re-ranks toward your target.`
         : "Nothing to fill in — mark a quest active first, or run Task Sync.",
     );
   };

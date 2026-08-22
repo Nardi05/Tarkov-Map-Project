@@ -59,7 +59,7 @@ export default function SettingsPanel({
     setDraft(null);
   };
   const resetLayers = useStore((s) => s.resetLayers);
-  const clearProgress = useStore((s) => s.clearProgress);
+  const resetTasks = useStore((s) => s.resetTasks);
   const mode = useStore((s) => s.profile.mode);
   const setProfile = useStore((s) => s.setProfile);
   const trackedCount = useStore((s) => {
@@ -227,7 +227,7 @@ export default function SettingsPanel({
                   `Clear every ${label} task status and ticked location? This cannot be undone.`,
                 )
               ) {
-                clearProgress();
+                resetTasks();
               }
             }}
           >

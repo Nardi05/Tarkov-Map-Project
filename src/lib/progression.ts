@@ -171,7 +171,11 @@ export function lockReasons(
         .map((req) => {
           const raw = progression?.tasks[req.task]?.name ?? "another task";
           const name = raw.replace(/\s*\[(PVP ZONE|PVE ZONE|KORD BREACH)\]\s*$/i, "").trim();
-          const wants = req.status.includes("failed") && !req.status.includes("complete") ? " (failed)" : "";
+          const wants =
+            req.status.some((s) => s.toLowerCase().startsWith("fail")) &&
+            !req.status.some((s) => s.toLowerCase().startsWith("complet"))
+              ? " (failed)"
+              : "";
           // Where it came from travels with it. The feed states barely half of
           // these; the rest are the wiki's word, and a player deciding whether
           // to trust a lock deserves to know which they are looking at.
@@ -198,7 +202,34 @@ export function lockReasons(
  * the same quest), the shortest branch is taken — it is the least presumptuous
  * guess about a path we can't actually observe.
  */
-export function prerequisiteClosure(progression: Progression | null, taskId: string): string[] {
+function pickRequirementSet(
+  sets: ProgressionTask["requires"],
+  taskStatus: Record<string, TaskStatus>,
+): ProgressionTask["requires"][number] {
+  let best = sets[0];
+  let bestScore = -1;
+  let bestLen = Infinity;
+  for (const set of sets) {
+    const completable = set.filter((req) =>
+      req.status.some((s) => s.toLowerCase().startsWith("complet")),
+    );
+    const satisfied = completable.filter((req) => satisfies(req.status, taskStatus[req.task])).length;
+    const declared = completable.filter((req) => !!taskStatus[req.task]).length;
+    const score = satisfied * 100 + declared;
+    if (score > bestScore || (score === bestScore && set.length < bestLen)) {
+      best = set;
+      bestScore = score;
+      bestLen = set.length;
+    }
+  }
+  return best;
+}
+
+export function prerequisiteClosure(
+  progression: Progression | null,
+  taskId: string,
+  taskStatus: Record<string, TaskStatus> = {},
+): string[] {
   if (!progression?.tasks[taskId]) return [];
 
   const collected = new Set<string>();
@@ -210,10 +241,9 @@ export function prerequisiteClosure(progression: Progression | null, taskId: str
     const task = progression.tasks[current];
     if (!task || task.requires.length === 0) continue;
 
-    let shortest = task.requires[0];
-    for (const set of task.requires) if (set.length < shortest.length) shortest = set;
+    const chosen = pickRequirementSet(task.requires, taskStatus);
 
-    for (const req of shortest) {
+    for (const req of chosen) {
       // A "must have failed" prerequisite is not something to auto-tick as
       // done — leave those for the player to say.
       if (!req.status.some((s) => s.toLowerCase().startsWith("complet"))) continue;

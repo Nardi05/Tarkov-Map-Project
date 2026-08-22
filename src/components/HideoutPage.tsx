@@ -112,13 +112,23 @@ export default function HideoutPage() {
                           <li key={req.itemId} className="flex items-center gap-2 text-sm">
                             {item?.icon && <img src={item.icon} alt="" width={24} height={24} className="rounded" />}
                             <span className="min-w-0 flex-1 truncate">{item?.name ?? req.itemId}</span>
-                            <button type="button" className="btn btn-ghost" onClick={() => bumpItemCount(req.itemId, -1)}>
+                            <button
+                              type="button"
+                              className="btn btn-ghost"
+                              aria-label={`Remove one ${item?.name ?? req.itemId}`}
+                              onClick={() => bumpItemCount(req.itemId, -1)}
+                            >
                               −
                             </button>
                             <span className="tabular-nums">
                               {have}/{req.count}
                             </span>
-                            <button type="button" className="btn btn-ghost" onClick={() => bumpItemCount(req.itemId, 1)}>
+                            <button
+                              type="button"
+                              className="btn btn-ghost"
+                              aria-label={`Add one ${item?.name ?? req.itemId}`}
+                              onClick={() => bumpItemCount(req.itemId, 1)}
+                            >
                               +
                             </button>
                           </li>

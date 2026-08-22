@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { computeAvailability, lockReasons, unlocksAfter } from "./progression.ts";
+import { computeAvailability, lockReasons, prerequisiteClosure, unlocksAfter } from "./progression.ts";
 import type { Progression, ProgressionTask } from "../types.ts";
 
 const task = (over: Partial<ProgressionTask> = {}): ProgressionTask => ({
@@ -109,4 +109,17 @@ test("unlocksAfter lists the next quests, not the whole tree", () => {
   assert.deepEqual(unlocksAfter(g, "debut"), ["checking"]);
   assert.deepEqual(unlocksAfter(g, "checking"), ["shortage"]);
   assert.deepEqual(unlocksAfter(g, "shortage"), []);
+});
+
+test("prerequisiteClosure follows a declared branch instead of the other exclusive line", () => {
+  const g = graph({
+    left: task({ name: "Left" }),
+    right: task({ name: "Right" }),
+    join: task({
+      name: "Join",
+      requires: [[{ task: "left", status: ["complete"] }], [{ task: "right", status: ["complete"] }]],
+    }),
+  });
+  assert.deepEqual(prerequisiteClosure(g, "join", { left: "completed" }).sort(), ["left"]);
+  assert.deepEqual(prerequisiteClosure(g, "join", { right: "active" }).sort(), ["right"]);
 });

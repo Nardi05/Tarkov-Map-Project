@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useItemCatalog, useProgression } from "../lib/data";
 import { targetTree } from "../lib/plan";
 import { computeAvailability } from "../lib/progression";
@@ -29,6 +29,10 @@ export default function ItemAudit() {
   const [audit, setAudit] = useState(false);
   const [firOnly, setFirOnly] = useState(false);
   const [targetOnly, setTargetOnly] = useState(!!profile.targetTaskId);
+
+  useEffect(() => {
+    if (profile.targetTaskId) setTargetOnly(true);
+  }, [profile.targetTaskId]);
   const [hideFinished, setHideFinished] = useState(true);
   const [trader, setTrader] = useState<string | null>(null);
   const [query, setQuery] = useState("");
@@ -86,7 +90,16 @@ export default function ItemAudit() {
     query,
   ]);
 
-  const remainingFir = rows.filter((r) => r.foundInRaid && r.remaining > 0).length;
+  const remainingFir = useMemo(() => {
+    const byItem = new Map<string, { need: number; have: number }>();
+    for (const row of rows) {
+      if (!row.foundInRaid) continue;
+      const prev = byItem.get(row.itemId) ?? { need: 0, have: row.have };
+      prev.need += row.need;
+      byItem.set(row.itemId, prev);
+    }
+    return [...byItem.values()].filter((r) => r.need > r.have).length;
+  }, [rows]);
 
   if (!progression.data) {
     return <EmptyState title="Loading items" hint="The task graph has not loaded yet." />;
@@ -103,6 +116,7 @@ export default function ItemAudit() {
         <input
           className="input min-w-[12rem] flex-1"
           placeholder="Search items or quests"
+          data-search
           value={typed}
           onChange={(e) => setTyped(e.target.value)}
           aria-label="Search items"
@@ -234,7 +248,12 @@ function ItemTable({
               </p>
             </div>
             <div className="ml-auto flex items-center gap-1">
-              <button type="button" className="btn btn-ghost" onClick={() => onBump(row.itemId, -1)}>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                aria-label={`Remove one ${row.itemName}`}
+                onClick={() => onBump(row.itemId, -1)}
+              >
                 −
               </button>
               <span
@@ -244,7 +263,12 @@ function ItemTable({
               >
                 {row.have}/{row.need}
               </span>
-              <button type="button" className="btn btn-ghost" onClick={() => onBump(row.itemId, 1)}>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                aria-label={`Add one ${row.itemName}`}
+                onClick={() => onBump(row.itemId, 1)}
+              >
                 +
               </button>
             </div>

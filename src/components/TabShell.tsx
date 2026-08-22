@@ -5,7 +5,7 @@ import ModeSwitch from "./ModeSwitch";
 import { Icon, icons, PageChrome } from "./ui";
 
 /**
- * The frame the three tab pages — dashboard, maps, quests — share.
+ * The frame the tab pages — dashboard, maps, quests, hideout — share.
  *
  * It lives here, above the route switch, rather than inside each page, and
  * that placement is the whole point. When every page rendered its own copy,

@@ -647,7 +647,9 @@ export function filterQuests(
    * have, drawing what the graph says they *could* pick up here is what makes
    * the map useful the moment it opens, with nothing typed in.
    */
-  const anyActiveHere = data.markers.quests.some((m) => taskStatus[m.task] === "active");
+  const anyActiveHere = data.markers.quests.some(
+    (m) => taskStatus[m.task] === "active" || taskStatus[m.task] === "pinned",
+  );
 
   return data.markers.quests.filter((marker) => {
     const task = data.tasks[marker.task];
@@ -658,7 +660,9 @@ export function filterQuests(
     // faded by the dimCompleted setting.
     if (!filters.showAll) {
       const shown =
-        taskStatus[task.id] === "active" || (!anyActiveHere && !!availableHere?.has(task.id));
+        taskStatus[task.id] === "active" ||
+        taskStatus[task.id] === "pinned" ||
+        (!anyActiveHere && !!availableHere?.has(task.id));
       if (!shown) return false;
     }
     if (filters.kappaOnly && !task.kappaRequired) return false;
