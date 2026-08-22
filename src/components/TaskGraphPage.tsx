@@ -91,11 +91,9 @@ export default function TaskGraphPage() {
                 const state = availability[id];
                 return (
                   <li key={id}>
-                    <button
-                      type="button"
-                      className="surface-2 flex w-full items-start gap-2 p-2 text-left"
+                    <div
+                      className="surface-2 flex w-full items-start gap-2 p-2"
                       style={{ borderLeft: `3px solid ${color(state)}` }}
-                      onClick={() => setOpenId(id)}
                     >
                       <TaskStatusControl
                         status={taskStatus[id]}
@@ -103,10 +101,14 @@ export default function TaskGraphPage() {
                         size={16}
                         onCycle={() => cycleTaskStatus(id)}
                       />
-                      <span className="min-w-0 flex-1 text-[0.78rem] leading-snug">
+                      <button
+                        type="button"
+                        className="min-w-0 flex-1 text-left text-[0.78rem] leading-snug"
+                        onClick={() => setOpenId(id)}
+                      >
                         <TaskName name={task.name} />
-                      </span>
-                    </button>
+                      </button>
+                    </div>
                   </li>
                 );
               })}

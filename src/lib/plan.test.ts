@@ -78,14 +78,15 @@ test("finishing the first hop puts the next one in current and the rest in high"
   assert.equal(plan.remainingToTarget, 2);
 });
 
-test("ignored tasks vanish from the plan and from remaining", () => {
+test("ignored tasks leave the plan but still count toward remaining", () => {
   const plan = buildPlan(
     wipe,
     { debut: "ignored" },
     profile({ targetTaskId: "collector", level: 50 }),
   );
   assert.ok(!plan.current.includes("debut"));
-  assert.equal(plan.remainingToTarget, 2);
+  // Ignoring a required parent does not pretend Collector is closer.
+  assert.equal(plan.remainingToTarget, 3);
 });
 
 test("a pinned off-tree task still jumps the queue", () => {

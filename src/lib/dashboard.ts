@@ -76,7 +76,7 @@ export const DASH_PANEL_META: Record<DashPanelId, DashPanelMeta> = {
   },
   season: {
     title: "Kord Breach",
-    hint: "The seasonal story line, from Uninvited Guests to Digital Puzzle.",
+    hint: "The full Kord Breach story line, including Riding the Wave.",
     blurb: "Tick the Kord Breach quests on a Season character.",
   },
   maps: {

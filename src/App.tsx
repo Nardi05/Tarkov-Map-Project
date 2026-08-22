@@ -116,7 +116,14 @@ export default function App() {
     );
   }
 
-  if (route.name === "setup") return <SetupWizard />;
+  if (route.name === "setup") {
+    return (
+      <>
+        <SetupWizard />
+        <CommandPalette />
+      </>
+    );
+  }
   if (route.name === "settings") {
     return (
       <>

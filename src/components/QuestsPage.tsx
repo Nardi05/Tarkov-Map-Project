@@ -90,7 +90,7 @@ export default function QuestsPage({
   const setProfile = useStore((s) => s.setProfile);
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const setTaskStatus = useStore((s) => s.setTaskStatus);
-  const fillCompleted = useStore((s) => s.fillCompleted);
+  const completeWithPrereqs = useStore((s) => s.completeWithPrereqs);
   const setKeyOwned = useStore((s) => s.setKeyOwned);
 
   /* Committed search term; `typed` is what the box shows while you type. */
@@ -212,8 +212,7 @@ export default function QuestsPage({
 
   /** "I finished this one" also means everything behind it is finished. */
   const completeWithHistory = (taskId: string) => {
-    fillCompleted(prerequisiteClosure(data, taskId));
-    setTaskStatus(taskId, "completed");
+    completeWithPrereqs(taskId, prerequisiteClosure(data, taskId, taskStatus));
   };
 
   const trackedCount = Object.keys(taskStatus).length;

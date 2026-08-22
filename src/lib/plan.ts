@@ -28,7 +28,10 @@ export const TARGET_SHORTCUTS: { id: string; label: string }[] = [
   { id: "60effd818b669d08a35bfad5", label: "The Choice" },
 ];
 
-const DONE = new Set<TaskStatus | TaskAvailability>(["completed", "failed", "ignored"]);
+/** Finished for remaining-to-target. Ignored is not done — the graph still needs it. */
+const CLOSED = new Set<TaskStatus | TaskAvailability>(["completed", "failed"]);
+/** Leave these out of "what to do next". */
+const SKIP_PLAN = new Set<TaskStatus | TaskAvailability>(["completed", "failed", "ignored"]);
 
 export function targetTree(progression: Progression | null, targetId: string | null): Set<string> {
   const out = new Set<string>();
@@ -77,7 +80,7 @@ function nextHop(
   candidates: string[],
 ): string[] {
   const doneOrCurrent = (id: string) =>
-    DONE.has(availability[id]) || current.has(id) || availability[id] === "active";
+    CLOSED.has(availability[id]) || current.has(id) || availability[id] === "active";
 
   const out: string[] = [];
   for (const id of candidates) {
@@ -120,15 +123,15 @@ export function buildPlan(
   const visible = (id: string) => visibleInMode(progression.tasks[id]?.name ?? "", profile.mode);
 
   const remaining = targetId
-    ? [...tree].filter((id) => visible(id) && !DONE.has(availability[id])).length
-    : Object.keys(progression.tasks).filter((id) => visible(id) && !DONE.has(availability[id])).length;
+    ? [...tree].filter((id) => visible(id) && !CLOSED.has(availability[id])).length
+    : Object.keys(progression.tasks).filter((id) => visible(id) && !CLOSED.has(availability[id])).length;
 
   const current: string[] = [];
   const rest: string[] = [];
   for (const id of Object.keys(progression.tasks)) {
     if (!visible(id)) continue;
     const state = availability[id];
-    if (DONE.has(state)) continue;
+    if (SKIP_PLAN.has(state)) continue;
     if (tree.size && !tree.has(id) && state !== "pinned" && state !== "active") {
       // Off-tree tasks stay out of the plan unless the player pinned or
       // activated them — Kappa's "show current" vs target-tree default.

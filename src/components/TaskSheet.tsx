@@ -33,8 +33,8 @@ export default function TaskSheet({
   const status = taskStatus[taskId];
 
   const prereqs = useMemo(
-    () => (progression.data ? prerequisiteClosure(progression.data, taskId) : []),
-    [progression.data, taskId],
+    () => (progression.data ? prerequisiteClosure(progression.data, taskId, taskStatus) : []),
+    [progression.data, taskId, taskStatus],
   );
   const unlocks = useMemo(
     () => (progression.data ? unlocksAfter(progression.data, taskId) : []),
@@ -97,7 +97,9 @@ export default function TaskSheet({
           <ul className="mb-3 space-y-1">
             {task.needs.map((need) => {
               const itemId = need.items[0];
-              const have = itemId ? itemCounts[itemId] ?? 0 : 0;
+              const have = need.items.length
+                ? Math.max(0, ...need.items.map((id) => itemCounts[id] ?? 0))
+                : 0;
               const item = itemId ? catalog.data?.items[itemId] : null;
               return (
                 <li key={need.name} className="surface-2 flex items-center gap-2 p-2">
@@ -111,13 +113,23 @@ export default function TaskSheet({
                   </div>
                   {itemId && (
                     <div className="flex items-center gap-1">
-                      <button type="button" className="btn btn-ghost" onClick={() => bumpItemCount(itemId, -1)}>
+                      <button
+                        type="button"
+                        className="btn btn-ghost"
+                        aria-label={`Remove one ${need.name}`}
+                        onClick={() => bumpItemCount(itemId, -1)}
+                      >
                         −
                       </button>
                       <span className="tabular-nums text-sm">
                         {have}/{need.count}
                       </span>
-                      <button type="button" className="btn btn-ghost" onClick={() => bumpItemCount(itemId, 1)}>
+                      <button
+                        type="button"
+                        className="btn btn-ghost"
+                        aria-label={`Add one ${need.name}`}
+                        onClick={() => bumpItemCount(itemId, 1)}
+                      >
                         +
                       </button>
                     </div>

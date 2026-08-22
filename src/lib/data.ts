@@ -72,8 +72,19 @@ function withKordSeason(progression: Progression): Progression {
     added++;
   }
   if (!added) return progression;
+  let withPrereq = progression.coverage?.withPrereq ?? 0;
+  let ungated = progression.coverage?.ungated ?? 0;
+  for (const [id, task] of Object.entries(extras)) {
+    if (progression.tasks[id]) continue;
+    const gated =
+      task.requires.some((set) => set.length > 0) ||
+      task.minPlayerLevel > 0 ||
+      task.traderGates.length > 0;
+    if (task.requires.some((set) => set.length > 0)) withPrereq++;
+    else if (!gated) ungated++;
+  }
   const coverage = progression.coverage
-    ? { ...progression.coverage, tasks: Object.keys(tasks).length }
+    ? { tasks: Object.keys(tasks).length, withPrereq, ungated }
     : progression.coverage;
   return { ...progression, tasks, coverage };
 }

@@ -8,6 +8,7 @@ import {
   SaveFileError,
   type ParsedSave,
 } from "../lib/save-file";
+import { GAME_MODES } from "../lib/persist-migrate";
 import { useStore } from "../store";
 import { Icon, icons } from "./ui";
 
@@ -41,10 +42,16 @@ export default function SavePanel({ compact = false }: { compact?: boolean } = {
     pve: Object.keys(progress.pve.taskStatus).length,
     season: Object.keys(progress.season.taskStatus).length,
   };
-  const extras =
-    Object.keys(progress[profile.mode].itemCounts).length +
-    Object.keys(progress[profile.mode].keysOwned).length +
-    Object.keys(progress[profile.mode].hideout).length;
+  const extras = GAME_MODES.reduce((n, mode) => {
+    const slice = progress[mode];
+    return (
+      n +
+      Object.keys(slice.itemCounts).length +
+      Object.keys(slice.keysOwned).length +
+      Object.keys(slice.hideout).length +
+      Object.keys(slice.markerDone).length
+    );
+  }, 0);
   const hasAnything = counts.pvp + counts.pve + counts.season + extras > 0;
 
   const download = () => {

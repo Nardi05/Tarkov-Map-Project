@@ -117,18 +117,17 @@ export default function DashboardPage() {
   const mosaic = useMemo(() => {
     const wanted = new Set(planIds);
     const rows = collectTaskItems(data, itemCounts).filter(
-      (row) => wanted.has(row.taskId) && row.remaining > 0,
+      (row) => wanted.has(row.taskId) && row.foundInRaid,
     );
     const byItem = new Map<string, (typeof rows)[number]>();
     for (const row of rows) {
       const prev = byItem.get(row.itemId);
       if (!prev) byItem.set(row.itemId, { ...row });
-      else {
-        prev.need += row.need;
-        prev.remaining = Math.max(0, prev.need - prev.have);
-      }
+      else prev.need += row.need;
     }
-    return [...byItem.values()];
+    return [...byItem.values()]
+      .map((row) => ({ ...row, remaining: Math.max(0, row.need - row.have) }))
+      .filter((row) => row.remaining > 0);
   }, [data, itemCounts, planIds]);
   const stats = useMemo(
     () => summarise(data, availability, profile.mode),
@@ -860,6 +859,7 @@ function ItemMosaic({
               className="item-mosaic-cell"
               style={{ gridColumn: `span ${w}`, gridRow: `span ${h}` }}
               title={`${row.itemName} · ${row.remaining} left · ${row.taskName}`}
+              aria-label={`${row.itemName}, ${row.remaining} left`}
               onClick={() => setOpenId(row.taskId)}
             >
               {row.icon && <img src={row.icon} alt="" />}
@@ -917,6 +917,8 @@ function Pager({
   if (total === 0) return null;
   return (
     <div className="pager">
+      {pages > 1 && (
+        <>
       <button type="button" className="btn btn-ghost" disabled={page === 0} onClick={() => setPage(0)} aria-label="First page">
         «
       </button>
@@ -958,6 +960,8 @@ function Pager({
       >
         »
       </button>
+        </>
+      )}
       <select
         className="input"
         style={{ width: "auto", paddingRight: "1.6rem" }}
@@ -1165,7 +1169,7 @@ function summarise(
     stats.total++;
     const state = availability[id];
     if (state === "completed") stats.done++;
-    else if (state === "active") stats.active++;
+    else if (state === "active" || state === "pinned") stats.active++;
     else if (state === "available") stats.available++;
     if (task.kappaRequired) {
       stats.kappaTotal++;

@@ -204,14 +204,22 @@ const isEdition = (v: unknown): v is GameEdition =>
   v === "edgeOfDarkness" ||
   v === "unheard";
 
+const isFaction = (v: unknown): v is Faction => v === "Any" || v === "USEC" || v === "BEAR";
+
 export function mergeProfile(stored: Partial<Profile> | undefined): Profile {
   const raw = stored ?? {};
+  const level =
+    typeof raw.level === "number" && Number.isFinite(raw.level)
+      ? Math.min(79, Math.max(1, Math.round(raw.level)))
+      : DEFAULT_PROFILE.level;
   return {
     ...DEFAULT_PROFILE,
     ...raw,
     // A junk or pre-season value must not become the selected mode — the
     // progress lookup indexes by it.
     mode: isMode(raw.mode) ? raw.mode : DEFAULT_PROFILE.mode,
+    faction: isFaction(raw.faction) ? raw.faction : DEFAULT_PROFILE.faction,
+    level,
     // Named explicitly, per the rule above: a nested object present in the
     // stored state but null, or absent from a save that predates it, must come
     // back as an object rather than undefined — every read site indexes it.

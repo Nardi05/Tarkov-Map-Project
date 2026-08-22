@@ -125,13 +125,13 @@ export default function SetupWizard() {
    * Everything the staged ticks imply, worked out fresh each render.
    *
    * A task you are running means every task behind it is done. Where a chain
-   * branches, `prerequisiteClosure` takes the shortest route — the least
-   * presumptuous guess about a path we cannot observe.
+   * branches, `prerequisiteClosure` follows statuses you already declared and
+   * only then falls back to the shortest remaining path.
    */
   const implied = useMemo(() => {
     const out = new Set<string>();
     for (const id of Object.keys(staged)) {
-      for (const prior of prerequisiteClosure(data, id)) {
+      for (const prior of prerequisiteClosure(data, id, staged)) {
         if (!staged[prior]) out.add(prior);
       }
     }

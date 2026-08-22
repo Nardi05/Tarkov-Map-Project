@@ -133,8 +133,9 @@ interface Store {
   /**
    * Marks these tasks completed only if they have no status yet.
    * Used to fill in prereqs behind currently active tasks when recalculating.
+   * Returns how many statuses were actually written.
    */
-  fillCompleted: (ids: string[]) => void;
+  fillCompleted: (ids: string[]) => number;
   /**
    * Folds a set of statuses in over the current mode.
    *
@@ -201,7 +202,7 @@ function editMode(
 
 export const useStore = create<Store>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       layers: { ...DEFAULT_LAYER_STATE },
       customViews: [],
       settings: { ...DEFAULT_SETTINGS },
@@ -286,7 +287,8 @@ export const useStore = create<Store>()(
           editMode(s, (p) => {
             const taskStatus = { ...p.taskStatus };
             for (const id of prereqIds) {
-              if (!taskStatus[id]) taskStatus[id] = "completed";
+              if (taskStatus[id] === "failed") continue;
+              taskStatus[id] = "completed";
             }
             taskStatus[taskId] = "completed";
             return { ...p, taskStatus };
@@ -377,20 +379,21 @@ export const useStore = create<Store>()(
           })),
         ),
 
-      fillCompleted: (ids) =>
-        set((s) =>
-          editMode(s, (p) => {
-            const taskStatus = { ...p.taskStatus };
-            let changed = false;
-            for (const id of ids) {
-              if (!taskStatus[id]) {
-                taskStatus[id] = "completed";
-                changed = true;
-              }
-            }
-            return changed ? { ...p, taskStatus } : p;
-          }),
-        ),
+      fillCompleted: (ids) => {
+        const s = get();
+        const existing = s.progress[s.profile.mode].taskStatus;
+        const fresh = ids.filter((id) => !existing[id]);
+        if (fresh.length) {
+          set((state) =>
+            editMode(state, (p) => {
+              const taskStatus = { ...p.taskStatus };
+              for (const id of fresh) taskStatus[id] = "completed";
+              return { ...p, taskStatus };
+            }),
+          );
+        }
+        return fresh.length;
+      },
 
       importTaskStatus: (statuses) =>
         set((s) => editMode(s, (p) => ({ ...p, taskStatus: { ...p.taskStatus, ...statuses } }))),
