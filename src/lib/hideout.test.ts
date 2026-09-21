@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { completeThrough, hideoutRows } from "./hideout.ts";
+import { completeThrough, hideoutRows, hideoutStatusLabel } from "./hideout.ts";
 import type { HideoutData, HideoutStation } from "../types.ts";
 
 const station = (over: Partial<HideoutStation> = {}): HideoutStation => ({
@@ -30,6 +30,17 @@ test("hideoutRows treats the next unbuilt level as available when prereqs are me
   assert.equal(row.completedLevel, 1);
   assert.equal(row.next?.level, 2);
   assert.equal(row.status, "available");
+});
+
+test("hideoutStatusLabel says what to do next in plain language", () => {
+  const [ready] = hideoutRows(data([station()]), { "med-1": "completed" });
+  assert.equal(hideoutStatusLabel(ready), "Level 1 of 3 · ready to build level 2");
+  const [maxed] = hideoutRows(data([station()]), {
+    "med-1": "completed",
+    "med-2": "completed",
+    "med-3": "completed",
+  });
+  assert.equal(hideoutStatusLabel(maxed), "Level 3 of 3 · finished");
 });
 
 test("a station-level requirement locks the next upgrade", () => {

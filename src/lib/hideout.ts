@@ -47,3 +47,15 @@ export function hideoutRows(
 export function completeThrough(station: HideoutStation, level: number): string[] {
   return station.levels.filter((row) => row.level <= level).map((row) => row.id);
 }
+
+/** Short line for a station row: what to do next, not the raw status id. */
+export function hideoutStatusLabel(row: HideoutRow): string {
+  const max = row.station.levels.reduce((n, l) => Math.max(n, l.level), 0);
+  const here = `Level ${row.completedLevel}${max ? ` of ${max}` : ""}`;
+  if (!row.next) return `${here} · finished`;
+  if (row.status === "locked") return `${here} · locked until other stations are built`;
+  if (row.status === "active") return `${here} · building level ${row.next.level}`;
+  if (row.status === "ignored") return `${here} · skipped`;
+  if (row.status === "completed") return `${here} · finished`;
+  return `${here} · ready to build level ${row.next.level}`;
+}

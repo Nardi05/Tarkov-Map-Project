@@ -46,33 +46,33 @@ export interface DashPanelMeta {
 export const DASH_PANEL_META: Record<DashPanelId, DashPanelMeta> = {
   progress: {
     title: "Progress",
-    hint: "Where this character is up to.",
-    blurb: "Tasks done, active and left, and how far through the graph you are.",
+    hint: "Done, active, and still open on this character.",
+    blurb: "How far this character is through the quest list.",
   },
   raid: {
     title: "Next raid",
-    hint: "Maps that hold your active tasks, documents as a tie-break.",
-    blurb: "Which map to queue into next.",
+    hint: "Best map to queue, based on your active tasks.",
+    blurb: "Which map to run next.",
   },
   upcoming: {
-    title: "What to do next",
-    hint: "Doable tasks on your target path, with maps and a complete action.",
-    blurb: "The tasks to run next, with the maps they are on.",
+    title: "Do next",
+    hint: "Tasks you can start now, with the maps they use.",
+    blurb: "The next tasks on your path.",
   },
   keys: {
-    title: "Upcoming keys",
-    hint: "Doors those upcoming tasks go through.",
-    blurb: "Keys to bring for what is coming up.",
+    title: "Keys to bring",
+    hint: "Doors those next tasks go through.",
+    blurb: "Keys for what is coming up.",
   },
   needs: {
-    title: "Upcoming items",
-    hint: "Stash of what those tasks still want, sized like the grid.",
-    blurb: "Quest items to keep, with remaining counts.",
+    title: "Find in raid",
+    hint: "Items those tasks still need from the stash.",
+    blurb: "Quest items still to find.",
   },
   traders: {
     title: "By trader",
-    hint: "What each trader has waiting for you.",
-    blurb: "The next task from every trader, side by side.",
+    hint: "The next offer from each trader.",
+    blurb: "One next task per trader.",
   },
   season: {
     title: "Kord Breach",

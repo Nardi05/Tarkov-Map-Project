@@ -26,7 +26,7 @@ import RaidClock from "./RaidClock";
 import TargetPicker from "./TargetPicker";
 import TaskName from "./TaskName";
 import TaskSheet from "./TaskSheet";
-import { EmptyState, Icon, icons } from "./ui";
+import { EmptyState, Icon, icons, PageHeader } from "./ui";
 
 /**
  * The dashboard: one screen answering "what do I do next", assembled from
@@ -189,41 +189,36 @@ export default function DashboardPage() {
 
   return (
     <>
-      <header className="mb-4 flex flex-wrap items-end justify-between gap-3">
-          <div className="min-w-0">
-            <h1 className="display text-2xl sm:text-3xl">Dashboard</h1>
-            <p className="mt-1.5 max-w-xl text-sm" style={{ color: "var(--text-dim)" }}>
-              What to run next, the keys those tasks go through, and what to find in raid.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
+      <PageHeader
+        title="Dashboard"
+        lead="Your next tasks, which map to queue, and what to bring."
+      >
             {resume && (
               <a
                 className="btn is-active"
-                style={{ padding: "0.34rem 0.72rem", fontSize: "0.75rem" }}
                 href={href.map(resume.normalizedName)}
                 onClick={onNavClick(href.map(resume.normalizedName))}
               >
-                Continue on {resume.name}
+                Continue {resume.name}
               </a>
             )}
             <button
               type="button"
               className="btn"
-              style={{ padding: "0.34rem 0.72rem", fontSize: "0.75rem" }}
               aria-pressed={editing}
               onClick={() => setEditing((v) => !v)}
             >
               <Icon path={icons.layout} size={14} />
-              {editing ? "Done" : "Customise"}
+              {editing ? "Done" : "Edit layout"}
             </button>
-          </div>
-        </header>
+      </PageHeader>
 
         <section className="surface dash-command">
           <RaidClock mapName={resume?.normalizedName ?? "customs"} variant="board" />
           <div className="dash-command-char">
+            <p className="dash-command-kicker">Character</p>
             <p className="text-lg font-semibold">{MODE_META[profile.mode].label}</p>
+            <p className="dash-command-kicker mt-2">Level</p>
             <div className="level-step">
               <button
                 type="button"
@@ -246,7 +241,7 @@ export default function DashboardPage() {
               </button>
             </div>
             <p className="mt-1 text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-              {profile.faction === "Any" ? "Either faction" : profile.faction}
+              {profile.faction === "Any" ? "USEC or BEAR" : profile.faction}
             </p>
           </div>
           <TargetPicker remaining={plan.remainingToTarget} variant="bar" />
@@ -261,10 +256,10 @@ export default function DashboardPage() {
         {data && fresh && !editing && (
           <section className="surface mb-3 flex flex-wrap items-center gap-3 p-4">
             <div className="w-full min-w-0 sm:w-auto sm:flex-1">
-              <h2 className="text-sm font-semibold">Set up your progress</h2>
+              <h2 className="text-sm font-semibold">Tell it what you are running</h2>
               <p className="mt-1 text-[0.8rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-                Walk through your traders once. Until then, the opening tasks the graph knows about
-                are below — not your real next raid.
+                Tick the quests in your trader list once. Until then, the tasks below are a guess,
+                not your raid.
               </p>
             </div>
             <a

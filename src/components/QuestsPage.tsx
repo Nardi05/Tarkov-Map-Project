@@ -24,7 +24,7 @@ import TaskGraphPage from "./TaskGraphPage";
 import { useSlashSearch } from "./ShortcutHelp";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
-import { EmptyState, Icon, icons } from "./ui";
+import { EmptyState, Icon, icons, PageHeader } from "./ui";
 
 /**
  * The quest tracker.
@@ -60,9 +60,9 @@ interface Row {
 const FACTIONS: Faction[] = ["Any", "USEC", "BEAR"];
 
 const QUEST_VIEWS: { id: QuestView; label: string }[] = [
-  { id: "list", label: "List" },
-  { id: "graph", label: "Graph" },
-  { id: "items", label: "Items" },
+  { id: "list", label: "Your list" },
+  { id: "graph", label: "Unlocks" },
+  { id: "items", label: "Stash" },
 ];
 
 const EDITION_LABEL: Record<GameEdition, string> = {
@@ -234,13 +234,11 @@ export default function QuestsPage({
 
   return (
     <Shell>
-      <header className="mb-6">
-        <h1 className="display text-2xl sm:text-3xl">Quests</h1>
-        <p className="mt-1.5 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
-          Tick what you have accepted. The graph fills in what that unlocks, which map to queue,
-          which keys to bring, and what to find in raid.
-        </p>
-        <nav className="mt-4 flex flex-wrap gap-1.5" aria-label="Quest views">
+      <PageHeader
+        title="Quests"
+        lead="Tick what is in your trader list. Maps then draw those objectives."
+      >
+        <nav className="flex flex-wrap gap-1.5" aria-label="Quest views">
           {QUEST_VIEWS.map((v) => (
             <a
               key={v.id}
@@ -253,7 +251,7 @@ export default function QuestsPage({
             </a>
           ))}
         </nav>
-      </header>
+      </PageHeader>
 
       {view === "graph" ? <TaskGraphPage /> : view === "items" ? <ItemAudit /> : null}
       {view !== "list" ? null : (
@@ -333,15 +331,12 @@ export default function QuestsPage({
                 prerequisite — 372 of 528 followed by "the remaining 58" simply
                 does not add up, and the one number a reader can check was the
                 one that was wrong. */}
-            Prerequisites are known for{" "}
+            Unlock data covers{" "}
             <strong style={{ color: "var(--text)" }}>
-              {data.coverage.withPrereq} of {data.coverage.tasks}
+              {data.coverage.withPrereq}/{data.coverage.tasks}
             </strong>{" "}
-            tasks. Of the {data.coverage.tasks - data.coverage.withPrereq} without one,{" "}
-            <strong style={{ color: "var(--text)" }}>{data.coverage.ungated}</strong> have nothing
-            recorded gating them at all — no prerequisite, no level, no loyalty — so they show as
-            available from the start and the game may not offer them yet. Your own ticks are never
-            affected.
+            tasks. {data.coverage.ungated} have no recorded gate and may show too early. Your ticks
+            are never changed.
           </span>
         </p>
       )}

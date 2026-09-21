@@ -202,3 +202,24 @@ export function PageChrome({
     </header>
   );
 }
+
+/** Title + one-line purpose + optional actions. Same shape on every tab page. */
+export function PageHeader({
+  title,
+  lead,
+  children,
+}: {
+  title: string;
+  lead?: string;
+  children?: ReactNode;
+}) {
+  return (
+    <header className="page-header">
+      <div className="min-w-0">
+        <h1 className="display text-[1.65rem] sm:text-3xl">{title}</h1>
+        {lead && <p className="page-lead">{lead}</p>}
+      </div>
+      {children ? <div className="page-header-actions">{children}</div> : null}
+    </header>
+  );
+}

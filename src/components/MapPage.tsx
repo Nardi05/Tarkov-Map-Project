@@ -340,21 +340,19 @@ export default function MapPage({
             <button
               type="button"
               className="btn hidden text-[0.72rem] md:inline-flex"
-              style={{ padding: "0.28rem 0.6rem" }}
               aria-pressed={!railCollapsed}
               onClick={() => setRailCollapsed((v) => !v)}
               title="Hide or show the side panel ([)"
             >
-              {railCollapsed ? "Show panel" : "Hide panel"}
+              {railCollapsed ? "Show list" : "Hide list"}
             </button>
             <button
               type="button"
               className="btn hidden text-[0.72rem] lg:inline-flex"
-              style={{ padding: "0.28rem 0.6rem" }}
               onClick={() => setFitToken((n) => n + 1)}
               title="Fit the whole map on screen (0)"
             >
-              Reset view
+              Fit map
             </button>
             <a
               className="btn btn-icon inline-flex flex-none sm:hidden"

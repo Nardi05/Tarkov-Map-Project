@@ -11,7 +11,7 @@ import { useStore, useTaskStatus } from "../store";
 import type { MapIndexEntry } from "../types";
 import NextRaid from "./NextRaid";
 import { useSlashSearch } from "./ShortcutHelp";
-import { Icon, icons } from "./ui";
+import { Icon, icons, PageHeader } from "./ui";
 
 export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
   const [query, setQuery] = useState("");
@@ -49,13 +49,10 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
 
   return (
     <>
-      <header className="mb-8">
-          <h1 className="display text-2xl sm:text-3xl">Maps</h1>
-          <p className="mt-1.5 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
-            Spawns, extracts, keys and your active tasks. Pick a map or continue where you left off.
-          </p>
-
-          <div className="mt-6 flex flex-wrap items-center gap-2.5">
+      <PageHeader
+        title="Maps"
+        lead="Open a map for spawns, extracts, keys and the quests you have ticked active."
+      >
             <div className="relative w-full max-w-xs">
               <span
                 className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2"
@@ -79,14 +76,13 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
                 href={href.map(resume.normalizedName)}
                 onClick={onNavClick(href.map(resume.normalizedName))}
               >
-                Continue on {resume.name}
+                Continue {resume.name}
               </a>
             )}
-          </div>
-          <p className="mt-3 text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-            Tracking {MODE_META[profile.mode].label}. {MODE_META[profile.mode].hint}
+      </PageHeader>
+          <p className="-mt-2 mb-5 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
+            Showing {MODE_META[profile.mode].label}. {MODE_META[profile.mode].hint}
           </p>
-        </header>
 
         <a
           href={href.quests()}
@@ -223,8 +219,8 @@ function MapCard({ map, priority }: { map: MapIndexEntry; priority: boolean }) {
           <div className="flex items-baseline justify-between gap-2">
             <h2 className="truncate text-[0.95rem] font-semibold">{map.name}</h2>
             <span className="flex-none text-[0.68rem] tabular-nums" style={{ color: "var(--text-faint)" }}>
-              {map.players ?? "—"}
-              {map.raidDuration ? ` · ${map.raidDuration}m` : ""}
+              {map.players ? `${map.players} PMC` : ""}
+              {map.raidDuration ? `${map.players ? " · " : ""}${map.raidDuration} min` : ""}
             </span>
           </div>
           {bosses.length > 0 && (
@@ -264,13 +260,13 @@ function Primer() {
   const items = LAYERS.filter((l) => picks.includes(l.id));
 
   return (
-    <section className="mt-16">
-      <h2 className="text-lg font-semibold">New to Tarkov maps?</h2>
+    <details className="surface mt-10 p-4">
+      <summary className="cursor-pointer text-sm font-semibold">How to read a map</summary>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
-        Colour tells you <em>who</em> something belongs to, shape tells you <em>what</em> it is —
-        so a blue square is always a PMC exit, wherever you see it.
+        Colour is <em>who</em> it belongs to. Shape is <em>what</em> it is. A blue square is always
+        a PMC extract.
       </p>
-      <ul className="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((layer) => (
           <li key={layer.id} className="surface-2 flex items-start gap-3 p-3.5">
             <span
@@ -287,6 +283,6 @@ function Primer() {
           </li>
         ))}
       </ul>
-    </section>
+    </details>
   );
 }

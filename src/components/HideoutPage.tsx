@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useHideoutData, useItemCatalog } from "../lib/data";
-import { completeThrough, hideoutRows } from "../lib/hideout";
+import { completeThrough, hideoutRows, hideoutStatusLabel } from "../lib/hideout";
 import { useHideout, useItemCounts, useStore } from "../store";
-import { EmptyState, Icon, icons } from "./ui";
+import { EmptyState, Icon, icons, PageHeader } from "./ui";
 
 export default function HideoutPage() {
   const data = useHideoutData();
@@ -27,12 +27,10 @@ export default function HideoutPage() {
 
   return (
     <>
-      <header className="mb-6">
-        <h1 className="display text-2xl sm:text-3xl">Hideout</h1>
-        <p className="mt-1.5 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
-          Station levels for this character. Item counts are the same stash the quest planner uses.
-        </p>
-      </header>
+      <PageHeader
+        title="Hideout"
+        lead="Station levels for this character. Item counts are the same stash as quests."
+      />
 
       {data.loading && !data.data && (
         <EmptyState title="Loading hideout" hint="Fetching station data." />
@@ -59,9 +57,7 @@ export default function HideoutPage() {
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{row.station.name}</p>
                 <p className="text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
-                  {row.next
-                    ? `Level ${row.completedLevel} · next ${row.next.level} (${row.status})`
-                    : `Level ${row.completedLevel} · maxed`}
+                  {hideoutStatusLabel(row)}
                 </p>
               </div>
             </button>

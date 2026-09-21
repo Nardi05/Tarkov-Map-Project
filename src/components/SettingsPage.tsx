@@ -8,7 +8,7 @@ import { useStore, type Theme } from "../store";
 import ModeSwitch from "./ModeSwitch";
 import SavePanel from "./SavePanel";
 import TargetPicker from "./TargetPicker";
-import { Icon, icons } from "./ui";
+import { Icon, icons, PageHeader } from "./ui";
 
 const FACTIONS: Faction[] = ["Any", "USEC", "BEAR"];
 
@@ -92,11 +92,10 @@ export default function SettingsPage() {
           </span>
         </nav>
 
-        <h1 className="display text-2xl sm:text-3xl">Settings</h1>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
-          Three characters, same as the game: PvP Zone, Season (Kord Breach), and PvE. Progress never
-          crosses between them. This page edits the one you are on.
-        </p>
+        <PageHeader
+          title="Settings"
+          lead="Three characters, same as the game: PvP Zone, Season, and PvE. This page edits the one you have selected."
+        />
 
         <section className="surface mt-5 p-4">
           <h2 className="text-sm font-semibold">Characters</h2>

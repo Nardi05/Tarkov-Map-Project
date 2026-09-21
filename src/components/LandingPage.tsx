@@ -67,7 +67,10 @@ export default function LandingPage() {
           </p>
         </header>
 
-        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+        <p className="mt-8 text-[0.72rem] font-semibold uppercase tracking-wider" style={{ color: "var(--text-faint)" }}>
+          Choose one
+        </p>
+        <div className="mt-2 grid gap-3 sm:grid-cols-2">
           <button type="button" className="surface landing-choice p-5 text-left" onClick={mapsOnly}>
             <p className="text-sm font-semibold">Just the maps</p>
             <p className="mt-2 text-[0.8rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
