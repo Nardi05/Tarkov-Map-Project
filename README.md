@@ -10,11 +10,8 @@ static site with no backend.
 
 ## Live
 
-Both are behind the same site password.
-
 - **Production** (`main`) — the stable build: https://tarkov-map-project.vercel.app
-- **Dev previews** — every other branch gets its own Vercel preview URL, listed
-  on the deployment in the Vercel dashboard. They sit behind the same password.
+- **Dev previews** — every other branch gets its own Vercel preview URL.
 
 ## What's on the map
 
@@ -289,18 +286,8 @@ production branch redeploys automatically (`vercel.json` sets the build command
 to `npm run data && npm run build`, so each deploy fetches current game data
 rather than a stale snapshot).
 
-While the site isn't ready to be public, `middleware.ts` puts a password in
-front of every request — including static assets, not just the page — using
-[Vercel Routing Middleware](https://vercel.com/docs/routing-middleware). Set
-these in the project's Environment Variables:
-
-- `SITE_PASSWORD` — the shared password. Required; the site fails closed
-  (503) if it's missing, rather than opening up by accident.
-- `SITE_PRIVATE` — set to `false` when it's time to go public. Anything else
-  (including leaving it unset) keeps the gate on.
-
-No custom domain or extra setup needed beyond that — share the Vercel-assigned
-URL and password with whoever's testing.
+Preview deploys from non-`main` branches are unlisted Vercel URLs. Production
+stays on `main`. There is no site-password gate.
 
 ## How it fits together
 
