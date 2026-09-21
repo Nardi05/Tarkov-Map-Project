@@ -22,7 +22,6 @@
     "audit-graph": "node scripts/audit-graph.mjs"
   },
   "dependencies": {
-    "@vercel/analytics": "^2.0.1",
     "leaflet": "^1.9.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
