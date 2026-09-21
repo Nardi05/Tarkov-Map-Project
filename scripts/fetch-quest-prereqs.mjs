@@ -39,6 +39,8 @@ const SRC = path.join(ROOT, "public", "data");
 const OUT = path.join(ROOT, "data");
 const CACHE = path.join(ROOT, "node_modules", ".cache", "wiki-quests");
 const WIKI = "https://escapefromtarkov.fandom.com/api.php";
+const TASKS_FEED = "https://json.tarkov.dev/regular/tasks";
+const TASKS_EN = "https://json.tarkov.dev/regular/tasks_en";
 const UA = "tarkov-map-project/0.1 (personal fan project; contact via GitHub)";
 const CONCURRENCY = 4;
 
@@ -106,12 +108,38 @@ async function mapLimit(items, limit, fn) {
 
 /* --------------------------------------------------------------------- main */
 
-const progression = JSON.parse(await fs.readFile(path.join(SRC, "progression.json"), "utf8"));
-const tasks = Object.entries(progression.tasks).map(([id, t]) => ({
-  id,
-  name: t.name,
-  title: pageTitle(t.wiki),
-}));
+async function loadJson(url) {
+  const res = await fetch(url, { headers: { Accept: "application/json", "user-agent": UA } });
+  if (!res.ok) throw new Error(`${url} ${res.status}`);
+  return res.json();
+}
+
+/**
+ * Prefer the last built progression graph (translated names, canonical ids).
+ * On a fresh machine or a wiki-first refresh, fall back to the live feed.
+ */
+async function loadTasks() {
+  try {
+    const progression = JSON.parse(await fs.readFile(path.join(SRC, "progression.json"), "utf8"));
+    return Object.entries(progression.tasks).map(([id, t]) => ({
+      id,
+      name: t.name,
+      title: pageTitle(t.wiki),
+    }));
+  } catch {
+    /* no local build yet */
+  }
+  const [payload, dict] = await Promise.all([loadJson(TASKS_FEED), loadJson(TASKS_EN)]);
+  const lookup = dict.data ?? {};
+  const bag = payload.data?.tasks ?? {};
+  return Object.values(bag).map((t) => {
+    const raw = typeof t.name === "string" ? t.name : "";
+    const name = (lookup[raw] ?? raw).replace(/\s+/g, " ").trim();
+    return { id: t.id, name, title: pageTitle(t.wikiLink) };
+  });
+}
+
+const tasks = await loadTasks();
 
 const missingTitle = tasks.filter((t) => !t.title);
 if (missingTitle.length) {
@@ -222,17 +250,32 @@ const payload = {
   requires: Object.fromEntries(Object.entries(requires).sort(([a], [b]) => a.localeCompare(b))),
 };
 
+const fetched = fetchable.length - unfetched.length;
+if (fetchable.length && fetched / fetchable.length < 0.5) {
+  console.error(
+    `\nWiki returned only ${fetched}/${fetchable.length} pages — keeping the previous scrape.`,
+  );
+  process.exit(0);
+}
+
 await fs.writeFile(path.join(OUT, "quest-prereqs.json"), JSON.stringify(payload, null, 1));
 
 /* ------------------------------------------------------------------- report */
 
-const feedEdges = Object.values(progression.tasks).reduce(
-  (n, t) => n + t.requires.reduce((m, set) => m + set.length, 0),
-  0,
-);
-const feedCovered = Object.values(progression.tasks).filter((t) =>
-  t.requires.some((set) => set.length > 0),
-).length;
+let feedEdges = 0;
+let feedCovered = 0;
+try {
+  const progression = JSON.parse(await fs.readFile(path.join(SRC, "progression.json"), "utf8"));
+  feedEdges = Object.values(progression.tasks).reduce(
+    (n, t) => n + t.requires.reduce((m, set) => m + set.length, 0),
+    0,
+  );
+  feedCovered = Object.values(progression.tasks).filter((t) =>
+    t.requires.some((set) => set.length > 0),
+  ).length;
+} catch {
+  /* comparison is optional */
+}
 
 console.log(`
 Pages read          ${fetchable.length - unfetched.length} of ${fetchable.length}

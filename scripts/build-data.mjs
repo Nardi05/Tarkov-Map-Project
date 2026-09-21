@@ -1405,12 +1405,22 @@ for (const [canonicalId, members] of groupMembers) {
   }
 
   let hideoutStations = [];
-  try {
-    const raw = await getLocalised(`${GAME_MODE}/hideout_stations`);
-    const bag = raw.hideoutStations ?? raw.stations ?? raw;
-    hideoutStations = Array.isArray(bag) ? bag : Object.values(bag ?? {});
-  } catch (err) {
-    console.warn(`  hideout stations unavailable (${err.message})`);
+  // json.tarkov.dev renamed this feed from hideout_stations -> hideout.
+  // Try both so a revert upstream does not empty the hideout page.
+  for (const feed of [`${GAME_MODE}/hideout`, `${GAME_MODE}/hideout_stations`]) {
+    try {
+      const raw = await getLocalised(feed);
+      const bag = raw.hideoutStations ?? raw.stations ?? raw;
+      const list = Array.isArray(bag) ? bag : Object.values(bag ?? {});
+      const usable = list.filter((s) => s && (s.levels || s.name || s.id));
+      if (usable.length) {
+        hideoutStations = usable;
+        console.log(`  hideout: ${usable.length} stations from ${feed}`);
+        break;
+      }
+    } catch (err) {
+      console.warn(`  hideout ${feed} unavailable (${err.message})`);
+    }
   }
 
   let stations = hideoutStations.map((station) => {
@@ -1464,10 +1474,13 @@ for (const [canonicalId, members] of groupMembers) {
     }
   }
 
-  await fs.writeFile(
-    path.join(OUT, "hideout.json"),
-    JSON.stringify({ generated: new Date().toISOString(), stations }),
-  );
+  const hideoutPayload = { generated: new Date().toISOString(), stations };
+  await fs.writeFile(path.join(OUT, "hideout.json"), JSON.stringify(hideoutPayload));
+  // Keep the vendored snapshot in step with a healthy live fetch so the next
+  // 404 does not roll the site back to an older wipe.
+  if (hideoutStations.length) {
+    await fs.writeFile(path.join(ROOT, "data", "hideout.json"), JSON.stringify(hideoutPayload));
+  }
   console.log(`  wrote hideout.json (${stations.length} stations)`);
 
   const catalog = {};

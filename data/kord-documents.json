@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-16T04:57:38.838Z",
+ "generated": "2026-09-21T07:29:17.421Z",
  "source": "https://escapefromtarkov.fandom.com",
  "note": "Positions are anchored to named place labels, not surveyed coordinates. A spawn with no recognisable place keeps its description and screenshot and ships without a position.",
  "maps": {
@@ -7,9 +7,9 @@
    {
     "document": "Financial documents",
     "note": "Inside crackhouse on the floor near the bookshelves.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0a/Financial_documents_customs_spawn_1.png/revision/latest?cb=20260805204021",
-    "imageWidth": 2557,
-    "imageHeight": 1437,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0a/Financial_documents_customs_spawn_1.png/revision/latest?cb=20260817234056",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      83,
      -153
@@ -19,9 +19,9 @@
    {
     "document": "Financial documents",
     "note": "On the desk inside old gas station building.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/f6/Financial_documents_customs_spawn_2.png/revision/latest?cb=20260805204031",
-    "imageWidth": 1459,
-    "imageHeight": 768,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/f6/Financial_documents_customs_spawn_2.png/revision/latest?cb=20260817234043",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      331,
      -173
@@ -31,9 +31,9 @@
    {
     "document": "Financial documents",
     "note": "Inside 3 story dorms, in room 304 on the nightstand.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/6f/Financial_documents_customs_spawn_3.png/revision/latest?cb=20260805204037",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/6f/Financial_documents_customs_spawn_3.png/revision/latest?cb=20260818233728",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      200,
      150
@@ -43,18 +43,18 @@
    {
     "document": "Financial documents",
     "note": "Inside the industrial plant used for ref quest in the office at the top floor.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d0/Financial_documents_customs_spawn_4.png/revision/latest?cb=20260805204044",
-    "imageWidth": 1918,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d0/Financial_documents_customs_spawn_4.png/revision/latest?cb=20260817234109",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Financial documents",
     "note": "Inside 3 story dorms in room 212 on the shelf above the desk.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/19/Financial_documents_customs_spawn_5.png/revision/latest?cb=20260805204054",
-    "imageWidth": 1919,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/19/Financial_documents_customs_spawn_5.png/revision/latest?cb=20260817234234",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      200,
      150
@@ -64,9 +64,9 @@
    {
     "document": "Financial documents",
     "note": "Inside a blue shack next to big red.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/42/Financial_documents_customs_spawn_6.png/revision/latest?cb=20260805204105",
-    "imageWidth": 2560,
-    "imageHeight": 1329,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/42/Financial_documents_customs_spawn_6.png/revision/latest?cb=20260817234326",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -215,
      -119
@@ -76,9 +76,9 @@
    {
     "document": "Financial documents",
     "note": "Inside the 2 story dorms behind Dorm guard desk key door.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d5/Financial_documents_customs_spawn_7.png/revision/latest?cb=20260805204111",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d5/Financial_documents_customs_spawn_7.png/revision/latest?cb=20260817234340",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      200,
      150
@@ -88,9 +88,9 @@
    {
     "document": "Financial documents",
     "note": "Inside crackhouse on the backshelf upstairs.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/3a/Financial_documents_customs_spawn_8.png/revision/latest?cb=20260805204120",
-    "imageWidth": 886,
-    "imageHeight": 1129,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/3a/Financial_documents_customs_spawn_8.png/revision/latest?cb=20260817234424",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      83,
      -153
@@ -100,9 +100,9 @@
    {
     "document": "Financial documents",
     "note": "In the computer room behind Tarcone Director's office key door.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9e/Financial_documents_customs_spawn_9.png/revision/latest?cb=20260805204133",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9e/Financial_documents_customs_spawn_9.png/revision/latest?cb=20260817234652",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
@@ -117,15 +117,54 @@
    },
    {
     "document": "Financial documents",
-    "note": "Bastion building / Fortress Bulding. First floor room in the middle with the bunk beds",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ea/Financial_documents_customs_spawn_11.png/revision/latest?cb=20260814011241",
-    "imageWidth": 2557,
-    "imageHeight": 1440,
+    "note": "Bastion building / Fortress Bulding. First floor room in the middle with the bunk beds.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ea/Financial_documents_customs_spawn_11.png/revision/latest?cb=20260817234719",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      201,
      -127
     ],
     "place": "Fortress"
+   },
+   {
+    "document": "Financial documents",
+    "note": "In a individual shack next to reshala's bunkhouse.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/6a/Financial_documents_customs_spawn_12.png/revision/latest?cb=20260817234737",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the 2 story dorms room no. 212",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/83/Financial_documents_customs_spawn_13.png/revision/latest?cb=20260817234745",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     200,
+     150
+    ],
+    "place": "Dorms"
+   },
+   {
+    "document": "Financial documents",
+    "note": "On the top floor of the industrial building located in front of the Company director's room key building.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/38/Financial_documents_customs_spawn_14.png/revision/latest?cb=20260817234752",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside warehouse 5 on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/70/Financial_documents_customs_spawn_15.png/revision/latest?cb=20260822110900",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
    },
    {
     "document": "Project documentation",
@@ -142,9 +181,9 @@
    {
     "document": "Project documentation",
     "note": "Inside the crackhouse library on the shelves.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/da/Project_documentation_customs_spawn_2.png/revision/latest?cb=20260805214118",
-    "imageWidth": 5120,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/da/Project_documentation_customs_spawn_2.png/revision/latest?cb=20260822101245",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      83,
      -153
@@ -166,9 +205,9 @@
    {
     "document": "Project documentation",
     "note": "In the warehouse 17 in the upstairs bunkhouse inside a nightstand.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/68/Project_documentation_customs_spawn_4.png/revision/latest?cb=20260805214132",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/68/Project_documentation_customs_spawn_4.png/revision/latest?cb=20260822101256",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      46,
      -59
@@ -178,9 +217,9 @@
    {
     "document": "Project documentation",
     "note": "Behind Company director's room key on the shelf.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ef/Project_documentation_customs_spawn_5.png/revision/latest?cb=20260805214138",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ef/Project_documentation_customs_spawn_5.png/revision/latest?cb=20260822101329",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
@@ -199,9 +238,9 @@
    {
     "document": "Project documentation",
     "note": "In the 3 story dorms in room 212 under the desk.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/91/Project_documentation_customs_spawn_7.png/revision/latest?cb=20260805214202",
-    "imageWidth": 1919,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/91/Project_documentation_customs_spawn_7.png/revision/latest?cb=20260822101405",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      200,
      150
@@ -211,9 +250,9 @@
    {
     "document": "Project documentation",
     "note": "Inside Fortress in the southern room with the beds on the shelf.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/5b/Project_documentation_customs_spawn_8.png/revision/latest?cb=20260805214245",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/5b/Project_documentation_customs_spawn_8.png/revision/latest?cb=20260822101417",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      201,
      -127
@@ -231,9 +270,87 @@
      -153
     ],
     "place": "Crackhouse"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside the 2 story dorms in room 207.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/4e/Project_documentation_customs_spawn_10.png/revision/latest?cb=20260822101150",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     200,
+     150
+    ],
+    "place": "Dorms"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside the 2 story dorms in room 216.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e8/Project_documentation_customs_spawn_11.png/revision/latest?cb=20260822101200",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     200,
+     150
+    ],
+    "place": "Dorms"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside warehouse 17 at the top floor of the main room with the trailer.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/4a/Project_documentation_customs_spawn_12.png/revision/latest?cb=20260822101206",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     46,
+     -59
+    ],
+    "place": "Warehouse 17"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside the workshop next to military checkpoint on 2nd floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/65/Project_documentation_customs_spawn_13.png/revision/latest?cb=20260822101212",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     572,
+     0
+    ],
+    "place": "Military Checkpoint"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Behind Tarcone Director's office key door inside the computer room.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9a/Project_documentation_customs_spawn_14.png/revision/latest?cb=20260822102018",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Project documentation",
+    "note": "Customs, Blue building near big red, trailer park side of big red, under table",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/4a/Project_documentation_customs_spawn_15.png/revision/latest?cb=20260906143621",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -211,
+     -219
+    ],
+    "place": "Trailer Park"
    }
   ],
   "factory": [
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Location of the documents on the map.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c4/BP_Documents_Factory_S01_Map.webp/revision/latest?cb=20260816205020",
+    "imageWidth": 11600,
+    "imageHeight": 9520,
+    "position": null,
+    "place": null
+   },
    {
     "document": "Blueprints and technical documentation",
     "note": "In the laboratory zone 1st floor in the breachable room.",
@@ -381,6 +498,15 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/90/Blueprints_and_technical_documentation_factory_spawn_15.png/revision/latest?cb=20260813005624",
     "imageWidth": 1920,
     "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Project documentation",
+    "note": "Location of the documents on the map.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c4/BP_Documents_Factory_S01_Map.webp/revision/latest?cb=20260816205020",
+    "imageWidth": 11600,
+    "imageHeight": 9520,
     "position": null,
     "place": null
    },
@@ -547,6 +673,15 @@
   "ground-zero": [
    {
     "document": "Medical documents",
+    "note": "Location of the documents on the map.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d7/BP_Documents_Ground_Zero_S01_Map.webp/revision/latest?cb=20260816204726",
+    "imageWidth": 15500,
+    "imageHeight": 6920,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Medical documents",
     "note": "Inside the coffee shop next to the v-ex on a chair.",
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/ad/Medical_documents_ground_zero_spawn_1.png/revision/latest?cb=20260814194723",
     "imageWidth": 1920,
@@ -704,6 +839,15 @@
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/62/Medical_documents_ground_zero_spawn_15.png/revision/latest?cb=20260814195908",
     "imageWidth": 1920,
     "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "User documentation",
+    "note": "Location of the documents on the map.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d7/BP_Documents_Ground_Zero_S01_Map.webp/revision/latest?cb=20260816204726",
+    "imageWidth": 15500,
+    "imageHeight": 6920,
     "position": null,
     "place": null
    },
@@ -883,9 +1027,9 @@
    {
     "document": "PMC personnel files",
     "note": "Inside Med. Office on level 1.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/32/PMC_personnel_files_icebreaker_spawn_1.png/revision/latest?cb=20260805205732",
-    "imageWidth": 2555,
-    "imageHeight": 1433,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/32/PMC_personnel_files_icebreaker_spawn_1.png/revision/latest?cb=20260823180935",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
@@ -901,7 +1045,7 @@
    {
     "document": "PMC personnel files",
     "note": "Inside the right room in the drone room on level 2.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/de/PMC_personnel_files_icebreaker_spawn_3.png/revision/latest?cb=20260810183156",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/de/PMC_personnel_files_icebreaker_spawn_3.png/revision/latest?cb=20260823180949",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -910,7 +1054,7 @@
    {
     "document": "PMC personnel files",
     "note": "Inside the small room where the code is located within the engine room on level -2.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/71/PMC_personnel_files_icebreaker_spawn_4.png/revision/latest?cb=20260810183201",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/71/PMC_personnel_files_icebreaker_spawn_4.png/revision/latest?cb=20260823181000",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -928,7 +1072,7 @@
    {
     "document": "PMC personnel files",
     "note": "Inside the control room under the helipad on level 1.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/fe/PMC_personnel_files_icebreaker_spawn_6.png/revision/latest?cb=20260810183224",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/fe/PMC_personnel_files_icebreaker_spawn_6.png/revision/latest?cb=20260823181102",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -937,7 +1081,7 @@
    {
     "document": "PMC personnel files",
     "note": "Inside the lower automation room on level -3 on a chair.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2b/PMC_personnel_files_icebreaker_spawn_7.png/revision/latest?cb=20260810183233",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2b/PMC_personnel_files_icebreaker_spawn_7.png/revision/latest?cb=20260823181148",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -946,16 +1090,88 @@
    {
     "document": "PMC personnel files",
     "note": "Inside the room where the flare spawn above the helipad on level 4.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/99/PMC_personnel_files_icebreaker_spawn_8.png/revision/latest?cb=20260810183241",
-    "imageWidth": 3440,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/99/PMC_personnel_files_icebreaker_spawn_8.png/revision/latest?cb=20260823181159",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
-    "document": "Test documentation",
-    "note": "Inside Med. storage room on level 1",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/64/Test_documentation_icebreaker_spawn_1.png/revision/latest?cb=20260806190157",
+    "document": "PMC personnel files",
+    "note": "Behind Compartment C-3 keycard door next to Boreas scientist audio tape.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/a4/PMC_personnel_files_icebreaker_spawn_9.png/revision/latest?cb=20260823180809",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "On level 1 in the Compartment C-3 keycard changing room.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9d/PMC_personnel_files_icebreaker_spawn_10.png/revision/latest?cb=20260823180846",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "On level 3 inside the room no. 12 above the desk.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/01/PMC_personnel_files_icebreaker_spawn_11.png/revision/latest?cb=20260823180826",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "On level 4 inside the archives room on the floor next to the table.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d1/PMC_personnel_files_icebreaker_spawn_12.png/revision/latest?cb=20260823180854",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "On level 4 inside the room no. 19 in a basket.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/7d/PMC_personnel_files_icebreaker_spawn_13.png/revision/latest?cb=20260823180901",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "On level 5 in the conference room on the table.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/ca/PMC_personnel_files_icebreaker_spawn_14.png/revision/latest?cb=20260823180906",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "On level 7 behind Compartment C-1 keycard door on the desk.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/3c/PMC_personnel_files_icebreaker_spawn_15.png/revision/latest?cb=20260823180910",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "On level 9 inside the bridge.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/4f/PMC_personnel_files_icebreaker_spawn_16.png/revision/latest?cb=20260823180916",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "On level 3 inside the west room of the canteen on the table.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/5d/PMC_personnel_files_icebreaker_spawn_17.png/revision/latest?cb=20260823183906",
     "imageWidth": 2560,
     "imageHeight": 1440,
     "position": null,
@@ -963,8 +1179,8 @@
    },
    {
     "document": "Test documentation",
-    "note": "Inside the east room of the canteen on level 3",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/30/Test_documentation_icebreaker_spawn_2.png/revision/latest?cb=20260806190203",
+    "note": "Inside Med. storage room on level 1.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/64/Test_documentation_icebreaker_spawn_1.png/revision/latest?cb=20260823175708",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -972,17 +1188,98 @@
    },
    {
     "document": "Test documentation",
-    "note": "Inside the green flare room at spawn on level 1",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/aa/Test_documentation_icebreaker_spawn_3.png/revision/latest?cb=20260806190210",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "note": "Inside the east room of the canteen on level 3.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/30/Test_documentation_icebreaker_spawn_2.png/revision/latest?cb=20260823175718",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Test documentation",
-    "note": "Inside the drone room before the helipad on level 2",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0d/Test_documentation_icebreaker_spawn_4.png/revision/latest?cb=20260806190222",
+    "note": "Inside the green flare room at spawn on level 1.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/aa/Test_documentation_icebreaker_spawn_3.png/revision/latest?cb=20260823175723",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "Inside the drone room before the helipad on level 2.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0d/Test_documentation_icebreaker_spawn_4.png/revision/latest?cb=20260823175740",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "Inside the sub room on the right in the drone room on level 2.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/ca/Test_documentation_icebreaker_spawn_5.png/revision/latest?cb=20260823175532",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "On level 0 in front of the staircase.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/00/Test_documentation_icebreaker_spawn_6.png/revision/latest?cb=20260823175535",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "Inside the sub room on the left in the drone room on level 2.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/75/Test_documentation_icebreaker_spawn_7.png/revision/latest?cb=20260823175543",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "On level 0 under the helipad control room on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/f7/Test_documentation_icebreaker_spawn_8.png/revision/latest?cb=20260823175555",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "On level 4 in the room above the helipad.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/39/Test_documentation_icebreaker_spawn_9.png/revision/latest?cb=20260823175555",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "On level 4 inside the archives room on a pile of documents.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d7/Test_documentation_icebreaker_spawn_10.png/revision/latest?cb=20260823175617",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "On level 4 inside the archives room on the floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/33/Test_documentation_icebreaker_spawn_11.png/revision/latest?cb=20260823175629",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "On level 5 inside the conference room on the shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/21/Test_documentation_icebreaker_spawn_12.png/revision/latest?cb=20260823175639",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -1041,7 +1338,7 @@
    {
     "document": "Blueprints and technical documentation",
     "note": "In the office between Goshan and OLI.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/39/Blueprints_and_technical_documentation_interchange_spawn_5.png/revision/latest?cb=20260815232903",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/39/Blueprints_and_technical_documentation_interchange_spawn_5.png/revision/latest?cb=20260815234354",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": [
@@ -1148,15 +1445,24 @@
    },
    {
     "document": "Blueprints and technical documentation",
-    "note": "Inside goshan south offices.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/ba/Blueprints_and_technical_documentation_interchange_spawn_14.png/revision/latest?cb=20260815234354",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
+    "note": "Inside the metal shack next to flare extract on top of the blue locker.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/ba/Blueprints_and_technical_documentation_interchange_spawn_14.png/revision/latest?cb=20260822110152",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Blueprints and technical documentation",
+    "note": "Behind OLI logistics department office key door on a desk.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/5f/Blueprints_and_technical_documentation_interchange_spawn_15.png/revision/latest?cb=20260822110158",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": [
-     -115,
-     -45
+     -28,
+     140
     ],
-    "place": "Goshan"
+    "place": "OLI"
    },
    {
     "document": "Financial documents",
@@ -1328,7 +1634,7 @@
    },
    {
     "document": "Financial documents",
-    "note": "Inside an office between Goshan and OLI.",
+    "note": "Inside the goshan north office.",
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/fc/Financial_documents_interchange_spawn_16.png/revision/latest?cb=20260816001510",
     "imageWidth": 1920,
     "imageHeight": 1080,
@@ -1343,18 +1649,18 @@
    {
     "document": "PMC personnel files",
     "note": "Inside the WTP Building 2 in the radio room next to the car.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/3c/PMC_personnel_files_lighthouse_spawn_1.png/revision/latest?cb=20260805205656",
-    "imageWidth": 3440,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/3c/PMC_personnel_files_lighthouse_spawn_1.png/revision/latest?cb=20260820000527",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "PMC personnel files",
     "note": "At the scav village inside a red two floor house in the bedroom on 2nd floor.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0d/PMC_personnel_files_lighthouse_spawn_2.png/revision/latest?cb=20260805205703",
-    "imageWidth": 1757,
-    "imageHeight": 1067,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0d/PMC_personnel_files_lighthouse_spawn_2.png/revision/latest?cb=20260820000551",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
@@ -1379,7 +1685,7 @@
    {
     "document": "PMC personnel files",
     "note": "Inside the blue chalet garage on 2nd floor on the bed.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/60/PMC_personnel_files_lighthouse_spawn_5.png/revision/latest?cb=20260810183131",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/60/PMC_personnel_files_lighthouse_spawn_5.png/revision/latest?cb=20260820000609",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -1389,6 +1695,99 @@
     "document": "PMC personnel files",
     "note": "Inside the black chalet in the kitchen on the microwave.",
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/a5/PMC_personnel_files_lighthouse_spawn_6.png/revision/latest?cb=20260810183139",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Behind Rogue USEC stash key door on the couch.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9d/PMC_personnel_files_lighthouse_spawn_7.png/revision/latest?cb=20260820000329",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "In the tent of the tennis court at black chalet.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c6/PMC_personnel_files_lighthouse_spawn_8.png/revision/latest?cb=20260820000335",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -70,
+     129
+    ],
+    "place": "Tennis Court"
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Inside the hangar at the trainyard.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/4c/PMC_personnel_files_lighthouse_spawn_9.png/revision/latest?cb=20260820000343",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Northern water house on 2nd floor on a chair.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/93/PMC_personnel_files_lighthouse_spawn_10.png/revision/latest?cb=20260820000349",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Southern water house on 2nd floor in the bedroom inside the tv stand.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/40/PMC_personnel_files_lighthouse_spawn_11.png/revision/latest?cb=20260820000357",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Inside the store house right apartment on 2nd floor in the bedroom.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/5e/PMC_personnel_files_lighthouse_spawn_12.png/revision/latest?cb=20260820000405",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Inside black chalet bedroom.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/26/PMC_personnel_files_lighthouse_spawn_13.png/revision/latest?cb=20260820000426",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Inside the WTP Building 1 on 2nd floor west side.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/68/PMC_personnel_files_lighthouse_spawn_14.png/revision/latest?cb=20260820000439",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Inside the WTP building 3 on 2nd floor in the western corridor on the floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/44/PMC_personnel_files_lighthouse_spawn_15.png/revision/latest?cb=20260820000444",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Inside the sunken restaurant on 2nd floor on a bed.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e1/PMC_personnel_files_lighthouse_spawn_16.png/revision/latest?cb=20260822111900",
     "imageWidth": 2560,
     "imageHeight": 1440,
     "position": null,
@@ -1406,18 +1805,18 @@
    {
     "document": "Technical documentation",
     "note": "Inside building 3 of the WTP in the upstairs room.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/66/Technical_documentation_lighthouse_spawn_2.png/revision/latest?cb=20260806204030",
-    "imageWidth": 2559,
-    "imageHeight": 1439,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/66/Technical_documentation_lighthouse_spawn_2.png/revision/latest?cb=20260822103136",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
     "note": "Inside a red brick 2-floor house at the village on 1st floor on a shelf.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/59/Technical_documentation_lighthouse_spawn_3.png/revision/latest?cb=20260806204037",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/59/Technical_documentation_lighthouse_spawn_3.png/revision/latest?cb=20260822103145",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -75,
      -284
@@ -1427,16 +1826,16 @@
    {
     "document": "Technical documentation",
     "note": "Inside the northern house by the sea next to the pier.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/79/Technical_documentation_lighthouse_spawn_4.png/revision/latest?cb=20260806204042",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/79/Technical_documentation_lighthouse_spawn_4.png/revision/latest?cb=20260822103159",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
-    "note": "Inside the southern house by the sea next to the pier. 2nd floor in the bedroom, in the nightstand under the TV.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e9/Technical_documentation_lighthouse_spawn_5.png/revision/latest?cb=20260810012242",
+    "note": "Inside the sunken restaurant on 2nd floor on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e9/Technical_documentation_lighthouse_spawn_5.png/revision/latest?cb=20260822103236",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -1445,34 +1844,34 @@
    {
     "document": "Technical documentation",
     "note": "Inside the North Chalet. In the first room after entering trough the north entrance.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/05/Technical_documentation_lighthouse_spawn_6.png/revision/latest?cb=20260815073830",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/05/Technical_documentation_lighthouse_spawn_6.png/revision/latest?cb=20260822103246",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
     "note": "On a chair under the Gazebo next to the northern Chalet.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/8c/Technical_documentation_lighthouse_spawn_7.png/revision/latest?cb=20260815073847",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/8c/Technical_documentation_lighthouse_spawn_7.png/revision/latest?cb=20260822103259",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
     "note": "Inside a shelf in the Warehouse at the Train Station.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0c/Technical_documentation_lighthouse_spawn_8.png/revision/latest?cb=20260815073858",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0c/Technical_documentation_lighthouse_spawn_8.png/revision/latest?cb=20260822103331",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
-    "note": "On a Shelf in the Office of Hall Nr. 3 of the Watertreatment Plant.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2f/Technical_documentation_lighthouse_spawn_9.png/revision/latest?cb=20260815073907",
+    "note": "Inside WTP Building 1 on 2nd floor in the western room.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2f/Technical_documentation_lighthouse_spawn_9.png/revision/latest?cb=20260822103344",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -1481,50 +1880,77 @@
    {
     "document": "Technical documentation",
     "note": "In the Living Room of the southern Chalet next to a Chair.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/03/Technical_documentation_lighthouse_spawn_10.png/revision/latest?cb=20260815075539",
-    "imageWidth": 1680,
-    "imageHeight": 1050,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/03/Technical_documentation_lighthouse_spawn_10.png/revision/latest?cb=20260822103417",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
     "note": "2nd Floor of the northern Chalet.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0e/Technical_documentation_lighthouse_spawn_11.png/revision/latest?cb=20260815073926",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/0e/Technical_documentation_lighthouse_spawn_11.png/revision/latest?cb=20260822103429",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
     "note": "Inside a Tent on the Tennis Court at the Southern Chalet.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b9/Technical_documentation_lighthouse_spawn_12.png/revision/latest?cb=20260815073935",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b9/Technical_documentation_lighthouse_spawn_12.png/revision/latest?cb=20260822103440",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -70,
      129
     ],
     "place": "Tennis Court"
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Behind Rogue USEC stash key in front of the tv.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/da/Technical_documentation_lighthouse_spawn_13.png/revision/latest?cb=20260822103613",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Behind Rogue USEC workshop key door.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/f1/Technical_documentation_lighthouse_spawn_14.png/revision/latest?cb=20260822103517",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Inside the store house on 2nd floor in the left apartment.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/6b/Technical_documentation_lighthouse_spawn_15.png/revision/latest?cb=20260822103521",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
    }
   ],
   "reserve": [
    {
     "document": "PMC personnel files",
     "note": "Into the tunnels, in the room opposite of the D2 extraction.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9a/PMC_personnel_files_reserve_spawn_1.png/revision/latest?cb=20260805205626",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9a/PMC_personnel_files_reserve_spawn_1.png/revision/latest?cb=20260819220815",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "PMC personnel files",
     "note": "Inside Black Bishop in the underground on a desk.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/1f/PMC_personnel_files_reserve_spawn_2.png/revision/latest?cb=20260805205632",
-    "imageWidth": 3840,
-    "imageHeight": 2160,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/1f/PMC_personnel_files_reserve_spawn_2.png/revision/latest?cb=20260819220845",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -140,
      -14.5
@@ -1534,45 +1960,45 @@
    {
     "document": "PMC personnel files",
     "note": "Inside RB-KORL key room.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e4/PMC_personnel_files_reserve_spawn_3.png/revision/latest?cb=20260805205639",
-    "imageWidth": 2560,
-    "imageHeight": 1355,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e4/PMC_personnel_files_reserve_spawn_3.png/revision/latest?cb=20260819220932",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "PMC personnel files",
     "note": "Behind RB-KPRL key door by the window.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c7/PMC_personnel_files_reserve_spawn_4.png/revision/latest?cb=20260805205645",
-    "imageWidth": 2559,
-    "imageHeight": 1439,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c7/PMC_personnel_files_reserve_spawn_4.png/revision/latest?cb=20260819221002",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "PMC personnel files",
     "note": "Behind the door RB-RS key in the far corner.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/69/PMC_personnel_files_reserve_spawn_5.png/revision/latest?cb=20260810001309",
-    "imageWidth": 1915,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/69/PMC_personnel_files_reserve_spawn_5.png/revision/latest?cb=20260819221048",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "PMC personnel files",
     "note": "Behind the door is RB-RLSA key on the nearby table.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/39/PMC_personnel_files_reserve_spawn_6.png/revision/latest?cb=20260810001308",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/39/PMC_personnel_files_reserve_spawn_6.png/revision/latest?cb=20260819221057",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "PMC personnel files",
     "note": "Second floor of the Black Bishop. The door is opposite the stairs.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/7f/PMC_personnel_files_reserve_spawn_7.png/revision/latest?cb=20260810001305",
-    "imageWidth": 1919,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/7f/PMC_personnel_files_reserve_spawn_7.png/revision/latest?cb=20260819221130",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -140,
      -14.5
@@ -1582,16 +2008,16 @@
    {
     "document": "PMC personnel files",
     "note": "Checkpoint North (Next to the Checkpoint Fence exit). Inside the table.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/20/PMC_personnel_files_reserve_spawn_8.png/revision/latest?cb=20260810001303",
-    "imageWidth": 1919,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/20/PMC_personnel_files_reserve_spawn_8.png/revision/latest?cb=20260819221220",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "PMC personnel files",
     "note": "Inside white knight on 3rd floor in the last room of the corridor.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d0/PMC_personnel_files_reserve_spawn_9.png/revision/latest?cb=20260810183054",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d0/PMC_personnel_files_reserve_spawn_9.png/revision/latest?cb=20260819221324",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": [
@@ -1602,17 +2028,20 @@
    },
    {
     "document": "PMC personnel files",
-    "note": "Inside the train betweek K buildins 1 and 3 on the bed.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/26/PMC_personnel_files_reserve_spawn_10.png/revision/latest?cb=20260810183101",
+    "note": "Inside the train between K buildings 1 and 3 on the bed.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/26/PMC_personnel_files_reserve_spawn_10.png/revision/latest?cb=20260819221343",
     "imageWidth": 1920,
     "imageHeight": 1080,
-    "position": null,
-    "place": null
+    "position": [
+     28,
+     -102
+    ],
+    "place": "K Buildings"
    },
    {
     "document": "PMC personnel files",
     "note": "Top of black knight in the 2nd room down the hall.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/70/PMC_personnel_files_reserve_spawn_11.png/revision/latest?cb=20260810183108",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/70/PMC_personnel_files_reserve_spawn_11.png/revision/latest?cb=20260819221414",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": [
@@ -1624,11 +2053,53 @@
    {
     "document": "PMC personnel files",
     "note": "Inside K building 4 on a nightstand.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/1b/PMC_personnel_files_reserve_spawn_12.png/revision/latest?cb=20260810183114",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/1b/PMC_personnel_files_reserve_spawn_12.png/revision/latest?cb=20260819221425",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
     "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Inside the southern barrack inside a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/02/PMC_personnel_files_reserve_spawn_13.png/revision/latest?cb=20260819220731",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Behind RB-OB key door inside a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d9/PMC_personnel_files_reserve_spawn_14.png/revision/latest?cb=20260819220738",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Inside black pawn in the shelf on in the corridor on north side.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9c/PMC_personnel_files_reserve_spawn_15.png/revision/latest?cb=20260819220744",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -165,
+     57
+    ],
+    "place": "Black Pawn"
+   },
+   {
+    "document": "PMC personnel files",
+    "note": "Inside white pawn on 4th floor in the room next to RB-ORB1 key on the floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/bf/PMC_personnel_files_reserve_spawn_16.png/revision/latest?cb=20260819220749",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -104,
+     93
+    ],
+    "place": "White Pawn"
    },
    {
     "document": "Project documentation",
@@ -1642,27 +2113,156 @@
    {
     "document": "Project documentation",
     "note": "In the 1-room office next to command office next to a printer.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e4/Project_documentation_reserve_spawn_2.png/revision/latest?cb=20260805214051",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e4/Project_documentation_reserve_spawn_2.png/revision/latest?cb=20260822100550",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Project documentation",
     "note": "Behind RB-KORL key door, between two shelves.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/87/Project_documentation_reserve_spawn_3.png/revision/latest?cb=20260806181534",
-    "imageWidth": 3440,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/87/Project_documentation_reserve_spawn_3.png/revision/latest?cb=20260822100600",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside the open guard building at the entrance of the radar station.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/28/Project_documentation_reserve_spawn_4.png/revision/latest?cb=20260822100350",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Project documentation",
+    "note": "Behind RB-RS key door next to two drawers.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/26/Project_documentation_reserve_spawn_5.png/revision/latest?cb=20260822100356",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Project documentation",
+    "note": "Behind RB-AK key door, on the floor next to a metal shelf",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/5f/Project_documentation_reserve_spawn_6.png/revision/latest?cb=20260822100412",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside black bishop on 3rd floor in the south-east side room.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/3c/Project_documentation_reserve_spawn_7.png/revision/latest?cb=20260822100417",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -140,
+     -14.5
+    ],
+    "place": "Black Bishop"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside black pawn on 2nd floor in a room east side.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/06/Project_documentation_reserve_spawn_8.png/revision/latest?cb=20260822100424",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -165,
+     57
+    ],
+    "place": "Black Pawn"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside black pawn 4th floor inside the south armory room.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/13/Project_documentation_reserve_spawn_9.png/revision/latest?cb=20260822100430",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -165,
+     57
+    ],
+    "place": "Black Pawn"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside the checkpoint building to the north.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/59/Project_documentation_reserve_spawn_10.png/revision/latest?cb=20260822100439",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside black night in the 2nd room down the hallway.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/84/Project_documentation_reserve_spawn_11.png/revision/latest?cb=20260822100445",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside white king office next to the RB-OB key under a desk.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b3/Project_documentation_reserve_spawn_12.png/revision/latest?cb=20260822100448",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -49.5,
+     15.5
+    ],
+    "place": "White King"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside white knight on 3rd floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ed/Project_documentation_reserve_spawn_13.png/revision/latest?cb=20260822100457",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     82.2,
+     -30.2
+    ],
+    "place": "White Knight"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside white pawn on 2nd floor on east side next to the room with a hole.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/32/Project_documentation_reserve_spawn_14.png/revision/latest?cb=20260822100503",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -104,
+     93
+    ],
+    "place": "White Pawn"
+   },
+   {
+    "document": "Project documentation",
+    "note": "Inside white pawn on 2nd floor next to RB-ORB2 key door.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/9d/Project_documentation_reserve_spawn_15.png/revision/latest?cb=20260822100509",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -104,
+     93
+    ],
+    "place": "White Pawn"
    }
   ],
   "shoreline": [
    {
     "document": "Technical documentation",
     "note": "Inside the powerstation in the second room.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/19/Technical_documentation_shoreline_spawn_1.png/revision/latest?cb=20260806203840",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/19/Technical_documentation_shoreline_spawn_1.png/revision/latest?cb=20260822112701",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -1671,18 +2271,18 @@
    {
     "document": "Technical documentation",
     "note": "Inside the northern warehouse at smuglers base.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/34/Technical_documentation_shoreline_spawn_2.png/revision/latest?cb=20260806203847",
-    "imageWidth": 1919,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/34/Technical_documentation_shoreline_spawn_2.png/revision/latest?cb=20260822112709",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
     "note": "On the counter of the building at the pier.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/79/Technical_documentation_shoreline_spawn_3.png/revision/latest?cb=20260806203855",
-    "imageWidth": 1919,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/79/Technical_documentation_shoreline_spawn_3.png/revision/latest?cb=20260822112718",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -338.6,
      525
@@ -1692,7 +2292,7 @@
    {
     "document": "Technical documentation",
     "note": "On a chair outside of the Cottage back door key house.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/70/Technical_documentation_shoreline_spawn_4.png/revision/latest?cb=20260806203901",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/70/Technical_documentation_shoreline_spawn_4.png/revision/latest?cb=20260822112729",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -1711,11 +2311,119 @@
     "place": "West Wing"
    },
    {
+    "document": "Technical documentation",
+    "note": "Inside resort east wing room 212 on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/57/Technical_documentation_shoreline_spawn_6.png/revision/latest?cb=20260822112803",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -329,
+     -83
+    ],
+    "place": "East Wing"
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Inside resort east wing on 3rd floor on a chair.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e5/Technical_documentation_shoreline_spawn_7.png/revision/latest?cb=20260822112809",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -329,
+     -83
+    ],
+    "place": "East Wing"
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Inside administration building east office.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/60/Technical_documentation_shoreline_spawn_8.png/revision/latest?cb=20260822112814",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Inside the white container at V-EX car extract on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/24/Technical_documentation_shoreline_spawn_9.png/revision/latest?cb=20260822112820",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Inside SORDI Tower station on the floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/41/Technical_documentation_shoreline_spawn_10.png/revision/latest?cb=20260822112829",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Inside west wing room 206 on the floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/6e/Technical_documentation_shoreline_spawn_11.png/revision/latest?cb=20260822112835",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -171,
+     -83
+    ],
+    "place": "West Wing"
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Inside the burning station office on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/50/Technical_documentation_shoreline_spawn_12.png/revision/latest?cb=20260822112841",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
+    "note": "In the room on top of the weather station radar.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/23/Technical_documentation_shoreline_spawn_13.png/revision/latest?cb=20260822112847",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -496,
+     257
+    ],
+    "place": "Weather Station"
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Under the resort on the way to the power station on a bench.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/ba/Technical_documentation_shoreline_spawn_14.png/revision/latest?cb=20260822112854",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -215.8,
+     178.4
+    ],
+    "place": "Power Station"
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Inside a white house in front of the t-90 at the village.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/14/Technical_documentation_shoreline_spawn_15.png/revision/latest?cb=20260822112902",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     418.4,
+     118
+    ],
+    "place": "Village"
+   },
+   {
     "document": "Test documentation",
     "note": "At pier on a emergency beds in front of the building.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b5/Test_documentation_shoreline_spawn_1.png/revision/latest?cb=20260806185730",
-    "imageWidth": 1919,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b5/Test_documentation_shoreline_spawn_1.png/revision/latest?cb=20260823101201",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -338.6,
      525
@@ -1725,18 +2433,18 @@
    {
     "document": "Test documentation",
     "note": "Inside the smuggler camp in the southern warehouse.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2b/Test_documentation_shoreline_spawn_2.png/revision/latest?cb=20260806185735",
-    "imageWidth": 1919,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2b/Test_documentation_shoreline_spawn_2.png/revision/latest?cb=20260823101210",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
    {
     "document": "Test documentation",
     "note": "At the weather station, 2nd floor of the building.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d7/Test_documentation_shoreline_spawn_3.png/revision/latest?cb=20260806185741",
-    "imageWidth": 2559,
-    "imageHeight": 1439,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d7/Test_documentation_shoreline_spawn_3.png/revision/latest?cb=20260823101223",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -496,
      257
@@ -1746,21 +2454,138 @@
    {
     "document": "Test documentation",
     "note": "In the resort east wing room 326 inside a opened drawer of the nightstand.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2f/Test_documentation_shoreline_spawn_4.png/revision/latest?cb=20260806185749",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/2f/Test_documentation_shoreline_spawn_4.png/revision/latest?cb=20260823101232",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": [
      -329,
      -83
     ],
     "place": "East Wing"
+   },
+   {
+    "document": "Test documentation",
+    "note": "At the cottage on medical boxes.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/8d/Test_documentation_shoreline_spawn_5.png/revision/latest?cb=20260823101310",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "Behind the bus depot store on a box.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/8f/Test_documentation_shoreline_spawn_6.png/revision/latest?cb=20260823101316",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "Inside resort east wing room 218 on a table.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/40/Test_documentation_shoreline_spawn_7.png/revision/latest?cb=20260823101325",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -329,
+     -83
+    ],
+    "place": "East Wing"
+   },
+   {
+    "document": "Test documentation",
+    "note": "Inside SORDI tower station on the shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e1/Test_documentation_shoreline_spawn_8.png/revision/latest?cb=20260823101332",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "Inside the burning station office on the desk.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/81/Test_documentation_shoreline_spawn_9.png/revision/latest?cb=20260823101337",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "On the back of a blue truck in the village.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c5/Test_documentation_shoreline_spawn_10.png/revision/latest?cb=20260823101346",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     418.4,
+     118
+    ],
+    "place": "Village"
+   },
+   {
+    "document": "Test documentation",
+    "note": "Inside resort admin building west storage room.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d6/Test_documentation_shoreline_spawn_11.png/revision/latest?cb=20260823101353",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -258.2,
+     -71.2
+    ],
+    "place": "Resort"
+   },
+   {
+    "document": "Test documentation",
+    "note": "Inside resort west wing room 211 on the bed.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/e6/Test_documentation_shoreline_spawn_12.png/revision/latest?cb=20260823101359",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -171,
+     -83
+    ],
+    "place": "West Wing"
+   },
+   {
+    "document": "Test documentation",
+    "note": "Inside resort west wing 3rd floor hallway on a table.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d1/Test_documentation_shoreline_spawn_13.png/revision/latest?cb=20260823101405",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -171,
+     -83
+    ],
+    "place": "West Wing"
+   },
+   {
+    "document": "Test documentation",
+    "note": "At the v-ex extraction inside the 2nd floor shack on the floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b0/Test_documentation_shoreline_spawn_14.png/revision/latest?cb=20260823101410",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "Inside the most southwest house in the village near tunnel exfil.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/5f/Test_documentation_shoreline_spawn_15.png/revision/latest?cb=20260823191005",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": [
+     418.4,
+     118
+    ],
+    "place": "Village"
    }
   ],
   "streets-of-tarkov": [
    {
     "document": "Financial documents",
     "note": "Inside \"Unity Credit\" bank on Klimov St.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/68/Financial_documents_streets_of_tarkov_spawn_1.png/revision/latest?cb=20260805204152",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/68/Financial_documents_streets_of_tarkov_spawn_1.png/revision/latest?cb=20260817225308",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -1768,8 +2593,8 @@
    },
    {
     "document": "Financial documents",
-    "note": "Inside Cardinal Residential Complex inside the corporate apartement.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/37/Financial_documents_streets_of_tarkov_spawn_2.png/revision/latest?cb=20260805204204",
+    "note": "Inside the TerraGroup corporate apartment key on the floor next to beanbags.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/37/Financial_documents_streets_of_tarkov_spawn_2.png/revision/latest?cb=20260816001121",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
@@ -1777,10 +2602,10 @@
    },
    {
     "document": "Financial documents",
-    "note": "Inside terragroup building reception, insie the counter shelves.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b3/Financial_documents_streets_of_tarkov_spawn_3.png/revision/latest?cb=20260805204422",
-    "imageWidth": 2560,
-    "imageHeight": 1440,
+    "note": "Inside the TerraGroup security post building at the reception, below the counter.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b3/Financial_documents_streets_of_tarkov_spawn_3.png/revision/latest?cb=20260817225326",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
     "position": null,
     "place": null
    },
@@ -1795,12 +2620,117 @@
    },
    {
     "document": "Financial documents",
-    "note": "Inside the TerraGroup corporate apartment key room on the floor next to a pile of book.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/30/Financial_documents_streets_of_tarkov_spawn_5.png/revision/latest?cb=20260816001121",
+    "note": "Inside the Beluga restaurant on 2nd floor on the counter.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/30/Financial_documents_streets_of_tarkov_spawn_5.png/revision/latest?cb=20260817225440",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -45,
+     -52
+    ],
+    "place": "Beluga"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside one of the Negotiation building office on a desk.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/62/Financial_documents_streets_of_tarkov_spawn_6.png/revision/latest?cb=20260817225454",
     "imageWidth": 1920,
     "imageHeight": 1080,
     "position": null,
     "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the Negotiation building rest room on the floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/a2/Financial_documents_streets_of_tarkov_spawn_7.png/revision/latest?cb=20260817225501",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the Pinewood Hotel room no. 212",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/99/Financial_documents_streets_of_tarkov_spawn_8.png/revision/latest?cb=20260817225507",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     -35,
+     64
+    ],
+    "place": "Pinewood Hotel"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the Terragroup office 2nd floor on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/4/44/Financial_documents_streets_of_tarkov_spawn_9.png/revision/latest?cb=20260817225608",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Behind the Financial institution office key door on a desk.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/5/5e/Financial_documents_streets_of_tarkov_spawn_10.png/revision/latest?cb=20260817225611",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Behind the Financial institution small office key door on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/61/Financial_documents_streets_of_tarkov_spawn_11.png/revision/latest?cb=20260817225620",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the Concordia building 9 inside the apartment no. 3 on the floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/ae/Financial_documents_streets_of_tarkov_spawn_12.png/revision/latest?cb=20260817225628",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     140,
+     362
+    ],
+    "place": "Concordia"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Behind the Concordia apartment 8 home cinema key door on the floor next to scattered books on the floor.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/1/16/Financial_documents_streets_of_tarkov_spawn_13.png/revision/latest?cb=20260817225637",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": [
+     140,
+     362
+    ],
+    "place": "Concordia"
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside the apartment no. 3 inside Cardinal building on the shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/89/Financial_documents_streets_of_tarkov_spawn_14.png/revision/latest?cb=20260818234317",
+    "imageWidth": 1920,
+    "imageHeight": 1080,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Financial documents",
+    "note": "Inside Concordia building 9 inside the 1st floor office on a shelf.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/aa/Financial_documents_streets_of_tarkov_spawn_15.png/revision/latest?cb=20260818234618",
+    "imageWidth": 1156,
+    "imageHeight": 650,
+    "position": [
+     140,
+     362
+    ],
+    "place": "Concordia"
    },
    {
     "document": "User documentation",
@@ -2109,8 +3039,17 @@
    },
    {
     "document": "Medical documents",
-    "note": "On a document stand in front of a medical bed in the infirmary, first floor (G21)",
+    "note": "On a document stand in front of a medical bed in the infirmary, second floor (G21).",
     "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/06/Medical_documents_the_lab_spawn_17.png/revision/latest?cb=20260815192101",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Medical documents",
+    "note": "Inside a consultation room within infirmary on second floor (G21).",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/2/20/Medical_documents_the_lab_spawn_18.png/revision/latest?cb=20260822111619",
     "imageWidth": 2560,
     "imageHeight": 1440,
     "position": null,
@@ -2259,6 +3198,36 @@
      -343
     ],
     "place": "Recreation Area"
+   },
+   {
+    "document": "User documentation",
+    "note": "Inside server room rest space on the counter.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/f/ff/User_documentation_the_lab_spawn_17.png/revision/latest?cb=20260822091756",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": [
+     -125,
+     -308
+    ],
+    "place": "Server Room"
+   },
+   {
+    "document": "User documentation",
+    "note": "Inside Offices (O22) on a desk",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b2/User_documentation_the_lab_spawn_18.png/revision/latest?cb=20260822091801",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "User documentation",
+    "note": "Next to kruglov office on the coference table.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/77/User_documentation_the_lab_spawn_19.png/revision/latest?cb=20260822091808",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
    }
   ],
   "the-labyrinth": [
@@ -2527,8 +3496,17 @@
   "woods": [
    {
     "document": "Technical documentation",
+    "note": "Location of the documents on the map.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/97/BP_Documents_Woods_S01_Map.webp/revision/latest?cb=20260827134840",
+    "imageWidth": 16260,
+    "imageHeight": 6680,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
     "note": "On a blue barrel by the north mountain bunker.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/8e/Technical_documentation_woods_spawn_1.png/revision/latest?cb=20260806203932",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/8e/Technical_documentation_woods_spawn_1.png/revision/latest?cb=20260822113609",
     "imageWidth": 2560,
     "imageHeight": 1440,
     "position": null,
@@ -2537,16 +3515,16 @@
    {
     "document": "Technical documentation",
     "note": "Inside the cockpit of the crashed plane.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/ae/Technical_documentation_woods_spawn_2.png/revision/latest?cb=20260806203937",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/ae/Technical_documentation_woods_spawn_2.png/revision/latest?cb=20260822113651",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
     "note": "At USEC Camp by the satellite dish.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/bc/Technical_documentation_woods_spawn_3.png/revision/latest?cb=20260806203944",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/bc/Technical_documentation_woods_spawn_3.png/revision/latest?cb=20260822113700",
     "imageWidth": 2560,
     "imageHeight": 1440,
     "position": [
@@ -2558,18 +3536,18 @@
    {
     "document": "Technical documentation",
     "note": "At scav bunker under the tower.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c5/Technical_documentation_woods_spawn_4.png/revision/latest?cb=20260806203950",
-    "imageWidth": 1919,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c5/Technical_documentation_woods_spawn_4.png/revision/latest?cb=20260822113710",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
     "note": "Inside the destroyed SUV north on the road north of the sawmill.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/76/Technical_documentation_woods_spawn_5.png/revision/latest?cb=20260806203955",
-    "imageWidth": 1920,
-    "imageHeight": 1200,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/76/Technical_documentation_woods_spawn_5.png/revision/latest?cb=20260822113747",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": [
      10,
      -3
@@ -2579,9 +3557,9 @@
    {
     "document": "Technical documentation",
     "note": "At the old sawmill inside a small shack next to the house with the antenna.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/3f/Technical_documentation_woods_spawn_6.png/revision/latest?cb=20260806204002",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/3/3f/Technical_documentation_woods_spawn_6.png/revision/latest?cb=20260822113759",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": [
      -517,
      -210
@@ -2591,27 +3569,27 @@
    {
     "document": "Technical documentation",
     "note": "Woods at the bridge overlook in the 2nd floor container next to the scav bunker area.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ef/Technical_documentation_woods_spawn_7.png/revision/latest?cb=20260806204008",
-    "imageWidth": 2559,
-    "imageHeight": 1439,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ef/Technical_documentation_woods_spawn_7.png/revision/latest?cb=20260822113813",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
     "note": "Inside cultist bunker in the showers.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/65/Technical_documentation_woods_spawn_8.png/revision/latest?cb=20260806204013",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/6/65/Technical_documentation_woods_spawn_8.png/revision/latest?cb=20260822113856",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": null,
     "place": null
    },
    {
     "document": "Technical documentation",
     "note": "On a static PMC body on the road to scav house.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b3/Technical_documentation_woods_spawn_9.png/revision/latest?cb=20260811065605",
-    "imageWidth": 2079,
-    "imageHeight": 1372,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/b/b3/Technical_documentation_woods_spawn_9.png/revision/latest?cb=20260822113913",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": null,
     "place": null
    },
@@ -2628,9 +3606,63 @@
     "place": "Sawmill"
    },
    {
+    "document": "Technical documentation",
+    "note": "Inside a container at the train depot.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/09/Technical_documentation_woods_spawn_11.png/revision/latest?cb=20260822113953",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
+    "note": "On a wooden box at EMERCON base.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/04/Technical_documentation_woods_spawn_12.png/revision/latest?cb=20260822114001",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Inside a house at scav village.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d1/Technical_documentation_woods_spawn_13.png/revision/latest?cb=20260822114006",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
+    "note": "At the graveyard site where the KOSA UAV electronic jamming device spawns.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/a/a4/Technical_documentation_woods_spawn_14.png/revision/latest?cb=20260822114012",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Technical documentation",
+    "note": "Inside the cultist house at the sunken village.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ec/Technical_documentation_woods_spawn_15.png/revision/latest?cb=20260822114016",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "Location of the documents on the map.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/97/BP_Documents_Woods_S01_Map.webp/revision/latest?cb=20260827134840",
+    "imageWidth": 16260,
+    "imageHeight": 6680,
+    "position": null,
+    "place": null
+   },
+   {
     "document": "Test documentation",
     "note": "At the old sawmill in the 2 floor shack on a table.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/dc/Test_documentation_woods_spawn_1.png/revision/latest?cb=20260806185954",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/dc/Test_documentation_woods_spawn_1.png/revision/latest?cb=20260823101423",
     "imageWidth": 2560,
     "imageHeight": 1440,
     "position": [
@@ -2642,18 +3674,18 @@
    {
     "document": "Test documentation",
     "note": "At scav village inside the red brick house within the floor.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/96/Test_documentation_woods_spawn_2.png/revision/latest?cb=20260806190002",
-    "imageWidth": 1919,
-    "imageHeight": 1079,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/96/Test_documentation_woods_spawn_2.png/revision/latest?cb=20260823101435",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": null,
     "place": null
    },
    {
     "document": "Test documentation",
     "note": "At USEC checkpoint on top of drawers.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c4/Test_documentation_woods_spawn_3.png/revision/latest?cb=20260806190039",
-    "imageWidth": 2559,
-    "imageHeight": 1438,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c4/Test_documentation_woods_spawn_3.png/revision/latest?cb=20260823101444",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": [
      239,
      -65
@@ -2663,7 +3695,7 @@
    {
     "document": "Test documentation",
     "note": "At scav village inside the 2 floor house.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/cb/Test_documentation_woods_spawn_4.png/revision/latest?cb=20260806190048",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/cb/Test_documentation_woods_spawn_4.png/revision/latest?cb=20260823101517",
     "imageWidth": 2560,
     "imageHeight": 1440,
     "position": null,
@@ -2672,9 +3704,9 @@
    {
     "document": "Test documentation",
     "note": "At USEC Camp inside a tent next to a bed.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ee/Test_documentation_woods_spawn_5.png/revision/latest?cb=20260806190105",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ee/Test_documentation_woods_spawn_5.png/revision/latest?cb=20260823101527",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": [
      290,
      -475
@@ -2684,9 +3716,9 @@
    {
     "document": "Test documentation",
     "note": "At USEC Camp on top of a wooden crate.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c8/Test_documentation_woods_spawn_6.png/revision/latest?cb=20260806190112",
-    "imageWidth": 1884,
-    "imageHeight": 1029,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c8/Test_documentation_woods_spawn_6.png/revision/latest?cb=20260823101541",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": [
      290,
      -475
@@ -2696,9 +3728,9 @@
    {
     "document": "Test documentation",
     "note": "At old sawmill inside the small shack.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ef/Test_documentation_woods_spawn_7.png/revision/latest?cb=20260806190121",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/e/ef/Test_documentation_woods_spawn_7.png/revision/latest?cb=20260823101551",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": [
      -517,
      -210
@@ -2708,9 +3740,9 @@
    {
     "document": "Test documentation",
     "note": "At USEC Camp on the medical table with the corpse.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/91/Test_documentation_woods_spawn_8.png/revision/latest?cb=20260806190132",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/9/91/Test_documentation_woods_spawn_8.png/revision/latest?cb=20260823101631",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": [
      290,
      -475
@@ -2720,23 +3752,80 @@
    {
     "document": "Test documentation",
     "note": "At Emercom base inside the white container with the bodies.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/7b/Test_documentation_woods_spawn_9.png/revision/latest?cb=20260806190137",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/7b/Test_documentation_woods_spawn_9.png/revision/latest?cb=20260823101641",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": null,
     "place": null
    },
    {
     "document": "Test documentation",
     "note": "At USEC Camp on a sleeping bag.",
-    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c4/Test_documentation_woods_spawn_10.png/revision/latest?cb=20260806190144",
-    "imageWidth": 1920,
-    "imageHeight": 1080,
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/c/c4/Test_documentation_woods_spawn_10.png/revision/latest?cb=20260823101651",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
     "position": [
      290,
      -475
     ],
     "place": "USEC Camp"
+   },
+   {
+    "document": "Test documentation",
+    "note": "At the USEC camp next to a weapon box.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/8/82/Test_documentation_woods_spawn_11.png/revision/latest?cb=20260823101840",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": [
+     290,
+     -475
+    ],
+    "place": "USEC Camp"
+   },
+   {
+    "document": "Test documentation",
+    "note": "At the USEC checkpoint in the WC boxes.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/77/Test_documentation_woods_spawn_12.png/revision/latest?cb=20260823101704",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": [
+     239,
+     -65
+    ],
+    "place": "Checkpoint"
+   },
+   {
+    "document": "Test documentation",
+    "note": "At EMERCOM base next to a flipped table.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/7/7e/Test_documentation_woods_spawn_13.png/revision/latest?cb=20260823101811",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": null,
+    "place": null
+   },
+   {
+    "document": "Test documentation",
+    "note": "At the sawmill inside the blue truck.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/d/d9/Test_documentation_woods_spawn_14.png/revision/latest?cb=20260823101817",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": [
+     10,
+     -3
+    ],
+    "place": "Sawmill"
+   },
+   {
+    "document": "Test documentation",
+    "note": "At the sawmill inside th guard shack on the drawers.",
+    "image": "https://static.wikia.nocookie.net/escapefromtarkov_gamepedia/images/0/02/Test_documentation_woods_spawn_15.png/revision/latest?cb=20260823101822",
+    "imageWidth": 2560,
+    "imageHeight": 1440,
+    "position": [
+     10,
+     -3
+    ],
+    "place": "Sawmill"
    }
   ]
  }

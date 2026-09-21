@@ -353,6 +353,11 @@ for (const spawns of Object.values(spawnsByMap)) {
   }
 }
 
+if (!total) {
+  console.error("Wiki returned no document spawns — keeping the previous scrape.");
+  process.exit(0);
+}
+
 const payload = {
   generated: new Date().toISOString(),
   source: "https://escapefromtarkov.fandom.com",

@@ -283,8 +283,9 @@ downloaded by a visitor unless they open the screenshot panel.
 
 The repo is set up for Vercel: connect it as a project and every push to the
 production branch redeploys automatically (`vercel.json` sets the build command
-to `npm run data && npm run build`, so each deploy fetches current game data
-rather than a stale snapshot).
+to `npm run data && npm run build`). Each deploy refreshes tarkov.dev maps,
+tasks, items and hideout, then best-effort updates wiki quest prereqs, Kord
+document spawns and task screenshots (a down wiki keeps the last good scrape).
 
 Preview deploys from non-`main` branches are unlisted Vercel URLs. Production
 stays on `main`. There is no site-password gate.
@@ -292,14 +293,17 @@ stays on `main`. There is no site-password gate.
 ## How it fits together
 
 ```
+scripts/refresh-sources.mjs
+                         runs on every `npm run data` / Vercel deploy: wiki
+                         scrapes (best-effort) then tarkov.dev rebuild
 scripts/build-data.mjs   fetches tarkov.dev's JSON feeds, resolves translations,
                          and writes one small payload per map
 scripts/fetch-task-images.mjs
                          caches the wiki's task screenshots into
-                         data/task-images.json (committed; not run on deploy)
+                         data/task-images.json
 scripts/fetch-kord-documents.mjs
                          caches the battle-pass document spawns into
-                         data/kord-documents.json (committed; not run on deploy)
+                         data/kord-documents.json
 scripts/check-quests.mjs cross-checks trader/level/Kappa against the wiki and
                          prints disagreements; changes nothing
 scripts/audit-graph.mjs  structural audit of the built graph — dangling edges,

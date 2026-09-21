@@ -5,7 +5,7 @@
   "type": "module",
   "description": "A clean, modern interactive map site for Escape from Tarkov.",
   "scripts": {
-    "data": "node scripts/build-data.mjs",
+    "data": "node scripts/refresh-sources.mjs",
     "dev": "node scripts/setup-ocr.mjs && vite",
     "build": "node scripts/setup-ocr.mjs && tsc -b && vite build",
     "preview": "vite preview",
