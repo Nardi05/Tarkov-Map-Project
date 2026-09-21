@@ -101,7 +101,7 @@ export default function CommandPalette() {
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-start justify-center pt-[15vh]" role="dialog" aria-modal="true">
-      <button type="button" className="absolute inset-0 bg-black/50" aria-label="Close search" onClick={() => setOpen(false)} />
+      <button type="button" className="absolute inset-0 bg-black/55 backdrop-blur-sm" aria-label="Close search" onClick={() => setOpen(false)} />
       <div className="surface relative z-10 w-[min(32rem,calc(100vw-2rem))] p-3">
         <input
           autoFocus

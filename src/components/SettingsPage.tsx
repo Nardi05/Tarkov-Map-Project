@@ -317,11 +317,11 @@ export default function SettingsPage() {
             >
               Source
             </a>
-            <span className="btn" title="Placeholder — not live yet" aria-disabled="true">
-              Discord
+            <span className="chip" title="Placeholder — not live yet">
+              Discord · soon
             </span>
-            <span className="btn" title="Placeholder — not live yet" aria-disabled="true">
-              Buy me a coffee
+            <span className="chip" title="Placeholder — not live yet">
+              Coffee · soon
             </span>
           </div>
         </section>

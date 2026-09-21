@@ -59,16 +59,18 @@ export default function TabShell({
     <div ref={scroller} className="page scroll-y h-full">
       <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-12">
         <PageChrome current={current}>
-          <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m)} size="sm" />
-          <a
-            href={href.settings()}
-            onClick={onNavClick(href.settings())}
-            className="btn btn-ghost btn-icon"
-            aria-label="Settings and profiles"
-            title="Settings"
-          >
-            <Icon path={icons.settings} size={16} />
-          </a>
+          <div className="flex items-center gap-1.5">
+            <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m)} size="sm" />
+            <a
+              href={href.settings()}
+              onClick={onNavClick(href.settings())}
+              className="btn btn-ghost btn-icon"
+              aria-label="Settings and profiles"
+              title="Settings"
+            >
+              <Icon path={icons.settings} size={16} />
+            </a>
+          </div>
         </PageChrome>
 
         {/* Keyed on the tab so React replaces the subtree, which is what

@@ -150,8 +150,8 @@ for (const map of maps) {
  * thing that cannot be there unless the page got past its data load.
  */
 const routes = [
-  { hash: "#/", heading: "Start here" },
-  { hash: "#/welcome", heading: "Start here" },
+  { hash: "#/", heading: "Know the map. Run the right raid." },
+  { hash: "#/welcome", heading: "Know the map. Run the right raid." },
   { hash: "#/dashboard", heading: "Dashboard" },
   { hash: "#/maps", heading: "Maps" },
   { hash: "#/quests", heading: "Quests" },

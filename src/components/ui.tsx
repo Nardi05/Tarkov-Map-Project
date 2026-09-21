@@ -152,7 +152,7 @@ export function Wordmark({ href: to = href.root() }: { href?: string } = {}) {
   return (
     <a className="wordmark" href={to} onClick={onNavClick(to)} aria-label="Tarkov Maps home">
       <span className="wordmark-mark" aria-hidden="true">
-        <svg viewBox="0 0 16 16" width="12" height="12">
+        <svg viewBox="0 0 16 16" width="13" height="13">
           <path d="M8 1.5 14.5 14H1.5Z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
           <circle cx="8" cy="10.2" r="1.35" fill="currentColor" />
         </svg>

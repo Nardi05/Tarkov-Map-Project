@@ -62,7 +62,7 @@ export default function App() {
           : route.name === "setup"
             ? "Set up your progress — Tarkov Maps"
             : route.name === "welcome" || route.name === "root"
-              ? "Start here — Tarkov Maps"
+              ? "Tarkov Maps"
             : route.name === "dashboard"
               ? "Dashboard — Tarkov Maps"
               : route.name === "home"

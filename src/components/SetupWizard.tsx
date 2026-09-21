@@ -314,7 +314,7 @@ function Shell({ step, total, children }: { step: number; total: number; childre
         </nav>
 
         <div
-          className="mb-6 h-1 w-full overflow-hidden rounded-full"
+          className="mb-6 h-1.5 w-full overflow-hidden rounded-full"
           style={{ background: "var(--panel-2)" }}
           role="progressbar"
           aria-valuenow={step + 1}

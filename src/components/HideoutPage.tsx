@@ -48,7 +48,7 @@ export default function HideoutPage() {
           <li key={row.station.id}>
             <button
               type="button"
-              className="surface flex w-full items-center gap-3 p-3 text-left"
+              className="surface flex w-full items-center gap-3 p-3.5 text-left"
               onClick={() => setOpenId(row.station.id)}
             >
               {row.station.image && (
