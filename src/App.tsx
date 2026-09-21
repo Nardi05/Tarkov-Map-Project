@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import DashboardPage from "./components/DashboardPage";
 import HideoutPage from "./components/HideoutPage";
 import HomePage from "./components/HomePage";
+import LandingPage from "./components/LandingPage";
 import MapPage from "./components/MapPage";
 import QuestsPage from "./components/QuestsPage";
 import SettingsPage from "./components/SettingsPage";
@@ -9,13 +10,26 @@ import SetupWizard from "./components/SetupWizard";
 import TabShell from "./components/TabShell";
 import CommandPalette from "./components/CommandPalette";
 import { prefetchIdleMaps, prefetchProgression, useMapData, useMapIndex } from "./lib/data";
+import { homeFor } from "./lib/onboarding";
 import { href, navigate, tabOf, useRoute } from "./lib/router";
 import { useStore } from "./store";
+
+function useHydrated() {
+  return useSyncExternalStore(
+    (onChange) => useStore.persist.onFinishHydration(onChange),
+    () => useStore.persist.hasHydrated(),
+    () => false,
+  );
+}
 
 export default function App() {
   const route = useRoute();
   const theme = useStore((s) => s.settings.theme);
   const setLastMap = useStore((s) => s.setLastMap);
+  const hydrated = useHydrated();
+  const entry = useStore((s) => s.entry);
+  const progress = useStore((s) => s.progress);
+  const home = homeFor(entry, progress);
 
   const index = useMapIndex();
   const mapName = route.name === "map" ? route.map : null;
@@ -47,6 +61,8 @@ export default function App() {
             ? "Settings — Tarkov Maps"
           : route.name === "setup"
             ? "Set up your progress — Tarkov Maps"
+            : route.name === "welcome" || route.name === "root"
+              ? "Start here — Tarkov Maps"
             : route.name === "dashboard"
               ? "Dashboard — Tarkov Maps"
               : route.name === "home"
@@ -61,6 +77,13 @@ export default function App() {
   useEffect(() => {
     prefetchProgression();
   }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (route.name !== "root") return;
+    if (home === "maps") navigate(href.home(), true);
+    if (home === "dashboard") navigate(href.dashboard(), true);
+  }, [hydrated, route.name, home]);
 
   useEffect(() => {
     if (!index.data) return;
@@ -116,6 +139,14 @@ export default function App() {
     );
   }
 
+  if (route.name === "welcome") {
+    return (
+      <>
+        <LandingPage />
+        <CommandPalette />
+      </>
+    );
+  }
   if (route.name === "setup") {
     return (
       <>
@@ -140,6 +171,15 @@ export default function App() {
   // Checked against the route rather than a `tabOf` result so the union
   // narrows for the map case below.
   if (route.name !== "map") {
+    if (route.name === "root") {
+      if (!hydrated || home !== "landing") return <Loading label="Loading" />;
+      return (
+        <>
+          <LandingPage />
+          <CommandPalette />
+        </>
+      );
+    }
     const tab = tabOf(route)!;
     return (
       <>

@@ -1282,6 +1282,15 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
   transition: border-color var(--dur-fast) ease;
 }
 
+.landing-choice {
+  cursor: pointer;
+  transition: border-color var(--dur-fast) ease, background var(--dur-fast) ease;
+}
+
+.landing-choice:hover {
+  border-color: var(--accent);
+}
+
 .map-glass {
   background: color-mix(in srgb, var(--panel) 88%, transparent);
   backdrop-filter: blur(16px) saturate(1.15);

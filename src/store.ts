@@ -11,6 +11,7 @@ import {
   type DashPanelId,
 } from "./lib/dashboard";
 import { DEFAULT_LAYER_STATE, LAYERS, PRESETS, type LayerId } from "./lib/layers";
+import { hasCharacterData, parseEntry, type EntryPath } from "./lib/onboarding.ts";
 import {
   emptyMode,
   emptyProgress,
@@ -25,6 +26,7 @@ import {
 import type { TaskStatus } from "./types";
 
 export type { GameMode, Profile } from "./lib/persist-migrate";
+export type { EntryPath } from "./lib/onboarding";
 export {
   DASH_PANELS,
   DASH_PANEL_META,
@@ -97,6 +99,11 @@ interface Store {
   lastMap: string | null;
   /** Dashboard layout — panel order and how many upcoming tasks to show. */
   dashboard: DashboardLayout;
+  /**
+   * First-run choice. Null until they pick maps-only or the tracker setup.
+   * Existing saves with quest ticks are treated as tracker in `merge`.
+   */
+  entry: EntryPath | null;
 
   setLayer: (id: LayerId, on: boolean) => void;
   toggleLayer: (id: LayerId) => void;
@@ -154,6 +161,7 @@ interface Store {
   restoreProgress: (progress: Record<GameMode, ModeProgress>, profile?: Partial<Profile>) => void;
 
   setLastMap: (map: string) => void;
+  setEntry: (entry: EntryPath) => void;
 
   /** Steps a panel one place up or down, skipping the ones switched off. */
   moveDashPanel: (id: DashPanelId, dir: -1 | 1) => void;
@@ -211,6 +219,7 @@ export const useStore = create<Store>()(
       progress: emptyProgress(),
       lastMap: null,
       dashboard: { ...DEFAULT_DASHBOARD, panels: [...DEFAULT_DASHBOARD.panels] },
+      entry: null,
 
       setLayer: (id, on) => set((s) => ({ layers: { ...s.layers, [id]: on } })),
       toggleLayer: (id) => set((s) => ({ layers: { ...s.layers, [id]: !s.layers[id] } })),
@@ -402,9 +411,11 @@ export const useStore = create<Store>()(
         set((s) => ({
           progress,
           profile: profile ? mergeProfile({ ...s.profile, ...profile }) : s.profile,
+          entry: "tracker",
         })),
 
       setLastMap: (map) => set({ lastMap: map }),
+      setEntry: (entry) => set({ entry }),
 
       moveDashPanel: (id, dir) =>
         set((s) => ({ dashboard: { ...s.dashboard, panels: movePanel(s.dashboard.panels, id, dir) } })),
@@ -455,6 +466,7 @@ export const useStore = create<Store>()(
         progress,
         lastMap,
         dashboard,
+        entry,
       }) => ({
         layers,
         customViews,
@@ -464,6 +476,7 @@ export const useStore = create<Store>()(
         progress,
         lastMap,
         dashboard,
+        entry,
       }),
       // Lives in ./lib/persist-migrate so it can be tested without stubbing
       // localStorage. See the rule at the top of that file: a migration may
@@ -484,6 +497,7 @@ export const useStore = create<Store>()(
           progress: mergeProgress(p),
           quest: { ...DEFAULT_QUEST, showAll: p.quest?.showAll ?? DEFAULT_QUEST.showAll },
           dashboard: mergeDashboard(p.dashboard),
+          entry: parseEntry(p.entry) ?? (hasCharacterData(p.progress) ? "tracker" : null),
         };
       },
     },

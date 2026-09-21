@@ -302,6 +302,32 @@ export default function SettingsPage() {
         <SavePanel />
 
         <section className="surface mt-3 p-4">
+          <h2 className="text-sm font-semibold">About</h2>
+          <p className="mt-1 text-[0.75rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
+            Fan maps and tracker. Data from tarkov.dev and the Tarkov wiki.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a className="btn" href={href.welcome()} onClick={onNavClick(href.welcome())}>
+              Start page
+            </a>
+            <a
+              className="btn"
+              href="https://github.com/Nardi05/Tarkov-Map-Project"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Source
+            </a>
+            <span className="btn" title="Placeholder — not live yet" aria-disabled="true">
+              Discord
+            </span>
+            <span className="btn" title="Placeholder — not live yet" aria-disabled="true">
+              Buy me a coffee
+            </span>
+          </div>
+        </section>
+
+        <section className="surface mt-3 p-4">
           <h2 className="text-sm font-semibold">Appearance</h2>
           <div className="mt-3 flex gap-1.5">
             {THEMES.map((theme) => (

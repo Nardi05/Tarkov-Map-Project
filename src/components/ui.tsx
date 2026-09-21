@@ -148,7 +148,7 @@ export function EmptyState({
   );
 }
 
-export function Wordmark({ href: to = href.dashboard() }: { href?: string } = {}) {
+export function Wordmark({ href: to = href.root() }: { href?: string } = {}) {
   return (
     <a className="wordmark" href={to} onClick={onNavClick(to)} aria-label="Tarkov Maps home">
       <span className="wordmark-mark" aria-hidden="true">

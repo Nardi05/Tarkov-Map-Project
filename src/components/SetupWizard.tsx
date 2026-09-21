@@ -62,6 +62,7 @@ export default function SetupWizard() {
   const profile = useStore((s) => s.profile);
   const setProfile = useStore((s) => s.setProfile);
   const importTaskStatus = useStore((s) => s.importTaskStatus);
+  const setEntry = useStore((s) => s.setEntry);
   const existing = useTaskStatus();
 
   /** Staged, not stored. See the note at the top of the file. */
@@ -166,6 +167,7 @@ export default function SetupWizard() {
     const toWrite: Record<string, TaskStatus> = { ...staged };
     for (const id of implied) toWrite[id] = "completed";
     importTaskStatus(toWrite);
+    setEntry("tracker");
     setFinished(true);
   };
 

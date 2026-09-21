@@ -5,7 +5,9 @@ import { useSyncExternalStore, useCallback, type MouseEvent } from "react";
  * mean the build drops onto any static host — including a subpath — with no
  * server rewrite rules.
  *
- *   #/              dashboard
+ *   #/              smart home: landing, maps, or dashboard
+ *   #/welcome       the first-run landing page, always
+ *   #/dashboard     the dashboard, even for maps-only visitors
  *   #/maps          map picker
  *   #/m/<map>       one map, optionally ?q=<taskId> to deep-link a task
  *   #/quests        the quest tracker
@@ -18,7 +20,9 @@ import { useSyncExternalStore, useCallback, type MouseEvent } from "react";
 export type QuestView = "list" | "graph" | "items";
 
 export type Route =
+  | { name: "root" }
   | { name: "dashboard" }
+  | { name: "welcome" }
   | { name: "home" }
   | { name: "quests"; view: QuestView; focus: string | null }
   | { name: "setup" }
@@ -43,7 +47,7 @@ export const TAB_ORDER: Record<TabId, number> = {
 
 /** The tab a route belongs to, or null for the map and the walkthrough. */
 export function tabOf(route: Route): TabId | null {
-  if (route.name === "dashboard") return "dashboard";
+  if (route.name === "dashboard" || route.name === "root") return "dashboard";
   if (route.name === "home") return "maps";
   if (route.name === "quests") return "quests";
   if (route.name === "hideout") return "hideout";
@@ -68,7 +72,9 @@ function parse(hash: string): Route {
   if (segments[0] === "hideout") return { name: "hideout" };
   if (segments[0] === "settings") return { name: "settings" };
   if (segments[0] === "maps") return { name: "home" };
-  return { name: "dashboard" };
+  if (segments[0] === "welcome") return { name: "welcome" };
+  if (segments[0] === "dashboard") return { name: "dashboard" };
+  return { name: "root" };
 }
 
 let current = parse(typeof location === "undefined" ? "" : location.hash);
@@ -120,7 +126,9 @@ export function onNavClick(to: string) {
 }
 
 export const href = {
-  dashboard: () => "#/",
+  root: () => "#/",
+  dashboard: () => "#/dashboard",
+  welcome: () => "#/welcome",
   home: () => "#/maps",
   maps: () => "#/maps",
   quests: (view: QuestView = "list", focus?: string | null) => {
