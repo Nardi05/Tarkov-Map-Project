@@ -231,7 +231,7 @@
       "number": 1,
       "name": "Tour",
       "tone": "blue",
-      "summary": "Tutorial and early unlocks. No ending choice here. Start the optional story chapters as soon as they appear — it saves weeks later.",
+      "summary": "Tutorial and map unlocks. No ending choice. Start the evidence storylines during Tour — on Savior that is 8 of 9 major pieces and it saves weeks.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/Tour",
       "howToStart": "Starts after the tutorial on Ground Zero.",
       "maps": ["ground-zero"],
@@ -239,32 +239,99 @@
         {
           "id": "tour-ground-zero",
           "title": "Escape Ground Zero",
-          "detail": "Finish the opening raids and get off Ground Zero.",
+          "detail": "Tutorial raid. Extract Klimov Street, behind Skyside. On-screen hints are optional.",
           "kind": "quest",
-          "maps": ["ground-zero"]
+          "maps": ["ground-zero"],
+          "location": "Klimov Street extract, behind Skyside"
         },
         {
           "id": "tour-therapist",
-          "title": "Talk to Therapist, unlock Streets",
-          "detail": "Therapist is the early unlock for Streets of Tarkov.",
+          "title": "Talk to Therapist",
+          "detail": "She is the only trader you start with. Visit her from the trader screen.",
+          "kind": "quest",
+          "trader": "Therapist"
+        },
+        {
+          "id": "tour-streets-pay",
+          "title": "Hand Therapist 250,000 RUB to open Streets",
+          "detail": "Does not need to be found in raid. Streets is the first map you unlock, not the last.",
           "kind": "quest",
           "trader": "Therapist",
           "maps": ["streets-of-tarkov"]
         },
         {
-          "id": "tour-maps-lab",
-          "title": "Unlock maps and The Lab",
-          "detail": "Work the early trader intros until the rest of the maps, including Labs, are open.",
-          "kind": "quest",
-          "maps": ["the-lab"]
+          "id": "tour-interchange",
+          "title": "Unlock Interchange — extract Survived or Run-Through (or visit 3 times)",
+          "detail": "Unlocks Skier and opens Customs.",
+          "kind": "extract",
+          "maps": ["interchange"]
         },
         {
-          "id": "tour-optional-start",
-          "title": "Start optional chapters now",
-          "detail": "Accidental Witness, Batya, Blue Fire, Boreas, The Labyrinth, The Unheard and They Are Already Here can all be started during Tour. Starting them now saves weeks on a Savior run.",
-          "kind": "note",
-          "required": false,
-          "parallel": true
+          "id": "tour-customs",
+          "title": "Unlock Customs — extract Survived or Run-Through (or visit 3 times)",
+          "detail": "Then Skier wants 5 FiR building materials or tools in one handover.",
+          "kind": "extract",
+          "maps": ["customs"]
+        },
+        {
+          "id": "tour-skier-mats",
+          "title": "Hand Skier 5 found-in-raid building materials",
+          "detail": "Partial handovers are refused. Unlocks Mechanic and Factory.",
+          "kind": "item",
+          "trader": "Skier"
+        },
+        {
+          "id": "tour-factory",
+          "title": "Unlock Factory — extract Survived or Run-Through (or visit 3 times)",
+          "detail": "Then Mechanic wants 2 FiR weapons.",
+          "kind": "extract",
+          "maps": ["factory"]
+        },
+        {
+          "id": "tour-mechanic-guns",
+          "title": "Hand Mechanic 2 found-in-raid weapons",
+          "detail": "Unlocks Prapor and Woods.",
+          "kind": "item",
+          "trader": "Mechanic"
+        },
+        {
+          "id": "tour-woods",
+          "title": "Unlock Woods — 3 kills and extract Survived or Run-Through",
+          "detail": "Kills and extract can be different raids. Unlocks Peacekeeper and Shoreline.",
+          "kind": "extract",
+          "maps": ["woods"]
+        },
+        {
+          "id": "tour-intercom",
+          "title": "Shoreline port intercom — press once, then extract",
+          "detail": "South-east watchtower in front of Terminal. Do not walk the Terminal wall; the guards shoot accurately. Pressing the intercom again after being told to leave also kills you.",
+          "kind": "quest",
+          "maps": ["shoreline"],
+          "location": "Port intercom, SE Shoreline"
+        },
+        {
+          "id": "tour-reserve",
+          "title": "Hand Prapor 5 PMC dogtags to open Reserve",
+          "detail": "Need not be FiR, and you need not have got the kill. Looting tags counts.",
+          "kind": "item",
+          "trader": "Prapor",
+          "maps": ["reserve"]
+        },
+        {
+          "id": "tour-lighthouse",
+          "title": "Hand Mechanic 20,000 USD to open Lighthouse",
+          "detail": "Buy dollars from Peacekeeper if you are short.",
+          "kind": "item",
+          "trader": "Mechanic",
+          "maps": ["lighthouse"]
+        },
+        {
+          "id": "tour-lab",
+          "title": "Transit into The Lab, search O21, the server room, and the drainage extract",
+          "detail": "Labs access keycard. Transits: Streets Klimova 16A underground (cosmonaut painting) or Factory flooded-sewer tunnel. Transits open one minute into the raid. O21 is the manager office on level 2; server room is level 1 by the hangar; drainage is the Sewage Conduit extract. You do not have to survive. Unlocks Lab in the location list.",
+          "kind": "quest",
+          "maps": ["the-lab", "streets-of-tarkov", "factory"],
+          "keys": ["TerraGroup Labs access keycard"]
         }
       ]
     },
@@ -280,12 +347,62 @@
       "lock": "case",
       "steps": [
         {
+          "id": "skies-plane",
+          "title": "Find the crashed plane on Woods",
+          "detail": "Eastern Woods. This starts Falling Skies after Tour.",
+          "kind": "quest",
+          "maps": ["woods"],
+          "location": "Eastern Woods wreck"
+        },
+        {
+          "id": "skies-prapor-ll2",
+          "title": "Reach Prapor loyalty 2, then ask five traders about the plane",
+          "detail": "Prapor, Therapist, Skier, Mechanic, Jaeger. Prepare for Escape / Unheard / EoD skip the loyalty gate.",
+          "kind": "reputation",
+          "trader": "Prapor"
+        },
+        {
+          "id": "skies-g-wagon",
+          "title": "Shoreline: G-Wagon flash drive (Tunnel extract)",
+          "detail": "Driver-side running board, FiR. Optional: pay Therapist 2,000 USD and she marks it. Hand the drive to Prapor and wait 1 hour.",
+          "kind": "item",
+          "maps": ["shoreline"],
+          "location": "G-Wagon by Tunnel extract",
+          "trader": "Prapor",
+          "wait": "1 hour"
+        },
+        {
+          "id": "skies-recorder",
+          "title": "Pull the flight recorder from the Woods wreck, stash it on Shoreline island",
+          "detail": "Right side of the plane, broken section near the back, FiR. Stash it in the destroyed room of Fisher's Island house — do not hand it to a trader.",
+          "kind": "item",
+          "maps": ["woods", "shoreline"],
+          "location": "Plane right-side wreck · Shoreline island house"
+        },
+        {
+          "id": "skies-parts",
+          "title": "Hand Prapor 2 FiR toolsets, 3 rechargeable batteries, 5 PCBs",
+          "detail": "Craftable at Workbench 1–2. Then wait 3–5 hours.",
+          "kind": "item",
+          "trader": "Prapor",
+          "wait": "3–5 hours"
+        },
+        {
+          "id": "skies-chairman",
+          "title": "Chairman's house: crew transcript + Elektronik's flash drive",
+          "detail": "Shoreline. Transcript under the overturned-bed mattress. Drive on the shelf by the bed. Hand both to Prapor (300k, more with Intel Center). After 1–3 hours he asks if you read the transcript — say yes for a second payout.",
+          "kind": "item",
+          "maps": ["shoreline"],
+          "location": "Chairman's house",
+          "trader": "Prapor"
+        },
+        {
           "id": "skies-loot",
-          "title": "Loot the Woods wreck and extract the case",
-          "detail": "Find the armored case on the crashed plane and get out with it. Dying in raid loses it — you pick it up again.",
+          "title": "Take the armored case from behind the cockpit",
+          "detail": "Woods plane. Dying in raid loses it. Optional: Note from Mr. Kerman on the pilot seat.",
           "kind": "item",
           "maps": ["woods"],
-          "location": "Crashed plane wreck on Woods"
+          "location": "Behind the cockpit"
         },
         {
           "id": "skies-keep",

@@ -14,6 +14,7 @@ import {
   progressFor,
   stepIsDone,
   stepsForEnding,
+  storylineChaptersFor,
   warningsForEnding,
   type StoryChapter,
   type StoryEnding,
@@ -227,6 +228,8 @@ function Guide({ ending }: { ending: StoryEnding }) {
     }
     return seen;
   }, [rows]);
+  const coreChapters = chapters.filter((c) => !c.storyline);
+  const lineChapters = storylineChaptersFor(ending.id);
 
   const [open, setOpen] = useState<string | null>(null);
 
@@ -318,26 +321,49 @@ function Guide({ ending }: { ending: StoryEnding }) {
         </section>
       )}
 
-      {stats.next.length > 0 && (
+      {(stats.next.length > 0 || stats.parallel.length > 0) && (
         <section className="surface mb-4 p-4">
           <h2 className="text-sm font-semibold">Do next</h2>
           <p className="mt-0.5 text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
-            Active story work, in order. Tick as you finish.
+            Core path in order, plus the next step of each evidence storyline you have not finished.
           </p>
-          <ol className="mt-3 space-y-2">
-            {stats.next.map((row, i) => (
-              <li key={row.step.id}>
-                <StepRow
-                  n={i + 1}
-                  row={row}
-                  done={stepIsDone(row.step, story.ticks, built)}
-                  onTick={() => tick(row.step.id)}
-                  onChoose={choose}
-                  selected={row.step.choice ? story.choices[row.step.choice.lock] : undefined}
-                />
-              </li>
-            ))}
-          </ol>
+          {stats.next.length > 0 && (
+            <ol className="mt-3 space-y-2">
+              {stats.next.map((row, i) => (
+                <li key={row.step.id}>
+                  <StepRow
+                    n={i + 1}
+                    row={row}
+                    done={stepIsDone(row.step, story.ticks, built)}
+                    onTick={() => tick(row.step.id)}
+                    onChoose={choose}
+                    selected={row.step.choice ? story.choices[row.step.choice.lock] : undefined}
+                  />
+                </li>
+              ))}
+            </ol>
+          )}
+          {stats.parallel.length > 0 && (
+            <div className="mt-4">
+              <p className="eyebrow">Evidence storylines — start these whenever</p>
+              <ul className="mt-2 space-y-2">
+                {stats.parallel.map((row) => (
+                  <li key={row.step.id}>
+                    <p className="mb-1 text-[0.72rem] font-semibold" style={{ color: "var(--text-faint)" }}>
+                      {row.chapter.name}
+                    </p>
+                    <StepRow
+                      row={row}
+                      done={stepIsDone(row.step, story.ticks, built)}
+                      onTick={() => tick(row.step.id)}
+                      onChoose={choose}
+                      selected={row.step.choice ? story.choices[row.step.choice.lock] : undefined}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
       )}
 
@@ -359,75 +385,58 @@ function Guide({ ending }: { ending: StoryEnding }) {
         </section>
       )}
 
+      {lineChapters.length > 0 && (
+        <section className="mb-4">
+          <h2 className="mb-1 text-sm font-semibold">
+            {ending.id === "savior"
+              ? "Nine storylines — hand in any eight"
+              : ending.id === "debtor"
+                ? "Evidence storylines — pick two, then stop"
+                : "Storylines"}
+          </h2>
+          <p className="mb-2 text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
+            Full quest guides. Open a chapter for every mission, key, map and item spot.
+            {ending.id === "savior" ? " Do not skip Ms. A." : ""}
+          </p>
+          <ol className="space-y-2">
+            {lineChapters.map((chapter) => (
+              <li key={chapter.id}>
+                <ChapterCard
+                  chapter={chapter}
+                  rows={rows}
+                  ticks={story.ticks}
+                  built={built}
+                  open={open === chapter.id}
+                  onToggle={() => setOpen(open === chapter.id ? null : chapter.id)}
+                  onTick={tick}
+                  onChoose={choose}
+                  choices={story.choices}
+                  color={color}
+                />
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      <h2 className="mb-2 text-sm font-semibold">Core path</h2>
       <ol className="space-y-3">
-        {chapters.map((chapter) => {
-          const steps = rows.filter((r) => r.chapter.id === chapter.id);
-          const doneCount = steps.filter((r) => stepIsDone(r.step, story.ticks, built)).length;
+        {coreChapters.map((chapter) => {
           const expanded = open === chapter.id;
           return (
-            <li key={chapter.id} className="surface overflow-hidden">
-              <button
-                type="button"
-                className="story-chapter-head"
-                aria-expanded={expanded}
-                onClick={() => setOpen(expanded ? null : chapter.id)}
-              >
-                <span
-                  className="story-chapter-n"
-                  style={{ background: TONE[chapter.tone] ?? color, color: "var(--accent-ink)" }}
-                >
-                  {chapter.number}
-                </span>
-                <span className="min-w-0 flex-1 text-left">
-                  <span className="block font-semibold">{chapter.name}</span>
-                  <span className="mt-0.5 block text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
-                    {chapter.howToStart}
-                  </span>
-                </span>
-                <span className="tabular-nums text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
-                  {doneCount}/{steps.length}
-                </span>
-              </button>
-              {expanded && (
-                <div className="border-t px-3 py-3" style={{ borderColor: "var(--line-soft)" }}>
-                  <p className="text-[0.82rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-                    {chapter.summary}
-                  </p>
-                  {chapter.maps.length > 0 && (
-                    <p className="mt-2 flex flex-wrap gap-1.5">
-                      {chapter.maps.map((m) => (
-                        <MapChip key={m} map={m} />
-                      ))}
-                    </p>
-                  )}
-                  <ol className="mt-3 space-y-2">
-                    {steps.map((row) => (
-                      <li key={row.step.id}>
-                        <StepRow
-                          row={row}
-                          done={stepIsDone(row.step, story.ticks, built)}
-                          onTick={() => tick(row.step.id)}
-                          onChoose={choose}
-                          selected={row.step.choice ? story.choices[row.step.choice.lock] : undefined}
-                        />
-                      </li>
-                    ))}
-                  </ol>
-                  {chapter.wiki && (
-                    <p className="mt-3">
-                      <a
-                        className="text-[0.75rem]"
-                        href={chapter.wiki}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{ color: "var(--text-faint)" }}
-                      >
-                        Wiki: {chapter.name}
-                      </a>
-                    </p>
-                  )}
-                </div>
-              )}
+            <li key={chapter.id}>
+              <ChapterCard
+                chapter={chapter}
+                rows={rows}
+                ticks={story.ticks}
+                built={built}
+                open={expanded}
+                onToggle={() => setOpen(expanded ? null : chapter.id)}
+                onTick={tick}
+                onChoose={choose}
+                choices={story.choices}
+                color={color}
+              />
             </li>
           );
         })}
@@ -464,6 +473,94 @@ function Guide({ ending }: { ending: StoryEnding }) {
         </a>
       </p>
     </>
+  );
+}
+
+function ChapterCard({
+  chapter,
+  rows,
+  ticks,
+  built,
+  open,
+  onToggle,
+  onTick,
+  onChoose,
+  choices,
+  color,
+}: {
+  chapter: StoryChapter;
+  rows: VisibleStep[];
+  ticks: Record<string, true>;
+  built: Record<string, number>;
+  open: boolean;
+  onToggle: () => void;
+  onTick: (id: string) => void;
+  onChoose: (lockId: string, value: string) => void;
+  choices: Record<string, string>;
+  color: string;
+}) {
+  const steps = rows.filter((r) => r.chapter.id === chapter.id);
+  const doneCount = steps.filter((r) => stepIsDone(r.step, ticks, built)).length;
+  return (
+    <article className="surface overflow-hidden">
+      <button type="button" className="story-chapter-head" aria-expanded={open} onClick={onToggle}>
+        <span
+          className="story-chapter-n"
+          style={{ background: TONE[chapter.tone] ?? color, color: "var(--accent-ink)" }}
+        >
+          {chapter.number}
+        </span>
+        <span className="min-w-0 flex-1 text-left">
+          <span className="block font-semibold">{chapter.name}</span>
+          <span className="mt-0.5 block text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
+            {chapter.howToStart}
+          </span>
+        </span>
+        <span className="tabular-nums text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
+          {doneCount}/{steps.length}
+        </span>
+      </button>
+      {open && (
+        <div className="border-t px-3 py-3" style={{ borderColor: "var(--line-soft)" }}>
+          <p className="text-[0.82rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
+            {chapter.summary}
+          </p>
+          {chapter.maps.length > 0 && (
+            <p className="mt-2 flex flex-wrap gap-1.5">
+              {chapter.maps.map((m) => (
+                <MapChip key={m} map={m} />
+              ))}
+            </p>
+          )}
+          <ol className="mt-3 space-y-2">
+            {steps.map((row) => (
+              <li key={row.step.id}>
+                <StepRow
+                  row={row}
+                  done={stepIsDone(row.step, ticks, built)}
+                  onTick={() => onTick(row.step.id)}
+                  onChoose={onChoose}
+                  selected={row.step.choice ? choices[row.step.choice.lock] : undefined}
+                />
+              </li>
+            ))}
+          </ol>
+          {chapter.wiki && (
+            <p className="mt-3">
+              <a
+                className="text-[0.75rem]"
+                href={chapter.wiki}
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: "var(--text-faint)" }}
+              >
+                Wiki: {chapter.name}
+              </a>
+            </p>
+          )}
+        </div>
+      )}
+    </article>
   );
 }
 
@@ -600,7 +697,7 @@ function EvidencePanel({
         </p>
       )}
       <p className="mt-1 text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
-        Optional chapters can be started during Tour. Do not skip Ms. A.
+        Each piece has a full questline above. Tick here or in the chapter — it is the same box. Do not skip Ms. A.
       </p>
       <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
         {STORY.evidence.map((row, i) => (

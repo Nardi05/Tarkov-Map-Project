@@ -109,7 +109,43 @@ test("progress counts required steps and next-up skips what is done", () => {
   const ticks = { "tour-ground-zero": true as const, "tour-therapist": true as const };
   const mid = progressFor(savior, ticks, {}, {});
   assert.equal(mid.requiredDone, 2);
-  assert.equal(mid.next[0]?.step.id, "tour-maps-lab");
+  assert.equal(mid.next[0]?.step.id, "tour-streets-pay");
+});
+
+test("Savior includes every evidence storyline and all 9 major pieces", () => {
+  const savior = endingById("savior")!;
+  const steps = stepsForEnding("savior", effectiveChoices(savior, {}));
+  const chapterIds = new Set(steps.map((r) => r.chapter.id));
+  for (const id of [
+    "accidental-witness",
+    "batya",
+    "blue-fire",
+    "boreas",
+    "labyrinth",
+    "unheard",
+    "already-here",
+    "ms-a",
+  ]) {
+    assert.ok(chapterIds.has(id), `missing storyline ${id}`);
+  }
+  for (const ev of STORY.evidence.filter((e) => e.major)) {
+    assert.ok(
+      steps.some((r) => r.step.id === ev.id),
+      `missing evidence step ${ev.id}`,
+    );
+  }
+  const stats = progressFor(savior, {}, {}, {});
+  assert.equal(stats.parallel.length, 8);
+  assert.ok(stats.required > 80);
+});
+
+test("Survivor skips the evidence storylines", () => {
+  const survivor = endingById("survivor")!;
+  const steps = stepsForEnding("survivor", effectiveChoices(survivor, {}));
+  assert.equal(
+    steps.some((r) => r.chapter.id === "accidental-witness"),
+    false,
+  );
 });
 
 test("a hideout station already built ticks the matching step", () => {

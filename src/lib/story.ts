@@ -1,4 +1,5 @@
 import raw from "../data/story-endings.json" with { type: "json" };
+import storylines from "../data/story-storylines.json" with { type: "json" };
 import type { HideoutStation } from "../types";
 import { emptyStory, type HideoutStatus, type ModeStory } from "./persist-migrate.ts";
 import { prettyMapName } from "./kord-season.ts";
@@ -106,6 +107,8 @@ export interface StoryChapter {
   lock?: StoryLockId;
   endings?: StoryEndingId[];
   when?: StoryWhen[];
+  /** Evidence-hunt questline. Required for Savior; optional pick-two for Debtor. */
+  storyline?: boolean;
   steps: StoryStep[];
 }
 
@@ -148,7 +151,13 @@ export interface StoryData {
   warnings: StoryWarning[];
 }
 
-export const STORY: StoryData = raw as StoryData;
+const base = raw as StoryData;
+const extra = storylines as { chapters: StoryChapter[] };
+
+export const STORY: StoryData = {
+  ...base,
+  chapters: [...base.chapters, ...extra.chapters],
+};
 
 export const STORY_ENDING_IDS: StoryEndingId[] = ["savior", "survivor", "debtor", "fallen"];
 
@@ -299,6 +308,12 @@ export interface StoryProgressStats {
 
 const SAVIOR_EVIDENCE_NEED = 8;
 
+function stepCountsAsRequired(row: VisibleStep, endingId: StoryEndingId): boolean {
+  if (row.step.required === false) return false;
+  if (row.chapter.storyline && endingId !== "savior") return false;
+  return true;
+}
+
 export function progressFor(
   ending: StoryEnding,
   ticks: Record<string, true>,
@@ -307,17 +322,26 @@ export function progressFor(
 ): StoryProgressStats {
   const choices = effectiveChoices(ending, recorded);
   const rows = stepsForEnding(ending.id, choices);
-  const required = rows.filter((r) => r.step.required !== false);
-  const optional = rows.filter((r) => r.step.required === false);
+  const required = rows.filter((r) => stepCountsAsRequired(r, ending.id));
+  const optional = rows.filter((r) => !stepCountsAsRequired(r, ending.id));
   const requiredDone = required.filter((r) => stepIsDone(r.step, ticks, built)).length;
   const optionalDone = optional.filter((r) => stepIsDone(r.step, ticks, built)).length;
 
-  const evidenceNeed = ending.id === "savior" ? SAVIOR_EVIDENCE_NEED : 0;
+  const evidenceNeed = ending.id === "savior" ? SAVIOR_EVIDENCE_NEED : ending.id === "debtor" ? 2 : 0;
   const evidenceHave = STORY.evidence.filter((e) => e.major && ticks[e.id]).length;
 
   const incompleteReq = required.filter((r) => !stepIsDone(r.step, ticks, built));
-  const next = incompleteReq.filter((r) => !r.step.parallel).slice(0, 3);
-  const parallel = incompleteReq.filter((r) => r.step.parallel);
+  const next = incompleteReq.filter((r) => !r.chapter.storyline && !r.step.parallel).slice(0, 3);
+
+  const parallel: VisibleStep[] = [];
+  const seen = new Set<string>();
+  for (const row of rows) {
+    if (!row.chapter.storyline || seen.has(row.chapter.id)) continue;
+    if (stepIsDone(row.step, ticks, built)) continue;
+    if (row.step.required === false) continue;
+    seen.add(row.chapter.id);
+    parallel.push(row);
+  }
 
   return {
     required: required.length,
@@ -330,6 +354,10 @@ export function progressFor(
     next,
     parallel,
   };
+}
+
+export function storylineChaptersFor(endingId: StoryEndingId): StoryChapter[] {
+  return STORY.chapters.filter((c) => c.storyline && onEnding(c.endings, endingId));
 }
 
 export function headlineRewards(ending: StoryEnding, cap = 6): StoryReward[] {
