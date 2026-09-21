@@ -85,6 +85,19 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
           </p>
 
         <a
+          href={href.story()}
+          onClick={onNavClick(href.story())}
+          className="surface surface-link mb-3 flex flex-wrap items-center justify-between gap-3 p-3.5"
+        >
+          <div className="min-w-0">
+            <p className="text-sm font-semibold">Story endings</p>
+            <p className="mt-0.5 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
+              Savior, Survivor, Debtor, Fallen — pick a target and follow the path
+            </p>
+          </div>
+          <span className="btn flex-none">Story</span>
+        </a>
+        <a
           href={href.quests()}
           onClick={onNavClick(href.quests())}
           className="surface surface-link mb-6 flex flex-wrap items-center justify-between gap-3 p-3.5"

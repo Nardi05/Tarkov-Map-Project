@@ -1,5 +1,6 @@
 import type { TaskStatus } from "../types";
-import type { GameMode, HideoutStatus, ModeProgress, Profile } from "./persist-migrate";
+import type { GameMode, HideoutStatus, ModeProgress, ModeStory, Profile } from "./persist-migrate.ts";
+import { emptyStory } from "./persist-migrate.ts";
 
 /**
  * Reading and writing a progress save file.
@@ -126,6 +127,7 @@ const tally = (slice: ModeProgress): ModeCounts => ({
   items: Object.keys(slice.itemCounts).length,
   keys: Object.keys(slice.keysOwned).length,
   hideout: Object.keys(slice.hideout).length,
+  story: Object.keys(slice.story.ticks).length + Object.keys(slice.story.choices).length + (slice.story.target ? 1 : 0),
 });
 
 const hideout = (raw: unknown): Record<string, HideoutStatus> => {
@@ -137,12 +139,29 @@ const hideout = (raw: unknown): Record<string, HideoutStatus> => {
   return out;
 };
 
+const story = (raw: unknown): ModeStory => {
+  if (!isRecord(raw)) return emptyStory();
+  const ticks = markers(raw.ticks);
+  const choices: Record<string, string> = {};
+  if (isRecord(raw.choices)) {
+    for (const [k, v] of Object.entries(raw.choices)) {
+      if (typeof v === "string" && v) choices[k] = v;
+    }
+  }
+  return {
+    target: typeof raw.target === "string" && raw.target ? raw.target : null,
+    ticks,
+    choices,
+  };
+};
+
 export interface ModeCounts {
   tasks: number;
   markers: number;
   items: number;
   keys: number;
   hideout: number;
+  story: number;
 }
 
 export interface ParsedSave {
@@ -186,6 +205,7 @@ export function parseSave(text: string): ParsedSave {
       itemCounts: counts(row.itemCounts),
       keysOwned: markers(row.keysOwned),
       hideout: hideout(row.hideout),
+      story: story(row.story),
     };
   };
   const progress = {
@@ -200,7 +220,10 @@ export function parseSave(text: string): ParsedSave {
       !Object.keys(progress[mode].markerDone).length &&
       !Object.keys(progress[mode].itemCounts).length &&
       !Object.keys(progress[mode].keysOwned).length &&
-      !Object.keys(progress[mode].hideout).length,
+      !Object.keys(progress[mode].hideout).length &&
+      !progress[mode].story.target &&
+      !Object.keys(progress[mode].story.ticks).length &&
+      !Object.keys(progress[mode].story.choices).length,
   );
   if (empty) throw new SaveFileError("That save has no progress in it.");
 

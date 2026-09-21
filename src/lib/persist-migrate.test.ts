@@ -71,6 +71,7 @@ test("merge fills in slices a stored state predates", () => {
   assert.deepEqual(partial.pvp.itemCounts, {});
   assert.deepEqual(partial.pvp.keysOwned, {});
   assert.deepEqual(partial.pvp.hideout, {});
+  assert.deepEqual(partial.pvp.story, emptyMode().story);
   assert.deepEqual(partial.pve, emptyMode());
   // Same rule for the season slice — it must not inherit PvP ticks.
   assert.deepEqual(partial.season, emptyMode());
@@ -119,6 +120,17 @@ test("a save from before the planner still has every task, and empty stash slice
   assert.equal(profile.targetTaskId, null);
   assert.equal(profile.gameEdition, DEFAULT_PROFILE.gameEdition);
   assert.deepEqual(profile.traderLevels, { Prapor: 2 });
+  assert.deepEqual(merged.pvp.story, emptyMode().story);
+});
+
+test("a save from before the story page gets an empty story slice, never undefined", () => {
+  const merged = mergeProgress({
+    progress: { pvp: { taskStatus: { a: "active" }, story: { target: "savior", ticks: { tour: true }, choices: { kerman: "accept" } } } },
+  });
+  assert.equal(merged.pvp.story.target, "savior");
+  assert.deepEqual(merged.pvp.story.ticks, { tour: true });
+  assert.deepEqual(merged.pvp.story.choices, { kerman: "accept" });
+  assert.deepEqual(merged.pve.story, emptyMode().story);
 });
 
 test("v5 deletes the stored TarkovTracker token, and nothing else", () => {

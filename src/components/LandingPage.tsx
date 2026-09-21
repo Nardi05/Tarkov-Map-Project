@@ -14,6 +14,10 @@ const FEATURES = [
     body: "Tick what you have accepted. The map draws those, and the dashboard ranks what is next.",
   },
   {
+    title: "Story endings",
+    body: "Savior, Survivor, Debtor, Fallen. Target one and follow the chapters, locks, and item spots.",
+  },
+  {
     title: "Hideout",
     body: "Station levels, item needs, and what is blocking the next upgrade.",
   },

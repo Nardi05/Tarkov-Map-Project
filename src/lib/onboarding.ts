@@ -19,6 +19,9 @@ export function hasCharacterData(progress: unknown): boolean {
     if (Object.keys(slice.itemCounts ?? {}).length) return true;
     if (Object.keys(slice.keysOwned ?? {}).length) return true;
     if (Object.keys(slice.hideout ?? {}).length) return true;
+    if (slice.story?.target) return true;
+    if (Object.keys(slice.story?.ticks ?? {}).length) return true;
+    if (Object.keys(slice.story?.choices ?? {}).length) return true;
   }
   return false;
 }

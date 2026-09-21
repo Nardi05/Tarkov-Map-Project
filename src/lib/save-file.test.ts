@@ -24,7 +24,7 @@ test("a save round-trips through export and import", () => {
   assert.deepEqual(back.progress.pvp.taskStatus, { a: "active", b: "completed" });
   assert.deepEqual(back.progress.pvp.markerDone, { m1: true });
   assert.equal(back.profile?.level, 42);
-  assert.deepEqual(back.counts.pvp, { tasks: 2, markers: 1, items: 0, keys: 0, hideout: 0 });
+  assert.deepEqual(back.counts.pvp, { tasks: 2, markers: 1, items: 0, keys: 0, hideout: 0, story: 0 });
 });
 
 test("a mode absent from the file comes back empty, not undefined", () => {
@@ -96,6 +96,7 @@ test("a v1 save without stash slices still loads", () => {
   assert.equal(back.progress.pvp.taskStatus.a, "completed");
   assert.deepEqual(back.progress.pvp.itemCounts, {});
   assert.deepEqual(back.progress.pvp.hideout, {});
+  assert.deepEqual(back.progress.pvp.story, emptyMode().story);
 });
 
 test("a quest log rides along on export and is ignored on import", () => {
@@ -108,6 +109,20 @@ test("a quest log rides along on export and is ignored on import", () => {
   assert.equal(file.log?.pvp[0]?.name, "Checking");
   const back = parseSave(JSON.stringify(file));
   assert.deepEqual(back.progress.pvp.taskStatus, { a: "active", b: "completed" });
+});
+
+test("story ticks and an ending target survive a round trip", () => {
+  const progress = emptyProgress();
+  progress.pvp.story = {
+    target: "savior",
+    ticks: { "tour-ground-zero": true },
+    choices: { kerman: "accept" },
+  };
+  const restored = parseSave(JSON.stringify(buildSave(DEFAULT_PROFILE, progress)));
+  assert.equal(restored.progress.pvp.story.target, "savior");
+  assert.deepEqual(restored.progress.pvp.story.ticks, { "tour-ground-zero": true });
+  assert.deepEqual(restored.progress.pvp.story.choices, { kerman: "accept" });
+  assert.equal(restored.counts.pvp.story, 3);
 });
 
 test("the file name sorts and says which mode it holds", () => {

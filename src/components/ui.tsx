@@ -93,6 +93,7 @@ export const icons = {
   eye: "M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Zm10 2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
   keyboard: "M4 6h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm3 4h.01M11 10h.01M15 10h.01M17 10h.01M7 14h10",
   pin: "M12 17v5M8 3h8l-1 7h3l-6 6-6-6h3L8 3z",
+  book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v15H6.5A2.5 2.5 0 0 0 4 19.5z",
 };
 
 export function Tick({
@@ -179,6 +180,7 @@ export function SiteNav({ current }: { current: TabId }) {
       <span className="site-nav-pill" aria-hidden="true" />
       {item("dashboard", "Dashboard", href.dashboard())}
       {item("maps", "Maps", href.maps())}
+      {item("story", "Story", href.story())}
       {item("quests", "Quests", href.quests())}
       {item("hideout", "Hideout", href.hideout())}
     </nav>

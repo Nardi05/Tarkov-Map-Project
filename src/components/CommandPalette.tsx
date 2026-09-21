@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useHideoutData, useMapIndex, useProgression } from "../lib/data";
 import { href, navigate } from "../lib/router";
+import { STORY } from "../lib/story";
 import { displayName, visibleInMode } from "../lib/task-variant";
 import { useStore } from "../store";
 
@@ -8,6 +9,7 @@ const GO_TO: { kind: string; label: string; href: string }[] = [
   { kind: "Go", label: "Dashboard", href: href.dashboard() },
   { kind: "Go", label: "Start page", href: href.welcome() },
   { kind: "Go", label: "Maps", href: href.home() },
+  { kind: "Go", label: "Story", href: href.story() },
   { kind: "Go", label: "Quests", href: href.quests() },
   { kind: "Go", label: "Task graph", href: href.quests("graph") },
   { kind: "Go", label: "Items", href: href.quests("items") },
@@ -58,6 +60,12 @@ export default function CommandPalette() {
 
     for (const item of GO_TO) if (!q || matches(item.label)) out.push(item);
     if (!q) return out;
+
+    for (const ending of STORY.endings) {
+      if (!q || matches(ending.name) || matches("story") || matches(ending.tagline)) {
+        out.push({ kind: "Story", label: `${ending.name} ending`, href: href.story(ending.id) });
+      }
+    }
 
     for (const map of maps.data?.maps ?? []) {
       if (matches(map.name)) out.push({ kind: "Map", label: map.name, href: href.map(map.normalizedName) });

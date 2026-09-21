@@ -21,8 +21,10 @@ import {
   type GameMode,
   type HideoutStatus,
   type ModeProgress,
+  type ModeStory,
   type Profile,
 } from "./lib/persist-migrate";
+import { endingById } from "./lib/story";
 import type { TaskStatus } from "./types";
 
 export type { GameMode, Profile } from "./lib/persist-migrate";
@@ -131,6 +133,12 @@ interface Store {
   bumpItemCount: (itemId: string, delta: number) => void;
   setKeyOwned: (keyId: string, owned: boolean) => void;
   setHideoutStatus: (levelId: string, status: HideoutStatus | null) => void;
+
+  setStoryTarget: (endingId: string | null) => void;
+  toggleStoryTick: (id: string) => void;
+  setStoryChoice: (lockId: string, value: string | null) => void;
+  resetStory: () => void;
+
   /** Wipes the current mode only — the other mode's progress is untouched. */
   clearProgress: () => void;
   /** Clears quest statuses and location ticks; stash and hideout stay. */
@@ -368,6 +376,42 @@ export const useStore = create<Store>()(
           }),
         ),
 
+      setStoryTarget: (endingId) =>
+        set((s) =>
+          editMode(s, (p) => {
+            const ending = endingById(endingId);
+            const choices = { ...p.story.choices };
+            if (ending) {
+              for (const [lock, value] of Object.entries(ending.choices)) {
+                if (!choices[lock] && value) choices[lock] = value;
+              }
+            }
+            return { ...p, story: { ...p.story, target: ending ? ending.id : null, choices } };
+          }),
+        ),
+
+      toggleStoryTick: (id) =>
+        set((s) =>
+          editMode(s, (p) => {
+            const ticks = { ...p.story.ticks };
+            if (ticks[id]) delete ticks[id];
+            else ticks[id] = true;
+            return { ...p, story: { ...p.story, ticks } };
+          }),
+        ),
+
+      setStoryChoice: (lockId, value) =>
+        set((s) =>
+          editMode(s, (p) => {
+            const choices = { ...p.story.choices };
+            if (value) choices[lockId] = value;
+            else delete choices[lockId];
+            return { ...p, story: { ...p.story, choices } };
+          }),
+        ),
+
+      resetStory: () => set((s) => editMode(s, (p) => ({ ...p, story: emptyMode().story }))),
+
       clearProgress: () => set((s) => editMode(s, () => emptyMode())),
 
       resetTasks: () =>
@@ -451,7 +495,7 @@ export const useStore = create<Store>()(
     }),
     {
       name: "tarkov-maps",
-      version: 7,
+      version: 8,
       storage: createJSONStorage(() => localStorage),
       // An allowlist: a slice added to the store and forgotten here simply
       // never persists. Search, trader and Kappa narrowing are momentary and
@@ -531,4 +575,8 @@ export function useKeysOwned(): Record<string, true> {
 
 export function useHideout(): Record<string, HideoutStatus> {
   return useStore((s) => s.progress[s.profile.mode].hideout);
+}
+
+export function useStory(): ModeStory {
+  return useStore((s) => s.progress[s.profile.mode].story);
 }

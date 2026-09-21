@@ -203,11 +203,11 @@ body::after {
   .site-nav {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     align-items: center;
     flex: 1 1 12rem;
     min-width: 0;
-    max-width: 28rem;
+    max-width: 36rem;
     padding: 3px;
     border-radius: 999px;
     border: 1px solid var(--line);
@@ -221,7 +221,7 @@ body::after {
     top: 3px;
     bottom: 3px;
     left: 3px;
-    width: calc(25% - 2px);
+    width: calc(20% - 2px);
     border-radius: 999px;
     background: var(--accent);
     transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
@@ -232,12 +232,16 @@ body::after {
     transform: translateX(100%);
   }
 
-  .site-nav[data-current="quests"] .site-nav-pill {
+  .site-nav[data-current="story"] .site-nav-pill {
     transform: translateX(200%);
   }
 
-  .site-nav[data-current="hideout"] .site-nav-pill {
+  .site-nav[data-current="quests"] .site-nav-pill {
     transform: translateX(300%);
+  }
+
+  .site-nav[data-current="hideout"] .site-nav-pill {
+    transform: translateX(400%);
   }
 
   .site-nav a,
@@ -921,6 +925,91 @@ body::after {
     transition: width 0.6s var(--ease);
   }
 
+  .story-epigraph {
+    margin: -0.55rem 0 1.1rem;
+    max-width: 40rem;
+    font-size: 0.92rem;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .story-chapter-head {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    text-align: left;
+  }
+
+  .story-chapter-n {
+    display: grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    flex: none;
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .story-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.55rem 0.4rem;
+    border-radius: 10px;
+  }
+
+  .story-step[data-done] {
+    opacity: 0.62;
+  }
+
+  .story-step-n {
+    width: 1.1rem;
+    flex: none;
+    padding-top: 0.15rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .story-lock-btn {
+    display: block;
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: inherit;
+    text-align: left;
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+
+  .story-lock-btn.is-on {
+    border-color: color-mix(in srgb, var(--ok) 55%, transparent);
+    background: color-mix(in srgb, var(--ok) 16%, transparent);
+    color: var(--ok);
+  }
+
+  .story-lock-btn[data-want]:not(.is-on) {
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+
+  .story-never {
+    padding: 1rem 1.1rem;
+    border-radius: var(--radius);
+    border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
+    background: color-mix(in srgb, var(--danger) 10%, transparent);
+  }
+
+  .story-dot {
+    display: block;
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 999px;
+  }
+
   /* A chip that is a link or a button, so it reacts like one. */
   .chip-button {
     cursor: pointer;
@@ -1437,7 +1526,7 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 .site-nav {
   flex: 1 1 12rem;
   min-width: 0;
-  max-width: 28rem;
+  max-width: 36rem;
 }
 
 .wordmark {
@@ -1485,8 +1574,8 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 
   .site-nav a,
   .site-nav span[aria-current] {
-    padding: 0.3rem 0.45rem;
-    font-size: 0.72rem;
+    padding: 0.3rem 0.28rem;
+    font-size: 0.68rem;
     min-height: 1.85rem;
   }
 }

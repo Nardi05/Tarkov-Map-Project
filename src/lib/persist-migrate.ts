@@ -48,6 +48,20 @@ export interface Profile {
 
 export type HideoutStatus = "active" | "completed" | "ignored";
 
+/**
+ * Ending target, checklist ticks and lock choices for the story page.
+ *
+ * Kept as a plain nested object so a save from before the page existed is
+ * filled in by `mergeProgress` rather than crashing on `progress.story.ticks`.
+ * Ending ids are not validated here — `story.ts` is the one that knows them,
+ * and this file stays free of that import.
+ */
+export interface ModeStory {
+  target: string | null;
+  ticks: Record<string, true>;
+  choices: Record<string, string>;
+}
+
 export interface ModeProgress {
   taskStatus: Record<string, TaskStatus>;
   markerDone: Record<string, true>;
@@ -57,6 +71,7 @@ export interface ModeProgress {
   keysOwned: Record<string, true>;
   /** Hideout station-level id -> status. Absent means not started. */
   hideout: Record<string, HideoutStatus>;
+  story: ModeStory;
 }
 
 export const GAME_MODES: GameMode[] = ["pvp", "pve", "season"];
@@ -78,12 +93,19 @@ export const DEFAULT_PROFILE: Profile = {
   gameEdition: "unheard",
 };
 
+export const emptyStory = (): ModeStory => ({
+  target: null,
+  ticks: {},
+  choices: {},
+});
+
 export const emptyMode = (): ModeProgress => ({
   taskStatus: {},
   markerDone: {},
   itemCounts: {},
   keysOwned: {},
   hideout: {},
+  story: emptyStory(),
 });
 
 export const emptyProgress = (): Record<GameMode, ModeProgress> => ({
@@ -116,6 +138,8 @@ const isStatus = (v: unknown): v is TaskStatus => v === "active" || v === "compl
  * - v7 adds item counts, owned keys, hideout status, a target task and game
  *   edition. `mergeProgress` / `mergeProfile` fill those; this function does
  *   not rewrite `taskStatus`, so every previously stored task survives.
+ * - v8 adds `story` on each mode (ending target, checklist ticks, lock
+ *   choices). `mergeProgress` fills it; nothing in `taskStatus` is rewritten.
  */
 export function migrate(persisted: unknown, version: number): Record<string, unknown> {
   const state = (persisted ?? {}) as Record<string, unknown>;
@@ -163,6 +187,8 @@ export function migrate(persisted: unknown, version: number): Record<string, unk
   //
   // v7 is the same idea for itemCounts / keysOwned / hideout / targetTaskId /
   // gameEdition — named in merge, not copied from another slice.
+  //
+  // v8 is the same for `story`.
 
   return state;
 }
@@ -189,9 +215,31 @@ export function mergeProgress(
       itemCounts: slice?.itemCounts ?? {},
       keysOwned: slice?.keysOwned ?? {},
       hideout: slice?.hideout ?? {},
+      story: mergeStorySlice(slice?.story),
     };
   }
   return base;
+}
+
+function mergeStorySlice(raw: unknown): ModeStory {
+  const base = emptyStory();
+  if (!raw || typeof raw !== "object") return base;
+  const row = raw as Partial<ModeStory>;
+  const ticks: Record<string, true> = {};
+  if (row.ticks && typeof row.ticks === "object") {
+    for (const id of Object.keys(row.ticks)) if (row.ticks[id]) ticks[id] = true;
+  }
+  const choices: Record<string, string> = {};
+  if (row.choices && typeof row.choices === "object") {
+    for (const [k, v] of Object.entries(row.choices)) {
+      if (typeof v === "string" && v) choices[k] = v;
+    }
+  }
+  return {
+    target: typeof row.target === "string" && row.target ? row.target : null,
+    ticks,
+    choices,
+  };
 }
 
 const isMode = (v: unknown): v is GameMode =>

@@ -41,6 +41,15 @@ test("homeFor sends a tracker setup or stored progress to the dashboard", () => 
   assert.equal(homeFor(null, progress), "dashboard");
 });
 
+test("a targeted ending or a ticked story step counts as a character", () => {
+  const targeted = emptyProgress();
+  targeted.pvp.story.target = "savior";
+  assert.equal(hasCharacterData(targeted), true);
+  const ticked = emptyProgress();
+  ticked.season.story.ticks["tour-ground-zero"] = true;
+  assert.equal(hasCharacterData(ticked), true);
+});
+
 test("parseEntry rejects junk", () => {
   assert.equal(parseEntry("maps"), "maps");
   assert.equal(parseEntry("tracker"), "tracker");

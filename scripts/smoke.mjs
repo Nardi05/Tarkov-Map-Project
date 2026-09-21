@@ -154,6 +154,8 @@ const routes = [
   { hash: "#/welcome", heading: "Know the map. Run the right raid." },
   { hash: "#/dashboard", heading: "Dashboard" },
   { hash: "#/maps", heading: "Maps" },
+  { hash: "#/story", heading: "Story" },
+  { hash: "#/story/savior", heading: "Savior" },
   { hash: "#/quests", heading: "Quests" },
   { hash: "#/quests/graph", heading: "Quests" },
   { hash: "#/quests/items", heading: "Quests" },

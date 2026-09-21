@@ -149,6 +149,21 @@ map that has them. Daily pickup limits differ by mode (30 / 20 / 15).
 
 The quest tracker also ranks **which map to queue** from your active tasks.
 
+## Story endings
+
+`#/story` is its own tab, next to Maps. The overview lists the four Tarkov 1.0
+endings — **Savior**, **Survivor**, **Debtor**, **Fallen** — with community
+difficulty, the lock choices that lead there, and the rewards.
+
+Target one and the page becomes a guided path: what to do next, every lock
+with the right answer highlighted, chapter checklists, major-evidence spots
+(8 of 9 for Savior), hideout gates, map links, and a "never do these" list.
+Ticks and choices are stored per character (PvP / Season / PvE) with the rest
+of your progress.
+
+The chapters are not in the tarkov.dev feed. They are vendored from the wiki
+into `src/data/story-endings.json`.
+
 ## The dashboard
 
 `#/` is the front page and the shortest answer to "what do I do next": which map

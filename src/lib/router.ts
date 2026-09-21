@@ -14,6 +14,8 @@ import { useSyncExternalStore, useCallback, type MouseEvent } from "react";
  *   #/quests/graph  task dependency graph
  *   #/quests/items  item tracker + stash audit
  *   #/quests/setup  the first-run walkthrough of each trader
+ *   #/story         story endings overview
+ *   #/story/<id>    one ending's guided path
  *   #/hideout       hideout stations
  *   #/settings      profile, reset, backup
  */
@@ -26,6 +28,7 @@ export type Route =
   | { name: "home" }
   | { name: "quests"; view: QuestView; focus: string | null }
   | { name: "setup" }
+  | { name: "story"; ending: string | null }
   | { name: "hideout" }
   | { name: "settings" }
   | { name: "map"; map: string; task: string | null };
@@ -36,19 +39,21 @@ export type Route =
  * Exported because the shell animates the body in the direction you moved
  * along this row, and both have to agree on which way that is.
  */
-export type TabId = "dashboard" | "maps" | "quests" | "hideout";
+export type TabId = "dashboard" | "maps" | "story" | "quests" | "hideout";
 
 export const TAB_ORDER: Record<TabId, number> = {
   dashboard: 0,
   maps: 1,
-  quests: 2,
-  hideout: 3,
+  story: 2,
+  quests: 3,
+  hideout: 4,
 };
 
 /** The tab a route belongs to, or null for the map and the walkthrough. */
 export function tabOf(route: Route): TabId | null {
   if (route.name === "dashboard" || route.name === "root") return "dashboard";
   if (route.name === "home") return "maps";
+  if (route.name === "story") return "story";
   if (route.name === "quests") return "quests";
   if (route.name === "hideout") return "hideout";
   return null;
@@ -68,6 +73,9 @@ function parse(hash: string): Route {
     if (segments[1] === "graph") return { name: "quests", view: "graph", focus };
     if (segments[1] === "items") return { name: "quests", view: "items", focus };
     return { name: "quests", view: "list", focus };
+  }
+  if (segments[0] === "story") {
+    return { name: "story", ending: segments[1] ? decodeURIComponent(segments[1]) : null };
   }
   if (segments[0] === "hideout") return { name: "hideout" };
   if (segments[0] === "settings") return { name: "settings" };
@@ -136,6 +144,8 @@ export const href = {
     return focus ? `${base}?q=${encodeURIComponent(focus)}` : base;
   },
   setup: () => "#/quests/setup",
+  story: (ending?: string | null) =>
+    ending ? `#/story/${encodeURIComponent(ending)}` : "#/story",
   hideout: () => "#/hideout",
   settings: () => "#/settings",
   map: (map: string, task?: string | null) => `#/m/${encodeURIComponent(map)}${task ? `?q=${task}` : ""}`,

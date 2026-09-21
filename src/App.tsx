@@ -7,6 +7,7 @@ import MapPage from "./components/MapPage";
 import QuestsPage from "./components/QuestsPage";
 import SettingsPage from "./components/SettingsPage";
 import SetupWizard from "./components/SetupWizard";
+import StoryPage from "./components/StoryPage";
 import TabShell from "./components/TabShell";
 import CommandPalette from "./components/CommandPalette";
 import { prefetchIdleMaps, prefetchProgression, useMapData, useMapIndex } from "./lib/data";
@@ -59,6 +60,8 @@ export default function App() {
             ? "Hideout — Tarkov Maps"
           : route.name === "settings"
             ? "Settings — Tarkov Maps"
+          : route.name === "story"
+            ? "Story — Tarkov Maps"
           : route.name === "setup"
             ? "Set up your progress — Tarkov Maps"
             : route.name === "welcome" || route.name === "root"
@@ -111,7 +114,9 @@ export default function App() {
       ? `map:${route.map}`
       : route.name === "quests"
         ? `quests:${route.view}`
-        : route.name;
+        : route.name === "story"
+          ? `story:${route.ending ?? ""}`
+          : route.name;
   useEffect(() => {
     if (firstRoute.current) {
       firstRoute.current = false;
@@ -185,6 +190,9 @@ export default function App() {
       <>
         <TabShell current={tab}>
           {tab === "dashboard" && <DashboardPage />}
+          {tab === "story" && (
+            <StoryPage endingId={route.name === "story" ? route.ending : null} />
+          )}
           {tab === "quests" && (
             <QuestsPage
               view={route.name === "quests" ? route.view : "list"}
