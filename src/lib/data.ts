@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import type {
   HideoutData,
   ItemCatalog,
@@ -11,12 +11,153 @@ import type {
 import { kordProgressionTasks } from "./kord-season";
 
 /**
- * Data lives as static JSON next to the bundle (see scripts/build-data.mjs).
- * One fetch per map, cached in memory, so switching back to a map you've
- * already opened is instant.
+ * Where the site's game data comes from.
+ *
+ * Two sources, tried in that order:
+ *
+ *   /api/data/…   the live endpoint. Rebuilds from tarkov.dev behind a one-day
+ *                 CDN cache, so what you see is what the game shipped today
+ *                 rather than what it had shipped when somebody last deployed.
+ *   /data/…       the snapshot baked into the bundle at build time. Served
+ *                 when the live endpoint isn't there (a plain static host, a
+ *                 local `vite preview`) or can't answer.
+ *
+ * The site works identically on both. The only visible difference is the
+ * freshness line, which says which one you got and when it was built — see
+ * `useDataStatus`.
+ *
+ * Both are relative to BASE_URL so the build still drops onto a subpath.
  */
-const BASE = `${import.meta.env.BASE_URL}data`;
+const LIVE = `${import.meta.env.BASE_URL}api/data/`;
+const SNAPSHOT = `${import.meta.env.BASE_URL}data/`;
 
+/** How old a payload may get before a returning tab quietly refetches it. */
+const STALE_AFTER_MS = 12 * 60 * 60 * 1000;
+
+export type DataSource = "live" | "snapshot";
+
+export interface DataStatus {
+  /** Null until the first payload lands. */
+  source: DataSource | null;
+  /** When the data was built upstream, ISO. Null if the payload didn't say. */
+  generated: string | null;
+  /** When this browser last fetched it. */
+  fetchedAt: number | null;
+  /** True while a refresh is in flight. */
+  refreshing: boolean;
+}
+
+let status: DataStatus = { source: null, generated: null, fetchedAt: null, refreshing: false };
+const statusListeners = new Set<() => void>();
+
+function setStatus(patch: Partial<DataStatus>) {
+  const next = { ...status, ...patch };
+  if (
+    next.source === status.source &&
+    next.generated === status.generated &&
+    next.fetchedAt === status.fetchedAt &&
+    next.refreshing === status.refreshing
+  ) {
+    return;
+  }
+  status = next;
+  for (const listener of statusListeners) listener();
+}
+
+/**
+ * Whether the live endpoint answered.
+ *
+ * Settled by the first payload that asks for it, then reused. On a host with
+ * no functions this costs one 404 for the whole session rather than one per
+ * file; the requests that raced that first one pay it too, which is a handful
+ * at worst and not worth a lock to avoid.
+ */
+let liveAvailable: boolean | null = null;
+
+/**
+ * Bumped by `refreshData`. Every hook below depends on it, so incrementing it
+ * is what makes an open tab re-read the payloads it already has.
+ */
+let generation = 0;
+const generationListeners = new Set<() => void>();
+
+function bumpGeneration() {
+  generation++;
+  for (const listener of generationListeners) listener();
+}
+
+function useGeneration() {
+  return useSyncExternalStore(
+    (onChange) => {
+      generationListeners.add(onChange);
+      return () => generationListeners.delete(onChange);
+    },
+    () => generation,
+    () => generation,
+  );
+}
+
+/** The freshness of the data on screen, for the footer and Settings. */
+export function useDataStatus(): DataStatus {
+  return useSyncExternalStore(
+    (onChange) => {
+      statusListeners.add(onChange);
+      return () => statusListeners.delete(onChange);
+    },
+    () => status,
+    () => status,
+  );
+}
+
+async function fromLive(file: string): Promise<Response | null> {
+  if (liveAvailable === false) return null;
+  try {
+    const res = await fetch(`${LIVE}${file}`, { headers: { Accept: "application/json" } });
+    if (!res.ok) {
+      // 404/405 is a host that simply has no functions — stop asking. A 5xx is
+      // the endpoint itself failing, which it already handles by serving its
+      // own snapshot, so treat it as a one-off and keep trying next time.
+      if (res.status === 404 || res.status === 405) liveAvailable = false;
+      return null;
+    }
+    liveAvailable = true;
+    return res;
+  } catch {
+    liveAvailable = false;
+    return null;
+  }
+}
+
+async function getJson<T>(file: string): Promise<T> {
+  const live = await fromLive(file);
+  if (live) {
+    const body = (await live.json()) as T & { generated?: string };
+    setStatus({
+      source: (live.headers.get("x-tk-source") as DataSource) ?? "live",
+      generated: live.headers.get("x-tk-generated") ?? body.generated ?? status.generated,
+      fetchedAt: Date.now(),
+    });
+    return body;
+  }
+
+  const res = await fetch(`${SNAPSHOT}${file}`);
+  if (!res.ok) throw new Error(`Could not load ${file} (${res.status})`);
+  const body = (await res.json()) as T & { generated?: string };
+  setStatus({
+    source: "snapshot",
+    generated: body.generated ?? status.generated,
+    fetchedAt: Date.now(),
+  });
+  return body;
+}
+
+/* ------------------------------------------------------------------ caches */
+
+/**
+ * One fetch per payload, cached in memory, so switching back to a map you've
+ * already opened is instant. `refreshData` is the only thing that empties
+ * these.
+ */
 const mapCache = new Map<string, Promise<MapData>>();
 let indexPromise: Promise<MapIndex> | null = null;
 let progressionPromise: Promise<Progression> | null = null;
@@ -24,20 +165,64 @@ let imagesPromise: Promise<TaskImages> | null = null;
 let hideoutPromise: Promise<HideoutData> | null = null;
 let itemsPromise: Promise<ItemCatalog> | null = null;
 
-async function getJson<T>(url: string): Promise<T> {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Could not load ${url} (${res.status})`);
-  return (await res.json()) as T;
+function clearCaches() {
+  mapCache.clear();
+  indexPromise = null;
+  progressionPromise = null;
+  imagesPromise = null;
+  hideoutPromise = null;
+  itemsPromise = null;
 }
 
+/**
+ * Throw away everything and fetch it again.
+ *
+ * The data behind this site changes about once a day, and a tab left open over
+ * a wipe would otherwise show last week's quests until it was reloaded. Called
+ * from the Settings refresh button, and automatically when a tab comes back to
+ * the foreground with data older than `STALE_AFTER_MS`.
+ */
+export async function refreshData(): Promise<void> {
+  if (status.refreshing) return;
+  setStatus({ refreshing: true });
+  clearCaches();
+  // A new chance for the live endpoint: the last failure may have been a blip.
+  if (liveAvailable === false) liveAvailable = null;
+  try {
+    await loadIndex();
+  } catch {
+    /* the hooks surface the error; this only drives the spinner */
+  } finally {
+    setStatus({ refreshing: false });
+    bumpGeneration();
+  }
+}
+
+/**
+ * Refetch when a tab that has been sitting in the background comes back and
+ * what it is showing has gone stale.
+ *
+ * Deliberately silent. There is no prompt and nothing jumps: the payloads are
+ * replaced and the components re-render with the newer numbers, which is what
+ * someone returning to the page expects to be looking at.
+ */
+if (typeof document !== "undefined") {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible") return;
+    if (!status.fetchedAt || Date.now() - status.fetchedAt < STALE_AFTER_MS) return;
+    void refreshData();
+  });
+}
+
+/* ----------------------------------------------------------------- loaders */
+
 export function loadIndex(): Promise<MapIndex> {
-  indexPromise ??= getJson<MapIndex>(`${BASE}/index.json`).catch((err) => {
+  indexPromise ??= getJson<MapIndex>("index.json").catch((err) => {
     indexPromise = null;
     throw err;
   });
   return indexPromise;
 }
-
 
 /**
  * The full task graph, including the ~165 tasks that never appear on a map.
@@ -48,7 +233,7 @@ export function loadIndex(): Promise<MapIndex> {
  * unlocked". 285KB, so it loads on demand — the map pages never need it.
  */
 export function loadProgression(): Promise<Progression> {
-  progressionPromise ??= getJson<Progression>(`${BASE}/progression.json`)
+  progressionPromise ??= getJson<Progression>("progression.json")
     .then(withKordSeason)
     .catch((err) => {
       progressionPromise = null;
@@ -94,7 +279,7 @@ export function useProgression() {
 }
 
 export function loadHideout(): Promise<HideoutData> {
-  hideoutPromise ??= getJson<HideoutData>(`${BASE}/hideout.json`).catch(() => ({
+  hideoutPromise ??= getJson<HideoutData>("hideout.json").catch(() => ({
     generated: "",
     stations: [],
   }));
@@ -106,7 +291,7 @@ export function useHideoutData() {
 }
 
 export function loadItems(): Promise<ItemCatalog> {
-  itemsPromise ??= getJson<ItemCatalog>(`${BASE}/items.json`).catch(() => ({
+  itemsPromise ??= getJson<ItemCatalog>("items.json").catch(() => ({
     generated: "",
     items: {},
   }));
@@ -125,7 +310,7 @@ export function useItemCatalog() {
  * A failure here is not worth surfacing: the gallery just doesn't appear.
  */
 export function loadTaskImages(): Promise<TaskImages> {
-  imagesPromise ??= getJson<TaskImages>(`${BASE}/task-images.json`).catch((err) => {
+  imagesPromise ??= getJson<TaskImages>("task-images.json").catch((err) => {
     imagesPromise = null;
     throw err;
   });
@@ -134,6 +319,7 @@ export function loadTaskImages(): Promise<TaskImages> {
 
 export function useTaskImages(taskId: string | null) {
   const [images, setImages] = useState<TaskImage[]>([]);
+  const gen = useGeneration();
   useEffect(() => {
     if (!taskId) return setImages([]);
     let live = true;
@@ -144,14 +330,14 @@ export function useTaskImages(taskId: string | null) {
     return () => {
       live = false;
     };
-  }, [taskId]);
+  }, [taskId, gen]);
   return images;
 }
 
 export function loadMap(name: string): Promise<MapData> {
   let promise = mapCache.get(name);
   if (!promise) {
-    promise = getJson<MapData>(`${BASE}/maps/${name}.json`).catch((err) => {
+    promise = getJson<MapData>(`maps/${name}.json`).catch((err) => {
       mapCache.delete(name);
       throw err;
     });
@@ -201,6 +387,7 @@ export interface AsyncState<T> {
 
 export function useAsync<T>(load: () => Promise<T>, deps: unknown[]): AsyncState<T> {
   const [state, setState] = useState<AsyncState<T>>({ data: null, error: null, loading: true });
+  const gen = useGeneration();
 
   useEffect(() => {
     let live = true;
@@ -213,7 +400,7 @@ export function useAsync<T>(load: () => Promise<T>, deps: unknown[]): AsyncState
       live = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+  }, [...deps, gen]);
 
   return state;
 }
@@ -222,10 +409,33 @@ export function useMapIndex() {
   return useAsync(loadIndex, []);
 }
 
-
 export function useMapData(name: string | null) {
   return useAsync(
     () => (name ? loadMap(name) : Promise.resolve(null as unknown as MapData)),
     [name],
   );
+}
+
+/* ------------------------------------------------------------- presentation */
+
+/** "3 hours ago" / "yesterday" — for the freshness line. */
+export function describeAge(iso: string | null): string | null {
+  if (!iso) return null;
+  const then = Date.parse(iso);
+  if (Number.isNaN(then)) return null;
+  const minutes = Math.max(0, Math.round((Date.now() - then) / 60000));
+  if (minutes < 2) return "just now";
+  if (minutes < 60) return `${minutes} minutes ago`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+  const days = Math.round(hours / 24);
+  if (days === 1) return "yesterday";
+  return `${days} days ago`;
+}
+
+/** A manual "check for new data" button, wired for a component. */
+export function useDataRefresh() {
+  const { refreshing } = useDataStatus();
+  const refresh = useCallback(() => void refreshData(), []);
+  return { refreshing, refresh };
 }

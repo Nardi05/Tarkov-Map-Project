@@ -26,7 +26,8 @@ import RaidClock from "./RaidClock";
 import TargetPicker from "./TargetPicker";
 import TaskName from "./TaskName";
 import TaskSheet from "./TaskSheet";
-import { EmptyState, Icon, icons, PageHeader } from "./ui";
+import { FirstSteps } from "./Onboarding";
+import { Callout, Card, EmptyState, Icon, icons, PageHeader, Term } from "./ui";
 
 /**
  * The dashboard: one screen answering "what do I do next", assembled from
@@ -191,7 +192,7 @@ export default function DashboardPage() {
     <>
       <PageHeader
         title="Dashboard"
-        lead="Your next tasks, which map to queue, and what to bring."
+        lead="What to do next, which map to queue for it, and what to take."
       >
             {resume && (
               <a
@@ -213,12 +214,20 @@ export default function DashboardPage() {
             </button>
       </PageHeader>
 
-        <section className="surface dash-command">
-          <RaidClock mapName={resume?.normalizedName ?? "customs"} variant="board" />
+        {/*
+          * Who you are and what you are aiming at, above everything the page
+          * then derives from it. Three related facts in one row rather than
+          * three cards: every one of them is an input to the plan below.
+          */}
+        <section className="surface dash-command mb-4">
+          <div>
+            <RaidClock mapName={resume?.normalizedName ?? "customs"} variant="board" />
+          </div>
+
           <div className="dash-command-char">
             <p className="dash-command-kicker">Character</p>
             <p className="text-lg font-semibold">{MODE_META[profile.mode].label}</p>
-            <p className="dash-command-kicker mt-2">Level</p>
+            <p className="dash-command-kicker mt-2.5">Level</p>
             <div className="level-step">
               <button
                 type="button"
@@ -227,7 +236,7 @@ export default function DashboardPage() {
                 disabled={profile.level <= 1}
                 onClick={() => setProfile("level", Math.max(1, profile.level - 1))}
               >
-                −
+                <Icon path={icons.minus} size={15} />
               </button>
               <span className="tabular-nums text-2xl font-semibold">{profile.level}</span>
               <button
@@ -237,13 +246,14 @@ export default function DashboardPage() {
                 disabled={profile.level >= 79}
                 onClick={() => setProfile("level", Math.min(79, profile.level + 1))}
               >
-                +
+                <Icon path={icons.plus} size={15} />
               </button>
             </div>
-            <p className="mt-1 text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
+            <p className="mt-1 text-[0.7rem] faint">
               {profile.faction === "Any" ? "USEC or BEAR" : profile.faction}
             </p>
           </div>
+
           <TargetPicker remaining={plan.remainingToTarget} variant="bar" />
         </section>
 
@@ -253,23 +263,28 @@ export default function DashboardPage() {
 
         {progression.loading && !data && <DashboardSkeleton />}
 
+        {data && !editing && (
+          <div className="mb-4">
+            <FirstSteps />
+          </div>
+        )}
+
         {data && fresh && !editing && (
-          <section className="surface mb-3 flex flex-wrap items-center gap-3 p-4">
-            <div className="w-full min-w-0 sm:w-auto sm:flex-1">
-              <h2 className="text-sm font-semibold">Tell it what you are running</h2>
-              <p className="mt-1 text-[0.8rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-                Tick the quests in your trader list once. Until then, the tasks below are a guess,
-                not your raid.
-              </p>
-            </div>
+          <Callout tone="accent" className="mb-4" icon={icons.info}>
+            <b className="font-semibold" style={{ color: "var(--text)" }}>
+              These are a guess, not your raid.
+            </b>{" "}
+            Until you tick the quests your <Term id="trader">traders</Term> have given you,
+            everything below is what the graph says a fresh character could pick up.{" "}
             <a
-              className="btn is-active w-full flex-none sm:w-auto"
+              className="underline underline-offset-2"
               href={href.setup()}
               onClick={onNavClick(href.setup())}
             >
               Set up my progress
             </a>
-          </section>
+            .
+          </Callout>
         )}
 
       {data && editing && <CustomiseBar />}
@@ -424,10 +439,8 @@ function DashPanelCard({
     >
       <header className="dash-panel-head">
         <div className="min-w-0">
-          <h2 className="text-sm font-semibold">{title}</h2>
-          <p className="mt-0.5 text-[0.7rem] leading-snug" style={{ color: "var(--text-faint)" }}>
-            {hint}
-          </p>
+          <h2 className="card-title">{title}</h2>
+          <p className="card-sub">{hint}</p>
         </div>
 
         {editing && (
@@ -513,12 +526,12 @@ function HiddenTray({
   onAdd: (id: DashPanelId) => void;
 }) {
   return (
-    <section className="surface mt-3 p-3.5">
-      <h2 className="text-sm font-semibold">Panels you have switched off</h2>
-      <p className="mt-0.5 text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-        They keep their place in the order, so adding one back puts it where it was.
-      </p>
-      <ul className="mt-2.5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+    <Card
+      className="mt-3"
+      title="Panels you have switched off"
+      hint="They keep their place in the order, so adding one back puts it where it was."
+    >
+      <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {hidden.map((panel) => {
           const meta = DASH_PANEL_META[panel.id];
           return (
@@ -530,9 +543,7 @@ function HiddenTray({
               >
                 <span className="min-w-0 flex-1">
                   <span className="block text-[0.8125rem] font-medium">{meta.title}</span>
-                  <span className="mt-0.5 block text-[0.7rem] leading-snug" style={{ color: "var(--text-faint)" }}>
-                    {meta.blurb}
-                  </span>
+                  <span className="mt-0.5 block text-meta">{meta.blurb}</span>
                 </span>
                 <span className="chip chip-accent flex-none">Add</span>
               </button>
@@ -540,7 +551,7 @@ function HiddenTray({
           );
         })}
       </ul>
-    </section>
+    </Card>
   );
 }
 

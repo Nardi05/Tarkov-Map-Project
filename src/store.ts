@@ -72,6 +72,26 @@ interface QuestFilters {
   focusTask: string | null;
 }
 
+/**
+ * One-off interface state that has to survive a reload.
+ *
+ * Only flags for things the site teaches once and should then stop teaching.
+ * Nothing in here affects what the data says — a cleared browser loses the
+ * dismissals and gets shown the introduction again, which is the right way
+ * round for a first-run aid.
+ */
+export interface UiFlags {
+  /** The new-player checklist on the dashboard, once they dismiss it. */
+  firstStepsDismissed: boolean;
+  /** The colour-and-shape primer over the map, once they have read it. */
+  mapPrimerSeen: boolean;
+}
+
+const DEFAULT_UI: UiFlags = {
+  firstStepsDismissed: false,
+  mapPrimerSeen: false,
+};
+
 /** A layer combination the player saved themselves, alongside the built-ins. */
 export interface CustomView {
   id: string;
@@ -106,6 +126,8 @@ interface Store {
    * Existing saves with quest ticks are treated as tracker in `merge`.
    */
   entry: EntryPath | null;
+  /** Dismissals for the first-run aids. See `UiFlags`. */
+  ui: UiFlags;
 
   setLayer: (id: LayerId, on: boolean) => void;
   toggleLayer: (id: LayerId) => void;
@@ -170,6 +192,7 @@ interface Store {
 
   setLastMap: (map: string) => void;
   setEntry: (entry: EntryPath) => void;
+  setUiFlag: <K extends keyof UiFlags>(key: K, value: UiFlags[K]) => void;
 
   /** Steps a panel one place up or down, skipping the ones switched off. */
   moveDashPanel: (id: DashPanelId, dir: -1 | 1) => void;
@@ -228,6 +251,7 @@ export const useStore = create<Store>()(
       lastMap: null,
       dashboard: { ...DEFAULT_DASHBOARD, panels: [...DEFAULT_DASHBOARD.panels] },
       entry: null,
+      ui: { ...DEFAULT_UI },
 
       setLayer: (id, on) => set((s) => ({ layers: { ...s.layers, [id]: on } })),
       toggleLayer: (id) => set((s) => ({ layers: { ...s.layers, [id]: !s.layers[id] } })),
@@ -460,6 +484,7 @@ export const useStore = create<Store>()(
 
       setLastMap: (map) => set({ lastMap: map }),
       setEntry: (entry) => set({ entry }),
+      setUiFlag: (key, value) => set((s) => ({ ui: { ...s.ui, [key]: value } })),
 
       moveDashPanel: (id, dir) =>
         set((s) => ({ dashboard: { ...s.dashboard, panels: movePanel(s.dashboard.panels, id, dir) } })),
@@ -511,6 +536,7 @@ export const useStore = create<Store>()(
         lastMap,
         dashboard,
         entry,
+        ui,
       }) => ({
         layers,
         customViews,
@@ -521,6 +547,7 @@ export const useStore = create<Store>()(
         lastMap,
         dashboard,
         entry,
+        ui,
       }),
       // Lives in ./lib/persist-migrate so it can be tested without stubbing
       // localStorage. See the rule at the top of that file: a migration may
@@ -542,6 +569,7 @@ export const useStore = create<Store>()(
           quest: { ...DEFAULT_QUEST, showAll: p.quest?.showAll ?? DEFAULT_QUEST.showAll },
           dashboard: mergeDashboard(p.dashboard),
           entry: parseEntry(p.entry) ?? (hasCharacterData(p.progress) ? "tracker" : null),
+          ui: { ...DEFAULT_UI, ...(p.ui ?? {}) },
         };
       },
     },

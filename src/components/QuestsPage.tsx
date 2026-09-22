@@ -24,7 +24,7 @@ import TaskGraphPage from "./TaskGraphPage";
 import { useSlashSearch } from "./ShortcutHelp";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
-import { EmptyState, Icon, icons, PageHeader } from "./ui";
+import { Callout, Card, EmptyState, Icon, icons, PageHeader, SectionHead, Term } from "./ui";
 
 /**
  * The quest tracker.
@@ -59,10 +59,15 @@ interface Row {
 
 const FACTIONS: Faction[] = ["Any", "USEC", "BEAR"];
 
-const QUEST_VIEWS: { id: QuestView; label: string }[] = [
-  { id: "list", label: "Your list" },
-  { id: "graph", label: "Unlocks" },
-  { id: "items", label: "Stash" },
+/**
+ * The three things this page can show you. Labelled by what you get rather
+ * than by what they are built from — "Unlocks" beats "Graph" for somebody who
+ * has not seen one before.
+ */
+const QUEST_VIEWS: { id: QuestView; label: string; hint: string }[] = [
+  { id: "list", label: "Your list", hint: "Active, available and locked tasks" },
+  { id: "graph", label: "Unlocks", hint: "What finishing a task opens up" },
+  { id: "items", label: "Stash", hint: "Items and keys your tasks need" },
 ];
 
 const EDITION_LABEL: Record<GameEdition, string> = {
@@ -236,7 +241,12 @@ export default function QuestsPage({
     <Shell>
       <PageHeader
         title="Quests"
-        lead="Tick what is in your trader list. Maps then draw those objectives."
+        lead={
+          <>
+            Tick what your <Term id="trader">traders</Term> have given you. Every map then draws
+            those objectives and nothing else.
+          </>
+        }
       >
         <nav className="flex flex-wrap gap-1.5" aria-label="Quest views">
           {QUEST_VIEWS.map((v) => (
@@ -244,8 +254,9 @@ export default function QuestsPage({
               key={v.id}
               href={href.quests(v.id)}
               onClick={onNavClick(href.quests(v.id))}
-              className={view === v.id ? "chip chip-accent" : "chip chip-button"}
+              className={view === v.id ? "btn is-active" : "btn"}
               aria-current={view === v.id ? "page" : undefined}
+              title={v.hint}
             >
               {v.label}
             </a>
@@ -262,65 +273,52 @@ export default function QuestsPage({
           below seven optional trader-loyalty selects — which also made it the
           fourteenth tab stop, so the one thing a new player needs was the
           hardest thing on the page to reach. */}
-      <section
-        className={`surface flex flex-wrap items-center gap-4 p-4 ${trackedCount === 0 ? "mt-1" : "mt-4"}`}
-      >
-        <div className="w-full min-w-0 sm:w-auto sm:flex-1">
-          <h2 className="text-sm font-semibold">
-            {trackedCount === 0 ? "Start by telling it where you are" : "Update your progress"}
-          </h2>
-          <p className="mt-0.5 text-[0.72rem] leading-snug" style={{ color: "var(--text-faint)" }}>
-            {/* Framed by what it costs, because the objection to any setup flow
-                is "how long is this going to take". Ticking actives is genuinely
-                the whole job — the history falls out of it. */}
-            Walk through your traders and tick the quests you have accepted. A quest in your list
-            means everything behind it is done, so a couple of dozen ticks rebuild the whole wipe.
-          </p>
-        </div>
-        <a
-          className="btn is-active w-full flex-none sm:w-auto"
-          href={href.setup()}
-          onClick={onNavClick(href.setup())}
-        >
-          {trackedCount === 0 ? "Set up my progress" : "Run the walkthrough"}
-        </a>
-      </section>
+      <div className="stack">
+        <Card
+          title={trackedCount === 0 ? "Start by telling it where you are" : "Update your progress"}
+          hint={
+            /* Framed by what it costs, because the objection to any setup flow
+               is "how long is this going to take". Ticking actives is genuinely
+               the whole job — the history falls out of it. */
+            "Walk through your traders and tick the quests you have accepted. A quest in your list means everything behind it is done, so a couple of dozen ticks rebuild the whole wipe."
+          }
+          action={
+            <a
+              className={trackedCount === 0 ? "btn btn-primary flex-none" : "btn flex-none"}
+              href={href.setup()}
+              onClick={onNavClick(href.setup())}
+            >
+              {trackedCount === 0 ? "Set up my progress" : "Run the walkthrough"}
+            </a>
+          }
+        />
 
-      <ProfileBar
-        profile={profile}
-        setProfile={setProfile}
-        traders={gatingTraders}
-        trackedCount={trackedCount}
-        markerCount={Object.keys(markerDone).length}
-      />
+        <ProfileBar
+          profile={profile}
+          setProfile={setProfile}
+          traders={gatingTraders}
+          trackedCount={trackedCount}
+          markerCount={Object.keys(markerDone).length}
+        />
 
-      <div className="mt-4">
         <SeasonPanel
           mode={profile.mode}
           taskStatus={taskStatus}
           availability={availability}
           onCycle={cycleTaskStatus}
         />
-      </div>
 
-      {trackedCount > 0 && (
-        <section className="surface mt-4 p-4">
-          <h2 className="text-sm font-semibold">Next raid</h2>
-          <p className="mb-3 mt-1 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
-            Maps that hold your active tasks, documents as a tie-break.
-          </p>
-          <NextRaid picks={raidPicks} />
-        </section>
-      )}
+        {trackedCount > 0 && (
+          <Card
+            title="Next raid"
+            hint="Maps that hold your active tasks, with document spawns as a tie-break."
+          >
+            <NextRaid picks={raidPicks} />
+          </Card>
+        )}
 
       {data?.coverage && data.coverage.ungated > 0 && (
-        <p
-          className="surface-2 mt-4 flex items-start gap-2 p-3 text-[0.78rem] leading-relaxed"
-          style={{ color: "var(--text-dim)" }}
-        >
-          <span className="mt-0.5 flex-none" style={{ color: "var(--warn, #facc15)" }}>
-            <Icon path={icons.info} size={15} />
-          </span>
+        <Callout>
           <span>
             {/* Numbers, not a vague warning. The old banner said "data may be
                 incomplete" on every visit, which tells nobody anything and is
@@ -338,36 +336,39 @@ export default function QuestsPage({
             tasks. {data.coverage.ungated} have no recorded gate and may show too early. Your ticks
             are never changed.
           </span>
-        </p>
+        </Callout>
       )}
 
-      <div className="relative mt-5 w-full max-w-sm">
-        <span
-          className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2"
-          style={{ color: "var(--text-faint)" }}
-        >
-          <Icon path={icons.search} size={15} />
-        </span>
-        <input
-          className="input input-icon"
-          type="search"
-          placeholder="Find a task or trader…"
-          value={typed}
-          onChange={(e) => setTyped(e.target.value)}
-          aria-label="Search tasks"
-          data-search
+      <div>
+        <SectionHead
+          title="Your tasks"
+          hint="Active first, then what is open to you, then what is still locked and why."
+          action={
+            <div className="relative w-full sm:w-72">
+              <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 faint">
+                <Icon path={icons.search} size={15} />
+              </span>
+              <input
+                className="input input-icon"
+                type="search"
+                placeholder="Find a task or trader…"
+                value={typed}
+                onChange={(e) => setTyped(e.target.value)}
+                aria-label="Search tasks"
+                data-search
+              />
+            </div>
+          }
         />
       </div>
 
       {progression.loading && !data ? (
-        <p className="py-16 text-center text-sm" style={{ color: "var(--text-dim)" }}>
-          Loading the task graph…
-        </p>
+        <p className="py-16 text-center text-sm muted">Loading the task graph…</p>
       ) : trackedCount === 0 && !needle ? (
         /* Five panels of empty states told a new player nothing five times
            over. One sentence and the list of what they will get is a better
            use of the screen. */
-        <section className="surface mt-6 p-8 text-center">
+        <section className="surface p-8 text-center">
           <h2 className="text-base font-semibold">Nothing tracked yet</h2>
           <p
             className="mx-auto mt-2 max-w-md text-[0.85rem] leading-relaxed"
@@ -393,7 +394,7 @@ export default function QuestsPage({
           </div>
         </section>
       ) : (
-        <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Panel
             title="Active"
             count={active.length}
@@ -572,6 +573,7 @@ export default function QuestsPage({
           empty profile is noise on the one screen a new player most needs to
           be able to read. */}
       {trackedCount > 0 && <SavePanel />}
+      </div>
       </>
       )}
     </Shell>
@@ -608,7 +610,7 @@ function Panel({
   const [open, setOpen] = useState(!collapsed);
 
   return (
-    <section className={`surface p-3 ${className ?? ""}`}>
+    <section className={`card card-tight ${className ?? ""}`}>
       <header className="mb-2 flex items-start gap-2">
         <button
           type="button"
@@ -624,15 +626,10 @@ function Panel({
           </span>
           <span className="min-w-0">
             <span className="flex items-baseline gap-2">
-              <h2 className="text-sm font-semibold">{title}</h2>
+              <h2 className="card-title">{title}</h2>
               <span className="chip flex-none tabular-nums">{count}</span>
             </span>
-            <span
-              className="mt-0.5 block text-[0.7rem] leading-snug"
-              style={{ color: "var(--text-faint)" }}
-            >
-              {hint}
-            </span>
+            <span className="card-sub block">{hint}</span>
           </span>
         </button>
       </header>
@@ -658,7 +655,11 @@ function ProfileBar({
   const set = traders.filter((t) => typeof profile.traderLevels[t] === "number").length;
 
   return (
-    <div className="surface mt-4 flex flex-wrap items-end gap-3 p-4">
+    <Card
+      title="This character"
+      hint="What the tracker assumes about you. Getting these right is what stops it offering tasks you cannot take."
+    >
+      <div className="flex flex-wrap items-end gap-3">
       <Field label="Faction" hint="Hides the other side's exclusive tasks.">
         <select
           className="input"
@@ -707,10 +708,7 @@ function ProfileBar({
         />
       </Field>
 
-      <p
-        className="w-full text-[0.7rem] leading-snug sm:ml-auto sm:w-auto sm:text-right"
-        style={{ color: "var(--text-faint)" }}
-      >
+      <p className="w-full text-[0.7rem] leading-snug faint sm:ml-auto sm:w-auto sm:text-right">
         {trackedCount} task{trackedCount === 1 ? "" : "s"} tracked
         <span className="hidden sm:inline">
           <br />
@@ -718,6 +716,7 @@ function ProfileBar({
         <span className="sm:hidden"> · </span>
         {markerCount} location{markerCount === 1 ? "" : "s"} ticked
       </p>
+      </div>
 
       {traders.length > 0 && (
         <details className="w-full border-t pt-3" style={{ borderColor: "var(--line-soft)" }}>
@@ -770,7 +769,7 @@ function ProfileBar({
           </div>
         </details>
       )}
-    </div>
+    </Card>
   );
 }
 

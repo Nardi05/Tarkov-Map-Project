@@ -5,14 +5,22 @@ import { bossMatchesSearch, listMapBosses } from "../lib/boss-names";
 import { MODE_META } from "../lib/mode";
 import { nextRaids } from "../lib/next-raid";
 import { href, navigate, onNavClick } from "../lib/router";
-import { LAYERS } from "../lib/layers";
-import { swatchSvg } from "../lib/marker-icons";
 import { useStore, useTaskStatus } from "../store";
 import type { MapIndexEntry } from "../types";
 import NextRaid from "./NextRaid";
+import { MapPrimer } from "./Onboarding";
 import { useSlashSearch } from "./ShortcutHelp";
-import { Icon, icons, PageHeader } from "./ui";
+import { Card, EmptyState, Icon, icons, PageHeader, SectionHead, Term } from "./ui";
 
+/**
+ * The map picker.
+ *
+ * Its job is to get somebody onto the right map in one decision, so the order
+ * is: what you were last doing, what your quests say you should do, then all
+ * thirteen. The two promotional rows that used to sit above the grid (Story,
+ * Kord Breach) are still here but pushed below it — they are worth knowing
+ * about, and they are not what anybody opened this page for.
+ */
 export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
   const [query, setQuery] = useState("");
   useSlashSearch();
@@ -46,101 +54,151 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
   }, [maps, query]);
 
   const resume = maps.find((m) => m.normalizedName === lastMap);
+  const suggested = raidPicks.filter((p) => p.active.length > 0);
 
   return (
     <>
       <PageHeader
         title="Maps"
-        lead="Open a map for spawns, extracts, keys and the quests you have ticked active."
+        lead={
+          <>
+            Every playable location, with <Term id="pmc" /> and <Term id="scav" /> spawns, every{" "}
+            <Term id="extract" />, and the quests you have ticked active.
+          </>
+        }
       >
-            <div className="relative w-full max-w-xs">
-              <span
-                className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2"
-                style={{ color: "var(--text-faint)" }}
-              >
-                <Icon path={icons.search} size={15} />
-              </span>
-              <input
-                className="input input-icon"
-                type="search"
-                placeholder="Find a map or boss…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                aria-label="Search maps"
-                data-search
-              />
-            </div>
-            {resume && (
-              <a
-                className="btn is-active"
-                href={href.map(resume.normalizedName)}
-                onClick={onNavClick(href.map(resume.normalizedName))}
-              >
-                Continue {resume.name}
-              </a>
-            )}
+        <div className="relative w-full sm:w-72">
+          <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 faint">
+            <Icon path={icons.search} size={15} />
+          </span>
+          <input
+            className="input input-icon"
+            type="search"
+            placeholder="Find a map or boss…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search maps"
+            data-search
+          />
+        </div>
       </PageHeader>
-          <p className="-mt-2 mb-5 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
-            Showing {MODE_META[profile.mode].label}. {MODE_META[profile.mode].hint}
-          </p>
 
-        <a
-          href={href.story()}
-          onClick={onNavClick(href.story())}
-          className="surface surface-link mb-3 flex flex-wrap items-center justify-between gap-3 p-3.5"
-        >
-          <div className="min-w-0">
-            <p className="text-sm font-semibold">Story endings</p>
-            <p className="mt-0.5 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
-              Savior, Survivor, Debtor, Fallen — pick a target and follow the path
-            </p>
-          </div>
-          <span className="btn flex-none">Story</span>
-        </a>
-        <a
-          href={href.quests()}
-          onClick={onNavClick(href.quests())}
-          className="surface surface-link mb-6 flex flex-wrap items-center justify-between gap-3 p-3.5"
-        >
-          <div className="min-w-0">
-            <p className="text-sm font-semibold">
-              {KORD_SEASON.name}
-              <span className="ml-2 font-normal" style={{ color: "var(--text-faint)" }}>
-                {days > 0 ? `${days}d left` : "ended"}
-              </span>
-            </p>
-            <p className="mt-0.5 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
-              Seasonal story line, documents, next raid
-            </p>
-          </div>
-          <span className="btn flex-none">Quests</span>
-        </a>
-
-        {raidPicks.some((p) => p.active.length > 0) && (
-          <section className="mb-8">
-            <h2 className="mb-2 text-sm font-semibold">Next raid</h2>
-            <NextRaid picks={raidPicks.filter((p) => p.active.length > 0)} />
+      <div className="stack-lg flex flex-col">
+        {/* ------------------------------------------------- pick up again */}
+        {(resume || suggested.length > 0) && !query && (
+          <section>
+            <SectionHead
+              title="Pick up where you left off"
+              hint={`Showing ${MODE_META[profile.mode].label}. ${MODE_META[profile.mode].hint}`}
+            />
+            <div className="grid gap-2.5 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+              {resume && (
+                <a
+                  href={href.map(resume.normalizedName)}
+                  onClick={onNavClick(href.map(resume.normalizedName))}
+                  className="card surface-link justify-between"
+                >
+                  <div>
+                    <p className="kicker">Last opened</p>
+                    <p className="mt-1 text-lg font-semibold">{resume.name}</p>
+                  </div>
+                  <p className="mt-3 inline-flex items-center gap-1.5 text-[0.8rem] font-semibold"
+                     style={{ color: "var(--accent)" }}>
+                    Continue
+                    <Icon path={icons.forward} size={14} />
+                  </p>
+                </a>
+              )}
+              {suggested.length > 0 && (
+                <Card
+                  title="Best map for your active quests"
+                  hint="Ranked by how many of the tasks you have accepted are on it."
+                >
+                  <NextRaid picks={suggested} />
+                </Card>
+              )}
+            </div>
           </section>
         )}
 
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((map, i) => (
-            <MapCard key={map.normalizedName} map={map} priority={i < 3} />
-          ))}
-        </ul>
+        {/* ------------------------------------------------------ the grid */}
+        <section>
+          <SectionHead
+            title={query ? `Matching “${query.trim()}”` : "All maps"}
+            hint={
+              query
+                ? `${filtered.length} of ${maps.length}`
+                : "Tap one to open it. Hover to start loading it before you click."
+            }
+          />
+          {filtered.length === 0 ? (
+            <Card>
+              <EmptyState
+                icon={icons.search}
+                title={`No map matches “${query.trim()}”`}
+                hint="Try a map name, or a boss like Reshala, Killa or Goons."
+                action={
+                  <button type="button" className="btn" onClick={() => setQuery("")}>
+                    Clear the search
+                  </button>
+                }
+              />
+            </Card>
+          ) : (
+            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((map, i) => (
+                <MapCard key={map.normalizedName} map={map} priority={i < 3} />
+              ))}
+            </ul>
+          )}
+        </section>
 
-        {filtered.length === 0 && (
-          <p className="py-16 text-center text-sm" style={{ color: "var(--text-dim)" }}>
-            No map matches “{query}”.
-          </p>
+        {/* ----------------------------------------------------- the primer */}
+        {!query && <MapPrimer />}
+
+        {/* --------------------------------------------------- what's on it */}
+        {!query && (
+          <section>
+            <SectionHead title="Elsewhere on the site" />
+            <div className="tile-grid">
+              <a href={href.story()} onClick={onNavClick(href.story())} className="card surface-link">
+                <p className="text-[0.875rem] font-semibold">Story endings</p>
+                <p className="mt-1 text-meta">
+                  Savior, Survivor, Debtor, Fallen — pick a target and follow the chapters, locks
+                  and item spots.
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1.5 text-[0.8rem] font-semibold"
+                      style={{ color: "var(--accent)" }}>
+                  Open Story
+                  <Icon path={icons.forward} size={14} />
+                </span>
+              </a>
+              <a
+                href={href.quests()}
+                onClick={onNavClick(href.quests())}
+                className="card surface-link"
+              >
+                <p className="text-[0.875rem] font-semibold">
+                  {KORD_SEASON.name}
+                  <span className="ml-2 chip chip-season">
+                    {days > 0 ? `${days}d left` : "ended"}
+                  </span>
+                </p>
+                <p className="mt-1 text-meta">
+                  The <Term id="kord">seasonal</Term> story line, battle-pass document spawns, and
+                  what to run next for it.
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1.5 text-[0.8rem] font-semibold"
+                      style={{ color: "var(--accent)" }}>
+                  Open Quests
+                  <Icon path={icons.forward} size={14} />
+                </span>
+              </a>
+            </div>
+          </section>
         )}
 
-        <Primer />
-
-        <footer
-          className="mt-16 border-t pt-6 text-xs leading-relaxed"
-          style={{ borderColor: "var(--line)", color: "var(--text-faint)" }}
-        >
+        <footer className="text-meta">
           <p>
             Map artwork and game data come from{" "}
             <a className="underline" href="https://tarkov.dev" target="_blank" rel="noreferrer noopener">
@@ -155,10 +213,11 @@ export default function HomePage({ maps }: { maps: MapIndexEntry[] }) {
             >
               the-hideout SVG map project
             </a>
-          . Escape from Tarkov is a trademark of Battlestate Games. This is an unofficial fan
-          project with no affiliation.
-        </p>
-      </footer>
+            . Escape from Tarkov is a trademark of Battlestate Games. This is an unofficial fan
+            project with no affiliation.
+          </p>
+        </footer>
+      </div>
     </>
   );
 }
@@ -175,17 +234,16 @@ function MapCard({ map, priority }: { map: MapIndexEntry; priority: boolean }) {
   const [ready, setReady] = useState(false);
   const preview = previewFailed ? null : map.preview;
 
-  // Zeroes are omitted rather than printed. "0 extracts 0 tasks 0 keys" under
-  // Icebreaker reads as a broken card; saying nothing reads as a small map.
   const bosses = listMapBosses(map.bosses);
 
+  // Zeroes are omitted rather than printed. "0 extracts 0 tasks 0 keys" under
+  // Icebreaker reads as a broken card; saying nothing reads as a small map.
   const stats: [string, number][] = (
     [
       ["spawns", map.counts.spawns],
-      ["extracts", map.counts.extracts + map.counts.transits],
+      ["exits", map.counts.extracts + map.counts.transits],
       ["tasks", map.counts.quests],
       ["keys", map.counts.keys],
-      ["docs", map.counts.docs ?? 0],
     ] as [string, number][]
   ).filter(([, value]) => value > 0);
 
@@ -203,10 +261,7 @@ function MapCard({ map, priority }: { map: MapIndexEntry; priority: boolean }) {
         }}
         className="surface map-card group flex h-full flex-col overflow-hidden"
       >
-        <div
-          className="relative aspect-[16/9] overflow-hidden"
-          style={{ background: "var(--bg-deep)" }}
-        >
+        <div className="relative aspect-[16/9] overflow-hidden" style={{ background: "var(--bg-deep)" }}>
           {preview ? (
             <img
               src={preview}
@@ -226,35 +281,38 @@ function MapCard({ map, priority }: { map: MapIndexEntry; priority: boolean }) {
               {map.name.slice(0, 2).toUpperCase()}
             </div>
           )}
+          {/* Keeps the name legible over the lightest corner of any artwork. */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-16"
+            style={{ background: "linear-gradient(to top, var(--panel), transparent)" }}
+          />
         </div>
 
-        <div className="flex flex-1 flex-col px-3 pb-3 pt-2.5">
+        <div className="flex flex-1 flex-col px-3.5 pb-3.5 pt-2">
           <div className="flex items-baseline justify-between gap-2">
-            <h2 className="truncate text-[0.95rem] font-semibold">{map.name}</h2>
-            <span className="flex-none text-[0.68rem] tabular-nums" style={{ color: "var(--text-faint)" }}>
+            <h3 className="truncate text-[1rem] font-semibold">{map.name}</h3>
+            <span className="flex-none text-[0.68rem] tabular-nums faint">
               {map.players ? `${map.players} PMC` : ""}
               {map.raidDuration ? `${map.players ? " · " : ""}${map.raidDuration} min` : ""}
             </span>
           </div>
+
           {bosses.length > 0 && (
-            <p className="mt-1.5 flex flex-wrap gap-1">
-              {bosses.slice(0, 4).map((boss) => (
+            <p className="mt-2 flex flex-wrap gap-1">
+              {bosses.slice(0, 3).map((boss) => (
                 <span key={boss} className="chip">
                   {boss}
                 </span>
               ))}
-              {bosses.length > 4 && <span className="chip">+{bosses.length - 4}</span>}
+              {bosses.length > 3 && <span className="chip">+{bosses.length - 3}</span>}
             </p>
           )}
 
-          <dl
-            className="mt-auto flex flex-wrap gap-x-3.5 gap-y-0.5 pt-3 text-[0.68rem]"
-            style={{ color: "var(--text-faint)" }}
-          >
+          <dl className="mt-auto flex flex-wrap gap-x-3.5 gap-y-0.5 pt-3 text-[0.7rem] faint">
             {stats.map(([label, value]) => (
               <div key={label} className="flex items-baseline gap-1">
                 <dt className="sr-only">{label}</dt>
-                <dd className="font-medium tabular-nums" style={{ color: "var(--text)" }}>
+                <dd className="font-semibold tabular-nums" style={{ color: "var(--text)" }}>
                   {value}
                 </dd>
                 <span>{label}</span>
@@ -264,38 +322,5 @@ function MapCard({ map, priority }: { map: MapIndexEntry; priority: boolean }) {
         </div>
       </a>
     </li>
-  );
-}
-
-/** A short orientation for players who have never used a Tarkov map site. */
-function Primer() {
-  const picks = ["pmc-spawns", "pmc-extracts", "transits", "quests", "keys", "boss-spawns"];
-  const items = LAYERS.filter((l) => picks.includes(l.id));
-
-  return (
-    <details className="surface mt-10 p-4">
-      <summary className="cursor-pointer text-sm font-semibold">How to read a map</summary>
-      <p className="mt-2 max-w-2xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
-        Colour is <em>who</em> it belongs to. Shape is <em>what</em> it is. A blue square is always
-        a PMC extract.
-      </p>
-      <ul className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((layer) => (
-          <li key={layer.id} className="surface-2 flex items-start gap-3 p-3.5">
-            <span
-              className="mt-0.5 flex-none"
-              aria-hidden="true"
-              dangerouslySetInnerHTML={{ __html: swatchSvg(layer.shape, layer.color, 20) }}
-            />
-            <div>
-              <p className="text-[0.8125rem] font-medium">{layer.label}</p>
-              <p className="mt-0.5 text-[0.72rem] leading-snug" style={{ color: "var(--text-faint)" }}>
-                {layer.hint}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </details>
   );
 }

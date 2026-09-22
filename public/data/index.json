@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-21T07:30:41.495Z",
+ "generated": "2026-09-22T07:29:07.698Z",
  "gameMode": "regular",
  "feedDegraded": true,
  "maps": [
@@ -128,7 +128,7 @@
     "extracts": 9,
     "transits": 2,
     "keys": 28,
-    "quests": 46,
+    "quests": 45,
     "docs": 31
    }
   },

@@ -10,6 +10,7 @@ import SetupWizard from "./components/SetupWizard";
 import StoryPage from "./components/StoryPage";
 import TabShell from "./components/TabShell";
 import CommandPalette from "./components/CommandPalette";
+import { Icon, icons, Spinner } from "./components/ui";
 import { prefetchIdleMaps, prefetchProgression, useMapData, useMapIndex } from "./lib/data";
 import { homeFor } from "./lib/onboarding";
 import { href, navigate, tabOf, useRoute } from "./lib/router";
@@ -236,13 +237,8 @@ function Loading({ label, inline }: { label: string; inline?: boolean }) {
   return (
     <div className={inline ? "grid place-items-center py-24" : "page grid h-full place-items-center"}>
       <div className="flex flex-col items-center gap-4">
-        <span
-          className="h-8 w-8 animate-spin rounded-full border-2 border-transparent"
-          style={{ borderTopColor: "var(--accent)", borderRightColor: "var(--accent)" }}
-        />
-        <p className="text-sm" style={{ color: "var(--text-dim)" }}>
-          {label}…
-        </p>
+        <Spinner size={32} />
+        <p className="text-sm muted">{label}…</p>
       </div>
     </div>
   );
@@ -260,14 +256,17 @@ function Message({
   return (
     <div className="page grid h-full place-items-center p-6">
       <div className="surface max-w-md p-8 text-center">
-        <h1 className="text-base font-semibold">{title}</h1>
-        {detail && (
-          <p className="mt-2 text-sm" style={{ color: "var(--text-dim)" }}>
-            {detail}
-          </p>
-        )}
+        <span className="empty-mark mx-auto">
+          <Icon path={icons.info} size={18} />
+        </span>
+        <h1 className="mt-3 text-base font-semibold">{title}</h1>
+        {detail && <p className="mt-2 text-sm muted">{detail}</p>}
+        <p className="mx-auto mt-3 max-w-sm text-meta">
+          The site falls back to the copy of the game data that shipped with it, so this usually
+          means the network dropped rather than anything being broken.
+        </p>
         {action && (
-          <button type="button" className="btn mt-4" onClick={action.onClick}>
+          <button type="button" className="btn btn-primary mt-4" onClick={action.onClick}>
             {action.label}
           </button>
         )}

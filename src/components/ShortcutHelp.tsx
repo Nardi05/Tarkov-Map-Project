@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Icon, icons } from "./ui";
+import { Icon, icons, Kbd } from "./ui";
 
 /**
  * The keyboard shortcuts, and the sheet that lists them.
@@ -117,7 +117,7 @@ export default function ShortcutHelp({ onClose }: { onClose: () => void }) {
         aria-label="Keyboard shortcuts"
         tabIndex={-1}
         className="surface animate-in w-full max-w-sm p-4 outline-none"
-        style={{ boxShadow: "var(--shadow)" }}
+        style={{ boxShadow: "var(--shadow-lg)" }}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={onKeyDown}
       >
@@ -136,30 +136,17 @@ export default function ShortcutHelp({ onClose }: { onClose: () => void }) {
         <dl className="space-y-1.5">
           {SHORTCUTS.map((s) => (
             <div key={s.label} className="flex items-center justify-between gap-3">
-              <dt className="text-[0.8125rem]" style={{ color: "var(--text-dim)" }}>
-                {s.label}
-              </dt>
+              <dt className="text-[0.8125rem] muted">{s.label}</dt>
               <dd className="flex flex-none gap-1">
                 {s.keys.map((k) => (
-                  <kbd
-                    key={k}
-                    className="rounded px-1.5 py-0.5 text-[0.7rem] font-medium"
-                    style={{
-                      border: "1px solid var(--line)",
-                      background: "var(--panel-2)",
-                      minWidth: "1.6rem",
-                      textAlign: "center",
-                    }}
-                  >
-                    {k}
-                  </kbd>
+                  <Kbd key={k}>{k}</Kbd>
                 ))}
               </dd>
             </div>
           ))}
         </dl>
 
-        <p className="mt-3 text-[0.7rem] leading-snug" style={{ color: "var(--text-faint)" }}>
+        <p className="mt-3 text-[0.7rem] leading-snug faint">
           Shortcuts pause while you are typing, so searching for “flash” will not send you
           fullscreen.
         </p>

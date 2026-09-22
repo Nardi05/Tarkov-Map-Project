@@ -2,11 +2,23 @@
 @import "leaflet/dist/leaflet.css";
 
 /*
- * Colour lives in CSS variables, never in utility classes, so the light theme is
- * a single block of overrides rather than a `dark:` prefix on every element.
- * Layer colours (marker hues) are deliberately theme-independent — they carry
- * meaning and must stay recognisable in both.
+ * ============================================================================
+ * Tarkov Maps — design system
+ * ============================================================================
+ *
+ * Three rules this file keeps to:
+ *
+ *   1. Colour lives in CSS variables, never in utility classes, so the light
+ *      theme is a single block of overrides rather than a `dark:` prefix on
+ *      every element.
+ *   2. Layer colours — the hues markers are drawn in — are deliberately
+ *      theme-independent. They carry meaning (blue is always PMC) and have to
+ *      stay recognisable in both themes, so they are never remapped here.
+ *   3. Anything a component repeats more than twice becomes a class. Inline
+ *      `style={{ color: "var(--text-faint)" }}` scattered through JSX was how
+ *      the old build drifted; the classes below are the replacement.
  */
+
 @theme {
   --font-sans:
     "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
@@ -16,70 +28,114 @@
   --font-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
 }
 
+/* ------------------------------------------------------------------ tokens */
+
 :root {
-  --bg: #07090c;
-  --bg-deep: #040506;
-  --panel: #0f141b;
-  --panel-2: #161d26;
-  --panel-3: #1e2630;
-  --line: #2b3644;
-  --line-soft: #1b232c;
-  --text: #f3f6f9;
-  --text-dim: #9eabb8;
-  /* 5.56:1 on --panel. Was #64717f, which measured 3.68 and failed AA. */
-  --text-faint: #8794a2;
-  --accent: #e2c48a;
-  --accent-hover: #f0d6a4;
-  --accent-ink: #16110a;
+  /*
+   * Dark is the default because the game is, and because most of this site is
+   * read next to a running raid. The backdrop is a touch lighter than true
+   * black: pure #000-ish backgrounds make thin type shimmer on OLED and give
+   * elevation nothing to work against.
+   */
+  --bg: #0a0d13;
+  --bg-deep: #06080d;
+  --panel: #131922;
+  --panel-2: #1a212c;
+  --panel-3: #232c39;
+  --line: #2b3545;
+  --line-soft: #1e2632;
+
+  --text: #eef2f7;
+  --text-dim: #a3b0be;
+  /* 5.6:1 on --panel. Anything dimmer than this fails AA at the sizes used. */
+  --text-faint: #8b98a7;
+
+  --accent: #edb45f;
+  --accent-hover: #f7c87f;
+  --accent-ink: #191204;
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 42%, transparent);
+
   --season: #e879f9;
   --season-ink: #2a0a32;
   --danger: #f87171;
+  --danger-soft: color-mix(in srgb, var(--danger) 13%, transparent);
   --ok: #4ade80;
-  --shadow: 0 16px 40px -24px rgb(0 0 0 / 0.8);
-  --radius: 12px;
-  --highlight: inset 0 1px 0 rgb(255 255 255 / 0.05);
+  --ok-soft: color-mix(in srgb, var(--ok) 13%, transparent);
+  --info: #7dd3fc;
+  --warn: #facc15;
+
+  /* Elevation. Three steps, used consistently, beats a shadow per component. */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
+  --shadow: 0 14px 34px -22px rgb(0 0 0 / 0.85), 0 2px 6px -3px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 30px 60px -30px rgb(0 0 0 / 0.9);
+  --highlight: inset 0 1px 0 rgb(255 255 255 / 0.045);
+
+  /* Radii. One scale, no one-offs. */
+  --r-xs: 6px;
+  --r-sm: 9px;
+  --r: 13px;
+  --r-lg: 18px;
+  --r-xl: 26px;
+  --radius: var(--r);
+
   --place-label: rgb(233 240 246 / 0.86);
   --place-halo: rgb(4 8 12 / 0.9);
+
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur: 0.24s;
   --dur-fast: 0.14s;
 
+  /* The width every page's content is measured against. */
+  --shell: 78rem;
+  --bar-h: 3.5rem;
+
   color-scheme: dark;
 }
 
-[data-theme="light"] body {
-  background: var(--bg);
-}
-
-[data-theme="light"] body::after {
-  opacity: 0.03;
-}
-
 [data-theme="light"] {
-  --bg: #f4f6f8;
-  --bg-deep: #e7ebef;
+  /*
+   * Warm paper rather than white. A pure-white page next to the map artwork
+   * (which is mostly mid-grey) makes the artwork look muddy; a hint of warmth
+   * in the background lets it sit rather than float.
+   */
+  --bg: #f6f7f9;
+  --bg-deep: #e8ebef;
   --panel: #ffffff;
-  --panel-2: #f2f5f8;
-  --panel-3: #e6ebf1;
-  --line: #d3dae2;
-  --line-soft: #e4e9ee;
-  --text: #16202b;
-  --text-dim: #55636f;
-  --text-faint: #646e7b;
-  --accent: #8a6d33;
-  --accent-hover: #6f571f;
+  --panel-2: #f2f4f7;
+  --panel-3: #e6eaef;
+  --line: #d5dbe3;
+  --line-soft: #e6eaef;
+
+  --text: #131b25;
+  --text-dim: #51606e;
+  --text-faint: #61707e;
+
+  --accent: #8a6420;
+  --accent-hover: #6d4d13;
   --accent-ink: #ffffff;
+  --accent-soft: color-mix(in srgb, var(--accent) 10%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 34%, transparent);
+
   --season: #9d174d;
-  --season-ink: #fff;
-  --danger: #c62f2f;
-  --ok: #15803d;
-  --shadow: 0 10px 24px -16px rgb(15 25 35 / 0.28);
-  --highlight: inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --season-ink: #ffffff;
+  --danger: #c02626;
+  --ok: #157f3c;
+  --info: #0369a1;
+  --warn: #9a6700;
+
+  --shadow-sm: 0 1px 2px rgb(15 25 35 / 0.06);
+  --shadow: 0 10px 26px -18px rgb(15 25 35 / 0.3), 0 1px 3px -1px rgb(15 25 35 / 0.08);
+  --shadow-lg: 0 24px 50px -26px rgb(15 25 35 / 0.32);
+  --highlight: inset 0 1px 0 rgb(255 255 255 / 0.85);
+
   --place-label: rgb(23 33 45 / 0.9);
   --place-halo: rgb(255 255 255 / 0.92);
 
   color-scheme: light;
 }
+
+/* -------------------------------------------------------------------- base */
 
 * {
   min-width: 0;
@@ -96,9 +152,9 @@ body,
  *
  * On a phone `100%` resolves against the *large* viewport — the one with the
  * URL bar already scrolled away — so a full-height app shell is taller than
- * what you can see, and the map page's bottom tab bar sits under the browser
- * chrome until you scroll a page that does not scroll. `100dvh` tracks the
- * bar as it comes and goes.
+ * what you can see, and the bottom tab bar sits under the browser chrome until
+ * you scroll a page that does not scroll. `100dvh` tracks the bar as it comes
+ * and goes.
  */
 @supports (height: 100dvh) {
   html,
@@ -110,9 +166,17 @@ body,
 
 body {
   margin: 0;
+  /*
+   * A very faint warm bloom at the top of the page, so the chrome has
+   * something to sit on and the site does not read as a flat grey sheet.
+   * On `background` rather than a pseudo-element: as ::before it formed a
+   * stacking context over the page content.
+   */
   background:
-    radial-gradient(900px 420px at 50% -8%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 62%),
+    radial-gradient(70rem 26rem at 18% -6%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%),
+    radial-gradient(52rem 22rem at 92% -10%, color-mix(in srgb, var(--info) 5%, transparent), transparent 72%),
     var(--bg);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-sans);
   font-feature-settings: "ss01", "cv11";
@@ -120,16 +184,6 @@ body {
   text-rendering: optimizeLegibility;
   /* iOS: stop the whole page bouncing behind the map. */
   overscroll-behavior: none;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
 }
 
 ::selection {
@@ -140,10 +194,19 @@ body::after {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
-/* --------------------------------------------------------------- primitives */
+/*
+ * Headings are focused on navigation so assistive tech announces the new page.
+ * They are targets, not controls, so they should not draw a focus ring — but
+ * only for pointer users: a keyboard user who lands there deserves to see it.
+ */
+h1[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* -------------------------------------------------------------- primitives */
 
 /*
  * The shared primitives live in Tailwind's components layer so utilities beat
@@ -155,18 +218,71 @@ body::after {
  * therefore floating over the map on every phone.
  */
 @layer components {
+  /*
+   * The scroll container for a page. Transparent so the ambient bloom on
+   * <body> shows through; the map page opts out by painting its own
+   * background, because artwork under a warm wash reads as miscoloured.
+   */
+  .page {
+    position: relative;
+    background: transparent;
+  }
+
+  /* ------------------------------------------------------------- surfaces */
+
   .surface {
-    background: color-mix(in srgb, var(--panel) 92%, transparent);
+    position: relative;
+    background: var(--panel);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
-    box-shadow: var(--highlight), var(--shadow);
-    backdrop-filter: blur(18px) saturate(1.15);
+    border-radius: var(--r);
+    box-shadow: var(--highlight), var(--shadow-sm);
   }
 
   .surface-2 {
     background: var(--panel-2);
     border: 1px solid var(--line-soft);
-    border-radius: 11px;
+    border-radius: var(--r-sm);
+  }
+
+  /*
+   * A card is a surface that holds a titled block of content. Most of the site
+   * is made of these, so the padding lives here rather than being respecified
+   * as a utility every time.
+   */
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.05rem;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--highlight), var(--shadow-sm);
+  }
+
+  .card-tight {
+    padding: 0.8rem 0.85rem;
+  }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .card-title {
+    font-size: 0.925rem;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+  }
+
+  .card-sub {
+    margin-top: 0.2rem;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--text-faint);
   }
 
   .divider {
@@ -181,93 +297,196 @@ body::after {
     color: var(--text-faint);
   }
 
+  /* --------------------------------------------------------- typography */
+
   .display {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.038em;
-    line-height: 1.12;
+    letter-spacing: -0.034em;
+    line-height: 1.1;
   }
 
   .eyebrow {
     font-size: 0.68rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.13em;
     text-transform: uppercase;
     color: var(--accent);
   }
 
-  .page {
-    background: var(--bg);
+  /* The small all-caps label above a number or a group. */
+  .kicker {
+    margin: 0;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
   }
 
-  .site-nav {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    align-items: center;
-    flex: 1 1 12rem;
-    min-width: 0;
-    max-width: 36rem;
-    padding: 3px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: color-mix(in srgb, var(--panel) 82%, transparent);
-    box-shadow: var(--highlight);
-    backdrop-filter: blur(14px);
+  /* Secondary running text: hints, counts, "3 of 12". */
+  .text-meta {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--text-faint);
   }
 
-  .site-nav-pill {
-    position: absolute;
-    top: 3px;
-    bottom: 3px;
-    left: 3px;
-    width: calc(20% - 2px);
-    border-radius: 999px;
-    background: var(--accent);
-    transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
-    pointer-events: none;
+  .text-body {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-dim);
   }
 
-  .site-nav[data-current="maps"] .site-nav-pill {
-    transform: translateX(100%);
+  .lead {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-dim);
   }
 
-  .site-nav[data-current="story"] .site-nav-pill {
-    transform: translateX(200%);
-  }
+  /* ----------------------------------------------------------- controls */
 
-  .site-nav[data-current="quests"] .site-nav-pill {
-    transform: translateX(300%);
-  }
-
-  .site-nav[data-current="hideout"] .site-nav-pill {
-    transform: translateX(400%);
-  }
-
-  .site-nav a,
-  .site-nav span[aria-current] {
-    position: relative;
-    z-index: 1;
+  .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 2rem;
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--text-dim);
-    text-decoration: none;
-    transition: color var(--dur-fast) var(--ease);
-  }
-
-  .site-nav a:hover {
+    gap: 0.45rem;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--line);
+    background: var(--panel-2);
     color: var(--text);
+    padding: 0.46rem 0.8rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.2;
+    cursor: pointer;
+    box-shadow: var(--highlight);
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background var(--dur-fast) ease,
+      border-color var(--dur-fast) ease,
+      color var(--dur-fast) ease,
+      transform var(--dur-fast) ease;
   }
 
-  .site-nav .is-active,
-  .site-nav span[aria-current] {
+  .btn:hover {
+    background: var(--panel-3);
+    border-color: color-mix(in srgb, var(--line) 55%, var(--accent));
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn:disabled {
+    opacity: 0.38;
+    cursor: default;
+    transform: none;
+  }
+
+  .btn:disabled:hover {
+    background: var(--panel-2);
+    border-color: var(--line);
+  }
+
+  .btn[aria-pressed="true"],
+  .btn.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
     color: var(--accent-ink);
+    box-shadow: none;
+  }
+
+  /*
+   * The one button on a screen that is the thing to do next. Used sparingly:
+   * two of these side by side means neither is primary.
+   */
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
+    box-shadow: 0 6px 18px -10px color-mix(in srgb, var(--accent) 80%, transparent);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  .btn-ghost:hover {
+    background: var(--panel-2);
+    border-color: transparent;
+  }
+
+  .btn-icon {
+    padding: 0.45rem;
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .btn-lg {
+    padding: 0.7rem 1.15rem;
+    font-size: 0.9rem;
+    border-radius: var(--r);
+  }
+
+  .btn-sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.72rem;
+  }
+
+  .btn-danger:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+
+  .input {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 0.55rem 0.8rem;
+    color: var(--text);
+    font-size: 0.8125rem;
+    line-height: 1.3;
+    box-shadow: var(--highlight);
+    transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+  }
+
+  /* Leading-icon variant; `.input`'s padding shorthand would beat a pl-* utility. */
+  .input-icon {
+    padding-left: 2.2rem;
+  }
+
+  .input::placeholder {
+    color: var(--text-faint);
+  }
+
+  .input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--highlight), 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+
+  /* A labelled form row, so Settings stops rebuilding one per field. */
+  .field {
+    display: block;
+  }
+
+  .field > .label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
   }
 
   .segment {
@@ -276,7 +495,7 @@ body::after {
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
     padding: 3px;
-    border-radius: 11px;
+    border-radius: var(--r-sm);
     border: 1px solid var(--line-soft);
     background: var(--panel-2);
   }
@@ -287,7 +506,7 @@ body::after {
     bottom: 3px;
     left: 3px;
     width: calc((100% - 6px) / var(--segment-count, 3));
-    border-radius: 8px;
+    border-radius: calc(var(--r-sm) - 3px);
     background: var(--panel);
     border: 1px solid var(--line);
     box-shadow: var(--highlight);
@@ -317,45 +536,49 @@ body::after {
     box-shadow: none;
   }
 
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: 10px;
-    border: 1px solid var(--line);
-    background: var(--panel-2);
-    color: var(--text);
-    padding: 0.48rem 0.85rem;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    line-height: 1.2;
-    cursor: pointer;
-    box-shadow: var(--highlight);
-    transition:
-      background 0.14s ease,
-      border-color 0.14s ease,
-      color 0.14s ease,
-      transform 0.14s ease;
-    white-space: nowrap;
-  }
-
-  .btn:hover {
+  /* Native-feeling toggle that inherits the layer's own colour. */
+  .switch {
+    position: relative;
+    flex: none;
+    width: 2rem;
+    height: 1.15rem;
+    border-radius: 999px;
     background: var(--panel-3);
-    border-color: color-mix(in srgb, var(--line) 70%, var(--accent));
+    border: 1px solid var(--line);
+    transition: background var(--dur-fast) ease, border-color var(--dur-fast) ease;
+    cursor: pointer;
   }
 
-  .btn:active {
-    transform: translateY(1px);
+  .switch::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 999px;
+    background: var(--text-faint);
+    transform: translateY(-50%);
+    transition: transform var(--dur-fast) ease, background var(--dur-fast) ease;
+  }
+
+  .switch[data-on="true"] {
+    background: color-mix(in srgb, var(--sw-color, var(--accent)) 30%, transparent);
+    border-color: var(--sw-color, var(--accent));
+  }
+
+  .switch[data-on="true"]::after {
+    transform: translate(0.82rem, -50%);
+    background: var(--sw-color, var(--accent));
   }
 
   .tick {
     display: grid;
     place-items: center;
     flex: none;
-    width: 1.05rem;
-    height: 1.05rem;
-    border-radius: 5px;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: var(--r-xs);
     border: 1px solid var(--line);
     background: transparent;
     color: transparent;
@@ -380,7 +603,7 @@ body::after {
     display: grid;
     place-items: center;
     flex: none;
-    border-radius: 6px;
+    border-radius: var(--r-xs);
     border: 1px solid var(--line);
     background: transparent;
     color: transparent;
@@ -425,301 +648,20 @@ body::after {
   }
 
   .status-box[data-state="pinned"] {
-    background: color-mix(in srgb, var(--warn, #facc15) 85%, black);
-    border-color: var(--warn, #facc15);
+    background: color-mix(in srgb, var(--warn) 85%, black);
+    border-color: var(--warn);
     color: #2b2206;
   }
 
-  /*
-   * The raid clock. Tightened on a phone: at 360px the header is the map's
-   * back button, its name, and this — and the name is the one that has to
-   * stay readable, so the clock gives up the room rather than truncating
-   * "Streets of Tarkov" to "S…".
-   */
-  .raid-board-label {
-    margin: 0 0 0.35rem;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-  }
-
-  .raid-board-pair {
-    display: flex;
-    gap: 0.35rem;
-  }
-
-  .raid-board-face {
-    min-width: 4.4rem;
-    padding: 0.35rem 0.55rem;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    background: var(--panel-2);
-    text-align: center;
-    font-size: 1.05rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-  }
-
-  .dash-command {
-    display: grid;
-    gap: 0.85rem;
-    margin-bottom: 1rem;
-    padding: 1rem 1.1rem;
-  }
-
-  @media (min-width: 800px) {
-    .dash-command {
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: start;
-    }
-  }
-
-  .dash-command-char {
-    text-align: center;
-  }
-
-  .dash-command-kicker {
-    margin: 0 0 0.2rem;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-  }
-
-  .level-step {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.15rem;
-    margin-top: 0.35rem;
-  }
-
-  .item-mosaic {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 52px);
-    grid-auto-rows: 52px;
-    gap: 3px;
-  }
-
-  .item-mosaic-cell {
-    position: relative;
-    overflow: hidden;
-    border-radius: 6px;
-    background: var(--panel-2);
-    border: 1px solid var(--line-soft);
-  }
-
-  .item-mosaic-cell img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 3px;
-  }
-
-  .item-mosaic-badge {
-    position: absolute;
-    left: 3px;
-    top: 3px;
-    min-width: 1.1rem;
-    padding: 0 0.25rem;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.72);
-    font-size: 0.68rem;
-    font-variant-numeric: tabular-nums;
-    line-height: 1.25;
-  }
-
-  .pager {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.25rem;
-    margin-top: 0.65rem;
-  }
-
-  .pager .btn {
-    min-width: 2rem;
-    padding: 0.22rem 0.45rem;
-    font-size: 0.75rem;
-  }
-
-  .key-acquire {
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    border: 2px solid var(--accent);
-    background: transparent;
-  }
-
-  .raid-clock {
-    gap: 0.3rem;
-    padding: 0.2rem 0.35rem;
-    font-size: 0.7rem;
-  }
-
-  .raid-clock-face {
-    font-size: 0.66rem;
-    line-height: 1;
-  }
-
-  @media (min-width: 480px) {
-    .raid-clock {
-      gap: 0.4rem;
-      padding: 0.25rem 0.5rem;
-      font-size: 0.78rem;
-    }
-
-    .raid-clock-face {
-      font-size: 0.7rem;
-    }
-  }
-
-  .map-tools {
-    position: absolute;
-    right: 0.75rem;
-    /* Above the phone's home indicator, and above Leaflet's zoom stack on a
-       desktop — where the zoom control is 0.75rem from the bottom and 5.1rem
-       tall once its own margin is counted. */
-    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
-    z-index: 500;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  .map-tools .btn-icon {
-    width: 2.15rem;
-    height: 2.15rem;
-  }
-
-  @media (min-width: 768px) {
-    .map-tools {
-      bottom: 6.6rem;
-    }
-  }
-
-  /*
-   * The floating hint over the map ("20 document spawns · Show").
-   *
-   * Centred, but only across the space the map tools are not using: at 390px
-   * a centred pill wide enough for that sentence ran straight underneath the
-   * fullscreen and fit buttons, and the tap landed on whichever was on top.
-   */
-  .map-hint {
-    position: absolute;
-    left: 0.75rem;
-    right: 3.6rem;
-    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
-    z-index: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.4rem 0.75rem;
-    font-size: 0.72rem;
-    text-align: left;
-  }
-
-  @media (min-width: 768px) {
-    .map-hint {
-      left: 50%;
-      right: auto;
-      bottom: 0.85rem;
-      width: max-content;
-      max-width: min(32rem, calc(100% - 9rem));
-      transform: translateX(-50%);
-      font-size: 0.75rem;
-    }
-  }
-
-  /*
-   * The element the browser puts fullscreen. Without an explicit background
-   * the UA paints its own black behind a page whose colour lives on <body>,
-   * which shows through everywhere the map does not reach.
-   */
-  .map-shell:fullscreen {
-    width: 100%;
-    height: 100%;
-    background: var(--bg);
-  }
-
-  /*
-   * The fallback for a browser that refused the screen. Pinned over the
-   * viewport rather than handed the display, which is as close as CSS gets.
-   */
-  .map-shell[data-filled] {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    height: 100%;
-    background: var(--bg);
-  }
-
-  .btn[aria-pressed="true"],
-  .btn.is-active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--accent-ink);
-    box-shadow: none;
-  }
-
-  .btn-ghost {
-    background: transparent;
-    border-color: transparent;
-    box-shadow: none;
-  }
-
-  .btn-ghost:hover {
-    background: var(--panel-2);
-  }
-
-  .btn-icon {
-    padding: 0.45rem;
-    width: 2.15rem;
-    height: 2.15rem;
-  }
-
-  .input {
-    width: 100%;
-    background: var(--panel-2);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 0.55rem 0.8rem;
-    color: var(--text);
-    font-size: 0.8125rem;
-    line-height: 1.3;
-    box-shadow: var(--highlight);
-    transition: border-color 0.14s ease, box-shadow 0.14s ease;
-  }
-
-  /* Leading-icon variant; `.input`'s padding shorthand would beat a pl-* utility. */
-  .input-icon {
-    padding-left: 2.15rem;
-  }
-
-  .input::placeholder {
-    color: var(--text-faint);
-  }
-
-  .input:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow:
-      var(--highlight),
-      0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
-  }
+  /* --------------------------------------------------- chips and badges */
 
   .chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.32rem;
     border-radius: 999px;
     border: 1px solid var(--line);
-    background: color-mix(in srgb, var(--panel-2) 80%, transparent);
+    background: var(--panel-2);
     padding: 0.18rem 0.55rem;
     font-size: 0.6875rem;
     font-weight: 500;
@@ -729,9 +671,9 @@ body::after {
   }
 
   .chip-accent {
-    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    border-color: var(--accent-line);
     color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    background: var(--accent-soft);
   }
 
   .chip-season {
@@ -740,45 +682,845 @@ body::after {
     background: color-mix(in srgb, var(--season) 12%, transparent);
   }
 
-  /* Native-feeling toggle that inherits the layer's own colour. */
-  .switch {
-    position: relative;
-    flex: none;
-    width: 2rem;
-    height: 1.15rem;
-    border-radius: 999px;
-    background: var(--panel-3);
-    border: 1px solid var(--line);
-    transition: background 0.15s ease;
+  /* A chip that is a link or a button, so it reacts like one. */
+  .chip-button {
     cursor: pointer;
-  }
-
-  .switch::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 2px;
-    width: 0.8rem;
-    height: 0.8rem;
-    border-radius: 999px;
-    background: var(--text-faint);
-    transform: translateY(-50%);
+    text-decoration: none;
     transition:
-      transform 0.15s ease,
-      background 0.15s ease;
+      border-color var(--dur-fast) ease,
+      background var(--dur-fast) ease,
+      color var(--dur-fast) ease;
   }
 
-  .switch[data-on="true"] {
-    background: color-mix(in srgb, var(--sw-color, var(--accent)) 32%, transparent);
-    border-color: var(--sw-color, var(--accent));
+  .chip-button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
-  .switch[data-on="true"]::after {
-    transform: translate(0.82rem, -50%);
-    background: var(--sw-color, var(--accent));
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.1rem 0.42rem;
+    border-radius: var(--r-xs);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: var(--panel-3);
+    color: var(--text-dim);
   }
 
-  /* ------------------------------------------------------------- dashboard */
+  .badge-ok {
+    background: var(--ok-soft);
+    color: var(--ok);
+  }
+
+  .badge-accent {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .badge-danger {
+    background: var(--danger-soft);
+    color: var(--danger);
+  }
+
+  /* A keyboard key, for the shortcut hints that make the palette findable. */
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.35rem;
+    padding: 0.05rem 0.32rem;
+    border-radius: var(--r-xs);
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    background: var(--panel-3);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text-dim);
+  }
+
+  /* ---------------------------------------------------------- app chrome */
+
+  /*
+   * The bar across the top of every page except the map, which has its own.
+   *
+   * Sticky rather than fixed so it participates in the scroll container the
+   * tab pages already use, and full-bleed so it reads as chrome rather than as
+   * the first card on the page.
+   */
+  .app-bar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(18px) saturate(1.3);
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .app-bar-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: var(--shell);
+    min-height: var(--bar-h);
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .app-bar-inner {
+      padding-inline: 1.5rem;
+      gap: 0.85rem;
+    }
+  }
+
+  .app-bar-tools {
+    display: flex;
+    flex: 0 1 auto;
+    min-width: 0;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+
+  /*
+   * At 390px the bar is the mark, a search button, the three-mode switch and
+   * the settings gear, and with the wordmark spelled out that came to 439px
+   * against a 390px viewport — so every page on a phone scrolled sideways.
+   * The name goes; the mark alone still reads as the logo and still links
+   * home, and the padding keeps it over a 24px tap target.
+   */
+  @media (max-width: 640px) {
+    .app-bar-inner {
+      gap: 0.4rem;
+      padding-inline: 0.75rem;
+    }
+
+    .wordmark-name {
+      display: none;
+    }
+
+    .wordmark {
+      padding-inline: 0.15rem;
+    }
+  }
+
+  /* The page body's measure, shared by every tab page. */
+  .shell {
+    width: 100%;
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding: 1.5rem 1rem 6rem;
+  }
+
+  @media (min-width: 640px) {
+    .shell {
+      padding: 2rem 1.5rem 4rem;
+    }
+  }
+
+  .wordmark {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 0.2rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .wordmark-mark {
+    display: grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: var(--r-xs);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-line);
+    color: var(--accent);
+  }
+
+  .wordmark-name {
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+  }
+
+  /*
+   * The section nav.
+   *
+   * The highlight is a single element that slides, which is why the nav is
+   * mounted above the route switch (see TabShell): the same element has to
+   * survive the page change for the transform to have two positions to move
+   * between. Its position comes from `--nav-index` set inline, so adding a
+   * sixth section does not need a CSS change.
+   */
+  .site-nav {
+    position: relative;
+    display: none;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 999px;
+    border: 1px solid var(--line-soft);
+    background: var(--panel-2);
+  }
+
+  @media (min-width: 900px) {
+    .site-nav {
+      display: flex;
+    }
+  }
+
+  .site-nav-pill {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc((100% - 6px) / var(--nav-count, 5));
+    border-radius: 999px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    box-shadow: var(--highlight), var(--shadow-sm);
+    transform: translateX(calc(var(--nav-index, 0) * 100%));
+    transition: transform 0.34s var(--ease);
+    pointer-events: none;
+  }
+
+  .site-nav a,
+  .site-nav span[aria-current] {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--dur-fast) var(--ease);
+  }
+
+  .site-nav a:hover {
+    color: var(--text);
+  }
+
+  .site-nav .is-active,
+  .site-nav span[aria-current] {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /*
+   * The phone's navigation: a bottom bar, because the top of a 6" screen is
+   * not somewhere a thumb goes. Five destinations, icon over label, and the
+   * safe-area inset so it clears the home indicator.
+   */
+  .tabbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 2px;
+    padding: 0.3rem 0.4rem calc(0.3rem + env(safe-area-inset-bottom, 0px));
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(18px) saturate(1.3);
+    border-top: 1px solid var(--line-soft);
+  }
+
+  @media (min-width: 900px) {
+    .tabbar {
+      display: none;
+    }
+  }
+
+  .tabbar a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    min-height: 3rem;
+    border-radius: var(--r-sm);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--text-faint);
+    text-decoration: none;
+    transition: color var(--dur-fast) ease, background var(--dur-fast) ease;
+  }
+
+  .tabbar a[aria-current="page"] {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  /*
+   * The command-palette affordance. A search box that is really a button: the
+   * palette is the most useful thing on the site and was reachable only by a
+   * shortcut nobody could discover.
+   */
+  .searchbtn {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 12rem;
+    padding: 0.42rem 0.5rem 0.42rem 0.7rem;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    color: var(--text-faint);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
+  }
+
+  .searchbtn:hover {
+    border-color: var(--accent-line);
+    color: var(--text-dim);
+  }
+
+  .searchbtn .kbd {
+    margin-left: auto;
+  }
+
+  @media (min-width: 1100px) {
+    .searchbtn {
+      display: flex;
+    }
+  }
+
+  /* ---------------------------------------------------------- page header */
+
+  .page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.85rem 1.5rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .page-lead {
+    margin-top: 0.45rem;
+    max-width: 44rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-dim);
+  }
+
+  .page-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* ---------------------------------------------------------------- menus */
+
+  .menu-pop {
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    z-index: 600;
+    width: max-content;
+    min-width: 13rem;
+    max-width: min(20rem, calc(100vw - 1.5rem));
+    padding: 0.3rem;
+    border-radius: var(--r);
+    border: 1px solid var(--line);
+    background: var(--panel);
+    box-shadow: var(--shadow-lg);
+    animation: tk-fade-up 0.16s var(--ease) both;
+  }
+
+  .menu-pop[data-align="end"] {
+    right: 0;
+  }
+
+  .menu-pop[data-align="start"] {
+    left: 0;
+  }
+
+  .menu-item {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.45rem 0.55rem;
+    border-radius: var(--r-sm);
+    background: none;
+    border: 0;
+    color: inherit;
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
+  }
+
+  .menu-item:hover {
+    background: var(--panel-2);
+  }
+
+  .menu-label {
+    margin: 0.4rem 0 0.15rem;
+    padding-inline: 0.55rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .menu-label:first-child {
+    margin-top: 0.15rem;
+  }
+
+  /* ------------------------------------------------------------ map chrome */
+
+  /*
+   * The map's own bar. It carries the four controls you touch during a raid
+   * and a menu for the rest — the version before this had eleven abreast, and
+   * at 900px they simply wrapped onto a second row over the map.
+   */
+  .map-bar {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.55rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (min-width: 768px) {
+    .map-bar {
+      gap: 0.5rem;
+      padding-inline: 0.75rem;
+    }
+  }
+
+  /*
+   * The first-run key over the map. Shown once, then never again: it teaches
+   * the one rule the whole map depends on, and a permanent banner over the
+   * thing you came to look at would be worse than not teaching it.
+   */
+  .map-primer {
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    top: 0.75rem;
+    z-index: 550;
+    padding: 0.85rem 0.95rem;
+    border-radius: var(--r);
+  }
+
+  @media (min-width: 768px) {
+    .map-primer {
+      left: 0;
+      right: 0;
+      width: min(34rem, calc(100% - 3rem));
+      margin-inline: auto;
+    }
+  }
+
+  /* Back-links on the pages that sit below a tab. */
+  .crumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.9rem;
+    padding: 0.22rem 0.5rem 0.22rem 0.3rem;
+    border-radius: var(--r-xs);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-faint);
+    text-decoration: none;
+    transition: color var(--dur-fast) ease, background var(--dur-fast) ease;
+  }
+
+  .crumb:hover {
+    color: var(--text);
+    background: var(--panel-2);
+  }
+
+  /* A run of sections down a page, evenly spaced without per-section margins. */
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stack-lg {
+    gap: 1.75rem;
+  }
+
+  .section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+  }
+
+  /* ------------------------------------------------- teaching the new user */
+
+  /*
+   * A callout: one sentence of context that is not part of the data on screen.
+   * Four tones, and the tone is the only thing that differs — an info callout
+   * that looks like a warning teaches the wrong urgency.
+   */
+  .callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.8rem 0.95rem;
+    border-radius: var(--r);
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--text-dim);
+  }
+
+  .callout-icon {
+    flex: none;
+    margin-top: 0.1rem;
+    color: var(--text-faint);
+  }
+
+  .callout-accent {
+    border-color: var(--accent-line);
+    background: var(--accent-soft);
+  }
+
+  .callout-accent .callout-icon {
+    color: var(--accent);
+  }
+
+  .callout-ok {
+    border-color: color-mix(in srgb, var(--ok) 40%, transparent);
+    background: var(--ok-soft);
+  }
+
+  .callout-ok .callout-icon {
+    color: var(--ok);
+  }
+
+  .callout-danger {
+    border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+    background: var(--danger-soft);
+  }
+
+  .callout-danger .callout-icon {
+    color: var(--danger);
+  }
+
+  /*
+   * A glossary term. Tarkov's vocabulary — Kappa, FIR, transit, Scav — is the
+   * single biggest barrier to a new player reading this site, and a dotted
+   * underline that explains itself on hover or tap costs nothing to everyone
+   * who already knows.
+   */
+  .term {
+    border: 0;
+    padding: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    cursor: help;
+    border-bottom: 1px dashed var(--accent-line);
+    transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
+  }
+
+  .term:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .term-pop {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 0.45rem);
+    z-index: 60;
+    width: max-content;
+    max-width: min(20rem, calc(100vw - 2rem));
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--line);
+    background: var(--panel);
+    box-shadow: var(--shadow-lg);
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-dim);
+    text-align: left;
+    cursor: auto;
+    white-space: normal;
+  }
+
+  .term-pop b {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* A numbered walkthrough — "how this site works", the setup wizard's spine. */
+  .steps {
+    display: grid;
+    gap: 0.75rem;
+    counter-reset: step;
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .step-n {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--accent-line);
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /*
+   * The first-run checklist. Four things that make the site useful, with the
+   * ones already done ticked off, so a new player can see what is left rather
+   * than guessing at what they were supposed to have done.
+   */
+  .checklist {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0.7rem;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--line-soft);
+    background: var(--panel-2);
+    text-align: left;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color var(--dur-fast) ease, background var(--dur-fast) ease;
+  }
+
+  .check-item:hover {
+    border-color: var(--accent-line);
+    background: var(--panel-3);
+  }
+
+  .check-item[data-done="true"] {
+    opacity: 0.6;
+  }
+
+  .check-item[data-done="true"]:hover {
+    opacity: 0.85;
+  }
+
+  .check-mark {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: transparent;
+  }
+
+  .check-item[data-done="true"] .check-mark {
+    background: var(--ok);
+    border-color: var(--ok);
+    color: #062b16;
+  }
+
+  /* The legend that explains colour-is-who, shape-is-what. */
+  .legend {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .legend {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .legend {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.7rem 0.75rem;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--line-soft);
+    background: var(--panel-2);
+  }
+
+  /* -------------------------------------------------------- empty states */
+
+  .empty {
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    padding: 2.5rem 1.25rem;
+    text-align: center;
+  }
+
+  .empty-mark {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    margin-bottom: 0.2rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    color: var(--text-faint);
+  }
+
+  .empty-title {
+    font-size: 0.925rem;
+    font-weight: 600;
+  }
+
+  .empty-hint {
+    max-width: 34ch;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--text-faint);
+  }
+
+  /* ------------------------------------------------------------- landing */
+
+  .hero {
+    position: relative;
+    padding: 3rem 0 2.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      padding: 5rem 0 3.5rem;
+    }
+  }
+
+  .hero-title {
+    font-size: clamp(2.35rem, 7vw, 4rem);
+    font-weight: 600;
+    letter-spacing: -0.042em;
+    line-height: 1.02;
+  }
+
+  .hero-lead {
+    margin-top: 1.1rem;
+    max-width: 34rem;
+    font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 1.9rem;
+  }
+
+  /* The card grid used for "what's on the site" and the two entry choices. */
+  .tile-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .tile-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .tile-grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .landing-choice {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
+  }
+
+  .landing-choice:hover {
+    border-color: var(--accent-line);
+    transform: translateY(-2px);
+    box-shadow: var(--highlight), var(--shadow);
+  }
+
+  .landing-choice-kicker {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .landing-hero {
+    position: relative;
+  }
+
+  /* ----------------------------------------------------------- dashboard */
 
   /*
    * The dashboard grid.
@@ -809,7 +1551,7 @@ body::after {
   .dash-panel {
     display: flex;
     flex-direction: column;
-    padding: 0.875rem;
+    padding: 0.95rem 1rem;
     /* Only the drag transform animates; `all` would fight the pointer. */
     transition:
       border-color var(--dur-fast) ease,
@@ -821,7 +1563,7 @@ body::after {
     align-items: flex-start;
     justify-content: space-between;
     gap: 0.5rem;
-    margin-bottom: 0.625rem;
+    margin-bottom: 0.7rem;
   }
 
   .dash-panel-tools {
@@ -854,17 +1596,90 @@ body::after {
     cursor: grabbing;
     opacity: 0.92;
     border-color: var(--accent);
-    box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.75);
+    box-shadow: var(--shadow-lg);
   }
 
   /* Where it will land. */
   .dash-panel[data-target] {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
 
   .dash-grid[data-editing] .dash-panel:not([data-dragged]) {
     border-style: dashed;
+  }
+
+  /*
+   * The bar at the top of the dashboard: raid clock, character, target.
+   *
+   * It is one row of three related facts rather than three cards, because
+   * every one of them answers part of the same question — what am I playing,
+   * and what am I playing toward.
+   */
+  .dash-command {
+    display: grid;
+    gap: 1rem;
+    padding: 1.1rem 1.15rem;
+  }
+
+  @media (min-width: 900px) {
+    /* Three equal columns so the clock and the target picker balance around
+       the character rather than the character floating in the leftovers. */
+    .dash-command {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: center;
+      gap: 1.25rem;
+    }
+  }
+
+  .dash-command-char {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    padding-inline: 1.25rem;
+    border-inline: 1px solid var(--line-soft);
+  }
+
+  @media (max-width: 899px) {
+    .dash-command-char {
+      border-inline: 0;
+      border-block: 1px solid var(--line-soft);
+      padding-block: 0.85rem;
+    }
+  }
+
+  .dash-command-kicker {
+    margin: 0 0 0.2rem;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .level-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  /* The outer two cells of the character bar. */
+  .raid-board,
+  .target-bar {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .target-bar .input {
+    width: 100%;
+  }
+
+  @media (min-width: 900px) {
+    .target-bar .input {
+      max-width: 15rem;
+    }
   }
 
   /* Stat tiles on the progress panel. */
@@ -883,27 +1698,29 @@ body::after {
   .stat {
     background: var(--panel-2);
     border: 1px solid var(--line-soft);
-    border-radius: 11px;
-    padding: 0.55rem 0.65rem;
+    border-radius: var(--r-sm);
+    padding: 0.6rem 0.7rem;
   }
 
   .stat-value {
     display: block;
-    font-size: 1.35rem;
+    font-size: 1.4rem;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     line-height: 1.1;
+    font-variant-numeric: tabular-nums;
   }
 
   .stat-of {
     font-size: 0.8rem;
     font-weight: 500;
+    color: var(--text-faint);
   }
 
   .stat-label {
     display: block;
-    margin-top: 0.15rem;
-    font-size: 0.66rem;
+    margin-top: 0.2rem;
+    font-size: 0.64rem;
     font-weight: 600;
     letter-spacing: 0.09em;
     text-transform: uppercase;
@@ -925,12 +1742,133 @@ body::after {
     transition: width 0.6s var(--ease);
   }
 
+  .item-mosaic {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 52px);
+    grid-auto-rows: 52px;
+    gap: 3px;
+  }
+
+  .item-mosaic-cell {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--r-xs);
+    background: var(--panel-2);
+    border: 1px solid var(--line-soft);
+  }
+
+  .item-mosaic-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 3px;
+  }
+
+  .item-mosaic-badge {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    min-width: 1.1rem;
+    padding: 0 0.25rem;
+    border-radius: 4px;
+    background: rgb(0 0 0 / 0.72);
+    color: #fff;
+    font-size: 0.68rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.25;
+  }
+
+  .pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    margin-top: 0.65rem;
+  }
+
+  .pager .btn {
+    min-width: 2rem;
+    padding: 0.22rem 0.45rem;
+    font-size: 0.75rem;
+  }
+
+  .key-acquire {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: transparent;
+  }
+
+  /* --------------------------------------------------------- raid clock */
+
+  /*
+   * The raid clock. Tightened on a phone: at 360px the map header is a back
+   * button, the map name, and this — and the name is the one that has to stay
+   * readable, so the clock gives up the room rather than truncating
+   * "Streets of Tarkov" to "S…".
+   */
+  .raid-clock {
+    gap: 0.3rem;
+    padding: 0.2rem 0.35rem;
+    font-size: 0.7rem;
+  }
+
+  .raid-clock-face {
+    font-size: 0.66rem;
+    line-height: 1;
+  }
+
+  @media (min-width: 480px) {
+    .raid-clock {
+      gap: 0.4rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.78rem;
+    }
+
+    .raid-clock-face {
+      font-size: 0.7rem;
+    }
+  }
+
+  .raid-board-label {
+    margin: 0 0 0.35rem;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .raid-board-pair {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .raid-board-face {
+    min-width: 4.5rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--r-xs);
+    border: 1px solid var(--line-soft);
+    background: var(--panel-2);
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --------------------------------------------------------------- story */
+
   .story-epigraph {
-    margin: -0.55rem 0 1.1rem;
-    max-width: 40rem;
-    font-size: 0.92rem;
+    margin: -0.35rem 0 1.25rem;
+    max-width: 42rem;
+    font-size: 0.95rem;
     font-style: italic;
-    line-height: 1.4;
+    line-height: 1.5;
+    color: var(--text-dim);
   }
 
   .story-chapter-head {
@@ -938,17 +1876,17 @@ body::after {
     width: 100%;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.85rem 1rem;
+    padding: 0.9rem 1rem;
     text-align: left;
   }
 
   .story-chapter-n {
     display: grid;
     place-items: center;
-    width: 1.7rem;
-    height: 1.7rem;
+    width: 1.8rem;
+    height: 1.8rem;
     flex: none;
-    border-radius: 7px;
+    border-radius: var(--r-xs);
     font-size: 0.78rem;
     font-weight: 700;
   }
@@ -958,11 +1896,11 @@ body::after {
     align-items: flex-start;
     gap: 0.65rem;
     padding: 0.55rem 0.4rem;
-    border-radius: 10px;
+    border-radius: var(--r-sm);
   }
 
   .story-step[data-done] {
-    opacity: 0.62;
+    opacity: 0.6;
   }
 
   .story-step-n {
@@ -971,68 +1909,203 @@ body::after {
     padding-top: 0.15rem;
     font-size: 0.72rem;
     font-weight: 600;
+    color: var(--text-faint);
   }
 
   .story-lock-btn {
     display: block;
     width: 100%;
-    padding: 0.55rem 0.7rem;
-    border-radius: 9px;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--r-sm);
     border: 1px solid var(--line);
-    background: var(--panel);
+    background: var(--panel-2);
     color: inherit;
     text-align: left;
     font-size: 0.8rem;
-    line-height: 1.3;
+    line-height: 1.35;
+    cursor: pointer;
+    transition: border-color var(--dur-fast) ease, background var(--dur-fast) ease;
+  }
+
+  .story-lock-btn:hover {
+    border-color: var(--accent-line);
   }
 
   .story-lock-btn.is-on {
     border-color: color-mix(in srgb, var(--ok) 55%, transparent);
-    background: color-mix(in srgb, var(--ok) 16%, transparent);
+    background: var(--ok-soft);
     color: var(--ok);
   }
 
   .story-lock-btn[data-want]:not(.is-on) {
-    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    border-color: var(--accent-line);
   }
 
   .story-never {
     padding: 1rem 1.1rem;
-    border-radius: var(--radius);
+    border-radius: var(--r);
     border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
-    background: color-mix(in srgb, var(--danger) 10%, transparent);
+    background: var(--danger-soft);
   }
 
   .story-dot {
     display: block;
-    width: 0.42rem;
-    height: 0.42rem;
+    width: 0.45rem;
+    height: 0.45rem;
     border-radius: 999px;
   }
 
-  /* A chip that is a link or a button, so it reacts like one. */
-  .chip-button {
-    cursor: pointer;
+  /* --------------------------------------------------------------- maps */
+
+  /* Map picker card. */
+  .map-card {
+    content-visibility: auto;
+    contain-intrinsic-size: 260px;
+    overflow: hidden;
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
+  }
+
+  .map-card:hover,
+  .surface-link:hover {
+    border-color: var(--accent-line);
+    transform: translateY(-2px);
+    box-shadow: var(--highlight), var(--shadow);
+  }
+
+  .surface-link {
     text-decoration: none;
+    color: inherit;
     transition:
       border-color var(--dur-fast) ease,
-      background var(--dur-fast) ease,
-      color var(--dur-fast) ease;
+      transform var(--dur-fast) var(--ease),
+      box-shadow var(--dur-fast) ease;
   }
 
-  .chip-button:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+  .map-glass {
+    background: color-mix(in srgb, var(--panel) 88%, transparent);
+    backdrop-filter: blur(16px) saturate(1.15);
   }
+
+  .map-tools {
+    position: absolute;
+    right: 0.75rem;
+    /* Above the phone's home indicator, and above Leaflet's zoom stack on a
+       desktop — where the zoom control is 0.75rem from the bottom and 5.1rem
+       tall once its own margin is counted. */
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .map-tools .btn-icon {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  @media (min-width: 768px) {
+    .map-tools {
+      bottom: 6.6rem;
+    }
+  }
+
+  /*
+   * The floating hint over the map ("20 document spawns · Show").
+   *
+   * Centred, but only across the space the map tools are not using: at 390px
+   * a centred pill wide enough for that sentence ran straight underneath the
+   * fullscreen and fit buttons, and the tap landed on whichever was on top.
+   */
+  .map-hint {
+    position: absolute;
+    left: 0.75rem;
+    right: 3.6rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.72rem;
+    text-align: left;
+  }
+
+  /*
+   * Centred with auto margins, not `translateX(-50%)`. The card also carries
+   * `.animate-in`, whose keyframes animate `transform` and — with
+   * `animation-fill-mode: both` — hold `transform: none` afterwards, which
+   * silently cancelled the centering and left the pill hanging off to the
+   * right of the map.
+   */
+  @media (min-width: 768px) {
+    .map-hint {
+      left: 0;
+      right: 0;
+      bottom: 0.85rem;
+      width: max-content;
+      max-width: min(32rem, calc(100% - 9rem));
+      margin-inline: auto;
+      font-size: 0.75rem;
+    }
+  }
+
+  /*
+   * The element the browser puts fullscreen. Without an explicit background
+   * the UA paints its own black behind a page whose colour lives on <body>,
+   * which shows through everywhere the map does not reach.
+   */
+  .map-shell:fullscreen {
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+  }
+
+  /*
+   * The fallback for a browser that refused the screen. Pinned over the
+   * viewport rather than handed the display, which is as close as CSS gets.
+   */
+  .map-shell[data-filled] {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    height: 100%;
+    background: var(--bg);
+  }
+
+  /* ------------------------------------------------------------- season */
+
+  .season-banner {
+    background: var(--panel);
+  }
+
+  .season-meter {
+    display: block;
+    height: 3px;
+    margin-top: 0.85rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--season) 18%, transparent);
+    overflow: hidden;
+  }
+
+  .season-meter > i {
+    display: block;
+    height: 100%;
+    width: calc(var(--p, 0) * 100%);
+    background: var(--season);
+    border-radius: inherit;
+    transition: width 0.8s var(--ease);
+  }
+
+  /* -------------------------------------------------------- misc / motion */
 
   .skeleton {
-    border-radius: 8px;
-    background: linear-gradient(
-      90deg,
-      var(--panel-2) 25%,
-      var(--panel-3) 50%,
-      var(--panel-2) 75%
-    );
+    border-radius: var(--r-xs);
+    background: linear-gradient(90deg, var(--panel-2) 25%, var(--panel-3) 50%, var(--panel-2) 75%);
     background-size: 200% 100%;
     animation: tk-shimmer 1.4s linear infinite;
   }
@@ -1052,7 +2125,7 @@ body::after {
    * motion nobody is looking at.
    */
   .tab-body {
-    animation: tab-in 0.34s var(--ease) both;
+    animation: tab-in 0.3s var(--ease) both;
   }
 
   .tab-body[data-slide="fwd"] {
@@ -1072,14 +2145,14 @@ body::after {
   @keyframes tab-in-right {
     from {
       opacity: 0;
-      transform: translate3d(2.5rem, 0, 0);
+      transform: translate3d(1.75rem, 0, 0);
     }
   }
 
   @keyframes tab-in-left {
     from {
       opacity: 0;
-      transform: translate3d(-2.5rem, 0, 0);
+      transform: translate3d(-1.75rem, 0, 0);
     }
   }
 
@@ -1091,22 +2164,15 @@ body::after {
   }
 
   .scroll-y::-webkit-scrollbar {
-    width: 8px;
+    width: 9px;
   }
 
   .scroll-y::-webkit-scrollbar-thumb {
     background: var(--line);
     border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
   }
-}
-
-/*
- * Headings are focused on navigation so assistive tech announces the new page.
- * They are targets, not controls, so they should not draw a focus ring — but
- * only for pointer users: a keyboard user who lands there deserves to see it.
- */
-h1[tabindex="-1"]:focus:not(:focus-visible) {
-  outline: none;
 }
 
 /* ------------------------------------------------------------------ leaflet */
@@ -1116,11 +2182,11 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 }
 
 .tk-map .leaflet-container {
-  font-family: inherit;
+  background: var(--bg-deep);
 }
 
 .leaflet-container {
-  background: var(--bg-deep);
+  font-family: var(--font-sans);
   outline: none;
 }
 
@@ -1128,154 +2194,131 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
   width: 100%;
   height: 100%;
   display: block;
+  /* The artwork is drawn for a dark page; in light mode it is lifted rather
+     than inverted, which would scramble the colour coding it carries. */
+  filter: saturate(1.04);
 }
 
-/* Both classes sit on the same <svg>, so this must not be a descendant
-   selector. Kept in case artwork ever ships its own text; today none does and
-   the place names come from the geo data instead. */
+[data-theme="light"] .tk-base-svg svg {
+  filter: saturate(0.96) brightness(1.02);
+}
+
 .tk-base-svg.hide-place-labels text {
   display: none;
 }
 
-/* Marker artwork: a shape, an optional trailing label, both centred. */
 .tk-marker {
+  position: relative;
   display: grid;
   place-items: center;
-  overflow: visible;
 }
 
 .tk-marker .marker-shape {
-  position: relative;
-  display: block;
+  transition:
+    transform var(--dur-fast) var(--ease),
+    filter var(--dur-fast) var(--ease);
   filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.55));
-  /*
-   * Two independent scales, multiplied.
-   *
-   * --tk-marker-scale is set by the map from how large the map itself currently
-   * renders, so pins stay in proportion on a phone. --tk-marker-draft is the
-   * ratio the settings slider is previewing while you drag it; it sits at 1
-   * until you touch the slider and returns to 1 the moment the value commits
-   * and the icons are rebuilt at real pixel sizes.
-   */
-  transform: scale(calc(var(--tk-marker-scale, 1) * var(--tk-marker-draft, 1)));
-  transition: transform 0.12s ease;
+}
+
+[data-theme="light"] .tk-marker .marker-shape {
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.3));
 }
 
 .tk-marker:hover .marker-shape {
-  transform: scale(calc(var(--tk-marker-scale, 1) * var(--tk-marker-draft, 1) * 1.18));
-  z-index: 1;
+  transform: scale(1.18);
 }
 
 .tk-marker .marker-check {
   position: absolute;
-  right: -22%;
-  bottom: -22%;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
 }
 
 .tk-marker.is-done {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 .tk-marker.is-done:hover {
-  opacity: 1;
+  opacity: 0.85;
 }
 
 .tk-marker .marker-label {
   position: absolute;
   left: 50%;
   top: 100%;
-  transform: translate(-50%, 3px);
-  padding: 1px 4px;
-  border-radius: 4px;
-  font-size: calc(10.5px * clamp(0.86, var(--tk-marker-scale, 1), 1));
+  transform: translate(-50%, 2px);
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: var(--place-halo);
+  color: var(--place-label);
+  font-size: 10px;
   font-weight: 600;
-  line-height: 1.25;
   letter-spacing: 0.01em;
+  line-height: 1.35;
   white-space: nowrap;
-  /* A pill rather than a text shadow: the map runs from near-black asphalt to
-     white building interiors, and plain text can't stay legible over both. */
-  color: #f2f6fa;
-  background: rgb(8 12 17 / 0.66);
   pointer-events: none;
-  max-width: 12rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .tk-spawn {
-  transition: none;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.45);
 }
 
-/*
- * Place names are printed over the artwork, so they carry their own halo
- * rather than trusting whatever is underneath. The pair is inverted for the
- * light theme: the vector artwork is pale, and pale-on-pale with a dark
- * shadow is legible on dark ground and a smudge on light.
- */
 .tk-place-label span {
-  position: absolute;
-  display: block;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: var(--place-halo);
   color: var(--place-label);
-  text-shadow:
-    0 0 4px var(--place-halo),
-    0 1px 2px var(--place-halo);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   pointer-events: none;
 }
 
-/*
- * Ring drawn under whatever is currently selected: a solid ring that is always
- * legible, plus a pulse on top. A pulse alone spends most of its cycle nearly
- * transparent, which is exactly when you glance at it.
- */
 .tk-highlight span,
 .tk-highlight span::after {
-  position: absolute;
-  left: -21px;
-  top: -21px;
-  width: 42px;
-  height: 42px;
+  display: block;
   border-radius: 999px;
-  border: 2px solid var(--accent);
 }
 
 .tk-highlight span {
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--accent) 24%, transparent),
-    0 0 10px 2px rgb(0 0 0 / 0.55);
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--accent);
+  animation: tk-pulse 1.5s var(--ease) infinite;
 }
 
 .tk-highlight span::after {
   content: "";
-  left: -2px;
-  top: -2px;
-  animation: tk-pulse 1.8s ease-out infinite;
+  width: 100%;
+  height: 100%;
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 @keyframes tk-pulse {
   0% {
-    transform: scale(1);
-    opacity: 0.9;
+    transform: scale(0.6);
+    opacity: 1;
   }
   100% {
-    transform: scale(1.7);
+    transform: scale(1.6);
     opacity: 0;
   }
 }
 
 .leaflet-tooltip.tk-tip {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  color: var(--text);
-  border-radius: 8px;
   padding: 0.35rem 0.55rem;
-  font-size: 0.75rem;
-  line-height: 1.35;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
   box-shadow: var(--shadow);
-  white-space: nowrap;
+  font-size: 0.72rem;
+  line-height: 1.4;
 }
 
 .leaflet-tooltip.tk-tip b {
@@ -1284,43 +2327,39 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 }
 
 .leaflet-tooltip.tk-tip span {
-  display: block;
-  color: var(--text-dim);
-  font-size: 0.6875rem;
+  color: var(--text-faint);
 }
 
 .leaflet-tooltip.tk-tip::before {
-  border-top-color: var(--line);
+  display: none;
 }
 
 .leaflet-bar,
 .leaflet-bar a {
-  background: var(--panel);
-  border-color: var(--line);
-  color: var(--text);
+  border-color: var(--line) !important;
+  background: var(--panel) !important;
+  color: var(--text) !important;
 }
 
 .leaflet-bar a:hover {
-  background: var(--panel-3);
-  color: var(--text);
+  background: var(--panel-2) !important;
 }
 
 .leaflet-control-zoom {
-  border-radius: 10px !important;
+  border-radius: var(--r-sm) !important;
   overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow) !important;
 }
 
 .leaflet-control-zoom a {
-  width: 34px;
-  height: 34px;
-  line-height: 34px;
-  font-size: 1.1rem;
+  width: 2rem !important;
+  height: 2rem !important;
+  line-height: 2rem !important;
+  font-size: 1rem !important;
 }
 
-/* Leave room for the mobile action bar. */
 .leaflet-bottom.leaflet-right {
-  margin-bottom: env(safe-area-inset-bottom, 0px);
+  display: none;
 }
 
 @media (max-width: 767px) {
@@ -1329,22 +2368,12 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .tk-highlight span {
-    animation: none;
-    opacity: 0.9;
-  }
-  .tk-marker .marker-shape {
-    transition: none;
-  }
-}
-
-/* -------------------------------------------------------------- animations */
+/* ------------------------------------------------------------------ motion */
 
 @keyframes tk-fade-up {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translate3d(0, 10px, 0);
   }
   to {
     opacity: 1;
@@ -1353,12 +2382,12 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 }
 
 .animate-in {
-  animation: tk-fade-up 0.18s ease-out;
+  animation: tk-fade-up 0.32s var(--ease) both;
 }
 
 @keyframes tk-sheet-up {
   from {
-    transform: translateY(100%);
+    transform: translate3d(0, 100%, 0);
   }
   to {
     transform: none;
@@ -1366,218 +2395,7 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 }
 
 .animate-sheet {
-  animation: tk-sheet-up 0.22s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .landing-choice:hover,
-  .map-card:hover,
-  .surface-link:hover {
-    transform: none;
-  }
-
-  .animate-in,
-  .animate-sheet {
-    animation: none;
-  }
-}
-
-/* Hidden by the label declutterer when it collides with a higher-priority one. */
-.tk-marker .marker-label.is-crowded,
-.tk-place-label span.is-crowded {
-  display: none;
-}
-
-/* Hovering the marker always reveals its own name, crowded or not. */
-.tk-marker:hover .marker-label.is-crowded {
-  display: block;
-  z-index: 2;
-}
-
-/* Map picker card. */
-.map-card {
-  content-visibility: auto;
-  contain-intrinsic-size: 260px;
-  transition:
-    border-color var(--dur) var(--ease),
-    transform var(--dur) var(--ease),
-    box-shadow var(--dur) var(--ease);
-}
-
-.map-card:hover,
-.surface-link:hover {
-  border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
-  transform: translateY(-2px);
-}
-
-.surface-link {
-  transition: border-color var(--dur-fast) ease;
-}
-
-.landing-choice {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  transition:
-    border-color var(--dur) var(--ease),
-    transform var(--dur) var(--ease),
-    box-shadow var(--dur) var(--ease);
-}
-
-.landing-choice:hover {
-  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
-  transform: translateY(-2px);
-}
-
-.landing-choice-kicker {
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.landing-hero {
-  position: relative;
-}
-
-@media (max-width: 640px) {
-  .input,
-  .input-icon {
-    font-size: 1rem;
-  }
-}
-
-.map-glass {
-  background: color-mix(in srgb, var(--panel) 88%, transparent);
-  backdrop-filter: blur(16px) saturate(1.15);
-}
-
-.season-banner {
-  background: var(--panel);
-}
-
-.season-meter {
-  display: block;
-  height: 3px;
-  margin-top: 0.85rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--season) 18%, transparent);
-  overflow: hidden;
-}
-
-.season-meter > i {
-  display: block;
-  height: 100%;
-  width: calc(var(--p, 0) * 100%);
-  background: var(--season);
-  border-radius: inherit;
-  transition: width 0.8s var(--ease);
-}
-
-.page-chrome {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin: -0.35rem -1rem 1.25rem;
-  padding: 0.65rem 1rem 0.85rem;
-  background: color-mix(in srgb, var(--bg) 86%, transparent);
-  backdrop-filter: blur(16px) saturate(1.15);
-  border-bottom: 1px solid var(--line-soft);
-}
-
-@media (min-width: 640px) {
-  .page-chrome {
-    margin-inline: -1.5rem;
-    padding-inline: 1.5rem;
-  }
-}
-
-.page-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.85rem 1.25rem;
-  margin-bottom: 1.15rem;
-}
-
-.page-lead {
-  margin-top: 0.4rem;
-  max-width: 38rem;
-  font-size: 0.9rem;
-  line-height: 1.45;
-  color: var(--text-dim);
-}
-
-.page-header-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.site-nav {
-  flex: 1 1 12rem;
-  min-width: 0;
-  max-width: 36rem;
-}
-
-.wordmark {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding-block: 0.2rem;
-  color: inherit;
-  text-decoration: none;
-}
-
-.wordmark-mark {
-  display: grid;
-  place-items: center;
-  width: 1.6rem;
-  height: 1.6rem;
-  border-radius: 7px;
-  background: var(--panel-2);
-  border: 1px solid var(--line);
-  color: var(--accent);
-}
-
-.wordmark-name {
-  font-size: 0.92rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-@media (max-width: 640px) {
-  /* The name is dropped for room, which leaves the mark alone as the link —
-     and a 23px-wide tap target. The padding puts it back over 24 without
-     making the mark itself bigger than the nav beside it. */
-  .wordmark-name {
-    display: none;
-  }
-
-  .wordmark {
-    padding-inline: 0.2rem;
-  }
-
-  .page-chrome {
-    margin-bottom: 0.85rem;
-    gap: 0.55rem;
-  }
-
-  .site-nav a,
-  .site-nav span[aria-current] {
-    padding: 0.3rem 0.28rem;
-    font-size: 0.68rem;
-    min-height: 1.85rem;
-  }
+  animation: tk-sheet-up 0.28s var(--ease) both;
 }
 
 .reveal {
@@ -1596,11 +2414,11 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 }
 
 .img-fade.is-ready {
-  opacity: 0.92;
+  opacity: 1;
 }
 
 .group:hover .img-fade.is-ready {
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 .status-pop {
@@ -1613,40 +2431,77 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
   100% { transform: scale(1); }
 }
 
+/*
+ * Labels that would overlap at the current zoom are hidden rather than allowed
+ * to pile up, and come back on hover so the information is never actually lost.
+ */
+.tk-marker .marker-label.is-crowded,
+.tk-place-label span.is-crowded {
+  display: none;
+}
+
+.tk-marker:hover .marker-label.is-crowded {
+  display: block;
+  z-index: 2;
+}
+
+@media (max-width: 640px) {
+  /* 16px stops iOS zooming the viewport when a field takes focus. */
+  .input,
+  .input-icon {
+    font-size: 1rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .site-nav-pill,
   .segment-pill {
     transition: none;
   }
+
   .tab-body {
     animation: none;
   }
+
   .map-card:hover,
+  .surface-link:hover,
+  .landing-choice:hover,
   .season-banner:hover {
     transform: none;
   }
+
   .btn:active {
     transform: none;
   }
+
   .skeleton {
     animation: none;
   }
+
   .meter > i {
     transition: none;
   }
+
+  .tk-highlight span {
+    animation: none;
+  }
+
+  .tk-marker .marker-shape {
+    transition: none;
+  }
+
   .reveal,
   .status-pop,
-  .img-fade {
+  .img-fade,
+  .animate-in,
+  .animate-sheet {
     animation: none;
     transition: none;
     opacity: 1;
   }
 }
 
-.btn:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
+/* ------------------------------------------------------------------- touch */
 
 /*
  * Controls that must stay visually small but be tappable on a phone.
@@ -1677,7 +2532,7 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
    * the box rather than the type leaves the design where it was on a desktop.
    */
   .btn {
-    min-height: 32px;
+    min-height: 34px;
   }
 
   /*

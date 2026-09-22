@@ -2,5 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run data && npm run build",
   "outputDirectory": "dist",
-  "framework": "vite"
+  "framework": "vite",
+  "functions": {
+    "api/data/[...path].js": {
+      "memory": 2048,
+      "maxDuration": 60,
+      "includeFiles": "{data,src/data,public/data}/**"
+    }
+  }
 }

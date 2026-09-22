@@ -7,8 +7,10 @@ import DetailPanel from "./DetailPanel";
 import MapSwitcher from "./MapSwitcher";
 import RaidClock from "./RaidClock";
 import ShortcutHelp, { isTypingInto, useSlashSearch } from "./ShortcutHelp";
-import { Icon, icons } from "./ui";
+import { Icon, icons, Menu, MenuItem, MenuLabel } from "./ui";
 import { availableStyles, floorsFor } from "../lib/base-layer";
+import { LAYERS } from "../lib/layers";
+import { swatchSvg } from "../lib/marker-icons";
 import { filterQuests, type Selection } from "../lib/build-layers";
 import { useProgression } from "../lib/data";
 import { withinExtents } from "../lib/leaflet-crs";
@@ -27,6 +29,15 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "settings", label: "Settings", icon: icons.settings },
 ];
 
+/**
+ * The four shapes worth naming in the first-run key. Read out of LAYERS rather
+ * than restated, so the swatch on the card is drawn by the same code that
+ * draws the marker on the map and the two can never drift apart.
+ */
+const PRIMER_KEY = (["pmc-spawns", "pmc-extracts", "quests", "keys"] as const)
+  .map((id) => LAYERS.find((l) => l.id === id))
+  .filter((l): l is (typeof LAYERS)[number] => Boolean(l));
+
 export default function MapPage({
   data,
   maps,
@@ -38,6 +49,8 @@ export default function MapPage({
 }) {
   const layers = useStore((s) => s.layers);
   const settings = useStore((s) => s.settings);
+  const primerSeen = useStore((s) => s.ui.mapPrimerSeen);
+  const setUiFlag = useStore((s) => s.setUiFlag);
   const quest = useStore((s) => s.quest);
   const setQuestFilter = useStore((s) => s.setQuestFilter);
   const setLayer = useStore((s) => s.setLayer);
@@ -321,15 +334,21 @@ export default function MapPage({
     >
       {/* ------------------------------------------------------------ header */}
       {!immersive && (
-        <header
-          className="map-glass flex flex-none items-center gap-1.5 border-b px-2 py-2 md:px-3"
-          style={{ borderColor: "var(--line)" }}
-        >
+        /*
+         * What stays on the bar is what you touch during a raid: which map,
+         * what time it is in there, which floor, and the panel toggle. The
+         * once-a-session controls — fit, art style, hide the interface,
+         * shortcuts, and the links to the other sections — moved into the
+         * menu. Eleven controls abreast wrapped onto a second row over the
+         * map at 900px, and none of them were findable anyway.
+         */
+        <header className="map-glass map-bar" style={{ borderColor: "var(--line)" }}>
           <a
             href={href.home()}
             onClick={onNavClick(href.home())}
             className="btn btn-ghost btn-icon flex-none"
             aria-label="All maps"
+            title="All maps"
           >
             <Icon path={icons.back} size={18} />
           </a>
@@ -337,69 +356,7 @@ export default function MapPage({
           <MapSwitcher maps={maps} current={data.normalizedName} onPick={(name) => navigate(href.map(name))} />
 
           <div className="ml-auto flex flex-none items-center gap-1.5">
-            <button
-              type="button"
-              className="btn hidden text-[0.72rem] md:inline-flex"
-              aria-pressed={!railCollapsed}
-              onClick={() => setRailCollapsed((v) => !v)}
-              title="Hide or show the side panel ([)"
-            >
-              {railCollapsed ? "Show list" : "Hide list"}
-            </button>
-            <button
-              type="button"
-              className="btn hidden text-[0.72rem] lg:inline-flex"
-              onClick={() => setFitToken((n) => n + 1)}
-              title="Fit the whole map on screen (0)"
-            >
-              Fit map
-            </button>
-            <a
-              className="btn btn-icon inline-flex flex-none sm:hidden"
-              href={href.dashboard()}
-              onClick={onNavClick(href.dashboard())}
-              title="Dashboard — what to run next"
-              aria-label="Dashboard"
-            >
-              <Icon path={icons.layout} size={16} />
-            </a>
-            <a
-              className="btn hidden text-[0.72rem] sm:inline-flex"
-              style={{ padding: "0.28rem 0.6rem" }}
-              href={href.dashboard()}
-              onClick={onNavClick(href.dashboard())}
-              title="What to run next"
-            >
-              Dashboard
-            </a>
-            <a
-              className="btn hidden text-[0.72rem] lg:inline-flex"
-              style={{ padding: "0.28rem 0.6rem" }}
-              href={href.quests()}
-              onClick={onNavClick(href.quests())}
-              title="Track your quests"
-            >
-              Quests
-            </a>
-
             <RaidClock mapName={data.normalizedName} />
-
-            {styles.length > 1 && (
-              <div className="hidden items-center gap-1 rounded-lg p-0.5 lg:flex" style={{ background: "var(--panel-2)" }}>
-                {styles.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    className="btn btn-ghost text-[0.72rem]"
-                    style={{ padding: "0.28rem 0.55rem" }}
-                    aria-pressed={style === s}
-                    onClick={() => setSetting("style", s)}
-                  >
-                    {s === "clean" ? "Clean" : "Satellite"}
-                  </button>
-                ))}
-              </div>
-            )}
 
             {floors.length > 1 && (
               <label className="hidden md:block">
@@ -419,29 +376,101 @@ export default function MapPage({
               </label>
             )}
 
-            {/* Hiding the interface has to be undoable from somewhere obvious,
-                and a keyboard shortcut nobody can find may as well not exist. */}
             <button
               type="button"
-              className="btn btn-ghost btn-icon hidden flex-none md:inline-flex"
-              aria-label="Hide the interface"
-              title="Hide the interface (H)"
-              onClick={() => {
-                setImmersive(true);
-                setSheetOpen(false);
-              }}
+              className="btn hidden flex-none text-[0.72rem] md:inline-flex"
+              aria-pressed={!railCollapsed}
+              onClick={() => setRailCollapsed((v) => !v)}
+              title="Hide or show the side panel ([)"
             >
-              <Icon path={icons.eye} size={16} />
+              {railCollapsed ? "Show panel" : "Hide panel"}
             </button>
-            <button
-              type="button"
-              className="btn btn-ghost btn-icon hidden flex-none md:inline-flex"
-              aria-label="Keyboard shortcuts"
-              title="Keyboard shortcuts (?)"
-              onClick={() => setShowHelp(true)}
-            >
-              <Icon path={icons.keyboard} size={16} />
-            </button>
+
+            <Menu label="More map options" icon={icons.stack}>
+              {(close) => (
+                <>
+                  <MenuLabel>This map</MenuLabel>
+                  <MenuItem
+                    icon={icons.fit}
+                    hint="Zoom out until the whole map is on screen"
+                    onClick={() => {
+                      setFitToken((n) => n + 1);
+                      close();
+                    }}
+                  >
+                    Fit map
+                  </MenuItem>
+                  {floors.length > 1 && (
+                    <div className="md:hidden">
+                      {floors.map((f) => (
+                        <MenuItem
+                          key={f.id}
+                          pressed={floorId === f.id}
+                          onClick={() => {
+                            setFloorId(f.id);
+                            close();
+                          }}
+                        >
+                          {f.name}
+                        </MenuItem>
+                      ))}
+                    </div>
+                  )}
+                  {styles.length > 1 && (
+                    <>
+                      <MenuLabel>Artwork</MenuLabel>
+                      {styles.map((s) => (
+                        <MenuItem
+                          key={s}
+                          pressed={style === s}
+                          hint={
+                            s === "clean"
+                              ? "Drawn vector map, easiest to read"
+                              : "Photographic tiles, matches what you see in game"
+                          }
+                          onClick={() => {
+                            setSetting("style", s);
+                            close();
+                          }}
+                        >
+                          {s === "clean" ? "Clean" : "Satellite"}
+                        </MenuItem>
+                      ))}
+                    </>
+                  )}
+
+                  <MenuLabel>View</MenuLabel>
+                  <MenuItem
+                    icon={icons.eye}
+                    hint="Map only — press H to bring it back"
+                    onClick={() => {
+                      setImmersive(true);
+                      setSheetOpen(false);
+                      close();
+                    }}
+                  >
+                    Hide the interface
+                  </MenuItem>
+                  <MenuItem
+                    icon={icons.keyboard}
+                    onClick={() => {
+                      setShowHelp(true);
+                      close();
+                    }}
+                  >
+                    Keyboard shortcuts
+                  </MenuItem>
+
+                  <MenuLabel>Go to</MenuLabel>
+                  <MenuItem icon={icons.compass} to={href.dashboard()} hint="What to run next">
+                    Dashboard
+                  </MenuItem>
+                  <MenuItem icon={icons.tasks} to={href.quests()} hint="Track your quests">
+                    Quests
+                  </MenuItem>
+                </>
+              )}
+            </Menu>
           </div>
         </header>
       )}
@@ -557,7 +586,10 @@ export default function MapPage({
           {quest.focusTask && mapData.tasks[quest.focusTask] && (
             <button
               type="button"
-              className="surface animate-in absolute left-1/2 top-3 z-[500] flex -translate-x-1/2 items-center gap-2 px-3 py-1.5 text-xs"
+              /* Centred with auto margins rather than a translate: `.animate-in`
+                 animates `transform` and holds `none` afterwards, which would
+                 cancel a `-translate-x-1/2`. */
+              className="surface animate-in absolute inset-x-0 top-3 z-[500] mx-auto flex w-max max-w-[calc(100%-1.5rem)] items-center gap-2 px-3 py-1.5 text-xs"
               style={{ boxShadow: "var(--shadow)", maxWidth: "min(20rem, calc(100% - 1.5rem))" }}
               onClick={() => setQuestFilter("focusTask", null)}
             >
@@ -566,6 +598,56 @@ export default function MapPage({
               </span>
               <Icon path={icons.close} size={13} />
             </button>
+          )}
+
+          {/*
+            * The one rule the map runs on, shown over it the first time
+            * somebody opens one and never again. A new player looking at four
+            * hundred coloured shapes has no way to learn this from the map
+            * itself, and it was previously filed inside a collapsed `details`
+            * at the bottom of the map *list*, which is a page they may never
+            * scroll.
+            */}
+          {!primerSeen && !selection && (
+            <aside className="surface animate-in map-primer" style={{ boxShadow: "var(--shadow-lg)" }}>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-[0.875rem] font-semibold">Reading the map</p>
+                  <p className="mt-1 text-meta">
+                    Colour says <em>who</em> it belongs to, shape says <em>what</em> it is. Tap
+                    anything for the detail panel, and use the layer switches on the left to show
+                    only what you care about.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-icon flex-none"
+                  aria-label="Got it"
+                  onClick={() => setUiFlag("mapPrimerSeen", true)}
+                >
+                  <Icon path={icons.close} size={15} />
+                </button>
+              </div>
+              <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5 text-[0.72rem]">
+                {PRIMER_KEY.map((row) => (
+                  <span key={row.id} className="inline-flex items-center gap-1.5">
+                    <span
+                      className="flex-none"
+                      aria-hidden="true"
+                      dangerouslySetInnerHTML={{ __html: swatchSvg(row.shape, row.color, 14) }}
+                    />
+                    {row.label}
+                  </span>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm mt-3"
+                onClick={() => setUiFlag("mapPrimerSeen", true)}
+              >
+                Got it
+              </button>
+            </aside>
           )}
 
           {!layers.documents && mapData.markers.documents.length > 0 && (

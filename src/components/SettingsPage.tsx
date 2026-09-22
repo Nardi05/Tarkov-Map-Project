@@ -5,10 +5,12 @@ import { GAME_EDITIONS, GAME_MODES, type Faction, type GameEdition } from "../li
 import { prerequisiteClosure } from "../lib/progression";
 import { href, onNavClick } from "../lib/router";
 import { useStore, type Theme } from "../store";
+import DataFreshness from "./DataFreshness";
 import ModeSwitch from "./ModeSwitch";
+import PageShell from "./PageShell";
 import SavePanel from "./SavePanel";
 import TargetPicker from "./TargetPicker";
-import { Icon, icons, PageHeader } from "./ui";
+import { PageHeader } from "./ui";
 
 const FACTIONS: Faction[] = ["Any", "USEC", "BEAR"];
 
@@ -76,22 +78,8 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="page scroll-y h-full">
-      <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
-        <nav className="mb-5 flex items-center gap-2">
-          <a
-            href={href.dashboard()}
-            onClick={onNavClick(href.dashboard())}
-            className="btn btn-ghost btn-icon"
-            aria-label="Back to dashboard"
-          >
-            <Icon path={icons.back} size={18} />
-          </a>
-          <span className="text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
-            Settings
-          </span>
-        </nav>
-
+    <PageShell>
+      <div>
         <PageHeader
           title="Settings"
           lead="Three characters, same as the game: PvP Zone, Season, and PvE. This page edits the one you have selected."
@@ -328,6 +316,9 @@ export default function SettingsPage() {
 
         <section className="surface mt-3 p-4">
           <h2 className="text-sm font-semibold">Appearance</h2>
+          <p className="card-sub">
+            Dark by default. System follows whatever your phone or desktop is set to.
+          </p>
           <div className="mt-3 flex gap-1.5">
             {THEMES.map((theme) => (
               <button
@@ -342,7 +333,19 @@ export default function SettingsPage() {
             ))}
           </div>
         </section>
+
+        {/*
+          * Where the game data came from, and a way to go and get it again.
+          * It belongs here rather than only in the footer: "is this current?"
+          * is a settings question, and the answer used to be unanswerable.
+          */}
+        <section className="surface mt-3 p-4">
+          <h2 className="text-sm font-semibold">Game data</h2>
+          <div className="mt-3">
+            <DataFreshness compact={false} />
+          </div>
+        </section>
       </div>
-    </div>
+    </PageShell>
   );
 }

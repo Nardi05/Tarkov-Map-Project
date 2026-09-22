@@ -8,11 +8,12 @@ import { useStore, useTaskStatus } from "../store";
 import type { Faction, GameMode } from "../lib/persist-migrate";
 import type { Progression, TaskStatus } from "../types";
 import ModeSwitch from "./ModeSwitch";
+import PageShell from "./PageShell";
 import SavePanel from "./SavePanel";
 import ScreenshotImport from "./ScreenshotImport";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
-import { EmptyState, Icon, icons } from "./ui";
+import { Callout, EmptyState, Icon, icons, Term } from "./ui";
 
 /**
  * The first-run walkthrough: what are you running at each trader right now?
@@ -181,9 +182,7 @@ export default function SetupWizard() {
   if (!data) {
     return (
       <Shell step={0} total={1}>
-        <p className="py-16 text-center text-sm" style={{ color: "var(--text-dim)" }}>
-          Loading the task graph…
-        </p>
+        <p className="py-16 text-center text-sm muted">Loading the task graph…</p>
       </Shell>
     );
   }
@@ -259,7 +258,7 @@ export default function SetupWizard() {
         {!onSummary ? (
           <button
             type="button"
-            className="btn is-active"
+            className="btn btn-primary"
             onClick={() => {
               setQuery("");
               setStep((s) => s + 1);
@@ -270,7 +269,7 @@ export default function SetupWizard() {
         ) : (
           <button
             type="button"
-            className="btn is-active"
+            className="btn btn-primary"
             // Enabled, it silently returned you to the dashboard having written
             // nothing, which reads as the save having failed.
             disabled={activeCount === 0 && doneCount === 0}
@@ -280,13 +279,29 @@ export default function SetupWizard() {
           </button>
         )}
 
-        <span className="ml-auto text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
+        {/*
+          * The escape hatch, available from every step rather than only the
+          * last one. Thirteen screens is a long way to walk before your ticks
+          * count for anything, and there is no reason they should not count
+          * from the second trader onwards.
+          */}
+        {!onSummary && (activeCount > 0 || doneCount > 0) && (
+          <button type="button" className="btn" onClick={finish}>
+            Save and finish
+          </button>
+        )}
+
+        <span className="ml-auto text-[0.72rem] tabular-nums faint">
           {activeCount} active · {doneCount + implied.size} done
           {implied.size > 0 ? ` (${implied.size} worked out)` : ""}
         </span>
 
-        <a className="btn btn-ghost text-[0.72rem]" href={href.dashboard()} onClick={onNavClick(href.dashboard())}>
-          Cancel
+        <a
+          className="btn btn-ghost text-[0.72rem]"
+          href={href.dashboard()}
+          onClick={onNavClick(href.dashboard())}
+        >
+          {activeCount > 0 || doneCount > 0 ? "Discard" : "Cancel"}
         </a>
       </footer>
     </Shell>
@@ -297,40 +312,35 @@ export default function SetupWizard() {
 
 function Shell({ step, total, children }: { step: number; total: number; children: React.ReactNode }) {
   return (
-    <div className="page scroll-y h-full">
-      <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
-        <nav className="mb-5 flex items-center gap-1.5">
-          <a
-            href={href.dashboard()}
-            onClick={onNavClick(href.dashboard())}
-            className="btn btn-ghost btn-icon flex-none"
-            aria-label="Back to dashboard"
-          >
-            <Icon path={icons.back} size={18} />
-          </a>
-          <span className="text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
-            Step {Math.min(step + 1, total)} of {total}
-          </span>
-        </nav>
-
+    <PageShell
+      aside={
+        <span className="text-[0.72rem] tabular-nums faint">
+          Step {Math.min(step + 1, total)} of {total}
+        </span>
+      }
+    >
+      {/*
+        * How far through you are, above everything else on the page. A
+        * walkthrough with eleven trader steps and no sense of length is one
+        * people abandon at step three.
+        */}
+      <div
+        className="mb-6 h-1.5 w-full overflow-hidden rounded-full"
+        style={{ background: "var(--panel-2)" }}
+        role="progressbar"
+        aria-valuenow={step + 1}
+        aria-valuemin={1}
+        aria-valuemax={total}
+        aria-label="Setup progress"
+      >
         <div
-          className="mb-6 h-1.5 w-full overflow-hidden rounded-full"
-          style={{ background: "var(--panel-2)" }}
-          role="progressbar"
-          aria-valuenow={step + 1}
-          aria-valuemin={1}
-          aria-valuemax={total}
-          aria-label="Setup progress"
-        >
-          <div
-            className="h-full rounded-full transition-[width] duration-200"
-            style={{ width: `${((step + 1) / total) * 100}%`, background: "var(--accent)" }}
-          />
-        </div>
-
-        {children}
+          className="h-full rounded-full transition-[width] duration-200"
+          style={{ width: `${((step + 1) / total) * 100}%`, background: "var(--accent)" }}
+        />
       </div>
-    </div>
+
+      {children}
+    </PageShell>
   );
 }
 
@@ -350,30 +360,35 @@ function ProfileStep({
   return (
     <div>
       <h1 className="display text-2xl sm:text-3xl">Set up your progress</h1>
-      <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-        Open the game, go through your traders, and tick the quests you have accepted. That is
-        enough — a quest sitting in your list means everything behind it is already done, so the
-        site fills in the rest of your wipe from it.
+      <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed muted">
+        Open the game, go through your <Term id="trader">traders</Term>, and tick the quests you
+        have accepted. That is enough — a quest sitting in your list means everything behind it is
+        already done, so the site fills in the rest of your wipe from it.
       </p>
 
-      <div className="surface mt-5 flex flex-wrap items-end gap-4 p-3">
+      {/*
+        * Said plainly, and said first. The walkthrough is thirteen screens
+        * long, and the single most common reason somebody abandons one is
+        * believing they have to finish it. They do not: every tick is saved
+        * at the end, one trader is already useful, and the rest can be done
+        * from the tracker whenever.
+        */}
+      <Callout tone="accent" className="mt-4" icon={icons.info}>
+        <b className="font-semibold" style={{ color: "var(--text)" }}>
+          You can stop whenever you like.
+        </b>{" "}
+        Skip any trader you have nothing from, and press Finish at the end of any step. Even one
+        trader's worth of ticks gives the dashboard something real to rank.
+      </Callout>
+
+      <div className="surface mt-4 flex flex-wrap items-end gap-4 p-3.5">
         <label className="block">
-          <span
-            className="mb-1 block text-[0.68rem] font-semibold uppercase tracking-[0.09em]"
-            style={{ color: "var(--text-dim)" }}
-          >
-            Mode
-          </span>
+          <span className="kicker mb-1 block">Mode</span>
           <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m as never)} />
         </label>
 
         <label className="block">
-          <span
-            className="mb-1 block text-[0.68rem] font-semibold uppercase tracking-[0.09em]"
-            style={{ color: "var(--text-dim)" }}
-          >
-            Faction
-          </span>
+          <span className="kicker mb-1 block">Faction</span>
           <select
             className="input"
             style={{ width: "auto", paddingRight: "1.75rem" }}
@@ -390,12 +405,7 @@ function ProfileStep({
         </label>
 
         <label className="block">
-          <span
-            className="mb-1 block text-[0.68rem] font-semibold uppercase tracking-[0.09em]"
-            style={{ color: "var(--text-dim)" }}
-          >
-            Level
-          </span>
+          <span className="kicker mb-1 block">Level</span>
           <input
             className="input tabular-nums"
             style={{ width: "5rem" }}
@@ -415,19 +425,11 @@ function ProfileStep({
       </div>
 
       {alreadyTracked > 0 && (
-        <p
-          className="surface-2 mt-4 flex items-start gap-2 p-3 text-[0.78rem] leading-relaxed"
-          style={{ color: "var(--text-dim)" }}
-        >
-          <span className="mt-0.5 flex-none" style={{ color: "var(--warn, #facc15)" }}>
-            <Icon path={icons.info} size={15} />
-          </span>
-          <span>
-            You already have {alreadyTracked} task{alreadyTracked === 1 ? "" : "s"} tracked in this
-            mode. Nothing here removes them — what you tick is added on top, so a task you have
-            already marked done stays done.
-          </span>
-        </p>
+        <Callout className="mt-4">
+          You already have {alreadyTracked} task{alreadyTracked === 1 ? "" : "s"} tracked in this
+          mode. Nothing here removes them — what you tick is added on top, so a task you have
+          already marked done stays done.
+        </Callout>
       )}
     </div>
   );

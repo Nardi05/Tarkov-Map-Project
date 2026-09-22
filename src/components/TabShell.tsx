@@ -1,8 +1,9 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { href, onNavClick, TAB_ORDER, type TabId } from "../lib/router";
 import { useStore } from "../store";
+import DataFreshness from "./DataFreshness";
 import ModeSwitch from "./ModeSwitch";
-import { Icon, icons, PageChrome } from "./ui";
+import { Icon, icons, SearchButton, SiteNav, TabBar, Wordmark } from "./ui";
 
 /**
  * The frame the tab pages — dashboard, maps, story, quests, hideout — share.
@@ -25,6 +26,10 @@ import { Icon, icons, PageChrome } from "./ui";
  * transition captured the old page twice and the new one appeared, abruptly,
  * after the animation had finished. A keyed remount plus one keyframe is less
  * clever and works everywhere.
+ *
+ * Two navs, not one. The row of pills is a desktop shape — at 360px five of
+ * them were 3.5 characters wide each — so below 900px the sections move to a
+ * bottom tab bar, where a thumb can actually reach them.
  */
 export default function TabShell({
   current,
@@ -56,10 +61,13 @@ export default function TabShell({
   }, [current]);
 
   return (
-    <div ref={scroller} className="page scroll-y h-full">
-      <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-12">
-        <PageChrome current={current}>
-          <div className="flex items-center gap-1.5">
+    <div className="page flex h-full flex-col">
+      <header className="app-bar">
+        <div className="app-bar-inner">
+          <Wordmark />
+          <SiteNav current={current} />
+          <div className="app-bar-tools">
+            <SearchButton />
             <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m)} size="sm" />
             <a
               href={href.settings()}
@@ -68,17 +76,27 @@ export default function TabShell({
               aria-label="Settings and profiles"
               title="Settings"
             >
-              <Icon path={icons.settings} size={16} />
+              <Icon path={icons.settings} size={17} />
             </a>
           </div>
-        </PageChrome>
+        </div>
+      </header>
 
-        {/* Keyed on the tab so React replaces the subtree, which is what
-            restarts the animation. */}
-        <div key={current} className="tab-body" data-slide={direction ?? undefined}>
-          {children}
+      <div ref={scroller} className="scroll-y min-h-0 flex-1">
+        <div className="shell">
+          {/* Keyed on the tab so React replaces the subtree, which is what
+              restarts the animation. */}
+          <div key={current} className="tab-body" data-slide={direction ?? undefined}>
+            {children}
+          </div>
+
+          <footer className="mt-12 border-t pt-5" style={{ borderColor: "var(--line-soft)" }}>
+            <DataFreshness />
+          </footer>
         </div>
       </div>
+
+      <TabBar current={current} />
     </div>
   );
 }
