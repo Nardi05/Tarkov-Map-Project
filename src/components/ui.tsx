@@ -84,11 +84,18 @@ export const TAB_ICON: Record<TabId, string> = {
   hideout: icons.home,
 };
 
+/**
+ * Section labels.
+ *
+ * "Side quests" rather than "Quests", because the site now tracks two kinds of
+ * quest and the distinction is the whole organising idea: Story is the ending
+ * path, Side quests is everything the traders hand you.
+ */
 const TAB_LABEL: Record<TabId, string> = {
   dashboard: "Dashboard",
   maps: "Maps",
   story: "Story",
-  quests: "Quests",
+  quests: "Side quests",
   hideout: "Hideout",
 };
 
@@ -395,7 +402,8 @@ export function EmptyState({
   action,
 }: {
   title: string;
-  hint?: string;
+  /** ReactNode, not string: a hint is the natural place for a glossary term. */
+  hint?: ReactNode;
   compact?: boolean;
   icon?: string;
   action?: ReactNode;

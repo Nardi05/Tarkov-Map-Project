@@ -218,6 +218,32 @@ export interface TaskItemNeed {
   foundInRaid: boolean;
 }
 
+/**
+ * One thing a task asks of you, in the feed's own words.
+ *
+ * The sentence is the guide. "Stash Golden neck chains in the microwave on the
+ * 3rd floor of the dorm on Customs" says what to do and where, which is what a
+ * tracker has to show and what nobody was going to write 1,400 times by hand.
+ *
+ * Only about half carry `maps` and a handful carry `keys` — an objective that
+ * is a trader hand-in belongs to no map and needs no door.
+ */
+export interface TaskObjective {
+  id: string;
+  /** Feed vocabulary: giveItem, findQuestItem, mark, shoot, visit, extract… */
+  type: string;
+  /** The human-readable instruction. Always present; empty ones are dropped. */
+  text: string;
+  /** How many, when more than one is wanted. */
+  count?: number;
+  optional?: boolean;
+  foundInRaid?: boolean;
+  /** Maps the objective names, whether or not it has coordinates. */
+  maps?: string[];
+  /** The key this particular objective goes through, not the task's whole ring. */
+  keys?: string[];
+}
+
 export interface ProgressionTask {
   name: string;
   trader: string | null;
@@ -237,6 +263,11 @@ export interface ProgressionTask {
   needs: TaskItemNeed[];
   /** Keys the task's objectives need, by map. */
   keys: { map: string | null; keys: string[] }[];
+  /**
+   * Everything the task asks for, in order. Absent on payloads built before
+   * this was recorded, so every consumer has to tolerate `undefined`.
+   */
+  objectives?: TaskObjective[];
   wiki: string | null;
 }
 

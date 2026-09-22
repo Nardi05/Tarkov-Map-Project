@@ -14,6 +14,7 @@ export type DashPanelId =
   | "progress"
   | "raid"
   | "upcoming"
+  | "story"
   | "keys"
   | "needs"
   | "traders"
@@ -55,18 +56,23 @@ export const DASH_PANEL_META: Record<DashPanelId, DashPanelMeta> = {
     blurb: "Which map to run next.",
   },
   upcoming: {
-    title: "Do next",
-    hint: "Tasks you can start now, with the maps they use.",
-    blurb: "The next tasks on your path.",
+    title: "Side quests — do next",
+    hint: "Trader tasks open to you now, with what each one asks for.",
+    blurb: "The next trader tasks on your path.",
+  },
+  story: {
+    title: "Story — do next",
+    hint: "The next chapters of the ending you are aiming at.",
+    blurb: "Where you are on the story path, and what is next.",
   },
   keys: {
     title: "Keys to bring",
-    hint: "Doors those next tasks go through.",
-    blurb: "Keys for what is coming up.",
+    hint: "Doors your next side quests and story chapters go through.",
+    blurb: "Keys for what is coming up, story and side.",
   },
   needs: {
     title: "Find in raid",
-    hint: "Items those tasks still need from the stash.",
+    hint: "Items those quests still want, against what your stash holds.",
     blurb: "Quest items still to find.",
   },
   traders: {
@@ -101,13 +107,22 @@ export const DEFAULT_DASHBOARD: DashboardLayout = {
     { id: "progress", visible: true, wide: true },
     { id: "raid", visible: true, wide: true },
     { id: "upcoming", visible: true, wide: false },
+    { id: "story", visible: true, wide: false },
     { id: "keys", visible: true, wide: false },
     { id: "needs", visible: true, wide: true },
     { id: "traders", visible: true, wide: true },
     { id: "season", visible: true, wide: false },
     { id: "maps", visible: true, wide: false },
   ],
-  upcomingLimit: 20,
+  /*
+   * Six, not twenty. The panel used to list one-line rows, where twenty was a
+   * glanceable column; its rows now carry the objective sentence, the maps and
+   * the key count, so twenty of them is a two-thousand-pixel wall next to a
+   * six-hundred-pixel story panel. The full list has its own page.
+   *
+   * A stored preference still wins — this only changes what a new layout gets.
+   */
+  upcomingLimit: 6,
   columns: 2,
 };
 

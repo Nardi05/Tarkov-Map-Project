@@ -1169,28 +1169,115 @@ export async function buildData({
     }
   }
 
-  /** Item ids a task wants handed in, with the found-in-raid flag preserved. */
-  function itemNeeds(task) {
+  /**
+   * Keys any part of the graph referenced, so the payload ships records for
+   * them. Declared before the helpers below because `objectiveList` adds to it.
+   */
+  const progressionKeyIds = new Set();
+
+  /**
+   * What a task actually asks you to do, in order.
+   *
+   * The feed states every objective with a type and a sentence of English —
+   * "Stash Golden neck chains in the microwave on the 3rd floor of the dorm on
+   * Customs". Only about a third carry coordinates, and until now the other two
+   * thirds were dropped on the floor: they became neither a marker nor a row,
+   * so a task whose objectives were all hand-ins or kills showed up in the
+   * tracker as a name and nothing else.
+   *
+   * Keeping all of them is what lets a task be a checklist rather than a
+   * checkbox, and the sentences are the closest thing to a guide that exists
+   * without somebody writing 526 of them by hand.
+   *
+   * Deliberately lossy: fields that are empty are omitted rather than stored as
+   * null, because this rides in a payload the site already pays 315KB for.
+   */
+  function objectiveList(task) {
     const out = [];
     for (const obj of task.objectives ?? []) {
-      if (obj.type !== "giveItem" && obj.type !== "findItem") continue;
-      const ids = (obj.items ?? []).filter(Boolean);
-      if (!ids.length) continue;
-      const first = items[ids[0]];
-      out.push({
-        items: ids,
-        // The list is alternatives ("any of these"); name the first and say so.
-        name: first?.name ?? "Unknown item",
-        icon: first?.iconLink ?? null,
-        count: obj.count ?? 1,
-        foundInRaid: !!obj.foundInRaid,
-      });
+      const description = (obj.description ?? "").trim();
+      if (!description) continue;
+      const row = { id: obj.id, type: obj.type, text: description };
+      if (obj.optional) row.optional = true;
+      if (typeof obj.count === "number" && obj.count > 1) row.count = obj.count;
+      if (obj.foundInRaid) row.foundInRaid = true;
+
+      // Which map the sentence is about, so a row can say where to go even when
+      // the objective has no coordinates to put a pin at.
+      const maps = new Set();
+      for (const id of obj.maps ?? []) {
+        for (const name of mapNamesForId(typeof id === "string" ? id : (id?.id ?? ""))) {
+          maps.add(name);
+        }
+      }
+      if (maps.size) row.maps = [...maps].sort();
+
+      // The key this specific objective needs, rather than the task's whole
+      // keyring — "which door does *this* step go through".
+      const keys = (obj.requiredKeys ?? []).flat().filter((id) => keyIndex[id]);
+      if (keys.length) row.keys = [...new Set(keys)];
+      for (const id of keys) progressionKeyIds.add(id);
+
+      out.push(row);
     }
     return out;
   }
 
+  /**
+   * Item ids a task wants handed in, with the found-in-raid flag preserved.
+   *
+   * Folded per item, and **not** by summing.
+   *
+   * The feed states one requirement as two objectives: `findItem` 4 car
+   * batteries, then `giveItem` 4. Those are the same four batteries, so adding
+   * them told people Car Repair wanted eight, and Ice Cream Cones six
+   * magazines instead of three. Fifty-five tasks are shaped this way, and both
+   * the dashboard's shopping list and the stash audit were inflating every one
+   * of them.
+   *
+   * So: counts add up *within* an objective type — two separate hand-ins
+   * really are two hand-ins — and the requirement is the largest of those
+   * per-type totals. Find four and hand over four is four.
+   */
+  function itemNeeds(task) {
+    /** itemId -> { byType: Map<type, count>, meta } */
+    const byItem = new Map();
+
+    for (const obj of task.objectives ?? []) {
+      if (obj.type !== "giveItem" && obj.type !== "findItem") continue;
+      const ids = (obj.items ?? []).filter(Boolean);
+      if (!ids.length) continue;
+      const key = ids[0];
+      let row = byItem.get(key);
+      if (!row) {
+        const first = items[key];
+        row = {
+          byType: new Map(),
+          // The list is alternatives ("any of these"); name the first and say so.
+          items: ids,
+          name: first?.name ?? "Unknown item",
+          icon: first?.iconLink ?? null,
+          foundInRaid: false,
+        };
+        byItem.set(key, row);
+      }
+      row.byType.set(obj.type, (row.byType.get(obj.type) ?? 0) + (obj.count ?? 1));
+      // Found-in-raid anywhere makes the line found-in-raid: the stricter of
+      // the two is the one that has to be satisfied.
+      if (obj.foundInRaid) row.foundInRaid = true;
+      for (const id of ids) if (!row.items.includes(id)) row.items.push(id);
+    }
+
+    return [...byItem.values()].map((row) => ({
+      items: row.items,
+      name: row.name,
+      icon: row.icon,
+      count: Math.max(...row.byType.values()),
+      foundInRaid: row.foundInRaid,
+    }));
+  }
+
   const progression = {};
-  const progressionKeyIds = new Set();
   for (const [canonicalId, members] of groupMembers) {
     const primary = members[0];
     const requires = [];
@@ -1236,6 +1323,7 @@ export async function buildData({
       traderGates,
       needs: itemNeeds(primary),
       keys,
+      objectives: objectiveList(primary),
       wiki: primary.wikiLink ?? null,
     };
   }

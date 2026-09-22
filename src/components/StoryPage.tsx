@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { useHideoutData } from "../lib/data";
+import { useHideoutData, useProgression } from "../lib/data";
+import { storyChapters, storyKeys } from "../lib/missions";
 import { href, navigate, onNavClick } from "../lib/router";
 import {
   STORY,
@@ -23,7 +24,7 @@ import {
   type StoryLock,
   type VisibleStep,
 } from "../lib/story";
-import { useHideout, useStore, useStory } from "../store";
+import { useHideout, useKeysOwned, useStore, useStory } from "../store";
 import { EmptyState, Icon, icons, PageHeader, Tick } from "./ui";
 
 const TONE: Record<string, string> = {
@@ -306,6 +307,8 @@ function Guide({ ending }: { ending: StoryEnding }) {
         </div>
       </section>
 
+      <StoryNeeds ending={ending} built={built} />
+
       {conflicts.length > 0 && (
         <section className="story-never mb-4" role="alert">
           <h2 className="text-sm font-semibold">This choice locks a different ending</h2>
@@ -473,6 +476,101 @@ function Guide({ ending }: { ending: StoryEnding }) {
         </a>
       </p>
     </>
+  );
+}
+
+/**
+ * What the rest of this path will ask you to carry.
+ *
+ * The chapters below say what to do; this says what to bring before you start,
+ * which is the question you ask while you are still in the stash. Keys are
+ * located by the step that wants them rather than the chapter — a chapter of
+ * the evidence hunt can span six maps, and reading a key's location off it
+ * told people to take a Labs keycard to Customs.
+ */
+function StoryNeeds({
+  ending,
+  built,
+}: {
+  ending: StoryEnding;
+  built: Record<string, number>;
+}) {
+  const story = useStory();
+  const progression = useProgression();
+  const keysOwned = useKeysOwned();
+  const setKeyOwned = useStore((s) => s.setKeyOwned);
+
+  const views = useMemo(
+    () => storyChapters(ending, story.ticks, story.choices, built),
+    [ending, story.ticks, story.choices, built],
+  );
+  const keys = useMemo(
+    () => storyKeys(views, progression.data, keysOwned),
+    [views, progression.data, keysOwned],
+  );
+
+  const remaining = views.filter((v) => !v.complete);
+  if (keys.length === 0) return null;
+
+  return (
+    <section className="card mb-4">
+      <header className="card-head">
+        <div className="min-w-0">
+          <h2 className="card-title">What to bring</h2>
+          <p className="card-sub">
+            Doors the {remaining.length} unfinished chapter{remaining.length === 1 ? "" : "s"} of
+            this path go through. Tick one when you have it.
+          </p>
+        </div>
+      </header>
+
+      <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
+        {keys.map((key) => (
+          <li
+            key={key.id ?? key.name}
+            className="surface-2 flex items-center gap-2 p-1.5"
+            data-owned={key.owned || undefined}
+            style={key.owned ? { opacity: 0.6 } : undefined}
+          >
+            {key.icon ? (
+              <img
+                src={key.icon}
+                alt=""
+                width={24}
+                height={24}
+                loading="lazy"
+                className="flex-none rounded"
+                onError={(e) => {
+                  e.currentTarget.style.visibility = "hidden";
+                }}
+              />
+            ) : (
+              <span
+                className="h-6 w-6 flex-none rounded"
+                style={{ background: "var(--panel-3)" }}
+              />
+            )}
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-[0.78rem]">{key.name}</span>
+              <span className="block truncate text-[0.66rem] faint">
+                {key.maps.map(mapLabel).join(", ") || key.wantedBy.map((w) => w.name).join(", ")}
+              </span>
+            </span>
+            {key.id && (
+              <button
+                type="button"
+                className="tick tap-target flex-none"
+                data-on={key.owned}
+                aria-label={`${key.owned ? "Remove" : "Mark"} ${key.name} as owned`}
+                onClick={() => setKeyOwned(key.id!, !key.owned)}
+              >
+                <Icon path={icons.check} size={11} />
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

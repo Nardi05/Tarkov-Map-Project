@@ -1,29 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMapIndex, useProgression } from "../lib/data";
 import { useDebouncedInput } from "../lib/use-debounced-input";
-import {
-  computeAvailability,
-  failureUnlocks,
-  lockReasons,
-  prerequisiteClosure,
-  type LockReason,
-} from "../lib/progression";
-import { prettyMapName } from "../lib/kord-season";
-import { collectKeys, collectNeeds } from "../lib/quest-lists";
-import { href, navigate, onNavClick, type QuestView } from "../lib/router";
+import { computeAvailability, failureUnlocks, type LockReason } from "../lib/progression";
+import { href, onNavClick, type QuestView } from "../lib/router";
 import { nextRaids } from "../lib/next-raid";
 import { displayName, visibleInMode } from "../lib/task-variant";
-import { useItemCounts, useKeysOwned, useMarkerDone, useStore, useTaskStatus } from "../store";
+import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import { GAME_EDITIONS, type Faction, type GameEdition, type Profile } from "../lib/persist-migrate";
-import type { TaskAvailability, TaskStatus } from "../types";
+import type { TaskAvailability } from "../types";
 import ItemAudit from "./ItemAudit";
 import NextRaid from "./NextRaid";
 import SavePanel from "./SavePanel";
 import SeasonPanel from "./SeasonPanel";
+import SideQuestList, { SideQuestLegend } from "./SideQuestList";
 import TaskGraphPage from "./TaskGraphPage";
 import { useSlashSearch } from "./ShortcutHelp";
-import TaskName from "./TaskName";
-import TaskStatusControl from "./TaskStatusControl";
 import { Callout, Card, EmptyState, Icon, icons, PageHeader, SectionHead, Term } from "./ui";
 
 /**
@@ -89,14 +80,9 @@ export default function QuestsPage({
   const progression = useProgression();
   const taskStatus = useTaskStatus();
   const markerDone = useMarkerDone();
-  const itemCounts = useItemCounts();
-  const keysOwned = useKeysOwned();
   const profile = useStore((s) => s.profile);
   const setProfile = useStore((s) => s.setProfile);
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
-  const setTaskStatus = useStore((s) => s.setTaskStatus);
-  const completeWithPrereqs = useStore((s) => s.completeWithPrereqs);
-  const setKeyOwned = useStore((s) => s.setKeyOwned);
 
   /* Committed search term; `typed` is what the box shows while you type. */
   const [query, setQuery] = useState("");
@@ -159,66 +145,21 @@ export default function QuestsPage({
   }, [data]);
 
   const needle = query.trim().toLowerCase();
-  const matches = (row: Row) =>
-    !needle ||
-    displayName(row.name).toLowerCase().includes(needle) ||
-    row.trader.toLowerCase().includes(needle);
 
   /*
-   * Bucketed in one pass, and memoised.
-   *
-   * These used to be three bare `rows.filter(...)` calls, which meant a new
-   * array identity on every render — so `upcoming` below never hit its memo,
-   * and neither did the key and find-in-raid lists built from it. Typing in the
-   * search box rebuilt both shopping lists on every keystroke.
+   * The ids the "next raid" picker ranks maps by: what you are on, and what is
+   * open to you. The page used to bucket every row here for four panels that
+   * have since become one self-contained list (SideQuestList), which does its
+   * own bucketing — so all that survives is this.
    */
-  const { active, available, completed } = useMemo(() => {
-    const out = { active: [] as Row[], available: [] as Row[], completed: [] as Row[] };
-    for (const row of rows) {
-      if (!matches(row)) continue;
-      if (row.availability === "active") out.active.push(row);
-      else if (row.availability === "available") out.available.push(row);
-      // Failed sits with finished so it stays on screen and can be undone. It
-      // is a state you set by hand, so there has to be somewhere to unset it.
-      else if (row.availability === "completed" || row.availability === "failed") {
-        out.completed.push(row);
-      }
-    }
-    return out;
-    // `matches` closes over `needle`, which is the dependency that matters.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rows, needle]);
-
-  /*
-   * Locked is 300+ tasks on a fresh profile and nobody scrolls that. What is
-   * actually useful is the edge of the wall — the tasks one step away — so this
-   * ranks by how few things are missing, then by level, and shows the top of
-   * that list. The blockers are only computed for what survives the filter.
-   */
-  const locked = useMemo(() => {
-    if (!data) return [];
-    return rows
-      .filter((r) => r.availability === "locked" && matches(r))
-      .map((r) => ({ ...r, blockers: lockReasons(data, r.id, taskStatus, profile) }))
-      .sort((a, b) => a.blockers.length - b.blockers.length || a.level - b.level)
-      .slice(0, 60);
-    // `matches` closes over `needle`, which is the dependency that matters.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, rows, taskStatus, profile, needle]);
-
-  /** Keys and hand-ins for what you can do next — active first, then available. */
-  const upcoming = useMemo(() => [...active, ...available], [active, available]);
-  const upcomingIds = useMemo(() => upcoming.map((r) => r.id), [upcoming]);
-  const keys = useMemo(() => collectKeys(data, upcomingIds), [data, upcomingIds]);
-  const needs = useMemo(
-    () => collectNeeds(data, upcomingIds, itemCounts),
-    [data, upcomingIds, itemCounts],
+  const upcomingIds = useMemo(
+    () =>
+      rows
+        .filter((r) => r.availability === "active" || r.availability === "available")
+        .map((r) => r.id),
+    [rows],
   );
 
-  /** "I finished this one" also means everything behind it is finished. */
-  const completeWithHistory = (taskId: string) => {
-    completeWithPrereqs(taskId, prerequisiteClosure(data, taskId, taskStatus));
-  };
 
   const trackedCount = Object.keys(taskStatus).length;
   const raidPicks = useMemo(
@@ -240,7 +181,7 @@ export default function QuestsPage({
   return (
     <Shell>
       <PageHeader
-        title="Quests"
+        title="Side quests"
         lead={
           <>
             Tick what your <Term id="trader">traders</Term> have given you. Every map then draws
@@ -341,8 +282,8 @@ export default function QuestsPage({
 
       <div>
         <SectionHead
-          title="Your tasks"
-          hint="Active first, then what is open to you, then what is still locked and why."
+          title="Your side quests"
+          hint={<SideQuestLegend />}
           action={
             <div className="relative w-full sm:w-72">
               <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 faint">
@@ -394,179 +335,7 @@ export default function QuestsPage({
           </div>
         </section>
       ) : (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <Panel
-            title="Active"
-            count={active.length}
-            hint="Tasks you have in your list right now. These are the ones your maps draw."
-            className="lg:col-span-2"
-          >
-            {active.length === 0 ? (
-              <EmptyState
-                title="Nothing marked active"
-                hint="Tick a task below and it appears here, and on the map it belongs to."
-              />
-            ) : (
-              <TaskList
-                rows={active}
-                onCycle={cycleTaskStatus}
-                onCompleteChain={completeWithHistory}
-                onFail={(id) => setTaskStatus(id, "failed")}
-              />
-            )}
-          </Panel>
-
-          <Panel
-            title="Available now"
-            count={available.length}
-            hint="Everything the graph says you can pick up at your level, by trader."
-            className="lg:col-span-2"
-          >
-            {available.length === 0 ? (
-              <EmptyState
-                title="Nothing available"
-                hint="Mark a task or two you have already finished — the rest follows from there."
-              />
-            ) : (
-              <ByTrader
-                rows={available}
-                onCycle={cycleTaskStatus}
-                onCompleteChain={completeWithHistory}
-                onFail={(id) => setTaskStatus(id, "failed")}
-              />
-            )}
-          </Panel>
-
-          <Panel
-            title="Keys you'll need"
-            count={keys.filter((k) => !keysOwned[k.item.id]).length}
-            hint="Doors your active and available tasks go through. Tick one when you have it."
-          >
-            {keys.filter((k) => !keysOwned[k.item.id]).length === 0 ? (
-              <EmptyState compact title="No keys needed" hint="Nothing coming up is behind a locked door." />
-            ) : (
-              <ul className="space-y-1">
-                {keys
-                  .filter((k) => !keysOwned[k.item.id])
-                  .map((k) => (
-                  <li key={k.item.id} className="surface-2 flex items-center gap-2.5 p-2">
-                    {k.item.icon && (
-                      <img
-                        src={k.item.icon}
-                        alt=""
-                        width={28}
-                        height={28}
-                        loading="lazy"
-                        className="flex-none rounded"
-                      />
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[0.8125rem] font-medium">{k.item.name}</p>
-                      <p className="truncate text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-                        {k.tasks.length} task{k.tasks.length === 1 ? "" : "s"}
-                        {k.maps.length ? ` · ${k.maps.join(", ")}` : ""}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      className="btn btn-ghost btn-icon flex-none"
-                      aria-label={`Mark ${k.item.name} acquired`}
-                      title="Mark acquired"
-                      onClick={() => setKeyOwned(k.item.id, true)}
-                    >
-                      <span className="key-acquire" aria-hidden="true" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Panel>
-
-          <Panel
-            title="Find in raid"
-            count={needs.length}
-            hint="Items your coming tasks want handed in, found in raid."
-          >
-            {needs.length === 0 ? (
-              <EmptyState
-                compact
-                title="Nothing to find"
-                hint="No found-in-raid hand-ins among your active and available tasks."
-              />
-            ) : (
-              <ul className="space-y-1">
-                {needs.map((n) => (
-                  <li key={n.name} className="surface-2 flex items-center gap-2.5 p-2">
-                    {n.icon && (
-                      <img
-                        src={n.icon}
-                        alt=""
-                        width={28}
-                        height={28}
-                        loading="lazy"
-                        className="flex-none rounded"
-                      />
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[0.8125rem] font-medium">{n.name}</p>
-                      <p className="truncate text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-                        {n.tasks.join(", ")}
-                      </p>
-                    </div>
-                    <span
-                      className="chip flex-none tabular-nums"
-                      title={`${n.count - n.remaining} in stash, ${n.count} needed`}
-                      style={n.remaining === 0 ? { color: "var(--ok)" } : undefined}
-                    >
-                      {n.remaining === 0 ? "have" : `×${n.remaining}`}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Panel>
-
-          <Panel
-            title="Coming up"
-            count={locked.length}
-            hint="Locked tasks, closest first, with what is standing in the way."
-            className="lg:col-span-2"
-          >
-            {locked.length === 0 ? (
-              <EmptyState title="Nothing locked" hint="Everything the graph knows about is open." />
-            ) : (
-              <ul className="space-y-1">
-                {locked.map((row) => (
-                  <TaskRow
-                    key={row.id}
-                    row={row}
-                    status={undefined}
-                    onCycle={() => cycleTaskStatus(row.id)}
-                    onCompleteChain={() => completeWithHistory(row.id)}
-                    onFail={row.failable ? () => setTaskStatus(row.id, "failed") : undefined}
-                  />
-                ))}
-              </ul>
-            )}
-          </Panel>
-
-          {completed.length > 0 && (
-            <Panel
-              title="Finished"
-              count={completed.length}
-              hint="Everything you have closed out, done or failed. Untick anything you have not actually done."
-              className="lg:col-span-2"
-              collapsed
-            >
-              <ByTrader
-                rows={completed}
-                onCycle={cycleTaskStatus}
-                onCompleteChain={completeWithHistory}
-                onFail={(id) => setTaskStatus(id, "failed")}
-              />
-            </Panel>
-          )}
-        </div>
+        <SideQuestList search={needle} />
       )}
 
       {/* Last, and only when there is something to save. Offering to back up an
@@ -589,53 +358,6 @@ export default function QuestsPage({
  */
 function Shell({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
-}
-
-function Panel({
-  title,
-  count,
-  hint,
-  className,
-  collapsed,
-  children,
-}: {
-  title: string;
-  count: number;
-  hint: string;
-  className?: string;
-  /** Starts shut. For lists that are long and rarely the reason you came. */
-  collapsed?: boolean;
-  children: React.ReactNode;
-}) {
-  const [open, setOpen] = useState(!collapsed);
-
-  return (
-    <section className={`card card-tight ${className ?? ""}`}>
-      <header className="mb-2 flex items-start gap-2">
-        <button
-          type="button"
-          className="flex min-w-0 flex-1 items-start gap-2 text-left"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span
-            className="mt-0.5 flex-none transition-transform"
-            style={{ color: "var(--text-faint)", transform: open ? undefined : "rotate(-90deg)" }}
-          >
-            <Icon path={icons.chevron} size={16} />
-          </span>
-          <span className="min-w-0">
-            <span className="flex items-baseline gap-2">
-              <h2 className="card-title">{title}</h2>
-              <span className="chip flex-none tabular-nums">{count}</span>
-            </span>
-            <span className="card-sub block">{hint}</span>
-          </span>
-        </button>
-      </header>
-      {open && children}
-    </section>
-  );
 }
 
 function ProfileBar({
@@ -799,219 +521,3 @@ function Field({
 }
 
 /* ------------------------------------------------------------------- lists */
-
-function ByTrader({
-  rows,
-  onCycle,
-  onCompleteChain,
-  onFail,
-}: {
-  rows: Row[];
-  onCycle: (id: string) => void;
-  onCompleteChain: (id: string) => void;
-  onFail?: (id: string) => void;
-}) {
-  const groups = useMemo(() => {
-    const byTrader = new Map<string, Row[]>();
-    for (const row of rows) {
-      const list = byTrader.get(row.trader);
-      if (list) list.push(row);
-      else byTrader.set(row.trader, [row]);
-    }
-    return [...byTrader.entries()]
-      .map(([trader, list]) => ({
-        trader,
-        list: [...list].sort((a, b) => a.level - b.level || a.name.localeCompare(b.name)),
-      }))
-      // Alphabetical, not biggest-first: a player looks for a trader by name,
-      // and a list that reorders itself as they tick things off is unreadable.
-      .sort((a, b) => a.trader.localeCompare(b.trader));
-  }, [rows]);
-
-  return (
-    <div className="space-y-3">
-      {groups.map((group) => (
-        <div key={group.trader}>
-          <h3
-            className="mb-1 text-[0.7rem] font-semibold uppercase tracking-[0.09em]"
-            style={{ color: "var(--text-dim)" }}
-          >
-            {group.trader}
-            <span className="ml-1.5 font-normal" style={{ color: "var(--text-faint)" }}>
-              {group.list.length}
-            </span>
-          </h3>
-          <ul className="space-y-1">
-            {group.list.map((row) => (
-              <TaskRow
-                key={row.id}
-                row={row}
-                status={
-                  row.availability === "completed" || row.availability === "failed"
-                    ? row.availability
-                    : undefined
-                }
-                onCycle={() => onCycle(row.id)}
-                onCompleteChain={() => onCompleteChain(row.id)}
-                onFail={row.failable && onFail ? () => onFail(row.id) : undefined}
-              />
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function TaskList({
-  rows,
-  onCycle,
-  onCompleteChain,
-  onFail,
-}: {
-  rows: Row[];
-  onCycle: (id: string) => void;
-  onCompleteChain: (id: string) => void;
-  onFail?: (id: string) => void;
-}) {
-  return (
-    <ul className="space-y-1">
-      {[...rows]
-        .sort((a, b) => a.trader.localeCompare(b.trader) || a.level - b.level)
-        .map((row) => (
-          <TaskRow
-            key={row.id}
-            row={row}
-            status="active"
-            onCycle={() => onCycle(row.id)}
-            onCompleteChain={() => onCompleteChain(row.id)}
-            onFail={row.failable && onFail ? () => onFail(row.id) : undefined}
-          />
-        ))}
-    </ul>
-  );
-}
-
-function TaskRow({
-  row,
-  status,
-  onCycle,
-  onCompleteChain,
-  onFail,
-}: {
-  row: Row;
-  status: TaskStatus | undefined;
-  onCycle: () => void;
-  onCompleteChain: () => void;
-  /** Only passed for a quest the graph branches on failing. */
-  onFail?: () => void;
-}) {
-  return (
-    <li className="surface-2 flex items-start gap-2.5 p-2">
-      <span className="mt-0.5">
-        <TaskStatusControl status={status} name={row.name} onCycle={onCycle} />
-      </span>
-
-      <div className="min-w-0 flex-1">
-        <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-          <span className="text-[0.8125rem] font-medium">
-            <TaskName name={row.name} />
-          </span>
-          <span className="text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
-            {/* Most tasks report level 0, which is not a requirement worth
-                printing 300 times. */}
-            {row.trader}
-            {row.level > 1 ? ` · lvl ${row.level}` : ""}
-          </span>
-          {row.kappa && <span className="chip flex-none">Kappa</span>}
-        </p>
-
-        {row.gates.length > 0 && (
-          /* Shown, not enforced: the site has no way to know your loyalty
-             levels, so treating these as locks would hide half the game. */
-          <p className="mt-1 flex flex-wrap gap-1">
-            {row.gates.map((g) => (
-              <span key={g} className="chip">
-                {g}
-              </span>
-            ))}
-          </p>
-        )}
-
-        {row.blockers.length > 0 && (
-          <p className="mt-1 text-[0.7rem] leading-snug" style={{ color: "var(--text-faint)" }}>
-            Needs{" "}
-            {row.blockers.map((b, i) => (
-              <span key={`${b.kind}-${b.label}`}>
-                {i > 0 && ", "}
-                {b.label}
-                {/* The feed states barely half of these; the rest are the
-                    wiki's word. Somebody deciding whether to trust a lock
-                    should be able to see which they are looking at. */}
-                {b.from === "wiki" && (
-                  <span title="From the wiki, not the game data feed"> (per the wiki)</span>
-                )}
-              </span>
-            ))}
-          </p>
-        )}
-
-        {row.maps.length > 0 && (
-          <p className="mt-1 flex flex-wrap gap-1">
-            {row.maps.map((map) => (
-              <button
-                key={map}
-                type="button"
-                className="chip chip-accent chip-button"
-                onClick={() => navigate(href.map(map, row.id))}
-                title={`Open ${displayName(row.name)} on this map`}
-              >
-                {prettyMapName(map)}
-              </button>
-            ))}
-          </p>
-        )}
-      </div>
-
-      <div className="flex flex-none items-center gap-1">
-        {status !== "completed" && status !== "failed" && (
-          <button
-            type="button"
-            className="btn btn-ghost text-[0.68rem]"
-            style={{ padding: "0.25rem 0.5rem", color: "var(--text-faint)" }}
-            onClick={onCompleteChain}
-            title={`Mark ${displayName(row.name)} done, and everything it needed before it`}
-          >
-            Done + earlier
-          </button>
-        )}
-        {/* Offered only where failing actually leads somewhere, which keeps a
-            destructive-sounding button off 500 rows that have no use for it. */}
-        {onFail && status !== "failed" && (
-          <button
-            type="button"
-            className="btn btn-ghost text-[0.68rem]"
-            style={{ padding: "0.25rem 0.5rem", color: "var(--danger)" }}
-            onClick={onFail}
-            title={`Mark ${displayName(row.name)} failed — that is what unlocks the quests that follow a failure`}
-          >
-            Failed
-          </button>
-        )}
-        {row.wiki && (
-          <a
-            className="btn btn-ghost btn-icon"
-            href={row.wiki}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label={`${displayName(row.name)} on the wiki`}
-          >
-            <Icon path={icons.external} size={15} />
-          </a>
-        )}
-      </div>
-    </li>
-  );
-}
-
-

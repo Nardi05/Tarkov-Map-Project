@@ -168,14 +168,38 @@ of your progress.
 The chapters are not in the tarkov.dev feed. They are vendored from the wiki
 into `src/data/story-endings.json`.
 
+## Two kinds of quest
+
+Tarkov has a story — the 1.0 ending path, twenty-one chapters of it — and it has
+five hundred trader tasks that have nothing to do with the story. The site
+tracks both, and keeps them apart, because they are different questions:
+
+| | **Story** | **Side quests** |
+| --- | --- | --- |
+| Where | `#/story` | `#/quests` |
+| What | The path to Savior, Survivor, Debtor or Fallen | Everything the traders hand you |
+| Shaped like | Chapters, in order, each with steps | A graph of prerequisites |
+| Guides from | A vendored wiki walkthrough | The feed's own objective text |
+| Tracked by | Step id | Task id |
+
+Both answer the same three questions — what next, which door does it go through,
+what do I need to be carrying — and `src/lib/missions.ts` is where that shared
+shape lives. The dashboard asks them of both at once.
+
 ## The dashboard
 
 `#/` is the front page and the shortest answer to "what do I do next": which map
-to queue, the tasks that are open on it, the keys those tasks go through, and
-what to keep out of raid for a hand-in.
+to queue, the side quests that are open, where you are on the story path, the
+keys all of that goes through, and what to keep out of raid for a hand-in.
 
-It is assembled from eight panels — progress, next raid, upcoming, keys, find in
-raid, by trader, season, jump back in — and **you arrange it**. Press
+The four mission panels — **Side quests — do next**, **Story — do next**, **Keys
+to bring** and **Find in raid** — all read one model, so they cannot disagree
+with each other: the keys panel lists keys for exactly the quests the first
+panel is showing. Before that they were three independent queries over the task
+graph with three slightly different ideas of what "next" meant.
+
+It is assembled from nine panels — progress, next raid, side quests, story,
+keys, find in raid, by trader, season, jump back in — and **you arrange it**. Press
 **Customise** and each panel grows a grip you can drag it by, arrows for the
 keyboard, a control for full or half width, and an × that puts it in a tray at
 the bottom. The tray remembers where a panel came from, so switching one back on
@@ -213,12 +237,32 @@ away, and **Reset layout** puts everything back as it shipped.
 Dragging is pointer-based rather than HTML5 drag-and-drop, so it works with a
 finger. Everything it can do is also on a button, so it works without one.
 
-## The quest tracker
+## The side-quest tracker
 
 `#/quests` answers a different question from the maps. They tell you what is on
 a map; it tells you what you should be doing — your active tasks, what each
 trader will offer next, the keys those tasks go through, and everything you need
 to find in raid.
+
+Quests are grouped by what you can do about them — active, available now, coming
+up, finished — rather than by trader, because "open to me" and "locked behind
+something" are the distinction that matters and a list sorted by trader buries
+it. Open a row and you get the whole quest:
+
+- **What it asks for** — every objective, in the feed's own words ("Stash Golden
+  neck chains in the microwave on the 3rd floor of the dorm on Customs"), each
+  one tickable. That tick is the same tick as ticking the location on the map.
+- **Doors it goes through** — the keys, with the map each one is for, and a
+  toggle for whether you already own it.
+- **What to bring back** — the hand-ins, found-in-raid flagged, counted against
+  your stash.
+- Where it is, what finishing it unlocks, and what is holding it back if it is
+  locked.
+
+The objective text is not written by hand — it comes from the feed, which states
+all 1,418 of them. The pipeline used to keep only the ~790 that carry map
+coordinates and drop the rest, so a task whose objectives were all hand-ins
+showed up as a name and a checkbox.
 
 It runs on the full task graph, including the ~165 tasks that never appear on a
 map, which is why the per-map payloads cannot answer it alone.
@@ -405,6 +449,17 @@ src/data/geo.json        vendored georeferencing (transform, bounds, rotation,
                          floors, place labels) for each map
 src/lib/leaflet-crs.ts   turns that into a Leaflet CRS so markers and artwork
                          share one coordinate system
+src/lib/missions.ts      the shared shape behind both trackers: a trader task and
+                         a story chapter as rows that answer the same three
+                         questions. Owns the folds — one key wanted by six
+                         quests is one row, and a find-then-hand-over pair is
+                         one requirement, not two
+src/components/MissionPanels.tsx
+                         the dashboard's four mission panels, all reading that
+                         one model
+src/components/SideQuestList.tsx
+                         the side-quest tracker: grouped, searchable, and
+                         expandable into objectives, keys, maps and hand-ins
 src/lib/layers.ts        the layer taxonomy: colour, shape, and the plain-English
                          explanation shown in the UI
 src/lib/build-layers.ts  data -> Leaflet layers, one builder per layer

@@ -56,7 +56,7 @@ export default function App() {
       route.name === "map" && map.data
         ? `${map.data.name} — Tarkov Maps`
         : route.name === "quests"
-          ? "Quests — Tarkov Maps"
+          ? "Side quests — Tarkov Maps"
           : route.name === "hideout"
             ? "Hideout — Tarkov Maps"
           : route.name === "settings"

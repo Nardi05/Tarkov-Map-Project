@@ -1,19 +1,15 @@
 import { useCallback, useId, useMemo, useState } from "react";
-import { useItemCatalog, useMapIndex, useProgression } from "../lib/data";
-import { prettyMapName } from "../lib/kord-season";
+import { useMapIndex, useProgression } from "../lib/data";
 import { nextRaids, type RaidPick } from "../lib/next-raid";
 import { buildPlan } from "../lib/plan";
 import { MODE_META } from "../lib/mode";
-import { chainDepth, computeAvailability, unlocksAfter } from "../lib/progression";
-import { collectKeys, collectTaskItems } from "../lib/quest-lists";
-import { href, navigate, onNavClick } from "../lib/router";
+import { chainDepth, computeAvailability } from "../lib/progression";
+import { href, onNavClick } from "../lib/router";
 import { displayName, visibleInMode } from "../lib/task-variant";
 import { useDragReorder } from "../lib/use-drag-reorder";
 import type { GameMode } from "../lib/persist-migrate";
 import {
   DASH_PANEL_META,
-  useItemCounts,
-  useKeysOwned,
   useStore,
   useTaskStatus,
   type DashPanel,
@@ -24,9 +20,13 @@ import NextRaid from "./NextRaid";
 import SeasonPanel from "./SeasonPanel";
 import RaidClock from "./RaidClock";
 import TargetPicker from "./TargetPicker";
-import TaskName from "./TaskName";
-import TaskSheet from "./TaskSheet";
 import { FirstSteps } from "./Onboarding";
+import {
+  KeysPanel,
+  NeedsPanel,
+  StoryNextPanel,
+  UpcomingSidePanel,
+} from "./MissionPanels";
 import { Callout, Card, EmptyState, Icon, icons, PageHeader, Term } from "./ui";
 
 /**
@@ -52,18 +52,6 @@ const TRADER_ORDER = [
   "BTR Driver",
 ];
 
-const THEN_CAP = 3;
-
-interface UpcomingRow {
-  id: string;
-  name: string;
-  trader: string;
-  level: number;
-  availability: TaskAvailability;
-  maps: string[];
-  wiki: string | null;
-  next: { id: string; name: string }[];
-}
 
 interface Stats {
   total: number;
@@ -81,13 +69,8 @@ export default function DashboardPage() {
   const profile = useStore((s) => s.profile);
   const dashboard = useStore((s) => s.dashboard);
   const lastMap = useStore((s) => s.lastMap);
-  const setTaskStatus = useStore((s) => s.setTaskStatus);
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const setProfile = useStore((s) => s.setProfile);
-  const itemCounts = useItemCounts();
-  const keysOwned = useKeysOwned();
-  const setKeyOwned = useStore((s) => s.setKeyOwned);
-  const catalog = useItemCatalog();
 
   const [editing, setEditing] = useState(false);
 
@@ -105,31 +88,6 @@ export default function DashboardPage() {
     [data, taskStatus, profile],
   );
 
-  const upcoming = useMemo(() => {
-    const cap = Math.max(80, dashboard.upcomingLimit);
-    const planned = rowsFromPlan(data, availability, profile.mode, plan.current, cap);
-    return planned.length
-      ? planned
-      : pickUpcoming(data, availability, profile.mode, cap);
-  }, [data, availability, profile.mode, plan.current, dashboard.upcomingLimit]);
-
-  const planIds = plan.current;
-  const keys = useMemo(() => collectKeys(data, planIds), [data, planIds]);
-  const mosaic = useMemo(() => {
-    const wanted = new Set(planIds);
-    const rows = collectTaskItems(data, itemCounts).filter(
-      (row) => wanted.has(row.taskId) && row.foundInRaid,
-    );
-    const byItem = new Map<string, (typeof rows)[number]>();
-    for (const row of rows) {
-      const prev = byItem.get(row.itemId);
-      if (!prev) byItem.set(row.itemId, { ...row });
-      else prev.need += row.need;
-    }
-    return [...byItem.values()]
-      .map((row) => ({ ...row, remaining: Math.max(0, row.need - row.have) }))
-      .filter((row) => row.remaining > 0);
-  }, [data, itemCounts, planIds]);
   const stats = useMemo(
     () => summarise(data, availability, profile.mode),
     [data, availability, profile.mode],
@@ -150,23 +108,20 @@ export default function DashboardPage() {
           return <ProgressPanel stats={stats} level={profile.level} mode={profile.mode} />;
         case "raid":
           return <NextRaid picks={raidPicks} />;
+        /*
+         * These four read one shared model (lib/missions) rather than querying
+         * the task graph apiece, so the keys panel lists keys for exactly the
+         * quests "do next" is showing. They used to be three independent
+         * queries with three slightly different ideas of what "next" meant.
+         */
         case "upcoming":
-          return (
-            <UpcomingList
-              rows={upcoming}
-              onComplete={(id) => setTaskStatus(id, "completed")}
-              fresh={fresh}
-            />
-          );
+          return <UpcomingSidePanel limit={dashboard.upcomingLimit} />;
+        case "story":
+          return <StoryNextPanel />;
         case "keys":
-          return <KeyList rows={keys} owned={keysOwned} onOwned={setKeyOwned} />;
+          return <KeysPanel />;
         case "needs":
-          return (
-            <ItemMosaic
-              rows={mosaic}
-              catalog={catalog.data?.items ?? {}}
-            />
-          );
+          return <NeedsPanel />;
         case "traders":
           return <TraderList rows={traders} />;
         case "season":
@@ -185,7 +140,19 @@ export default function DashboardPage() {
           return <MapList maps={maps.data?.maps ?? []} resume={resume ?? null} picks={raidPicks} />;
       }
     },
-    [stats, profile.level, profile.mode, raidPicks, upcoming, setTaskStatus, cycleTaskStatus, taskStatus, availability, fresh, keys, keysOwned, setKeyOwned, mosaic, catalog.data, traders, maps.data, resume, plan.remainingToTarget],
+    [
+      stats,
+      profile.level,
+      profile.mode,
+      raidPicks,
+      cycleTaskStatus,
+      taskStatus,
+      availability,
+      traders,
+      maps.data,
+      resume,
+      dashboard.upcomingLimit,
+    ],
   );
 
   return (
@@ -714,299 +681,6 @@ function Meter({ label, value, tone }: { label: string; value: number; tone?: "a
   );
 }
 
-function UpcomingList({
-  rows,
-  onComplete,
-  fresh,
-}: {
-  rows: UpcomingRow[];
-  onComplete: (id: string) => void;
-  fresh: boolean;
-}) {
-  const pager = usePager(rows.length, 20);
-  if (rows.length === 0) {
-    return (
-      <EmptyState
-        compact
-        title={fresh ? "No opening tasks in this mode" : "Nothing upcoming"}
-        hint={fresh ? undefined : "Mark a task active, or finish one so the next in the chain opens."}
-      />
-    );
-  }
-
-  const slice = rows.slice(pager.start, pager.end);
-
-  return (
-    <>
-    <ul className="space-y-1">
-      {slice.map((row) => (
-        <li key={row.id} className="surface-2 flex items-start gap-2.5 p-2">
-          <div className="min-w-0 flex-1">
-            <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-              <span className="text-[0.8125rem] font-medium">
-                <TaskName name={row.name} />
-              </span>
-              <span className="text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
-                {row.trader}
-                {row.level > 1 ? ` · lvl ${row.level}` : ""}
-                {row.availability === "active" ? " · active" : ""}
-              </span>
-            </p>
-            {row.maps.length > 0 && (
-              <p className="mt-1 flex flex-wrap gap-1">
-                {row.maps.map((map) => (
-                  <button
-                    key={map}
-                    type="button"
-                    className="chip chip-accent chip-button"
-                    onClick={() => navigate(href.map(map, row.id))}
-                    title={`Open ${displayName(row.name)} on ${prettyMapName(map)}`}
-                  >
-                    {prettyMapName(map)}
-                  </button>
-                ))}
-              </p>
-            )}
-            {row.next.length > 0 && (
-              <p className="mt-1 text-[0.7rem] leading-snug" style={{ color: "var(--text-faint)" }}>
-                Then: {row.next.slice(0, THEN_CAP).map((n) => n.name).join(", ")}
-                {row.next.length > THEN_CAP ? ` +${row.next.length - THEN_CAP}` : ""}
-              </p>
-            )}
-          </div>
-          <button
-            type="button"
-            className="btn btn-ghost btn-icon flex-none"
-            style={{ color: "var(--ok)" }}
-            aria-label={`Mark ${displayName(row.name)} done`}
-            title="Mark done — it leaves this list and the next quest fills in"
-            onClick={() => onComplete(row.id)}
-          >
-            <Icon path={icons.check} size={16} />
-          </button>
-        </li>
-      ))}
-    </ul>
-    <Pager {...pager} noun="quests" />
-    </>
-  );
-}
-
-function KeyList({
-  rows,
-  owned,
-  onOwned,
-}: {
-  rows: ReturnType<typeof collectKeys>;
-  owned: Record<string, true>;
-  onOwned: (id: string, have: boolean) => void;
-}) {
-  const open = rows.filter((k) => !owned[k.item.id]);
-  const pager = usePager(open.length, 20);
-  if (open.length === 0) {
-    return <EmptyState compact title="No keys needed" hint="Nothing coming up is behind a locked door." />;
-  }
-  const slice = open.slice(pager.start, pager.end);
-  return (
-    <>
-    <ul className="space-y-1">
-      {slice.map((k) => (
-        <li key={k.item.id} className="surface-2 flex items-center gap-2.5 p-2">
-          {k.item.icon && (
-            <img
-              src={k.item.icon}
-              alt=""
-              width={28}
-              height={28}
-              loading="lazy"
-              className="flex-none rounded"
-              onError={(e) => {
-                e.currentTarget.style.visibility = "hidden";
-              }}
-            />
-          )}
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[0.8125rem] font-medium">{k.item.name}</p>
-            <p className="truncate text-[0.7rem]" style={{ color: "var(--text-faint)" }}>
-              {k.tasks.join(", ")}
-              {k.maps.length ? ` · ${k.maps.join(", ")}` : ""}
-            </p>
-          </div>
-          <button
-            type="button"
-            className="btn btn-ghost btn-icon flex-none"
-            aria-label={`Mark ${k.item.name} acquired`}
-            title="Mark acquired — it leaves this list and the next key fills in"
-            onClick={() => onOwned(k.item.id, true)}
-          >
-            <span className="key-acquire" aria-hidden="true" />
-          </button>
-        </li>
-      ))}
-    </ul>
-    <Pager {...pager} noun="keys" />
-    </>
-  );
-}
-
-function ItemMosaic({
-  rows,
-  catalog,
-}: {
-  rows: ReturnType<typeof collectTaskItems>;
-  catalog: Record<string, { width?: number; height?: number }>;
-}) {
-  const [openId, setOpenId] = useState<string | null>(null);
-  if (rows.length === 0) {
-    return (
-      <EmptyState compact title="Nothing to find" hint="No remaining hand-ins on the current plan." />
-    );
-  }
-  return (
-    <>
-      <div className="item-mosaic">
-        {rows.map((row) => {
-          const w = Math.min(4, Math.max(1, catalog[row.itemId]?.width ?? 1));
-          const h = Math.min(4, Math.max(1, catalog[row.itemId]?.height ?? 1));
-          return (
-            <button
-              key={row.itemId}
-              type="button"
-              className="item-mosaic-cell"
-              style={{ gridColumn: `span ${w}`, gridRow: `span ${h}` }}
-              title={`${row.itemName} · ${row.remaining} left · ${row.taskName}`}
-              aria-label={`${row.itemName}, ${row.remaining} left`}
-              onClick={() => setOpenId(row.taskId)}
-            >
-              {row.icon && (
-                <img
-                  src={row.icon}
-                  alt=""
-                  loading="lazy"
-                  onError={(e) => {
-                    e.currentTarget.style.visibility = "hidden";
-                  }}
-                />
-              )}
-              <span className="item-mosaic-badge">{row.remaining}</span>
-            </button>
-          );
-        })}
-      </div>
-      {openId && <TaskSheet taskId={openId} onClose={() => setOpenId(null)} />}
-    </>
-  );
-}
-
-const PAGE_SIZES = [10, 20] as const;
-
-function usePager(total: number, initialSize: number) {
-  const [size, setSize] = useState(initialSize);
-  const [page, setPage] = useState(0);
-  const pages = Math.max(1, Math.ceil(total / size) || 1);
-  const current = Math.min(page, pages - 1);
-  return {
-    page: current,
-    pages,
-    size,
-    start: current * size,
-    end: Math.min(total, (current + 1) * size),
-    total,
-    setPage,
-    setSize: (n: number) => {
-      setSize(n);
-      setPage(0);
-    },
-  };
-}
-
-function pageWindow(current: number, pages: number): number[] {
-  const span = 5;
-  let from = Math.max(0, current - 2);
-  let to = Math.min(pages, from + span);
-  from = Math.max(0, to - span);
-  return Array.from({ length: to - from }, (_, i) => from + i);
-}
-
-function Pager({
-  page,
-  pages,
-  size,
-  start,
-  end,
-  total,
-  setPage,
-  setSize,
-  noun,
-}: ReturnType<typeof usePager> & { noun: string }) {
-  if (total === 0) return null;
-  return (
-    <div className="pager">
-      {pages > 1 && (
-        <>
-      <button type="button" className="btn btn-ghost" disabled={page === 0} onClick={() => setPage(0)} aria-label="First page">
-        «
-      </button>
-      <button
-        type="button"
-        className="btn btn-ghost"
-        disabled={page === 0}
-        onClick={() => setPage(page - 1)}
-        aria-label="Previous page"
-      >
-        ‹
-      </button>
-      {pageWindow(page, pages).map((n) => (
-        <button
-          key={n}
-          type="button"
-          className={n === page ? "btn is-active" : "btn btn-ghost"}
-          aria-current={n === page ? "page" : undefined}
-          onClick={() => setPage(n)}
-        >
-          {n + 1}
-        </button>
-      ))}
-      <button
-        type="button"
-        className="btn btn-ghost"
-        disabled={page >= pages - 1}
-        onClick={() => setPage(page + 1)}
-        aria-label="Next page"
-      >
-        ›
-      </button>
-      <button
-        type="button"
-        className="btn btn-ghost"
-        disabled={page >= pages - 1}
-        onClick={() => setPage(pages - 1)}
-        aria-label="Last page"
-      >
-        »
-      </button>
-        </>
-      )}
-      <select
-        className="input"
-        style={{ width: "auto", paddingRight: "1.6rem" }}
-        aria-label={`${noun} per page`}
-        value={size}
-        onChange={(e) => setSize(Number(e.target.value))}
-      >
-        {PAGE_SIZES.map((n) => (
-          <option key={n} value={n}>
-            {n}
-          </option>
-        ))}
-      </select>
-      <span className="text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
-        {start + 1}–{end} of {total} {noun}
-      </span>
-    </div>
-  );
-}
-
 interface TraderRow {
   trader: string;
   available: number;
@@ -1092,94 +766,6 @@ function MapList({
 }
 
 /* -------------------------------------------------------------------- data */
-
-function rowsFromPlan(
-  data: Progression | null,
-  availability: Record<string, TaskAvailability>,
-  mode: GameMode,
-  ids: string[],
-  limit: number,
-): UpcomingRow[] {
-  if (!data) return [];
-  const rows: UpcomingRow[] = [];
-  for (const id of ids) {
-    const task = data.tasks[id];
-    if (!task || !visibleInMode(task.name, mode)) continue;
-    const state = availability[id];
-    if (!state) continue;
-    rows.push({
-      id,
-      name: task.name,
-      trader: task.trader ?? "Unknown",
-      level: task.minPlayerLevel,
-      availability: state,
-      maps: task.maps,
-      wiki: task.wiki,
-      next: unlocksAfter(data, id)
-        .filter((nid) => {
-          const child = data.tasks[nid];
-          return !!child && visibleInMode(child.name, mode);
-        })
-        .map((nid) => ({
-          id: nid,
-          name: displayName(data.tasks[nid]?.name ?? nid),
-        })),
-    });
-    if (rows.length >= limit) break;
-  }
-  return rows;
-}
-
-function pickUpcoming(
-  data: Progression | null,
-  availability: Record<string, TaskAvailability>,
-  mode: GameMode,
-  limit: number,
-): UpcomingRow[] {
-  if (!data) return [];
-
-  const rows: UpcomingRow[] = [];
-  for (const [id, task] of Object.entries(data.tasks)) {
-    if (!visibleInMode(task.name, mode)) continue;
-    const state = availability[id];
-    if (state !== "active" && state !== "available") continue;
-    rows.push({
-      id,
-      name: task.name,
-      trader: task.trader ?? "Unknown",
-      level: task.minPlayerLevel,
-      availability: state,
-      maps: task.maps,
-      wiki: task.wiki,
-      next: unlocksAfter(data, id)
-        .filter((nid) => {
-          const child = data.tasks[nid];
-          return !!child && visibleInMode(child.name, mode);
-        })
-        .map((nid) => ({
-          id: nid,
-          name: displayName(data.tasks[nid]?.name ?? nid),
-        })),
-    });
-  }
-
-  const traderRank = (name: string) => {
-    const i = TRADER_ORDER.indexOf(name);
-    return i === -1 ? 99 : i;
-  };
-
-  const rank = (a: UpcomingRow, b: UpcomingRow) => {
-    if (a.availability !== b.availability) return a.availability === "active" ? -1 : 1;
-    const da = chainDepth(data, a.id) - chainDepth(data, b.id);
-    if (da) return da;
-    if (a.level !== b.level) return a.level - b.level;
-    const ta = traderRank(a.trader) - traderRank(b.trader);
-    if (ta) return ta;
-    return displayName(a.name).localeCompare(displayName(b.name));
-  };
-
-  return rows.sort(rank).slice(0, limit);
-}
 
 function summarise(
   data: Progression | null,
