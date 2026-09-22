@@ -102,12 +102,37 @@ export async function createSvgBase(geo: Geo): Promise<SvgBase> {
     (c): c is SVGGElement => c.nodeName === "g" && !!(c as SVGGElement).id,
   );
 
+  /**
+   * Show the ground artwork plus the selected floor, and say which is which.
+   *
+   * Both were drawn at full strength, so picking "2nd Floor" on Interchange
+   * left its walls fighting the ground plan underneath for the same ink — you
+   * could see the floor, but not read it. tarkov.dev solves this by holding
+   * the base back, and so does this: the group that *is* the selected floor is
+   * marked `active`, the ground plan under it `base`, and the stylesheet dims
+   * the latter.
+   *
+   * Done with a data attribute rather than an inline opacity so the amount of
+   * dimming is a theme decision, and so a map with no floors at all pays
+   * nothing — on those, every group is `active`.
+   */
   const setFloor = (floor: Floor) => {
     const wanted = new Set([geo.svgLayer, floor.svgLayer].filter(Boolean) as string[]);
+    // The ground plan is only "base" while a *different* floor is on top of
+    // it. On the ground floor, and on "All levels", it is what you came to
+    // look at.
+    const overlaid = !!floor.svgLayer && floor.svgLayer !== geo.svgLayer;
+
     for (const g of groups) {
       const keep = (g.dataset as Record<string, string>).keepWithGroup;
-      const visible = wanted.has(g.id) || (keep ? wanted.has(keep) : false);
-      g.style.display = visible ? "" : "none";
+      const owner = wanted.has(g.id) ? g.id : keep && wanted.has(keep) ? keep : null;
+      if (!owner) {
+        g.style.display = "none";
+        delete g.dataset.role;
+        continue;
+      }
+      g.style.display = "";
+      g.dataset.role = overlaid && owner === geo.svgLayer ? "base" : "active";
     }
   };
 

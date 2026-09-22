@@ -82,6 +82,16 @@
   --place-label: rgb(233 240 246 / 0.86);
   --place-halo: rgb(4 8 12 / 0.9);
 
+  /*
+   * Map theme. Everything the map shell is allowed to vary by, in one place,
+   * so a map cannot end up with its own look — see docs/map-style.md.
+   */
+  /* How far the ground plan is held back while another floor sits on it. */
+  --map-base-dim: 0.3;
+  /* Marker geometry, shared by every layer on every map. */
+  --marker-stroke: 1.6px;
+  --marker-hover-scale: 1.18;
+
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur: 0.24s;
   --dur-fast: 0.14s;
@@ -131,6 +141,10 @@
 
   --place-label: rgb(23 33 45 / 0.9);
   --place-halo: rgb(255 255 255 / 0.92);
+
+  /* Pale artwork dimmed as hard as the dark theme simply disappears, so the
+     ground plan is held back less here and still reads as "underneath". */
+  --map-base-dim: 0.45;
 
   color-scheme: light;
 }
@@ -2243,6 +2257,52 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 
 .tk-base-svg.hide-place-labels text {
   display: none;
+}
+
+/*
+ * Floor separation.
+ *
+ * `setFloor` in lib/base-layer.ts marks each visible top-level group with the
+ * part it is playing: `active` is the floor you asked for, `base` is the
+ * ground plan showing through beneath it. Both used to render at full
+ * strength, so Interchange's second floor and the shop plan under it competed
+ * for the same ink and neither could be read.
+ *
+ * Opacity only, so it composites on the GPU and costs nothing to pan over, and
+ * it changes only when you pick a different floor — never during a pan or a
+ * zoom.
+ */
+.tk-base-svg [data-role="base"] {
+  opacity: var(--map-base-dim);
+  transition: opacity var(--dur-fast) linear;
+}
+
+.tk-base-svg [data-role="active"] {
+  opacity: 1;
+  transition: opacity var(--dur-fast) linear;
+}
+
+/*
+ * Place names baked into the artwork.
+ *
+ * The SVGs ship their own text at their own colours, which vary by map and
+ * were drawn against the artwork rather than against our page. `paint-order`
+ * puts a halo behind every glyph, which is what keeps a street name legible
+ * over both a dark roof and a pale car park, and it stays sharp at any zoom
+ * because it is still vector text.
+ */
+.tk-base-svg text {
+  paint-order: stroke fill;
+  stroke: var(--place-halo);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  fill: var(--place-label);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tk-base-svg [data-role] {
+    transition: none;
+  }
 }
 
 .tk-marker {
