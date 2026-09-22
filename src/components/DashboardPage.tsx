@@ -813,7 +813,17 @@ function KeyList({
       {slice.map((k) => (
         <li key={k.item.id} className="surface-2 flex items-center gap-2.5 p-2">
           {k.item.icon && (
-            <img src={k.item.icon} alt="" width={28} height={28} loading="lazy" className="flex-none rounded" />
+            <img
+              src={k.item.icon}
+              alt=""
+              width={28}
+              height={28}
+              loading="lazy"
+              className="flex-none rounded"
+              onError={(e) => {
+                e.currentTarget.style.visibility = "hidden";
+              }}
+            />
           )}
           <div className="min-w-0 flex-1">
             <p className="truncate text-[0.8125rem] font-medium">{k.item.name}</p>
@@ -868,7 +878,16 @@ function ItemMosaic({
               aria-label={`${row.itemName}, ${row.remaining} left`}
               onClick={() => setOpenId(row.taskId)}
             >
-              {row.icon && <img src={row.icon} alt="" />}
+              {row.icon && (
+                <img
+                  src={row.icon}
+                  alt=""
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.style.visibility = "hidden";
+                  }}
+                />
+              )}
               <span className="item-mosaic-badge">{row.remaining}</span>
             </button>
           );

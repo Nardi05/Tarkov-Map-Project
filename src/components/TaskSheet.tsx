@@ -103,7 +103,19 @@ export default function TaskSheet({
               const item = itemId ? catalog.data?.items[itemId] : null;
               return (
                 <li key={need.name} className="surface-2 flex items-center gap-2 p-2">
-                  {need.icon && <img src={need.icon} alt="" width={28} height={28} className="rounded" />}
+                  {need.icon && (
+                    <img
+                      src={need.icon}
+                      alt=""
+                      width={28}
+                      height={28}
+                      loading="lazy"
+                      className="rounded"
+                      onError={(e) => {
+                        e.currentTarget.style.visibility = "hidden";
+                      }}
+                    />
+                  )}
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm">{need.name}</p>
                     <p className="text-[0.7rem]" style={{ color: "var(--text-faint)" }}>

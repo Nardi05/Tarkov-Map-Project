@@ -1,3 +1,4 @@
+import { useMapIndex } from "../lib/data";
 import { href, navigate, onNavClick } from "../lib/router";
 import { useStore } from "../store";
 import DataFreshness from "./DataFreshness";
@@ -54,6 +55,57 @@ const WHAT_YOU_GET = [
   },
 ];
 
+/**
+ * What the site currently holds, counted from the live index rather than
+ * written into the copy.
+ *
+ * A landing page that claims "500+ quests" is a number somebody typed once and
+ * nobody will ever correct. This one is whatever came back from the data
+ * endpoint thirty seconds ago, which is also the most direct demonstration of
+ * the thing the page says two sections further down.
+ */
+function AtAGlance() {
+  const index = useMapIndex();
+  const maps = index.data?.maps ?? [];
+
+  const totals = maps.reduce(
+    (acc, m) => ({
+      spawns: acc.spawns + m.counts.spawns,
+      exits: acc.exits + m.counts.extracts + m.counts.transits,
+      tasks: acc.tasks + m.counts.quests,
+      keys: acc.keys + m.counts.keys,
+    }),
+    { spawns: 0, exits: 0, tasks: 0, keys: 0 },
+  );
+
+  const rows: [string, number][] = [
+    ["Maps", maps.length],
+    ["Spawn points", totals.spawns],
+    ["Exits and transits", totals.exits],
+    ["Task objectives", totals.tasks],
+    ["Locked doors", totals.keys],
+  ];
+
+  return (
+    <aside className="card hero-glance" aria-label="What the site holds">
+      <p className="kicker">On the map right now</p>
+      <dl className="mt-3 divide-y" style={{ borderColor: "var(--line-soft)" }}>
+        {rows.map(([label, value]) => (
+          <div key={label} className="flex items-baseline justify-between gap-3 py-2">
+            <dt className="text-[0.8125rem] muted">{label}</dt>
+            <dd className="text-lg font-semibold tabular-nums">
+              {index.loading && !index.data ? "—" : value.toLocaleString("en-GB")}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p className="mt-2 text-meta">
+        Counted from the data the site is serving, not from a number typed into this page.
+      </p>
+    </aside>
+  );
+}
+
 export default function LandingPage() {
   const setEntry = useStore((s) => s.setEntry);
 
@@ -97,31 +149,35 @@ export default function LandingPage() {
 
       <div className="shell landing-hero">
         {/* ------------------------------------------------------------ hero */}
-        <section className="hero">
-          <p className="eyebrow">Escape from Tarkov</p>
-          <h1 className="hero-title mt-3">
-            Know the map.
-            <br />
-            Run the right raid.
-          </h1>
-          <p className="hero-lead">
-            Interactive maps for every location, and a tracker that puts <em>your</em> quests on
-            them. Free, no account, and everything you tick stays in this browser.
-          </p>
+        <section className="hero hero-split">
+          <div className="min-w-0">
+            <p className="eyebrow">Escape from Tarkov</p>
+            <h1 className="hero-title mt-3">
+              Know the map.
+              <br />
+              Run the right raid.
+            </h1>
+            <p className="hero-lead">
+              Interactive maps for every location, and a tracker that puts <em>your</em> quests on
+              them. Free, no account, and everything you tick stays in this browser.
+            </p>
 
-          <div className="hero-actions">
-            <button type="button" className="btn btn-primary btn-lg" onClick={fullSetup}>
-              Set up my character
-              <Icon path={icons.forward} size={16} />
-            </button>
-            <button type="button" className="btn btn-lg" onClick={mapsOnly}>
-              Just browse the maps
-            </button>
+            <div className="hero-actions">
+              <button type="button" className="btn btn-primary btn-lg" onClick={fullSetup}>
+                Set up my character
+                <Icon path={icons.forward} size={16} />
+              </button>
+              <button type="button" className="btn btn-lg" onClick={mapsOnly}>
+                Just browse the maps
+              </button>
+            </div>
+            <p className="mt-3 text-meta">
+              Setting up takes about two minutes and you can skip any part of it. Already been
+              here? The dashboard opens itself next time.
+            </p>
           </div>
-          <p className="mt-3 text-meta">
-            Setting up takes about two minutes and you can skip any part of it. Already been here?
-            The dashboard opens itself next time.
-          </p>
+
+          <AtAGlance />
         </section>
 
         {/* --------------------------------------------------- how it works */}

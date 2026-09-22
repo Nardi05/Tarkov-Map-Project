@@ -5,8 +5,12 @@ keys, boss spawns and every task objective — on one map, with every layer
 explained in plain English so a new player can learn a map without a second tab
 open.
 
-Covers all 13 playable maps, works from a phone up to a desktop, and ships as a
-static site with no backend.
+Covers all 13 playable maps, works from a phone up to a desktop, and rebuilds
+its game data from tarkov.dev every day without a redeploy.
+
+Every piece of Tarkov jargon on the site — Kappa, found-in-raid, transits,
+Scavs, Kord Breach — explains itself on hover or tap, so a new player is not
+expected to arrive already fluent.
 
 ## Live
 
@@ -269,8 +273,15 @@ is about to be overwritten first.
 
 ```bash
 npm install
-npm run data      # fetch game data and build public/data (needs network)
-npm run dev
+npm run dev       # serves the app *and* the live data endpoint at /api/data
+```
+
+`npm run data` is optional for development — `npm run dev` serves the live
+endpoint, so the committed snapshot in `public/data` only matters when that
+cannot be reached. Run it when you want to refresh the fallback:
+
+```bash
+npm run data      # rebuild the public/data snapshot (needs network)
 ```
 
 ```bash
@@ -294,13 +305,62 @@ copied from `node_modules` plus the committed language model), so screenshot
 reading works without fetching anything from a CDN at runtime. None of it is
 downloaded by a visitor unless they open the screenshot panel.
 
-## Deploying a private preview
+## Where the game data comes from
+
+Maps, quests, keys, items and hideout requirements are rebuilt from
+[tarkov.dev](https://tarkov.dev) **on request, daily**, not at deploy time. A
+patch that changes a task shows up here without anyone touching the site.
+
+```
+GET /api/data/index.json
+        |
+        |  CDN hit for the next 24h (s-maxage=86400), and
+        |  stale-while-revalidate serves the old copy while
+        |  the new one is being built, so nobody ever waits
+        v
+api/data/[...path].js  ->  scripts/lib/build-data-core.mjs
+                           (the same pipeline `npm run data` runs,
+                            against an in-memory filesystem)
+                                     |
+                                     |  tarkov.dev down, or the feed
+                                     |  comes back too thin to trust
+                                     v
+                           public/data/*.json, the snapshot baked
+                           into the bundle at build time
+```
+
+The response says which one you got in `x-tk-source`, and the site repeats that
+in the footer and on the Settings page — a stale answer is fine, a stale answer
+presented as current is not.
+
+Three layers keep it cheap: the CDN answers for a day, so roughly one request
+per region per day reaches the function at all; a warm function reuses one
+build for an hour, so the thirteen map payloads cost one pipeline run between
+them rather than thirteen; and the browser holds its own copy for the session.
+The whole pipeline takes about 1.2s and ~250MB, well inside a serverless
+function's budget.
+
+`npm run build` still runs `npm run data`, but only to lay down the fallback.
+It is not what a healthy deploy serves.
+
+**On a host with no functions** — a plain static bundle, `vite preview` without
+this repo's config, GitHub Pages — `/api/data/*` 404s once, the client notices,
+and everything falls back to the snapshot. The site works identically; it just
+says "snapshot" instead of "live". `vite.config.ts` mounts the same endpoint in
+`npm run dev` and `npm run preview`, so the path the deployed site takes is not
+the one path that never gets exercised locally.
+
+## Deploying
 
 The repo is set up for Vercel: connect it as a project and every push to the
-production branch redeploys automatically (`vercel.json` sets the build command
-to `npm run data && npm run build`). Each deploy refreshes tarkov.dev maps,
-tasks, items and hideout, then best-effort updates wiki quest prereqs, Kord
-document spawns and task screenshots (a down wiki keeps the last good scrape).
+production branch redeploys automatically. `vercel.json` sets the build command
+to `npm run data && npm run build` and gives `api/data/[...path].js` the
+vendored inputs it needs via `includeFiles`.
+
+Each deploy refreshes the fallback snapshot from tarkov.dev and best-effort
+updates the wiki-scraped parts — quest prereqs, Kord document spawns, task
+screenshots (a down wiki keeps the last good scrape). Those are the pieces that
+change rarely; the runtime endpoint re-pulls only tarkov.dev.
 
 Preview deploys from non-`main` branches are unlisted Vercel URLs. Production
 stays on `main`. There is no site-password gate.
@@ -311,8 +371,21 @@ stays on `main`. There is no site-password gate.
 scripts/refresh-sources.mjs
                          runs on every `npm run data` / Vercel deploy: wiki
                          scrapes (best-effort) then tarkov.dev rebuild
-scripts/build-data.mjs   fetches tarkov.dev's JSON feeds, resolves translations,
-                         and writes one small payload per map
+scripts/build-data.mjs   the CLI: writes the fallback snapshot into public/data
+scripts/lib/build-data-core.mjs
+                         the pipeline itself — fetches tarkov.dev's JSON feeds,
+                         resolves translations, writes one small payload per
+                         map. Takes its filesystem as a parameter, which is
+                         what lets the live endpoint run it in memory
+scripts/lib/overlay-fs.mjs
+                         copy-on-write filesystem: reads fall through to disk,
+                         writes land in a Map. How the pipeline runs where
+                         there is nowhere to write
+scripts/lib/data-middleware.mjs
+                         mounts the live endpoint in `vite dev` and
+                         `vite preview` so local and deployed agree
+api/data/[...path].js    the live endpoint. Runs the pipeline on request behind
+                         a one-day CDN cache, falls back to the snapshot
 scripts/fetch-task-images.mjs
                          caches the wiki's task screenshots into
                          data/task-images.json
@@ -344,10 +417,23 @@ src/lib/use-drag-reorder.ts
                          pointer-based drag reordering, because HTML5
                          drag-and-drop does not fire on touch at all
 src/components/TabShell.tsx
-                         the frame the three tab pages share, mounted above
-                         the route switch so the section nav is the same
-                         element across a tab change — which is what lets its
-                         highlight slide instead of being redrawn in place
+                         the frame the five tab pages share, mounted above the
+                         route switch so the section nav is the same element
+                         across a tab change — which is what lets its
+                         highlight slide instead of being redrawn in place.
+                         Also owns the phone's bottom tab bar
+src/components/PageShell.tsx
+                         the same bar for the pages that are not a section —
+                         Settings and the setup walkthrough
+src/components/ui.tsx    the shared component vocabulary: card, callout, empty
+                         state, menu, page header, the nav, the glossary term.
+                         Anything a page repeats more than twice lives here
+src/lib/glossary.ts      the jargon the site used to assume you already knew —
+                         Kappa, FIR, transit, Scav, Kord Breach — each one
+                         explained in a sentence, shown on hover or tap
+src/components/Onboarding.tsx
+                         the first-run checklist and the map legend. Both
+                         disappear once they have done their job
 src/lib/persist-migrate.ts
                          the persisted-state migrations. The rule every
                          version has to clear: a migration may never drop a
@@ -356,9 +442,10 @@ src/components/          map canvas, layer panel, task panel, detail panel,
                          and the dashboard's panels
 ```
 
-Data is baked at build time rather than fetched at runtime: opening a map is one
-request for a 25–225KB JSON file (well under 50KB gzipped for most maps), and
-the site keeps working if the upstream API is down.
+Opening a map is one request for a 25–225KB JSON file (well under 50KB gzipped
+for most maps), served by the live endpoint or, if that cannot answer, by the
+snapshot in the bundle. Either way the site keeps working when the upstream API
+is down — see "Where the game data comes from" above.
 
 A few details worth knowing if you touch this code:
 

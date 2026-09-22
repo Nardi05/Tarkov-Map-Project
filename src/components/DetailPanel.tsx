@@ -265,7 +265,19 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
         ].filter(Boolean) as View["facts"],
         body: (
           <div className="flex items-center gap-2">
-            {key?.icon && <img src={key.icon} alt="" width={48} height={48} className="surface-2 p-1" loading="lazy" />}
+            {key?.icon && (
+              <img
+                src={key.icon}
+                alt=""
+                width={48}
+                height={48}
+                className="surface-2 p-1"
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.style.visibility = "hidden";
+                }}
+              />
+            )}
             {key?.wiki && (
               <a className="btn" href={key.wiki} target="_blank" rel="noreferrer noopener">
                 <Icon path={icons.external} size={14} /> Key details
@@ -324,7 +336,18 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
           <div className="flex flex-col gap-2">
             {marker.item && (
               <div className="surface-2 flex items-center gap-2 px-2 py-1.5">
-                {marker.item.icon && <img src={marker.item.icon} alt="" width={34} height={34} loading="lazy" />}
+                {marker.item.icon && (
+                  <img
+                    src={marker.item.icon}
+                    alt=""
+                    width={34}
+                    height={34}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.style.visibility = "hidden";
+                    }}
+                  />
+                )}
                 <div className="min-w-0">
                   <p className="truncate text-[0.75rem] font-medium">{marker.item.name}</p>
                   <p className="text-[0.68rem]" style={{ color: "var(--text-faint)" }}>

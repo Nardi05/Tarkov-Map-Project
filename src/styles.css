@@ -1101,6 +1101,15 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
    * at 900px they simply wrapped onto a second row over the map.
    */
   .map-bar {
+    /*
+     * Positioned and lifted, because `.map-glass`'s `backdrop-filter` makes
+     * this a stacking context of its own. Without a z-index here the whole
+     * header stacks at `auto` — below the map canvas, which is a later
+     * sibling — and the options menu opened *underneath* the map however
+     * high its own z-index was.
+     */
+    position: relative;
+    z-index: 700;
     display: flex;
     flex: none;
     align-items: center;
@@ -1267,6 +1276,8 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     left: 0;
     bottom: calc(100% + 0.45rem);
     z-index: 60;
+    /* `below` is set by the component when the term sits too near the top of
+       the viewport for the popover to fit above it. */
     width: max-content;
     max-width: min(20rem, calc(100vw - 2rem));
     padding: 0.6rem 0.75rem;
@@ -1281,6 +1292,11 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     text-align: left;
     cursor: auto;
     white-space: normal;
+  }
+
+  .term-pop[data-below] {
+    bottom: auto;
+    top: calc(100% + 0.45rem);
   }
 
   .term-pop b {
@@ -1446,6 +1462,28 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     .hero {
       padding: 5rem 0 3.5rem;
     }
+  }
+
+  /*
+   * Two columns from 1024px: the pitch, and a panel of what the site actually
+   * holds. Below that the panel drops under the buttons rather than squeezing
+   * the headline into four words a line.
+   */
+  .hero-split {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-split {
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: 3.5rem;
+    }
+  }
+
+  .hero-glance {
+    align-self: center;
   }
 
   .hero-title {

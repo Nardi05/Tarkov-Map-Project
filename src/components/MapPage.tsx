@@ -622,7 +622,7 @@ export default function MapPage({
                 <button
                   type="button"
                   className="btn btn-ghost btn-icon flex-none"
-                  aria-label="Got it"
+                  aria-label="Dismiss the map key"
                   onClick={() => setUiFlag("mapPrimerSeen", true)}
                 >
                   <Icon path={icons.close} size={15} />

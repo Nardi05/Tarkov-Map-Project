@@ -8,7 +8,7 @@ import type { TaskAvailability } from "../types";
 import TaskName from "./TaskName";
 import TaskSheet from "./TaskSheet";
 import TaskStatusControl from "./TaskStatusControl";
-import { EmptyState, Tick } from "./ui";
+import { Card, EmptyState } from "./ui";
 
 export default function TaskGraphPage() {
   const progression = useProgression();
@@ -68,22 +68,50 @@ export default function TaskGraphPage() {
 
   return (
     <div>
-      <div className="mb-3 flex flex-wrap items-center gap-3">
-        <Tick
-          checked={allTasks}
-          label="Show every task"
-          onChange={() => setAllTasks((v) => !v)}
-        />
-        <Tick checked={showCompleted} label="Show finished" onChange={() => setShowCompleted((v) => !v)} />
-        <p className="text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
-          {plan.targetName ? `Aimed at ${plan.targetName}` : "No target — showing what is currently doable."}
-        </p>
-      </div>
-      <div className="flex gap-3 overflow-x-auto pb-4">
+      {/*
+        * The two filters used to be bare tick boxes with nothing beside them —
+        * an accessible name and a tooltip, and on screen two unlabelled
+        * squares that nobody could be expected to guess at.
+        */}
+      <Card
+        title="What unlocks what"
+        hint={
+          <>
+            Each column is one step further down the chain: the first holds tasks with nothing
+            behind them, and finishing everything in a column opens the next.{" "}
+            {plan.targetName
+              ? `Narrowed to the path toward ${plan.targetName}.`
+              : "No target set, so this is everything currently doable."}
+          </>
+        }
+        action={
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              className={allTasks ? "btn btn-sm is-active" : "btn btn-sm"}
+              aria-pressed={allTasks}
+              onClick={() => setAllTasks((v) => !v)}
+            >
+              Every task
+            </button>
+            <button
+              type="button"
+              className={showCompleted ? "btn btn-sm is-active" : "btn btn-sm"}
+              aria-pressed={showCompleted}
+              onClick={() => setShowCompleted((v) => !v)}
+            >
+              Show finished
+            </button>
+          </div>
+        }
+      />
+
+      <div className="scroll-y mt-4 flex gap-3 overflow-x-auto pb-4">
         {columns.map(([depth, ids]) => (
           <section key={depth} className="w-56 flex-none">
-            <h3 className="eyebrow mb-2" style={{ color: "var(--text-faint)" }}>
-              {depth === 0 ? "Start" : `Hop ${depth}`}
+            <h3 className="kicker mb-2">
+              {depth === 0 ? "Open now" : depth === 1 ? "One task away" : `${depth} tasks away`}
+              <span className="ml-1.5 font-normal normal-case tracking-normal">({ids.length})</span>
             </h3>
             <ul className="space-y-1.5">
               {ids.map((id) => {

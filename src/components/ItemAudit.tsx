@@ -11,7 +11,7 @@ import { useItemCounts, useStore, useTaskStatus } from "../store";
 import type { TaskAvailability } from "../types";
 import SavePanel from "./SavePanel";
 import TaskName from "./TaskName";
-import { EmptyState, Tick } from "./ui";
+import { EmptyState, Term, Tick } from "./ui";
 
 /**
  * Kappa's task item list: every hand-in, which quest wants it, FIR or not,
@@ -107,9 +107,10 @@ export default function ItemAudit() {
 
   return (
     <div>
-      <p className="text-sm" style={{ color: "var(--text-dim)" }}>
-        Every hand-in on your remaining quests. FIR is the ones you have to extract with.
-        Counts are your stash — one pile, used by hideout as well.
+      <p className="text-body">
+        Every hand-in on your remaining quests. <Term id="fir">FIR</Term> marks the ones you have
+        to extract with rather than buy. Counts are your <Term id="stash" /> — one pile, which the
+        hideout page reads from too.
       </p>
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -211,7 +212,17 @@ function ItemTable({
         return (
           <li key={row.key} className="surface-2 flex flex-wrap items-center gap-2 p-2 sm:flex-nowrap">
             {row.icon && (
-              <img src={row.icon} alt="" width={32} height={32} className="flex-none rounded" />
+              <img
+                src={row.icon}
+                alt=""
+                width={32}
+                height={32}
+                loading="lazy"
+                className="flex-none rounded"
+                onError={(e) => {
+                  e.currentTarget.style.visibility = "hidden";
+                }}
+              />
             )}
             <div className="min-w-0 flex-1">
               <p className="flex flex-wrap items-baseline gap-1.5 text-sm font-medium">
@@ -320,7 +331,17 @@ function AuditGrid({
             }}
             title={`${row.itemName}: ${row.have}/${row.need}. Click to add, right-click to remove.`}
           >
-            {row.icon && <img src={row.icon} alt="" className="h-full w-full object-contain p-1" />}
+            {row.icon && (
+              <img
+                src={row.icon}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-contain p-1"
+                onError={(e) => {
+                  e.currentTarget.style.visibility = "hidden";
+                }}
+              />
+            )}
             {row.foundInRaid && (
               <span className="absolute left-1 top-1 rounded bg-black/70 px-1 text-[0.6rem]">FIR</span>
             )}

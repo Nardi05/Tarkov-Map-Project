@@ -302,8 +302,20 @@ export function Callout({
 export function Term({ id, children }: { id: string; children?: ReactNode }) {
   const entry = glossary(id);
   const [open, setOpen] = useState(false);
+  /*
+   * Above by default, below when there is not room — a term in a page lead
+   * sits ~140px from the top of the viewport, and the popover opened upward
+   * into the browser chrome where nobody could read it.
+   */
+  const [below, setBelow] = useState(false);
   const wrap = useRef<HTMLSpanElement>(null);
   const popId = useId();
+
+  const show = () => {
+    const top = wrap.current?.getBoundingClientRect().top ?? 0;
+    setBelow(top < 180);
+    setOpen(true);
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -332,16 +344,16 @@ export function Term({ id, children }: { id: string; children?: ReactNode }) {
         className="term"
         aria-expanded={open}
         aria-controls={open ? popId : undefined}
-        onClick={() => setOpen((v) => !v)}
-        onMouseEnter={() => setOpen(true)}
+        onClick={() => (open ? setOpen(false) : show())}
+        onMouseEnter={show}
         onMouseLeave={() => setOpen(false)}
-        onFocus={() => setOpen(true)}
+        onFocus={show}
         onBlur={() => setOpen(false)}
       >
         {children ?? entry.term}
       </button>
       {open && (
-        <span id={popId} role="tooltip" className="term-pop">
+        <span id={popId} role="tooltip" className="term-pop" data-below={below || undefined}>
           <b>{entry.term}</b>
           {entry.body}
         </span>
