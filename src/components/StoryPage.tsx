@@ -668,7 +668,7 @@ function ChapterCard({
           {/* Photos the wiki has for this chapter that belong to no one step —
               the establishing shots and the overview maps. */}
           {shots && shots.chapter.length > 0 && (
-            <div className="story-shot mt-3">
+            <div className="panel-shot mt-3">
               <p className="eyebrow mb-1.5">More from the wiki</p>
               <TaskGallery images={shots.chapter} taskName={chapter.name} />
             </div>
@@ -766,7 +766,7 @@ function StepRow({
         </p>
 
         {photos?.length ? (
-          <div className="story-shot mt-2">
+          <div className="panel-shot mt-2">
             <TaskGallery images={photos} taskName={step.title} />
           </div>
         ) : (

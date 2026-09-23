@@ -1956,12 +1956,13 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
   }
 
   /*
-   * Story photos are thumbnails, and the lightbox is where you actually look.
-   * The gallery sizes itself to its container, which is right inside the map's
-   * narrow detail panel and wrong here — a checklist whose every step carries a
-   * 700px-tall screenshot is not a checklist any more.
+   * A photo in a wide panel is a thumbnail, and the lightbox is where you
+   * actually look. The gallery sizes itself to its container, which is right
+   * inside the map's narrow detail panel and wrong on a full-width page — a
+   * checklist whose every row carries a 700px-tall screenshot is not a
+   * checklist any more.
    */
-  .story-shot {
+  .panel-shot {
     max-width: 26rem;
   }
 

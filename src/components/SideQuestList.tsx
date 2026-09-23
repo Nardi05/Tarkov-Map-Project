@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTaskImages } from "../lib/data";
 import { objectiveLabel, type MissionKeyRow, type SideMission } from "../lib/missions";
 import { prerequisiteClosure } from "../lib/progression";
 import { mapLabel } from "../lib/story";
@@ -6,6 +7,7 @@ import { href, onNavClick } from "../lib/router";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
 import type { TaskAvailability } from "../types";
 import { useMissionBoard } from "./MissionPanels";
+import TaskGallery from "./TaskGallery";
 import { Card, EmptyState, Icon, icons, Term } from "./ui";
 
 /**
@@ -275,6 +277,16 @@ function MissionDetail({ mission }: { mission: SideMission }) {
   const completeWithPrereqs = useStore((s) => s.completeWithPrereqs);
   const { progression } = useMissionBoard();
   const taskStatus = useTaskStatus();
+  /*
+   * The wiki's screenshots for this quest. Loaded only once a row is opened,
+   * which is what makes it affordable at all — the cache is a quarter of a
+   * megabyte and a tracker shows a hundred rows.
+   *
+   * The map's detail panel has shown these for a while; the tracker had the
+   * item icons but not the photos, so the two panels disagreed about how much
+   * a quest could tell you. The story guide now shows them too.
+   */
+  const photos = useTaskImages(mission.id);
 
   return (
     <div className="mt-2.5 border-t pt-2.5" style={{ borderColor: "var(--line-soft)" }}>
@@ -409,6 +421,16 @@ function MissionDetail({ mission }: { mission: SideMission }) {
               </li>
             ))}
           </ul>
+        </>
+      )}
+
+      {/* ----------------------------------------------------------- photos */}
+      {photos.length > 0 && (
+        <>
+          <p className="kicker mb-1.5 mt-3">What it looks like</p>
+          <div className="panel-shot">
+            <TaskGallery images={photos} taskName={mission.name} />
+          </div>
         </>
       )}
 
