@@ -93,6 +93,10 @@ export interface StoryStep {
   parallel?: boolean;
   when?: StoryWhen[];
   keys?: string[];
+  /** Items you must hold or hand over. Not the same as a door key. */
+  needs?: string[];
+  /** Every known spawn, in the order a guide would check them. */
+  spawns?: string[];
 }
 
 export interface StoryChapter {

@@ -799,33 +799,54 @@
         {
           "id": "open-jammer",
           "title": "Find the experimental signal jammer (found in raid)",
-          "detail": "Three Labs spots: containment block glass lab (middle desks), recreational area R21 (round table in Cat, near Red), lecture hall R16 (conference desks downstairs from the kitchen).",
+          "detail": "Found in raid on The Lab. Any one of the three rooms is enough. Take it out, then craft the case open at Workbench 1 with the jammer plus a toolset (25 hours, power on the whole time).",
           "kind": "item",
           "maps": [
             "the-lab"
           ],
-          "location": "Labs containment / R21 / R16",
+          "location": "The Lab — three rooms, any one spawn",
           "keys": [
             "TerraGroup Labs access keycard"
+          ],
+          "needs": [
+            "Experimental signal jammer (found in raid)"
+          ],
+          "spawns": [
+            "Containment block, glass lab: middle desks.",
+            "Recreational area R21 (Cat room): round table near the red keycard room.",
+            "Lecture hall R16: conference desks downstairs."
           ]
         },
         {
           "id": "open-craft",
           "title": "Craft the case open at Workbench 1 (~55 hours)",
-          "detail": "Start the armored-case opening craft at Workbench 1. It takes about 55 hours. Then unpack the result.",
+          "detail": "Workbench 1 recipe: jammer + toolset + the locked armored case. 25 hours. Electricity has to stay on or the craft stops. Then unpack the result.",
           "kind": "craft",
           "hideout": {
             "station": "Workbench",
             "level": 1
           },
-          "location": "Hideout Workbench 1"
+          "location": "Hideout Workbench 1",
+          "needs": [
+            "Experimental signal jammer",
+            "Toolset",
+            "Locked armored case"
+          ]
         },
         {
           "id": "open-unpack",
           "title": "Unpack Kruglov's RFID and read the manual",
-          "detail": "Right-click the opened case and unpack it. Kruglov's RFID goes to your stash. The manual is in the Handbook — open and read it.",
+          "detail": "Unpacking is the only way to get Kruglov's RFID. It does not spawn in raid.",
           "kind": "item",
-          "location": "Inventory — right-click the opened case"
+          "location": "Inventory — right-click the opened case",
+          "needs": [
+            "Unlocked armored case"
+          ],
+          "spawns": [
+            "Not a raid spawn. Right-click the unlocked case → Unpack.",
+            "Kruglov's RFID keycard lands in a special slot. It cannot be flea-sold or dropped for someone else.",
+            "The RFID card manual is added to your Handbook. Open the Handbook and read it."
+          ]
         },
         {
           "id": "open-contact",
@@ -881,15 +902,15 @@
         },
         {
           "id": "kerman-labs-black",
-          "title": "Get Labs Black keycard and Kruglov's master pass",
-          "detail": "You need a TerraGroup Labs access keycard (single use, bought or found) and Kruglov's master pass from the unpacked case. Used later for the Terminal and Cardinal routes.",
+          "title": "Labs: master pass from Kruglov's safe (R22)",
+          "detail": "Two Black swipes: door, then safe. The master pass is the card in the safe, not something from the unpacked case.",
           "kind": "item",
           "maps": [
-            "the-lab",
-            "streets-of-tarkov"
+            "the-lab"
           ],
           "keys": [
-            "TerraGroup Labs access keycard"
+            "TerraGroup Labs access keycard",
+            "TerraGroup Labs keycard (Black), 2 uses"
           ],
           "endings": [
             "savior",
@@ -902,7 +923,16 @@
               "is": "accept"
             }
           ],
-          "location": "Labs access keycard (any Labs entrance) and Kruglov's master pass from the opened case"
+          "location": "Kruglov's office R22, second floor — safe in the back corner",
+          "needs": [
+            "TerraGroup Labs master keycard (found in raid)"
+          ],
+          "spawns": [
+            "Get into The Lab with a TerraGroup Labs access keycard (Therapist, or loose loot in jackets, filing cabinets, marked rooms, boss pockets).",
+            "Black keycard opens both the R22 office door and the safe. You need two uses. Black spawns on Cultists, the Goons, Tagilla, Kaban, Partisan, rare valuables, and marked rooms (Customs dorm 314, Reserve RB-BK / RB-PKPM, Streets factory and Chekannaya 13).",
+            "Master keycard is inside that safe. Put it in your quest inventory before you die or it is gone.",
+            "The RFID encryption device is not in this safe. That objective is scripted to fail — see the next step."
+          ]
         },
         {
           "id": "kerman-btc",
@@ -929,13 +959,14 @@
         },
         {
           "id": "kerman-elektronik",
-          "title": "Streets: Elektronik apartment device",
-          "detail": "Find and use the device in Elektronik's apartment on Streets. Check the quest item spawns inside the apartment after you have the key the quest names.",
+          "title": "RFID encryption device — Labs fail, then Elektronik's apartment",
+          "detail": "Do the Labs time first so the objective can fail, pay the bitcoin, then take the device from Elektronik's apartment. That is the only pickup.",
           "kind": "item",
           "maps": [
+            "the-lab",
             "streets-of-tarkov"
           ],
-          "location": "Elektronik apartment, Streets of Tarkov",
+          "location": "Streets, green building by the school / Labs basement transit — 3rd floor, under the coffee table",
           "endings": [
             "savior",
             "debtor",
@@ -946,17 +977,29 @@
               "lock": "kerman",
               "is": "accept"
             }
+          ],
+          "keys": [
+            "Elektronik's apartment key (from Mechanic after 40 bitcoin)"
+          ],
+          "needs": [
+            "RFID keycard encryption device"
+          ],
+          "spawns": [
+            "On The Lab the device does not have a loot spawn. Survive about 30 minutes total in Labs raids and the objective fails on purpose. Mechanic then says Raiders took it.",
+            "Hand Mechanic 40 Physical Bitcoin. He mails Elektronik's apartment key.",
+            "Streets: the green building left of the blue school, the one whose basement transits to Labs. Third floor. The device is under the coffee table.",
+            "You do not need a separate Labs run to 'find' it on a shelf. Looking in R22 will not produce it."
           ]
         },
         {
           "id": "kerman-activate",
-          "title": "Activate Kruglov's RFID (~50 hour craft)",
-          "detail": "Intelligence Center 1 craft. Then swipe it at the Shoreline intercom — the first swipe fails. That is normal.",
+          "title": "Craft the activated Kruglov RFID (23 h 30 min)",
+          "detail": "All four items go into one craft. The blank card is the only piece that is ordinary loot. The other three come from the steps above.",
           "kind": "craft",
           "maps": [
             "shoreline"
           ],
-          "location": "Shoreline port intercom",
+          "location": "Hideout Intelligence Center 1, power on the whole time",
           "endings": [
             "savior",
             "debtor",
@@ -967,6 +1010,17 @@
               "lock": "kerman",
               "is": "accept"
             }
+          ],
+          "needs": [
+            "RFID keycard encryption device",
+            "TerraGroup Labs master keycard",
+            "Blank RFID keycard",
+            "Kruglov's RFID keycard"
+          ],
+          "spawns": [
+            "Blank RFID (any one): Scav and boss pockets; Customs dorm 314 marked room; Reserve marked rooms RB-BK, RB-PKPM, RB-VO; Streets abandoned-factory marked room; Chekannaya 13 marked room; Labs R22 office and its safe.",
+            "Craft is Intelligence Center 1, 23 hours 30 minutes. If the generator drops, it pauses.",
+            "First swipe at the Shoreline port intercom (21:00–06:00) is supposed to fail. That starts the next lock."
           ]
         },
         {

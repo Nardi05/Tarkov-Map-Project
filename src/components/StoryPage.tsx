@@ -947,6 +947,26 @@ function StepRow({
         <p className="mt-0.5 text-[0.75rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
           {step.detail}
         </p>
+        {step.needs && step.needs.length > 0 && (
+          <div className="mt-2">
+            <p className="eyebrow">Need</p>
+            <ul className="mt-1 space-y-0.5 text-[0.75rem] leading-snug" style={{ color: "var(--text)" }}>
+              {step.needs.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {step.spawns && step.spawns.length > 0 && (
+          <div className="mt-2">
+            <p className="eyebrow">Spawns</p>
+            <ol className="mt-1 list-decimal space-y-0.5 pl-4 text-[0.75rem] leading-snug" style={{ color: "var(--text)" }}>
+              {step.spawns.map((spot) => (
+                <li key={spot}>{spot}</li>
+              ))}
+            </ol>
+          </div>
+        )}
         <p className="mt-1 flex flex-wrap gap-1.5">
           {step.maps?.map((m) => (
             <MapChip key={m} map={m} find={find} />

@@ -75,7 +75,13 @@
           "keys": [
             "Zmeisky 3 apartment key"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Ninth Circle #19: living-room wall on the right as you enter, or the wall by the armchair.",
+            "Tarkov Herald summary: bottom of the shelf by the TV, on the armchair, or the bottom of the bookshelf.",
+            "FSB report: a drawer under the TV, or the windowsill beside the TV.",
+            "Ninth Circle #14: wall by the kitchen door, or the right-hand kitchen wall."
+          ]
         },
         {
           "id": "aw-report-skier-ragman",
@@ -361,7 +367,12 @@
           ],
           "trader": "Mechanic",
           "parallel": true,
-          "location": "LexOs closed section (2nd floor) or Chekannaya 13 marked room"
+          "location": "LexOs closed section (2nd floor) or Chekannaya 13 marked room",
+          "spawns": [
+            "LexOs car dealership, closed section on the second floor. Needs the Car dealership closed section key. The lot is mined with claymores.",
+            "Chekannaya 13 marked room. Needs the Mysterious room marked key.",
+            "Only one of the two spawns is required."
+          ]
         },
         {
           "id": "bf-hack",
@@ -659,7 +670,12 @@
             "TerraGroup science office key"
           ],
           "parallel": true,
-          "location": "TerraGroup security post surveillance room on Streets, or TerraGroup science office 4 on Ground Zero (level 21+)"
+          "location": "TerraGroup security post surveillance room on Streets, or TerraGroup science office 4 on Ground Zero (level 21+)",
+          "spawns": [
+            "Streets: surveillance room inside the TerraGroup security post.",
+            "Ground Zero, level 21+: office 4, second floor of the TerraGroup building. Needs the TerraGroup science office key.",
+            "Reading either note starts the chapter."
+          ]
         },
         {
           "id": "uh-lab-docs",
@@ -831,6 +847,11 @@
           "parallel": true,
           "keys": [
             "Cult victim's apartment key"
+          ],
+          "spawns": [
+            "Book of the Arrival and the prep note: office inside apartment 5.",
+            "Audio tape #1: same office.",
+            "The Cult victim's apartment key also spawns in the Lighthouse torture house if you do not have it yet."
           ]
         },
         {
