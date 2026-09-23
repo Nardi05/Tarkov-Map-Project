@@ -62,7 +62,9 @@ export default function App() {
           : route.name === "settings"
             ? "Settings — Tarkov Maps"
           : route.name === "story"
-            ? "Story — Tarkov Maps"
+            ? route.chapter
+              ? "Story chapter — Tarkov Maps"
+              : "Story — Tarkov Maps"
           : route.name === "setup"
             ? "Set up your progress — Tarkov Maps"
             : route.name === "welcome" || route.name === "root"
@@ -116,7 +118,7 @@ export default function App() {
       : route.name === "quests"
         ? `quests:${route.view}`
         : route.name === "story"
-          ? `story:${route.ending ?? ""}`
+          ? `story:${route.chapter ?? route.ending ?? ""}`
           : route.name;
   useEffect(() => {
     if (firstRoute.current) {
@@ -192,7 +194,10 @@ export default function App() {
         <TabShell current={tab}>
           {tab === "dashboard" && <DashboardPage />}
           {tab === "story" && (
-            <StoryPage endingId={route.name === "story" ? route.ending : null} />
+            <StoryPage
+              endingId={route.name === "story" ? route.ending : null}
+              chapterId={route.name === "story" ? route.chapter : null}
+            />
           )}
           {tab === "quests" && (
             <QuestsPage

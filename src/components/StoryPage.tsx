@@ -7,6 +7,9 @@ import type { TaskImage } from "../types";
 import { href, navigate, onNavClick } from "../lib/router";
 import {
   STORY,
+  chapterById,
+  chapterProgress,
+  chaptersForEnding,
   choiceConflicts,
   effectiveChoices,
   endingById,
@@ -46,7 +49,30 @@ const TONE: Record<string, string> = {
   green: "var(--ok)",
 };
 
-export default function StoryPage({ endingId }: { endingId: string | null }) {
+export default function StoryPage({
+  endingId,
+  chapterId,
+}: {
+  endingId: string | null;
+  chapterId: string | null;
+}) {
+  if (chapterId) {
+    const chapter = chapterById(chapterId);
+    if (!chapter) {
+      return (
+        <>
+          <PageHeader title="Story" lead="That chapter is not in the guide." />
+          <EmptyState title="Unknown chapter" hint="Pick a chapter from the story list." />
+          <p className="mt-4">
+            <a className="btn" href={href.story()} onClick={onNavClick(href.story())}>
+              Story progress
+            </a>
+          </p>
+        </>
+      );
+    }
+    return <ChapterGuide chapter={chapter} />;
+  }
   const ending = endingById(endingId);
   if (endingId && !ending) {
     return (
@@ -100,8 +126,10 @@ function Overview() {
     <>
       <PageHeader
         title="Story"
-        lead="Four endings. Pick one and we walk you through every chapter, lock, and item — in the order you should do them."
+        lead="Your story chapters, separate from trader side quests. Tick a step when you have done it. Each chapter opens into a full guide: map, place, keys, and what to pick up."
       />
+
+      <ChapterList endingId={targeted?.id ?? null} ticks={story.ticks} built={built} />
 
       {targeted && targetStats && (
         <a
@@ -125,6 +153,10 @@ function Overview() {
         </a>
       )}
 
+      <h2 className="mb-2 mt-8 text-sm font-semibold">Endings</h2>
+      <p className="mb-3 text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
+        Pick one so the chapter list and “do next” follow that path. Side quests stay on their own page.
+      </p>
       <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         {STORY.endings.map((row) => (
           <li key={row.id}>
@@ -150,6 +182,149 @@ function Overview() {
         {", current for patch "}
         {STORY.patch}.
       </p>
+    </>
+  );
+}
+
+function ChapterList({
+  endingId,
+  ticks,
+  built,
+}: {
+  endingId: StoryEndingId | null;
+  ticks: Record<string, true>;
+  built: Record<string, number>;
+}) {
+  const chapters = chaptersForEnding(endingId);
+  const current = chapters.find((c) => chapterProgress(c, ticks, built).next) ?? null;
+
+  return (
+    <section className="mb-2">
+      {current && (
+        <a
+          className="surface surface-link mb-3 flex flex-wrap items-center justify-between gap-3 p-4"
+          href={href.storyChapter(current.id)}
+          onClick={onNavClick(href.storyChapter(current.id))}
+        >
+          <div className="min-w-0">
+            <p className="eyebrow">Continue</p>
+            <p className="mt-1 text-lg font-semibold">{current.name}</p>
+            <p className="mt-0.5 text-[0.8rem]" style={{ color: "var(--text-dim)" }}>
+              {chapterProgress(current, ticks, built).next?.title}
+            </p>
+          </div>
+          <span className="btn is-active">Open chapter</span>
+        </a>
+      )}
+      <h2 className="mb-2 text-sm font-semibold">Chapters</h2>
+      <ol className="space-y-2">
+        {chapters.map((chapter) => {
+          const prog = chapterProgress(chapter, ticks, built);
+          const finished = prog.done === prog.total && prog.total > 0;
+          return (
+            <li key={chapter.id}>
+              <a
+                className="surface surface-link flex items-center gap-3 p-3"
+                href={href.storyChapter(chapter.id)}
+                onClick={onNavClick(href.storyChapter(chapter.id))}
+              >
+                <span
+                  className="story-chapter-n"
+                  style={{ background: TONE[chapter.tone] ?? "var(--accent)", color: "var(--accent-ink)" }}
+                >
+                  {chapter.number}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-semibold">{chapter.name}</span>
+                  <span className="mt-0.5 block truncate text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
+                    {chapter.summary}
+                  </span>
+                </span>
+                <span className="tabular-nums text-[0.75rem]" style={{ color: finished ? "var(--ok)" : "var(--text-faint)" }}>
+                  {prog.done}/{prog.total}
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
+
+function ChapterGuide({ chapter }: { chapter: StoryChapter }) {
+  const story = useStory();
+  const toggleStoryTick = useStore((s) => s.toggleStoryTick);
+  const setStoryChoice = useStore((s) => s.setStoryChoice);
+  const hideout = useHideout();
+  const stations = useHideoutData().data?.stations;
+  const built = useMemo(() => hideoutLevels(stations, hideout), [stations, hideout]);
+  const media = useStoryMedia();
+  const prog = chapterProgress(chapter, story.ticks, built);
+  const shots = useMemo(
+    () => chapterMedia(media, chapter, chapter.steps),
+    [media, chapter],
+  );
+  const color = TONE[chapter.tone] ?? "var(--accent)";
+
+  return (
+    <>
+      <nav className="mb-3">
+        <a className="btn btn-ghost" href={href.story()} onClick={onNavClick(href.story())}>
+          <Icon path={icons.back} size={14} />
+          Story progress
+        </a>
+      </nav>
+      <PageHeader title={chapter.name} lead={chapter.summary}>
+        <span className="tabular-nums text-sm" style={{ color: "var(--text-faint)" }}>
+          {prog.done}/{prog.total}
+        </span>
+      </PageHeader>
+      <span className="meter mb-4">
+        <i style={{ width: `${prog.total ? (prog.done / prog.total) * 100 : 0}%`, background: color }} />
+      </span>
+      <p className="mb-3 text-[0.9rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
+        <strong style={{ color: "var(--text)" }}>How to start. </strong>
+        {chapter.howToStart}
+      </p>
+      {chapter.maps.length > 0 && (
+        <p className="mb-4 flex flex-wrap gap-1.5">
+          {chapter.maps.map((m) => (
+            <MapChip key={m} map={m} />
+          ))}
+        </p>
+      )}
+      <ol className="space-y-3">
+        {chapter.steps.map((step, i) => (
+          <li key={step.id}>
+            <article className="surface p-3">
+              <p className="eyebrow mb-2">Step {i + 1}</p>
+              <StepRow
+                row={{ step, chapter }}
+                done={stepIsDone(step, story.ticks, built)}
+                onTick={() => toggleStoryTick(step.id)}
+                onChoose={(lock, value) => setStoryChoice(lock, story.choices[lock] === value ? null : value)}
+                selected={step.choice ? story.choices[step.choice.lock] : undefined}
+                photos={shots.byStep.get(step.id)}
+                pooled={shots.pooled}
+              />
+            </article>
+          </li>
+        ))}
+      </ol>
+      {shots.chapter.length > 0 && (
+        <div className="panel-shot mt-4">
+          <p className="eyebrow mb-1.5">More from the wiki</p>
+          <TaskGallery images={shots.chapter} taskName={chapter.name} />
+        </div>
+      )}
+      {chapter.wiki && (
+        <p className="mt-4">
+          <a className="text-[0.75rem]" href={chapter.wiki} target="_blank" rel="noreferrer" style={{ color: "var(--text-faint)" }}>
+            Wiki: {chapter.name}
+          </a>
+        </p>
+      )}
     </>
   );
 }

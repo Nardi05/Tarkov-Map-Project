@@ -360,6 +360,25 @@ export function storylineChaptersFor(endingId: StoryEndingId): StoryChapter[] {
   return STORY.chapters.filter((c) => c.storyline && onEnding(c.endings, endingId));
 }
 
+export function chapterById(id: string): StoryChapter | null {
+  return STORY.chapters.find((c) => c.id === id) ?? null;
+}
+
+export function chaptersForEnding(endingId: StoryEndingId | null): StoryChapter[] {
+  if (!endingId) return STORY.chapters;
+  return STORY.chapters.filter((c) => onEnding(c.endings, endingId));
+}
+
+export function chapterProgress(
+  chapter: StoryChapter,
+  ticks: Record<string, true>,
+  built: Record<string, number>,
+): { total: number; done: number; next: StoryStep | null } {
+  const done = chapter.steps.filter((s) => stepIsDone(s, ticks, built)).length;
+  const next = chapter.steps.find((s) => !stepIsDone(s, ticks, built)) ?? null;
+  return { total: chapter.steps.length, done, next };
+}
+
 export function headlineRewards(ending: StoryEnding, cap = 6): StoryReward[] {
   const preferred = ending.rewards.filter(
     (r) => r.group === "cosmetic" || r.group === "achievement" || /USD|EUR|RUB|THICC|T H I C C|Red Rebel|Taiga|Money case/i.test(r.name),

@@ -15,8 +15,9 @@ import { useSyncExternalStore, useCallback, type MouseEvent } from "react";
  *   #/quests/graph  task dependency graph
  *   #/quests/items  item tracker + stash audit
  *   #/quests/setup  the first-run walkthrough of each trader
- *   #/story         story endings overview
- *   #/story/<id>    one ending's guided path
+ *   #/story                 story progress and chapter list
+ *   #/story/chapter/<id>    one chapter's step-by-step guide
+ *   #/story/<id>            one ending's guided path
  *   #/hideout       hideout stations
  *   #/settings      profile, reset, backup
  */
@@ -29,7 +30,7 @@ export type Route =
   | { name: "home" }
   | { name: "quests"; view: QuestView; focus: string | null }
   | { name: "setup" }
-  | { name: "story"; ending: string | null }
+  | { name: "story"; ending: string | null; chapter: string | null }
   | { name: "hideout" }
   | { name: "settings" }
   | { name: "map"; map: string; task: string | null; find: string | null };
@@ -81,7 +82,18 @@ function parse(hash: string): Route {
     return { name: "quests", view: "list", focus };
   }
   if (segments[0] === "story") {
-    return { name: "story", ending: segments[1] ? decodeURIComponent(segments[1]) : null };
+    if (segments[1] === "chapter" && segments[2]) {
+      return {
+        name: "story",
+        ending: null,
+        chapter: decodeURIComponent(segments[2]),
+      };
+    }
+    return {
+      name: "story",
+      ending: segments[1] ? decodeURIComponent(segments[1]) : null,
+      chapter: null,
+    };
   }
   if (segments[0] === "hideout") return { name: "hideout" };
   if (segments[0] === "settings") return { name: "settings" };
@@ -152,6 +164,7 @@ export const href = {
   setup: () => "#/quests/setup",
   story: (ending?: string | null) =>
     ending ? `#/story/${encodeURIComponent(ending)}` : "#/story",
+  storyChapter: (id: string) => `#/story/chapter/${encodeURIComponent(id)}`,
   hideout: () => "#/hideout",
   settings: () => "#/settings",
   map: (map: string, task?: string | null) => `#/m/${encodeURIComponent(map)}${task ? `?q=${task}` : ""}`,

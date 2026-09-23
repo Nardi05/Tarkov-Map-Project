@@ -184,8 +184,12 @@ export default function QuestsPage({
         title="Side quests"
         lead={
           <>
-            Tick what your <Term id="trader">traders</Term> have given you. Every map then draws
-            those objectives and nothing else.
+            Tick what your <Term id="trader">traders</Term> have given you. This page is only side
+            quests — story chapters and endings are on{" "}
+            <a className="underline" href={href.story()} onClick={onNavClick(href.story())}>
+              Story
+            </a>
+            .
           </>
         }
       >
