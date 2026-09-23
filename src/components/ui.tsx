@@ -461,15 +461,17 @@ export function Wordmark({ href: to = href.root() }: { href?: string } = {}) {
  * rule per section, so the row can grow without a stylesheet change. It only
  * animates because this element outlives the page change — see TabShell.
  */
-export function SiteNav({ current }: { current: TabId }) {
+export function SiteNav({ current }: { current?: TabId }) {
+  const index = current == null ? -1 : TAB_ORDER[current];
   return (
     <nav
       className="site-nav"
       aria-label="Sections"
+      data-idle={current == null || undefined}
       style={
         {
           "--nav-count": TABS.length,
-          "--nav-index": TAB_ORDER[current],
+          "--nav-index": Math.max(0, index),
         } as CSSProperties
       }
     >
@@ -500,7 +502,7 @@ export function SiteNav({ current }: { current: TabId }) {
  * with people who have not used the app before, which is the whole audience
  * this overhaul is for.
  */
-export function TabBar({ current }: { current: TabId }) {
+export function TabBar({ current }: { current?: TabId }) {
   return (
     <nav className="tabbar" aria-label="Sections">
       {TABS.map((id) => (

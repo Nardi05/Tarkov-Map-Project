@@ -6,6 +6,7 @@ import {
   prettyMapName,
   seasonDaysLeft,
   seasonElapsed,
+  shortDocumentLabel,
   type SeasonQuest,
 } from "../lib/kord-season";
 import { href, navigate } from "../lib/router";
@@ -221,7 +222,7 @@ function DocumentHunt({ mode }: { mode: GameMode }) {
       <ul className="mt-2 grid grid-cols-1 gap-1 sm:grid-cols-2">
         {KORD_SEASON.documentTypes.map((doc) => (
           <li key={doc.name} className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 px-0.5 py-0.5">
-            <span className="text-[0.72rem] font-medium">{doc.name.replace(" documentation", "").replace(" documents", "")}</span>
+            <span className="text-[0.72rem] font-medium">{shortDocumentLabel(doc.name)}</span>
             <span className="flex flex-wrap gap-1">
               {doc.maps.map((map) => (
                 <button

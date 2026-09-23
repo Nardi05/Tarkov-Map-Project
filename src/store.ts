@@ -85,11 +85,14 @@ export interface UiFlags {
   firstStepsDismissed: boolean;
   /** The colour-and-shape primer over the map, once they have read it. */
   mapPrimerSeen: boolean;
+  /** The "download a backup" banner after they have progress. */
+  backupNudgeDismissed: boolean;
 }
 
 const DEFAULT_UI: UiFlags = {
   firstStepsDismissed: false,
   mapPrimerSeen: false,
+  backupNudgeDismissed: false,
 };
 
 /** A layer combination the player saved themselves, alongside the built-ins. */

@@ -39,7 +39,8 @@ export type TermId =
   | "lightkeeper"
   | "boss"
   | "prestige"
-  | "stash";
+  | "stash"
+  | "unheard";
 
 export const GLOSSARY: Record<TermId, GlossaryEntry> = {
   pmc: {
@@ -121,6 +122,10 @@ export const GLOSSARY: Record<TermId, GlossaryEntry> = {
   stash: {
     term: "Stash",
     body: "Your storage between raids. The item tracker on this site counts against what you say is in it, so hand-in requirements can tell you what is still missing.",
+  },
+  unheard: {
+    term: "The Unheard",
+    body: "The highest game edition. It starts with extra stash space, a bigger secure container and some hideout stations already built. It is not a separate character from PvP Zone or Season.",
   },
 };
 

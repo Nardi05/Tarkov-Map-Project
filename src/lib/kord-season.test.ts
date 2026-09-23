@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { KORD_SEASON, kordProgressionTasks } from "./kord-season.ts";
+import { KORD_SEASON, kordProgressionTasks, shortDocumentLabel } from "./kord-season.ts";
 import { visibleInMode } from "./task-variant.ts";
 
 test("the story line is complete from Uninvited Guests through Digital Puzzle", () => {
@@ -26,6 +26,13 @@ test("Desperate Assault is an either-or gate, not both", () => {
   assert.equal(assault.requires.length, 2);
   assert.equal(assault.requires[0].length, 1);
   assert.equal(assault.requires[1].length, 1);
+});
+
+test("shortDocumentLabel does not turn User documentation into Useration", () => {
+  assert.equal(shortDocumentLabel("User documentation"), "User");
+  assert.equal(shortDocumentLabel("Medical documents"), "Medical");
+  assert.equal(shortDocumentLabel("Blueprints and technical documentation"), "Blueprints and technical");
+  assert.equal(shortDocumentLabel("PMC personnel files"), "PMC personnel files");
 });
 
 test("season-tagged names only show on a seasonal character", () => {

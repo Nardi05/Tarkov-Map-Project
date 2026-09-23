@@ -131,6 +131,21 @@ export function mapsForDocumentType(name: string): string[] {
   return KORD_SEASON.documentTypes.find((d) => d.name === name)?.maps ?? [];
 }
 
+/**
+ * Short label for a battle-pass document type.
+ *
+ * Must strip the *whole* trailing word (`documentation` before `document`),
+ * otherwise "User documentation" becomes "Useration" — `document` matches
+ * inside `documentation` and leaves `ation`.
+ */
+export function shortDocumentLabel(name: string): string {
+  return name
+    .replace(/\s+documentation$/i, "")
+    .replace(/\s+documents$/i, "")
+    .replace(/\s+document$/i, "")
+    .trim();
+}
+
 /** Adds seasonal story tasks that belong on this map, so the panel can list them. */
 export function withSeasonTasks(data: MapData, mode: GameMode): MapData {
   if (mode !== "season") return data;

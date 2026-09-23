@@ -15,7 +15,7 @@ import { filterQuests, type Selection } from "../lib/build-layers";
 import { useProgression } from "../lib/data";
 import { indexMap, offFloorPoints, type SearchResult } from "../lib/map-index";
 import { withinExtents } from "../lib/leaflet-crs";
-import { documentTypesOnMap, withSeasonTasks } from "../lib/kord-season";
+import { documentTypesOnMap, shortDocumentLabel, withSeasonTasks } from "../lib/kord-season";
 import { availableOnMap, computeAvailability } from "../lib/progression";
 import { displayName, visibleInMode } from "../lib/task-variant";
 import { useMarkerDone, useStore, useTaskStatus } from "../store";
@@ -729,7 +729,7 @@ export default function MapPage({
                 {mapData.markers.documents.length} document spawn
                 {mapData.markers.documents.length === 1 ? "" : "s"}
                 {docTypes.length > 0
-                  ? ` · ${docTypes.map((d) => d.name.replace(/ documents?| documentation/gi, "")).join(", ")}`
+                  ? ` · ${docTypes.map((d) => shortDocumentLabel(d.name)).join(", ")}`
                   : ""}
               </span>
               <span className="flex-none" style={{ color: "var(--accent)" }}>Show</span>

@@ -81,6 +81,17 @@ function Overview() {
     : null;
 
   const pick = (id: StoryEndingId) => {
+    const next = endingById(id);
+    if (
+      story.target &&
+      story.target !== id &&
+      next &&
+      !window.confirm(
+        `Aim at ${next.name} instead of ${targeted?.name ?? "your current ending"}? You can change this whenever you like.`,
+      )
+    ) {
+      return;
+    }
     setStoryTarget(id);
     navigate(href.story(id));
   };
@@ -180,7 +191,7 @@ function EndingCard({
       </ul>
       <div className="mt-4 flex flex-wrap gap-2">
         <button type="button" className={targeted ? "btn is-active" : "btn"} onClick={onTarget}>
-          {targeted ? "Open guide" : "Target this"}
+          {targeted ? "Open guide" : "Aim at this ending"}
         </button>
         <a
           className="btn btn-ghost"
@@ -265,9 +276,24 @@ function Guide({ ending }: { ending: StoryEnding }) {
         <button
           type="button"
           className={isTarget ? "btn is-active" : "btn"}
-          onClick={() => setStoryTarget(isTarget ? null : ending.id)}
+          onClick={() => {
+            if (isTarget) {
+              setStoryTarget(null);
+              return;
+            }
+            if (
+              story.target &&
+              story.target !== ending.id &&
+              !window.confirm(
+                `Aim at ${ending.name} instead of your current ending? You can change this whenever you like.`,
+              )
+            ) {
+              return;
+            }
+            setStoryTarget(ending.id);
+          }}
         >
-          {isTarget ? "Targeted" : "Set as target"}
+          {isTarget ? "Aimed here" : "Aim at this ending"}
         </button>
       </PageHeader>
 

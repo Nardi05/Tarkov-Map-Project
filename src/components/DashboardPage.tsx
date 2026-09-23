@@ -21,6 +21,7 @@ import SeasonPanel from "./SeasonPanel";
 import RaidClock from "./RaidClock";
 import TargetPicker from "./TargetPicker";
 import { FirstSteps } from "./Onboarding";
+import SavePanel from "./SavePanel";
 import {
   KeysPanel,
   NeedsPanel,
@@ -71,6 +72,8 @@ export default function DashboardPage() {
   const lastMap = useStore((s) => s.lastMap);
   const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const setProfile = useStore((s) => s.setProfile);
+  const backupNudgeDismissed = useStore((s) => s.ui.backupNudgeDismissed);
+  const setUiFlag = useStore((s) => s.setUiFlag);
 
   const [editing, setEditing] = useState(false);
 
@@ -193,7 +196,15 @@ export default function DashboardPage() {
 
           <div className="dash-command-char">
             <p className="dash-command-kicker">Character</p>
-            <p className="text-lg font-semibold">{MODE_META[profile.mode].label}</p>
+            <p className="text-lg font-semibold">
+              {profile.mode === "pvp" ? (
+                <Term id="pvp-zone" />
+              ) : profile.mode === "pve" ? (
+                <Term id="pve" />
+              ) : (
+                <Term id="kord">{MODE_META[profile.mode].label}</Term>
+              )}
+            </p>
             <p className="dash-command-kicker mt-2.5">Level</p>
             <div className="level-step">
               <button
@@ -234,6 +245,30 @@ export default function DashboardPage() {
           <div className="mb-4">
             <FirstSteps />
           </div>
+        )}
+
+        {data && !fresh && !editing && !backupNudgeDismissed && (
+          <Callout className="mb-4" icon={icons.info}>
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <p>
+                <b className="font-semibold" style={{ color: "var(--text)" }}>
+                  This wipe lives in this browser.
+                </b>{" "}
+                Download a file if you want it on another phone, or after a cache clear.
+              </p>
+              <button
+                type="button"
+                className="btn btn-ghost btn-icon"
+                aria-label="Hide backup reminder"
+                onClick={() => setUiFlag("backupNudgeDismissed", true)}
+              >
+                <Icon path={icons.close} size={15} />
+              </button>
+            </div>
+            <div className="mt-3">
+              <SavePanel compact />
+            </div>
+          </Callout>
         )}
 
         {data && fresh && !editing && (

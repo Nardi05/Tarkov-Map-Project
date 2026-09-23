@@ -86,21 +86,31 @@ function AtAGlance() {
     ["Locked doors", totals.keys],
   ];
 
+  if (index.error && !index.data) return null;
+
+  const pending = index.loading && !index.data;
+
   return (
-    <aside className="card hero-glance" aria-label="What the site holds">
+    <aside className="card hero-glance" aria-busy={pending || undefined} aria-label="What the site holds">
       <p className="kicker">On the map right now</p>
       <dl className="mt-3 divide-y" style={{ borderColor: "var(--line-soft)" }}>
         {rows.map(([label, value]) => (
           <div key={label} className="flex items-baseline justify-between gap-3 py-2">
             <dt className="text-[0.8125rem] muted">{label}</dt>
             <dd className="text-lg font-semibold tabular-nums">
-              {index.loading && !index.data ? "—" : value.toLocaleString("en-GB")}
+              {pending ? (
+                <span className="skeleton inline-block h-5 w-14 align-middle" aria-hidden="true" />
+              ) : (
+                value.toLocaleString("en-GB")
+              )}
             </dd>
           </div>
         ))}
       </dl>
       <p className="mt-2 text-meta">
-        Counted from the data the site is serving, not from a number typed into this page.
+        {pending
+          ? "Counting from the live map data…"
+          : "Counted from the data the site is serving, not from a number typed into this page."}
       </p>
     </aside>
   );
@@ -331,9 +341,7 @@ export default function LandingPage() {
             >
               Settings
             </a>
-            <span className="chip" title="Placeholder — not live yet">
-              Discord · soon
-            </span>
+
           </div>
         </footer>
       </div>

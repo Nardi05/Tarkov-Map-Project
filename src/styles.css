@@ -892,6 +892,10 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     }
   }
 
+  .site-nav[data-idle] .site-nav-pill {
+    opacity: 0;
+  }
+
   .site-nav-pill {
     position: absolute;
     top: 3px;

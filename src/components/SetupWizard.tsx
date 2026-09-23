@@ -53,6 +53,17 @@ const TRADER_ORDER = [
   "BTR Driver",
 ];
 
+/** Everyone meets these first. The rest can wait. */
+const CORE_TRADERS = new Set([
+  "Prapor",
+  "Therapist",
+  "Skier",
+  "Peacekeeper",
+  "Mechanic",
+  "Ragman",
+  "Jaeger",
+]);
+
 interface TraderStep {
   trader: string;
   tasks: { id: string; name: string; level: number; kappa: boolean; depth: number }[];
@@ -197,8 +208,8 @@ export default function SetupWizard() {
       <Shell step={total} total={total}>
         <h1 className="display text-2xl sm:text-3xl">Wipe reconstructed</h1>
         <p className="mt-2 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
-          {activeCount} active and {doneCount + implied.size} done are stored in this browser.
-          Download a file now if you want to restore this wipe later or on another phone or PC.
+          {activeCount} active and {doneCount + implied.size} done are stored in this browser only.
+          Download a backup now — a cleared cache or another phone will not have this wipe.
         </p>
         <SavePanel />
         <div className="mt-4 flex flex-wrap gap-2">
@@ -291,9 +302,29 @@ export default function SetupWizard() {
           </button>
         )}
 
+        {!onSummary &&
+          !onProfile &&
+          steps.slice(step).length > 0 &&
+          steps.slice(step).every((s) => !CORE_TRADERS.has(s.trader)) && (
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => {
+              setQuery("");
+              setStep(steps.length + 1);
+            }}
+          >
+            Skip later traders
+          </button>
+        )}
+
         <span className="ml-auto text-[0.72rem] tabular-nums faint">
-          {activeCount} active · {doneCount + implied.size} done
-          {implied.size > 0 ? ` (${implied.size} worked out)` : ""}
+          {activeCount} active
+          {implied.size > 0
+            ? ` · ${implied.size} earlier quest${implied.size === 1 ? "" : "s"} assumed done`
+            : doneCount > 0
+              ? ` · ${doneCount} marked done`
+              : ""}
         </span>
 
         <a
@@ -362,8 +393,9 @@ function ProfileStep({
       <h1 className="display text-2xl sm:text-3xl">Set up your progress</h1>
       <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed muted">
         Open the game, go through your <Term id="trader">traders</Term>, and tick the quests you
-        have accepted. That is enough — a quest sitting in your list means everything behind it is
-        already done, so the site fills in the rest of your wipe from it.
+        have accepted. A quest in your list means everything behind it is already done, so those
+        earlier quests are marked done when you save — you can un-tick any of them afterwards.
+        Fence, Lightkeeper and the rest can be skipped.
       </p>
 
       {/*
@@ -469,6 +501,13 @@ function TraderStepView({
         Tick anything in your {step.trader} list right now. Tick twice for one you have already
         finished — useful when a trader has nothing active because you are through their chain.
       </p>
+      {implied.size > 0 && (
+        <Callout className="mt-3" icon={icons.info}>
+          {implied.size} earlier quest{implied.size === 1 ? "" : "s"} will be marked done when you
+          save, because {step.trader} would not have given you these until those were finished. They
+          are listed on the last step so you can check them first.
+        </Callout>
+      )}
 
       <ScreenshotImport
         trader={step.trader}

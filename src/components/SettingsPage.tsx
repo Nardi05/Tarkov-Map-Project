@@ -10,7 +10,7 @@ import ModeSwitch from "./ModeSwitch";
 import PageShell from "./PageShell";
 import SavePanel from "./SavePanel";
 import TargetPicker from "./TargetPicker";
-import { PageHeader } from "./ui";
+import { PageHeader, Term } from "./ui";
 
 const FACTIONS: Faction[] = ["Any", "USEC", "BEAR"];
 
@@ -82,7 +82,13 @@ export default function SettingsPage() {
       <div>
         <PageHeader
           title="Settings"
-          lead="Three characters, same as the game: PvP Zone, Season, and PvE. This page edits the one you have selected."
+          lead={
+            <>
+              Three characters, same as the game: <Term id="pvp-zone" />, Season, and{" "}
+              <Term id="pve" />. This page edits the one you have selected.{" "}
+              <Term id="unheard">The Unheard</Term> is an edition, not a character.
+            </>
+          }
         />
 
         <section className="surface mt-5 p-4">
@@ -305,12 +311,6 @@ export default function SettingsPage() {
             >
               Source
             </a>
-            <span className="chip" title="Placeholder — not live yet">
-              Discord · soon
-            </span>
-            <span className="chip" title="Placeholder — not live yet">
-              Coffee · soon
-            </span>
           </div>
         </section>
 
