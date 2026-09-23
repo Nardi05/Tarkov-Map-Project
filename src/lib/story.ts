@@ -388,6 +388,24 @@ export function outcomeLabel(outcome: StoryOutcome): string {
   return "Worst ending";
 }
 
+/**
+ * The words to hand the map's search when a step says "show me".
+ *
+ * Story steps know where they mean in prose, not in coordinates — the
+ * checklists come from the wiki. So the map is pointed at by name, and this
+ * picks the part of the step that names a place: the location line first, then
+ * a key, since a locked door is a place too.
+ *
+ * Trimmed to the first clause, because "G-Wagon by Tunnel extract · Shoreline
+ * island house" is two places and the search can only look for one.
+ */
+export function stepSearchText(step: StoryStep): string | null {
+  const source = step.location ?? step.keys?.[0] ?? null;
+  if (!source) return null;
+  const first = source.split(/\s+·\s+|\s+then\s+|,\s+/)[0].trim();
+  return first.length >= 3 ? first : null;
+}
+
 export function mapLabel(slug: string): string {
   if (slug === "the-lab") return "The Lab";
   if (slug === "the-labyrinth") return "The Labyrinth";

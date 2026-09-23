@@ -10,6 +10,7 @@ import { useSyncExternalStore, useCallback, type MouseEvent } from "react";
  *   #/dashboard     the dashboard, even for maps-only visitors
  *   #/maps          map picker
  *   #/m/<map>       one map, optionally ?q=<taskId> to deep-link a task
+ *                   or ?find=<text> to open it searching for a place
  *   #/quests        the quest tracker
  *   #/quests/graph  task dependency graph
  *   #/quests/items  item tracker + stash audit
@@ -31,7 +32,7 @@ export type Route =
   | { name: "story"; ending: string | null }
   | { name: "hideout" }
   | { name: "settings" }
-  | { name: "map"; map: string; task: string | null };
+  | { name: "map"; map: string; task: string | null; find: string | null };
 
 /**
  * The tab pages, left to right, as the section nav shows them.
@@ -64,8 +65,13 @@ function parse(hash: string): Route {
   const [pathPart, queryPart] = raw.split("?");
   const segments = pathPart.split("/").filter(Boolean);
   if (segments[0] === "m" && segments[1]) {
-    const task = new URLSearchParams(queryPart ?? "").get("q");
-    return { name: "map", map: decodeURIComponent(segments[1]), task };
+    const query = new URLSearchParams(queryPart ?? "");
+    return {
+      name: "map",
+      map: decodeURIComponent(segments[1]),
+      task: query.get("q"),
+      find: query.get("find"),
+    };
   }
   if (segments[0] === "quests") {
     const focus = new URLSearchParams(queryPart ?? "").get("q");
@@ -149,4 +155,15 @@ export const href = {
   hideout: () => "#/hideout",
   settings: () => "#/settings",
   map: (map: string, task?: string | null) => `#/m/${encodeURIComponent(map)}${task ? `?q=${task}` : ""}`,
+  /**
+   * A map opened looking for something by name.
+   *
+   * Story steps know *where* in words — "G-Wagon by Tunnel extract" — and not
+   * in coordinates, because they come from wiki prose. Handing the words to the
+   * map's own search is the honest way to point: it lands on the spot when the
+   * name is unambiguous, and offers the candidates when it is not, rather than
+   * inventing a pin.
+   */
+  findOnMap: (map: string, text: string) =>
+    `#/m/${encodeURIComponent(map)}?find=${encodeURIComponent(text)}`,
 };

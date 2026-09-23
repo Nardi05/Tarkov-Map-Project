@@ -151,7 +151,8 @@ Three rules it must keep:
 | Marker click | Opens the detail panel; on a phone, the bottom sheet |
 | Marker hover | Tooltip, and the glyph grows by `--marker-hover-scale` |
 | Off-floor pip click | Switches to the floor the thing is on and opens it |
-| Find on this map | Names every extract, transit, key, switch, hazard, boss zone, document spawn and task objective. Arrows move, Enter goes — turning on the layer, switching to the right floor, flying there and opening the card |
+| Find on this map | Names every extract, transit, key, switch, hazard, boss zone, document spawn, task objective and place name on the artwork. Arrows move, Enter goes — turning on the layer, switching to the right floor, flying there and opening the card |
+| `#/m/<map>?find=<text>` | Opens a map already searching. Story steps point with it, since they know where they mean in words and not in coordinates |
 | Quest step → map | `href.map(map, taskId)` focuses the map on that task and highlights its pins |
 | `0` | Fit the whole map |
 | `[` | Hide or show the side panel |
@@ -223,7 +224,14 @@ Tracked honestly rather than quietly:
 - **Markers read small on a 4K desktop.** `--tk-marker-scale` is capped at 1, so
   past about 1900px of map the pins stop growing with the artwork. The marker
   size setting covers it, but the default could be better.
-- **Story steps have no photos.** `task-images.json` covers trader tasks only.
+- **Most story steps have no photo.** The wiki has one for about a quarter of
+  them; the rest show an empty slot rather than a wrong picture. See
+  `lib/story-media.ts`, and `scripts/story-media-report.mjs` to read what the
+  matcher chose.
+- **A story step's map link can land on nothing.** It searches with the wiki's
+  wording, and the wiki and the map name things differently — "Eastern Woods
+  wreck" against a label that reads "Crash Site". The search says so instead of
+  pretending.
 
 ### Measured, not assumed
 

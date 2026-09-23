@@ -22,7 +22,13 @@ import type { DocumentSpawn, MapData, Vec3 } from "../types";
 
 export interface MapPoint {
   id: string;
-  layer: LayerId;
+  /**
+   * Null for a place name, which is a label on the artwork rather than a marker
+   * on a layer. Those are findable — "where is Dorms" is the commonest question
+   * a map gets — but they have no layer to switch on and no elevation to place
+   * them on a floor.
+   */
+  layer: LayerId | null;
   title: string;
   /** One line of context, shown under the title in the result list. */
   subtitle: string | null;
@@ -228,6 +234,26 @@ export function indexMap(data: MapData): MapPoint[] {
     });
   }
 
+  /*
+   * The street and area names printed on the map. They are the answer to a
+   * large share of "where is …", and leaving them out was why a story step
+   * pointing at "Eastern Woods wreck" found nothing: the wreck is a place, not
+   * a marker, and the map has always drawn its name.
+   */
+  for (const [i, label] of data.geo.labels.entries()) {
+    out.push({
+      id: `place:${i}`,
+      layer: null,
+      title: label.text,
+      subtitle: "Place on the map",
+      // Labels are ground positions with no elevation; the map draws them at
+      // every floor for the same reason.
+      position: [label.position[0], 0, label.position[1]],
+      terms: "place area landmark building",
+      select: null,
+    });
+  }
+
   for (const marker of m.quests) {
     const task = data.tasks[marker.task];
     if (!task) continue;
@@ -274,6 +300,32 @@ function score(point: MapPoint, needle: string): number {
   return Infinity;
 }
 
+/**
+ * The fallback for a query that is a phrase rather than a fragment of a name.
+ *
+ * "dorm 220" is what somebody types; "Dorm room 220 key" is what the thing is
+ * called, and no substring of one is a substring of the other. It matters more
+ * than convenience: a story step points at the map with the words the wiki used
+ * — "G-Wagon by Tunnel extract" — and those are never a substring of anything.
+ *
+ * Ranks below every substring tier, so an exact name always wins, and needs
+ * more than one word to agree unless there is only one word to agree on.
+ */
+function phraseScore(point: MapPoint, terms: string[]): number {
+  const hay = `${point.title} ${point.subtitle ?? ""} ${point.terms}`.toLowerCase();
+  const hits = terms.filter((t) => hay.includes(t)).length;
+  if (!hits) return Infinity;
+  if (terms.length > 1 && hits < 2) return Infinity;
+  // Best when every word landed; degrades as more of the phrase goes unmatched.
+  return 5 + (terms.length - hits);
+}
+
+/** Words that connect a phrase without narrowing it. */
+const PHRASE_STOP = new Set([
+  "the", "and", "for", "with", "from", "near", "any", "all", "into", "onto",
+  "your", "this", "that", "then", "there", "here", "out", "off",
+]);
+
 export interface SearchResult extends MapPoint {
   /** Which floor it is on, when the map has floors and one of them owns it. */
   floor: Floor | null;
@@ -288,9 +340,15 @@ export function searchMap(
   const needle = query.trim().toLowerCase();
   if (needle.length < 2) return [];
 
+  // Words worth matching on. "the", "by" and "on" are in every other name.
+  const terms = needle
+    .split(/[^a-z0-9-]+/)
+    .filter((t) => t.length >= 3 && !PHRASE_STOP.has(t));
+
   const scored: { point: MapPoint; rank: number }[] = [];
   for (const point of points) {
-    const rank = score(point, needle);
+    let rank = score(point, needle);
+    if (rank === Infinity && terms.length) rank = phraseScore(point, terms);
     if (rank !== Infinity) scored.push({ point, rank });
   }
   scored.sort((a, b) => a.rank - b.rank || a.point.title.localeCompare(b.point.title));
@@ -303,7 +361,7 @@ export function searchMap(
   const seen = new Set<string>();
   const out: SearchResult[] = [];
   for (const { point } of scored) {
-    const dedupe = `${point.layer}|${point.title.toLowerCase()}`;
+    const dedupe = `${point.layer ?? "place"}|${point.title.toLowerCase()}`;
     if (seen.has(dedupe)) continue;
     seen.add(dedupe);
     out.push({ ...point, floor: floorOf(point, floors) });
@@ -394,6 +452,9 @@ export function offFloorPoints(
   const grouped = new Map<string, OffFloorPoint>();
 
   for (const point of points) {
+    // A place name has no elevation of its own, so it is never "on another
+    // floor" — the map prints it at every level, as it should.
+    if (!point.layer) continue;
     if (withinExtents(point, current.extents)) continue;
     if (!isOn(point)) continue;
     const home = floorOf(point, floors);

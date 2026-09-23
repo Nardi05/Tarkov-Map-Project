@@ -1,4 +1,4 @@
-import { useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { indexMap, searchMap, type SearchResult } from "../lib/map-index";
 import { LAYER_BY_ID } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
@@ -23,17 +23,33 @@ export default function MapSearch({
   data,
   floors,
   currentFloorId,
+  initialQuery,
   onPick,
 }: {
   data: MapData;
   floors: Floor[];
   currentFloorId: string;
+  /** From `?find=` — a story step naming where it means, in its own words. */
+  initialQuery: string | null;
   onPick: (result: SearchResult) => void;
 }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery ?? "");
   const [cursor, setCursor] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listId = useId();
+
+  /*
+   * Follow the link when it changes, but never fight the typing: a second story
+   * step deep-linking into the same open map has to replace the query, and a
+   * re-render must not.
+   */
+  const linked = useRef(initialQuery);
+  useEffect(() => {
+    if (initialQuery === linked.current) return;
+    linked.current = initialQuery;
+    setQuery(initialQuery ?? "");
+    setCursor(0);
+  }, [initialQuery]);
 
   // Indexing a map is a few thousand object literals and happens once per map.
   const points = useMemo(() => indexMap(data), [data]);
@@ -100,18 +116,28 @@ export default function MapSearch({
       {query.trim().length >= 2 && (
         <div id={listId} className="mt-1.5" role="listbox" aria-label="Places on this map">
           {results.length === 0 ? (
-            <p className="px-2 py-2 text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
-              Nothing on {data.name} matches “{query.trim()}”.
+            /*
+             * A dead end with a way out. This is reached most often from a
+             * story step's map link, where the wiki's wording and the map's own
+             * labels are simply different vocabularies — the wiki says "Eastern
+             * Woods wreck" and the map says "Crash Site". Saying what was
+             * looked for, and what to try instead, beats an empty box.
+             */
+            <p className="px-2 py-2 text-[0.72rem] leading-relaxed" style={{ color: "var(--text-faint)" }}>
+              Nothing on {data.name} is called “{query.trim()}”. Try fewer words, or turn on a layer
+              below and look.
             </p>
           ) : (
             <ul className="flex flex-col gap-0.5">
               {results.map((result, i) => {
-                const layer = LAYER_BY_ID[result.layer];
+                // A place name belongs to no layer, so it gets the plain pip
+                // rather than borrowing another layer's colour and meaning.
+                const layer = result.layer ? LAYER_BY_ID[result.layer] : null;
                 return (
                   /* `searchMap` guarantees one row per layer and name, which is
                      a stabler key than the feed's ids — it gives two factions'
                      view of one door the same one. */
-                  <li key={`${result.layer}|${result.title}`}>
+                  <li key={`${result.layer ?? "place"}|${result.title}`}>
                     <button
                       type="button"
                       role="option"
@@ -124,7 +150,13 @@ export default function MapSearch({
                       <span
                         className="mt-px flex-none"
                         aria-hidden="true"
-                        dangerouslySetInnerHTML={{ __html: swatchSvg(layer.shape, layer.color, 15) }}
+                        dangerouslySetInnerHTML={{
+                          __html: swatchSvg(
+                            layer?.shape ?? "dot",
+                            layer?.color ?? "var(--text-faint)",
+                            15,
+                          ),
+                        }}
                       />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-[0.8125rem] font-medium">

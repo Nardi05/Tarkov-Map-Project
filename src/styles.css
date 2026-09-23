@@ -1955,6 +1955,33 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     opacity: 0.6;
   }
 
+  /*
+   * Story photos are thumbnails, and the lightbox is where you actually look.
+   * The gallery sizes itself to its container, which is right inside the map's
+   * narrow detail panel and wrong here — a checklist whose every step carries a
+   * 700px-tall screenshot is not a checklist any more.
+   */
+  .story-shot {
+    max-width: 26rem;
+  }
+
+  /*
+   * The empty photo slot. Deliberately quiet and deliberately present: the wiki
+   * has a screenshot for about a quarter of the story steps, and a reader who
+   * can see which ones it lacks knows the gap is the source's rather than this
+   * page failing to load a picture.
+   */
+  .story-photo-gap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.55rem;
+    border: 1px dashed var(--line);
+    border-radius: var(--r-sm);
+    font-size: 0.68rem;
+    color: var(--text-faint);
+  }
+
   .story-step-n {
     width: 1.1rem;
     flex: none;

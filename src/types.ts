@@ -344,6 +344,15 @@ export interface TaskImages {
   generated: string;
   source: string;
   tasks: Record<string, TaskImage[]>;
+  /**
+   * Story chapters, which are vendored checklists rather than feed tasks. Keyed
+   * by wiki page because eight endgame chapters share one, and which photo goes
+   * with which step is worked out on the client — see `lib/story-media.ts`.
+   */
+  story?: {
+    pages: Record<string, TaskImage[]>;
+    chapters: Record<string, string>;
+  };
 }
 
 export interface Task {

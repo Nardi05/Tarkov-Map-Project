@@ -334,6 +334,28 @@ export function useTaskImages(taskId: string | null) {
   return images;
 }
 
+/**
+ * The story chapters' photo pool, from the same lazily-loaded file as the task
+ * screenshots. Null until it arrives, and null forever if it never does — the
+ * guide is complete without photos, and a missing gallery is not an error
+ * worth a banner.
+ */
+export function useStoryMedia() {
+  const [media, setMedia] = useState<NonNullable<TaskImages["story"]> | null>(null);
+  const gen = useGeneration();
+  useEffect(() => {
+    let live = true;
+    loadTaskImages().then(
+      (all) => live && setMedia(all.story ?? null),
+      () => live && setMedia(null),
+    );
+    return () => {
+      live = false;
+    };
+  }, [gen]);
+  return media;
+}
+
 export function loadMap(name: string): Promise<MapData> {
   let promise = mapCache.get(name);
   if (!promise) {

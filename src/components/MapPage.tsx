@@ -43,10 +43,13 @@ export default function MapPage({
   data,
   maps,
   deepLinkTask,
+  deepLinkFind,
 }: {
   data: MapData;
   maps: MapIndexEntry[];
   deepLinkTask: string | null;
+  /** `?find=` — words to put in the map's search box, from a story step. */
+  deepLinkFind: string | null;
 }) {
   const layers = useStore((s) => s.layers);
   const settings = useStore((s) => s.settings);
@@ -157,7 +160,7 @@ export default function MapPage({
   const offFloor = useMemo(() => {
     const visibleQuestIds = new Set(visibleQuests.map((q) => q.id));
     return offFloorPoints(points, floors, floorId, (point) => {
-      if (!layers[point.layer]) return false;
+      if (!point.layer || !layers[point.layer]) return false;
       // A quest pin downstairs is only worth flagging if it would have been on
       // screen at all — the quest filter is doing its job, not hiding a floor.
       if (point.select?.kind === "quest") return visibleQuestIds.has(point.select.marker.id);
@@ -183,6 +186,15 @@ export default function MapPage({
       setTab("tasks");
     }
   }, [deepLinkTask, mapData, setQuestFilter]);
+
+  /*
+   * And `?find=` opens it looking for a place by name, which is how a story
+   * step points at somewhere it only knows in words. The panel has to be the
+   * one showing the search, or the query would land somewhere invisible.
+   */
+  useEffect(() => {
+    if (deepLinkFind) setTab("layers");
+  }, [deepLinkFind]);
 
   const focusOn = useCallback(
     (position: Vec3) => {
@@ -221,7 +233,8 @@ export default function MapPage({
    */
   const goToResult = useCallback(
     (result: SearchResult) => {
-      if (!layers[result.layer]) setLayer(result.layer, true);
+      // A place name has no layer to switch on; it is always drawn.
+      if (result.layer && !layers[result.layer]) setLayer(result.layer, true);
       /*
        * The quest layer draws your tasks, not every task, so a search hit on
        * one you haven't ticked would fly you to an empty spot. Isolating it is
@@ -365,6 +378,7 @@ export default function MapPage({
           visibleQuestCount={visibleQuests.length}
           floors={floors}
           floorId={floorId}
+          initialFind={deepLinkFind}
           onFind={goToResult}
         />
       )}

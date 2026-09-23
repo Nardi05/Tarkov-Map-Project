@@ -227,6 +227,7 @@ export default function App() {
         data={map.data}
         maps={index.data.maps}
         deepLinkTask={route.task}
+        deepLinkFind={route.find}
       />
       <CommandPalette />
     </>

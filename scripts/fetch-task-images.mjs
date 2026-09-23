@@ -100,9 +100,25 @@ for (const file of await fs.readdir(MAPS)) {
   }
 }
 
+/*
+ * Story chapters come from the vendored checklists rather than the feed, and
+ * several of them share one wiki page — eight chapters of the endgame all live
+ * on The Ticket. So the pool is keyed by page and the chapters point into it,
+ * instead of copying one gallery eight times. Which photo belongs to which
+ * step is decided on the client, by `lib/story-media.ts`, from the wiki's own
+ * very literal file names.
+ */
+const storyChapters = [
+  ...JSON.parse(await fs.readFile(path.join(ROOT, "src", "data", "story-endings.json"), "utf8")).chapters,
+  ...JSON.parse(await fs.readFile(path.join(ROOT, "src", "data", "story-storylines.json"), "utf8")).chapters,
+];
+
 let cache = {};
+let storyCache = { pages: {}, chapters: {} };
 try {
-  cache = JSON.parse(await fs.readFile(CACHE, "utf8")).tasks ?? {};
+  const previous = JSON.parse(await fs.readFile(CACHE, "utf8"));
+  cache = previous.tasks ?? {};
+  if (previous.story?.pages) storyCache = previous.story;
 } catch {
   /* first run */
 }
@@ -127,15 +143,40 @@ const lanes = Array.from({ length: CONCURRENCY }, (_, i) =>
 );
 await Promise.all(lanes);
 
+/* ------------------------------------------------------------------- story */
+
+for (const chapter of storyChapters) {
+  if (!chapter.wiki) continue;
+  storyCache.chapters[chapter.id] = pageTitle(chapter.wiki, chapter.name);
+}
+
+const storyPages = [...new Set(Object.values(storyCache.chapters))];
+const storyTodo = storyPages.filter((p) => force || !(p in storyCache.pages));
+console.log(
+  `${storyChapters.length} story chapters across ${storyPages.length} wiki pages, ${storyTodo.length} to fetch`,
+);
+for (const page of storyTodo) {
+  storyCache.pages[page] = await imagesFor(page);
+  console.log(`  ${page}: ${storyCache.pages[page].length} photos`);
+}
+
 await fs.mkdir(path.dirname(CACHE), { recursive: true });
 await fs.writeFile(
   CACHE,
-  JSON.stringify({ generated: new Date().toISOString(), source: "escapefromtarkov.fandom.com", tasks: cache }),
+  JSON.stringify({
+    generated: new Date().toISOString(),
+    source: "escapefromtarkov.fandom.com",
+    tasks: cache,
+    story: storyCache,
+  }),
 );
 
 const total = Object.values(cache).reduce((n, list) => n + list.length, 0);
 const populated = Object.values(cache).filter((l) => l.length).length;
+const storyTotal = Object.values(storyCache.pages).reduce((n, l) => n + l.length, 0);
 const kb = ((await fs.stat(CACHE)).size / 1024).toFixed(0);
 console.log(
-  `\nWrote ${kb}KB to data/task-images.json — ${total} screenshots across ${populated}/${Object.keys(cache).length} tasks`,
+  `\nWrote ${kb}KB to data/task-images.json — ${total} screenshots across ${populated}/${
+    Object.keys(cache).length
+  } tasks, plus ${storyTotal} across ${storyPages.length} story pages`,
 );

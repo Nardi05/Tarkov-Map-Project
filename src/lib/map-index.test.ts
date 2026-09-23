@@ -241,6 +241,59 @@ test("search matches the hidden terms as well as the name", () => {
   assert.deepEqual(searchMap(points, "d-2").map((h) => h.title), ["Power box"]);
 });
 
+test("the names printed on the map are findable too", () => {
+  // "Where is Dorms" is the commonest thing a map is asked, and Dorms is a
+  // label on the artwork rather than a marker on any layer.
+  const data = mapData();
+  data.geo.labels = [
+    { position: [10, 20], text: "Dorms" },
+    { position: [40, 50], text: "Gas Station" },
+  ];
+  const [hit] = searchMap(indexMap(data), "dorms");
+  assert.equal(hit.title, "Dorms");
+  assert.equal(hit.layer, null);
+  assert.deepEqual(hit.position, at(10, 0, 20));
+});
+
+test("a place name is never reported as being on another floor", () => {
+  // It has no elevation of its own — the map prints it at every level.
+  const data = mapData();
+  data.geo.labels = [{ position: [10, 20], text: "Dorms" }];
+  assert.deepEqual(offFloorPoints(indexMap(data), FLOORS, "l0", ALL), []);
+});
+
+test("a phrase finds the thing even when no substring of it matches", () => {
+  // Nobody types "Dorm room 220 key"; they type "dorm 220".
+  const data = mapData({ locks: [lock("l1", "k1", at(0, 0, 0))] });
+  data.keys = { k1: { id: "k1", name: "Dorm room 220 key", shortName: "Dorm 220", icon: null } as never };
+  assert.deepEqual(
+    searchMap(indexMap(data), "dorm 220").map((h) => h.title),
+    ["Dorm room 220 key"],
+  );
+});
+
+test("a phrase needs two words to agree, so one common word is not a match", () => {
+  const data = mapData({
+    extracts: [extract("e1", "Tunnel", at(0, 0, 0)), extract("e2", "Road to Customs", at(9, 0, 9))],
+  });
+  // "G-Wagon by Tunnel extract" should find Tunnel, and not Road to Customs.
+  assert.deepEqual(
+    searchMap(indexMap(data), "G-Wagon by Tunnel extract").map((h) => h.title),
+    ["Tunnel"],
+  );
+});
+
+test("an exact name still outranks a phrase match", () => {
+  const data = mapData({
+    extracts: [
+      extract("e1", "Tunnel", at(0, 0, 0)),
+      extract("e2", "Tunnel gate shortcut", at(5, 0, 5), "scav"),
+    ],
+  });
+  const hits = searchMap(indexMap(data), "tunnel");
+  assert.equal(hits[0].title, "Tunnel");
+});
+
 test("a result carries the floor it is on, so the picker can switch to it", () => {
   const points = indexMap(mapData({ extracts: [extract("e1", "Balcony", at(0, 5, 0))] }));
   const [hit] = searchMap(points, "balcony", FLOORS);

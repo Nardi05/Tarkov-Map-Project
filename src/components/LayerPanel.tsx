@@ -138,12 +138,14 @@ export default function LayerPanel({
   visibleQuestCount,
   floors,
   floorId,
+  initialFind,
   onFind,
 }: {
   data: MapData;
   visibleQuestCount: number;
   floors: Floor[];
   floorId: string;
+  initialFind: string | null;
   onFind: (result: SearchResult) => void;
 }) {
   const layers = useStore((s) => s.layers);
@@ -177,7 +179,13 @@ export default function LayerPanel({
     <div>
       {/* Above the layer switches on purpose: when you already know the name of
           the thing you want, finding the right switch is the long way round. */}
-      <MapSearch data={data} floors={floors} currentFloorId={floorId} onPick={onFind} />
+      <MapSearch
+        data={data}
+        floors={floors}
+        currentFloorId={floorId}
+        initialQuery={initialFind}
+        onPick={onFind}
+      />
 
       <Section title="Quick views" hint="One tap to switch what the map is for.">
         <div className="flex flex-wrap gap-1.5">

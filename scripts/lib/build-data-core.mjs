@@ -1653,7 +1653,8 @@ export async function buildData({
     await fs.copyFile(imagesSrc, path.join(OUT, "task-images.json"));
     const cached = JSON.parse(await fs.readFile(imagesSrc, "utf8"));
     const n = Object.values(cached.tasks ?? {}).reduce((a, l) => a + l.length, 0);
-    imageNote = `${n} task photos`;
+    const story = Object.values(cached.story?.pages ?? {}).reduce((a, l) => a + l.length, 0);
+    imageNote = `${n} task photos${story ? ` and ${story} story photos` : ""}`;
   } catch {
     /* optional */
   }

@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
-import { useHideoutData, useProgression } from "../lib/data";
+import { useHideoutData, useProgression, useStoryMedia } from "../lib/data";
 import { storyChapters, storyKeys } from "../lib/missions";
+import { chapterMedia, type StoryMediaData } from "../lib/story-media";
+import TaskGallery from "./TaskGallery";
+import type { TaskImage } from "../types";
 import { href, navigate, onNavClick } from "../lib/router";
 import {
   STORY,
@@ -14,6 +17,7 @@ import {
   outcomeLabel,
   progressFor,
   stepIsDone,
+  stepSearchText,
   stepsForEnding,
   storylineChaptersFor,
   warningsForEnding,
@@ -199,6 +203,7 @@ function Guide({ ending }: { ending: StoryEnding }) {
   const hideout = useHideout();
   const stations = useHideoutData().data?.stations;
   const built = useMemo(() => hideoutLevels(stations, hideout), [stations, hideout]);
+  const media = useStoryMedia();
   const color = TONE[ending.id];
   const isTarget = story.target === ending.id;
 
@@ -415,6 +420,7 @@ function Guide({ ending }: { ending: StoryEnding }) {
                   onChoose={choose}
                   choices={story.choices}
                   color={color}
+                  media={media}
                 />
               </li>
             ))}
@@ -439,6 +445,7 @@ function Guide({ ending }: { ending: StoryEnding }) {
                 onChoose={choose}
                 choices={story.choices}
                 color={color}
+                media={media}
               />
             </li>
           );
@@ -585,6 +592,7 @@ function ChapterCard({
   onChoose,
   choices,
   color,
+  media,
 }: {
   chapter: StoryChapter;
   rows: VisibleStep[];
@@ -596,9 +604,20 @@ function ChapterCard({
   onChoose: (lockId: string, value: string) => void;
   choices: Record<string, string>;
   color: string;
+  media: StoryMediaData | null;
 }) {
   const steps = rows.filter((r) => r.chapter.id === chapter.id);
   const doneCount = steps.filter((r) => stepIsDone(r.step, ticks, built)).length;
+
+  /*
+   * Matching photos to steps walks the chapter's whole wiki gallery, so it
+   * waits until the chapter is open. Nobody opens more than one at a time, and
+   * The Ticket's pool is 234 files.
+   */
+  const shots = useMemo(
+    () => (open ? chapterMedia(media, chapter, steps.map((s) => s.step)) : null),
+    [open, media, chapter, steps],
+  );
   return (
     <article className="surface overflow-hidden">
       <button type="button" className="story-chapter-head" aria-expanded={open} onClick={onToggle}>
@@ -639,10 +658,22 @@ function ChapterCard({
                   onTick={() => onTick(row.step.id)}
                   onChoose={onChoose}
                   selected={row.step.choice ? choices[row.step.choice.lock] : undefined}
+                  photos={shots?.byStep.get(row.step.id)}
+                  pooled={shots?.pooled}
                 />
               </li>
             ))}
           </ol>
+
+          {/* Photos the wiki has for this chapter that belong to no one step —
+              the establishing shots and the overview maps. */}
+          {shots && shots.chapter.length > 0 && (
+            <div className="story-shot mt-3">
+              <p className="eyebrow mb-1.5">More from the wiki</p>
+              <TaskGallery images={shots.chapter} taskName={chapter.name} />
+            </div>
+          )}
+
           {chapter.wiki && (
             <p className="mt-3">
               <a
@@ -669,6 +700,9 @@ function StepRow({
   onChoose,
   selected,
   n,
+  photos,
+  /** True once we know the chapter has a photo pool, so "none" means "none". */
+  pooled,
 }: {
   row: VisibleStep;
   done: boolean;
@@ -676,10 +710,19 @@ function StepRow({
   onChoose: (lockId: string, value: string) => void;
   selected?: string;
   n?: number;
+  photos?: TaskImage[];
+  pooled?: boolean;
 }) {
   const step = row.step;
   const isChoice = step.kind === "choice" && step.choice;
   const chosen = isChoice && selected === step.choice!.value;
+  const find = stepSearchText(step);
+  /*
+   * A step worth photographing is one that happens somewhere. A reputation
+   * grind or a hideout build has nothing to show, so an empty slot under it
+   * would be a promise the wiki never made.
+   */
+  const wantsPhoto = !!step.maps?.length || !!step.location;
   return (
     <div className="story-step" data-done={done || chosen || undefined}>
       {n != null && (
@@ -705,7 +748,7 @@ function StepRow({
         </p>
         <p className="mt-1 flex flex-wrap gap-1.5">
           {step.maps?.map((m) => (
-            <MapChip key={m} map={m} />
+            <MapChip key={m} map={m} find={find} />
           ))}
           {step.location && <span className="chip">{step.location}</span>}
           {step.trader && <span className="chip">{step.trader}</span>}
@@ -721,6 +764,26 @@ function StepRow({
             </span>
           ))}
         </p>
+
+        {photos?.length ? (
+          <div className="story-shot mt-2">
+            <TaskGallery images={photos} taskName={step.title} />
+          </div>
+        ) : (
+          /*
+           * An empty slot rather than nothing, and rather than a broken image.
+           * The wiki has a photo for about a quarter of these steps, and a
+           * reader who can see which ones are missing knows the gap is the
+           * source's and not the page failing to load.
+           */
+          wantsPhoto &&
+          pooled && (
+            <p className="story-photo-gap mt-2" role="note">
+              <Icon path={icons.image} size={13} />
+              No wiki photo for this step
+            </p>
+          )
+        )}
       </div>
     </div>
   );
@@ -890,13 +953,31 @@ function RewardsPanel({ ending }: { ending: StoryEnding }) {
   );
 }
 
-function MapChip({ map }: { map: string }) {
+/**
+ * `find` turns the chip from "open this map" into "open this map looking for
+ * the thing this step is about" — which is as close to a pin as a checklist
+ * written in prose can honestly get. The map lands on it when the name is
+ * unambiguous and offers the candidates when it is not.
+ */
+function MapChip({ map, find }: { map: string; find?: string | null }) {
+  // Terminal has no artwork yet, so a link to it is a link to an empty page.
   if (map === "terminal") {
     return <span className="chip">{mapLabel(map)}</span>;
   }
+  const to = find ? href.findOnMap(map, find) : href.map(map);
   return (
-    <a className="chip chip-button" href={href.map(map)} onClick={onNavClick(href.map(map))}>
+    <a
+      className="chip chip-button"
+      href={to}
+      onClick={onNavClick(to)}
+      title={find ? `Find "${find}" on ${mapLabel(map)}` : `Open ${mapLabel(map)}`}
+    >
       {mapLabel(map)}
+      {find && (
+        <span aria-hidden="true" style={{ opacity: 0.6 }}>
+          <Icon path={icons.search} size={11} />
+        </span>
+      )}
     </a>
   );
 }
