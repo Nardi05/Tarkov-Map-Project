@@ -2263,6 +2263,14 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 
 .tk-map {
   background: var(--bg-deep);
+  /* The map owns pan and zoom. Without this, a MacBook pinch zooms the page. */
+  touch-action: none;
+}
+
+.tk-map .leaflet-marker-icon,
+.tk-map .leaflet-marker-shadow {
+  /* Leaflet owns the position. Extra CSS transforms here make pins drift. */
+  will-change: auto;
 }
 
 .tk-map .leaflet-container {
@@ -2344,6 +2352,7 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 }
 
 .tk-marker .marker-shape {
+  transform-origin: center center;
   transition:
     transform var(--dur-fast) var(--ease),
     filter var(--dur-fast) var(--ease);

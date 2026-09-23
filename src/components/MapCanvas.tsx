@@ -142,13 +142,16 @@ export default function MapCanvas(props: Props) {
       crs: createCRS(geo),
       attributionControl: false,
       zoomControl: false,
-      // Fractional zoom keeps pinch and wheel gestures feeling continuous.
-      // The steps are deliberately small: a map's whole usable range is only
-      // four or five levels (see geo.json), so half a level per button press
-      // threw away a tenth of the range at a time.
-      zoomSnap: 0.1,
-      zoomDelta: 0.25,
-      wheelPxPerZoomLevel: 110,
+      // Wheel/trackpad zoom is handled below. Leaflet's own handler steps in
+      // 0.1-zoom clicks and, on a MacBook pinch (wheel + ctrlKey), lets the
+      // browser page-zoom as well — which scales the pins *and* the chrome
+      // over the map, so everything looks like it is sliding off the artwork.
+      scrollWheelZoom: false,
+      zoomSnap: 0,
+      zoomDelta: 0.5,
+      // HTML markers must not CSS-scale with the tile pane during a zoom:
+      // that transform is isotropic and the CRS is not, so pins drift.
+      markerZoomAnimation: false,
       minZoom: geo.minZoom,
       maxZoom: Math.max(7, geo.maxZoom),
       maxBounds: paddedBounds(geo.bounds, 1.5),
@@ -159,6 +162,32 @@ export default function MapCanvas(props: Props) {
     createBasePane(map);
     L.control.zoom({ position: "bottomright" }).addTo(map);
     map.on("click", () => onSelect(null));
+
+    /*
+     * Continuous zoom toward the cursor. Trackpads fire dozens of tiny wheel
+     * events; applying each as a fraction of a zoom level (no animation, no
+     * snap) is what makes a MacBook feel like Maps, not like a click-stop
+     * mouse wheel. `ctrlKey` is a pinch — same path, slightly more gain.
+     */
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!mapRef.current) return;
+      const dy =
+        e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+      const pxPerLevel = e.ctrlKey ? 280 : 200;
+      const next = Math.max(
+        map.getMinZoom(),
+        Math.min(map.getMaxZoom(), map.getZoom() - dy / pxPerLevel),
+      );
+      if (Math.abs(next - map.getZoom()) < 0.0008) return;
+      map.setZoomAround(map.mouseEventToContainerPoint(e), next, { animate: false });
+    };
+    const swallowGesture = (e: Event) => e.preventDefault();
+    container.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    container.addEventListener("gesturestart", swallowGesture, { passive: false });
+    container.addEventListener("gesturechange", swallowGesture, { passive: false });
+    container.addEventListener("gestureend", swallowGesture, { passive: false });
 
     const bounds = toBounds(geo.bounds);
 
@@ -247,13 +276,19 @@ export default function MapCanvas(props: Props) {
 
     rendererRef.current = L.canvas({ padding: 0.4 });
     declutterRef.current = createDeclutterer(container);
-    map.on("zoomend moveend", () => {
+    map.on("zoom moveend", () => {
       syncScales();
+    });
+    map.on("zoomend moveend", () => {
       declutterRef.current?.();
     });
     mapRef.current = map;
 
     return () => {
+      container.removeEventListener("wheel", onWheel, true);
+      container.removeEventListener("gesturestart", swallowGesture);
+      container.removeEventListener("gesturechange", swallowGesture);
+      container.removeEventListener("gestureend", swallowGesture);
       map.remove();
       mapRef.current = null;
       rendererRef.current = null;
