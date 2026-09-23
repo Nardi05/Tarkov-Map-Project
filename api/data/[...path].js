@@ -122,9 +122,36 @@ async function snapshot(file) {
   return nodeFs.readFile(path.join(root, "public", "data", file));
 }
 
-function requested(query) {
-  const raw = query?.path;
-  const segments = Array.isArray(raw) ? raw : raw ? [raw] : [];
+/**
+ * Which payload was asked for, read off the URL rather than the router.
+ *
+ * This used to trust `req.query.path`, which is what a catch-all route is
+ * supposed to give you. Deployed, it was empty — every request answered "No
+ * such data file" while the same handler served fine under Vite — so the
+ * feature silently fell back to the build-time snapshot in production, which
+ * is exactly the thing it exists to avoid.
+ *
+ * The path is in the URL on every runtime, so it is taken from there and the
+ * router's helpers are not depended on at all.
+ */
+export function requested(req) {
+  const raw = req?.query?.path;
+  let segments = Array.isArray(raw) ? raw : raw ? [raw] : [];
+
+  if (!segments.length) {
+    /*
+     * Split the query off by hand rather than parsing with `new URL`, which
+     * resolves `..` before returning — so `/api/data/maps/../index.json` would
+     * arrive here already flattened and the traversal check below would have
+     * nothing left to reject. The allowlist would still have caught it, but a
+     * guard that cannot see what it is guarding against is not a guard.
+     */
+    const pathname = (req.url ?? "/").split(/[?#]/)[0];
+    const after = pathname.replace(/^\/+api\/+data\/*/, "");
+    segments = after.split("/").filter(Boolean).map(decodeURIComponent);
+  }
+
+  if (!segments.length) return null;
   if (segments.some((s) => !/^[A-Za-z0-9._-]+$/.test(s) || s === "." || s === "..")) return null;
   const file = segments.join("/");
   if (SHARED.has(file)) return file;
@@ -133,7 +160,7 @@ function requested(query) {
 }
 
 export default async function handler(req, res) {
-  const file = requested(req.query);
+  const file = requested(req);
   if (!file) {
     res.setHeader("Cache-Control", "public, max-age=3600");
     return res.status(404).json({ error: "No such data file." });
