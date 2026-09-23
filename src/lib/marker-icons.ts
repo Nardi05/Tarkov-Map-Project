@@ -137,6 +137,7 @@ export function markerIcon({ shape, color, scale, label, labelPriority = 0, done
   if (cached) return cached;
 
   const size = Math.round(BASE_SIZE[shape] * scale);
+  const anchor = Math.floor(size / 2);
   const text = label
     ? `<span class="marker-label" data-priority="${labelPriority}">${label.replace(/[<>&]/g, (c) => `&#${c.charCodeAt(0)};`)}</span>`
     : "";
@@ -148,7 +149,7 @@ export function markerIcon({ shape, color, scale, label, labelPriority = 0, done
     className: `tk-marker${done ? " is-done" : ""}`,
     html: `<span class="marker-shape">${markerSvg(shape, color, size)}${check}</span>${text}`,
     iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
+    iconAnchor: [anchor, anchor],
   });
 
   // Icons are shared by thousands of markers; a bounded cache keeps churn down.
@@ -196,11 +197,12 @@ export function offFloorIcon(
   if (cached) return cached;
 
   const size = Math.round(19 * scale);
+  const anchor = Math.floor(size / 2);
   const icon = L.divIcon({
     className: "tk-offfloor",
     html: `<span class="marker-shape">${offFloorSvg(color, direction, size)}</span>`,
     iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
+    iconAnchor: [anchor, anchor],
   });
   if (iconCache.size > 400) iconCache.clear();
   iconCache.set(cacheKey, icon);

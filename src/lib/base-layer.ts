@@ -175,6 +175,8 @@ export function createTileBase(geo: Geo, floor: Floor): L.TileLayer {
     maxNativeZoom: geo.maxZoom,
     noWrap: true,
     keepBuffer: 3,
+    updateWhenZooming: false,
+    updateWhenIdle: true,
     className: "tk-base tk-base-tile",
   });
 }

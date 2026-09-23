@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import type { MapData, Vec3 } from "../types";
-import { createCRS, paddedBounds, toBounds, toLatLng } from "../lib/leaflet-crs";
+import { createCRS, paddedBounds, skipLayerPointRounding, toBounds, toLatLng } from "../lib/leaflet-crs";
 import {
   createBasePane,
   createPlaceLabels,
@@ -142,46 +142,51 @@ export default function MapCanvas(props: Props) {
       crs: createCRS(geo),
       attributionControl: false,
       zoomControl: false,
-      // Wheel/trackpad zoom is handled below. Leaflet's own handler steps in
-      // 0.1-zoom clicks and, on a MacBook pinch (wheel + ctrlKey), lets the
-      // browser page-zoom as well — which scales the pins *and* the chrome
-      // over the map, so everything looks like it is sliding off the artwork.
       scrollWheelZoom: false,
       zoomSnap: 0,
       zoomDelta: 0.5,
-      // HTML markers must not CSS-scale with the tile pane during a zoom:
-      // that transform is isotropic and the CRS is not, so pins drift.
+      // Animated zoom CSS-scales the artwork isotropically; these CRSs are not.
+      // Pins then lag behind the image until the animation ends.
+      zoomAnimation: false,
       markerZoomAnimation: false,
+      fadeAnimation: false,
+      inertia: true,
       minZoom: geo.minZoom,
       maxZoom: Math.max(7, geo.maxZoom),
       maxBounds: paddedBounds(geo.bounds, 1.5),
       maxBoundsViscosity: 0.7,
       preferCanvas: true,
     });
+    skipLayerPointRounding(map);
 
     createBasePane(map);
     L.control.zoom({ position: "bottomright" }).addTo(map);
     map.on("click", () => onSelect(null));
 
     /*
-     * Continuous zoom toward the cursor. Trackpads fire dozens of tiny wheel
-     * events; applying each as a fraction of a zoom level (no animation, no
-     * snap) is what makes a MacBook feel like Maps, not like a click-stop
-     * mouse wheel. `ctrlKey` is a pinch — same path, slightly more gain.
+     * Trackpads fire a wheel event per pixel. Applying each one as a map zoom
+     * re-projects every pin and is what made zoom/pan feel like lag. Coalesce
+     * to one setZoomAround per frame. Pinch is wheel+ctrlKey — same path, and
+     * preventDefault so the browser does not page-zoom the chrome.
      */
+    let wheelZoom = map.getZoom();
+    let wheelPoint: L.Point | null = null;
+    let wheelFrame = 0;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      if (!mapRef.current) return;
       const dy =
         e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
-      const pxPerLevel = e.ctrlKey ? 280 : 200;
-      const next = Math.max(
-        map.getMinZoom(),
-        Math.min(map.getMaxZoom(), map.getZoom() - dy / pxPerLevel),
-      );
-      if (Math.abs(next - map.getZoom()) < 0.0008) return;
-      map.setZoomAround(map.mouseEventToContainerPoint(e), next, { animate: false });
+      const pxPerLevel = e.ctrlKey ? 320 : 240;
+      wheelZoom = Math.max(map.getMinZoom(), Math.min(map.getMaxZoom(), wheelZoom - dy / pxPerLevel));
+      wheelPoint = map.mouseEventToContainerPoint(e);
+      if (wheelFrame) return;
+      wheelFrame = requestAnimationFrame(() => {
+        wheelFrame = 0;
+        if (!mapRef.current || !wheelPoint) return;
+        if (Math.abs(wheelZoom - map.getZoom()) < 0.0008) return;
+        map.setZoomAround(wheelPoint, wheelZoom, { animate: false });
+      });
     };
     const swallowGesture = (e: Event) => e.preventDefault();
     container.addEventListener("wheel", onWheel, { passive: false, capture: true });
@@ -243,7 +248,7 @@ export default function MapCanvas(props: Props) {
     map.options.minZoom = Math.min(geo.minZoom, fitZoomNow());
     let fittedZoom = fitZoomNow();
 
-    fitRef.current = () => map.fitBounds(bounds, { animate: true });
+    fitRef.current = () => map.fitBounds(bounds, { animate: false });
 
     // Opening at the fitted zoom on a phone would show the whole map at a size
     // nobody can read, so open no further out than legibility allows and let
@@ -251,6 +256,7 @@ export default function MapCanvas(props: Props) {
     const openZoom = Math.max(fittedZoom, Math.log2(MIN_LEGIBLE_WIDTH / baseWidth));
     if (openZoom > fittedZoom + 0.01) map.setView(bounds.getCenter(), openZoom, { animate: false });
     else map.fitBounds(bounds, { animate: false });
+    wheelZoom = map.getZoom();
 
     /**
      * Two things have to stay in proportion to the map rather than the screen,
@@ -260,10 +266,6 @@ export default function MapCanvas(props: Props) {
      *   --tk-label-scale   sizes place names like printed map labels
      */
     const syncScales = () => {
-      const px = map.project(bounds.getNorthEast()).x - map.project(bounds.getSouthWest()).x;
-      const markerScale = Math.min(1, Math.max(0.55, Math.abs(px) / 900));
-      container.style.setProperty("--tk-marker-scale", markerScale.toFixed(3));
-
       const labelScale = Math.min(2.4, Math.max(0.55, 2 ** (map.getZoom() - fittedZoom)));
       container.style.setProperty("--tk-label-scale", labelScale.toFixed(3));
     };
@@ -276,15 +278,18 @@ export default function MapCanvas(props: Props) {
 
     rendererRef.current = L.canvas({ padding: 0.4 });
     declutterRef.current = createDeclutterer(container);
-    map.on("zoom moveend", () => {
+    map.on("zoomend", () => {
+      wheelZoom = map.getZoom();
       syncScales();
+      declutterRef.current?.();
     });
-    map.on("zoomend moveend", () => {
+    map.on("moveend", () => {
       declutterRef.current?.();
     });
     mapRef.current = map;
 
     return () => {
+      if (wheelFrame) cancelAnimationFrame(wheelFrame);
       container.removeEventListener("wheel", onWheel, true);
       container.removeEventListener("gesturestart", swallowGesture);
       container.removeEventListener("gesturechange", swallowGesture);

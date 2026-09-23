@@ -135,8 +135,8 @@ function symbol(
       labelPriority: LABEL_PRIORITY[def.id] ?? 0,
       done: opts.done,
     }),
-    keyboard: true,
-    riseOnHover: true,
+    keyboard: false,
+    riseOnHover: false,
     title,
   });
   marker.bindTooltip(tooltip(title, sub), { direction: "top", offset: [0, -10], className: "tk-tip" });

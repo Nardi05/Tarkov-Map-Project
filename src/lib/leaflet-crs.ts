@@ -22,6 +22,20 @@ function rotate(latLng: L.LatLng, degrees: number): L.LatLng {
   return L.latLng(x * sin + y * cos, x * cos - y * sin);
 }
 
+/**
+ * Leaflet rounds every marker to a whole pixel (`latLngToLayerPoint`).
+ * On these maps a pixel at the fitted zoom is metres on the ground, so pins
+ * only sit on the artwork when you are zoomed right in. Keep fractions.
+ */
+export function skipLayerPointRounding(map: L.Map): void {
+  map.latLngToLayerPoint = function (latlng) {
+    return this.project(L.latLng(latlng)).subtract(this.getPixelOrigin());
+  };
+  map.layerPointToLatLng = function (point) {
+    return this.unproject(L.point(point).add(this.getPixelOrigin()));
+  };
+}
+
 export function createCRS(geo: Geo): L.CRS {
   const [scaleX, marginX, scaleYRaw, marginY] = geo.transform ?? [1, 0, 1, 0];
   const rotation = geo.coordinateRotation ?? 0;
