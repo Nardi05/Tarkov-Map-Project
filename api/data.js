@@ -32,8 +32,8 @@
 import path from "node:path";
 import nodeFs from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { buildData } from "../../scripts/lib/build-data-core.mjs";
-import { overlayFs } from "../../scripts/lib/overlay-fs.mjs";
+import { buildData } from "../scripts/lib/build-data-core.mjs";
+import { overlayFs } from "../scripts/lib/overlay-fs.mjs";
 
 /** How long a warm instance reuses one build before rebuilding. */
 const INSTANCE_TTL_MS = 60 * 60 * 1000;
@@ -57,7 +57,7 @@ const SHARED = new Set([
 /**
  * The repository root as it exists wherever this is running.
  *
- * Locally that is two directories up. In a deployed function the bundle is
+ * Locally that is one directory up. In a deployed function the bundle is
  * rooted at the project, and `includeFiles` in vercel.json puts the vendored
  * inputs back at the same relative paths — but the function file itself may
  * have been moved, so the location is confirmed by looking for a file that
@@ -68,6 +68,7 @@ function findRoot() {
   rootPromise ??= (async () => {
     const here = path.dirname(fileURLToPath(import.meta.url));
     const candidates = [
+      path.resolve(here, ".."),
       path.resolve(here, "..", ".."),
       process.cwd(),
       path.resolve(process.cwd(), ".."),
@@ -83,7 +84,7 @@ function findRoot() {
     }
     // Nothing to build from. The snapshot path below will fail too, and the
     // handler turns that into a 503 rather than a blank map.
-    return path.resolve(here, "..", "..");
+    return path.resolve(here, "..");
   })();
   return rootPromise;
 }
@@ -123,33 +124,39 @@ async function snapshot(file) {
 }
 
 /**
- * Which payload was asked for, read off the URL rather than the router.
+ * The path segments after `/api/data/`, however this request got here.
  *
- * This used to trust `req.query.path`, which is what a catch-all route is
+ * This used to trust `req.query.path` alone, which is what a catch-all route is
  * supposed to give you. Deployed, it was empty — every request answered "No
- * such data file" while the same handler served fine under Vite — so the
- * feature silently fell back to the build-time snapshot in production, which
- * is exactly the thing it exists to avoid.
+ * such data file" while the same handler served fine under Vite — so the whole
+ * feature silently fell back to the build-time snapshot in production, which is
+ * the one thing it exists to avoid.
  *
- * The path is in the URL on every runtime, so it is taken from there and the
- * router's helpers are not depended on at all.
+ * So both shapes are read. A direct request keeps the path in the URL. The
+ * rewrite in vercel.json moves it into `?path=`, and Vite's dev middleware
+ * hands it over as an array. It is a few lines, and it means no deployment
+ * target has to behave a particular way for the endpoint to work at all.
  */
-export function requested(req) {
-  const raw = req?.query?.path;
-  let segments = Array.isArray(raw) ? raw : raw ? [raw] : [];
+function segmentsFor(req) {
+  /*
+   * Split the query off by hand rather than parsing with `new URL`, which
+   * resolves `..` before returning — so `/api/data/maps/../index.json` would
+   * arrive already flattened and the traversal check below would have nothing
+   * left to reject. The allowlist would still have caught it, but a guard that
+   * cannot see what it is guarding against is not a guard.
+   */
+  const pathname = (req?.url ?? "/").split(/[?#]/)[0];
+  const after = pathname.replace(/^\/+api\/+data\/*/, "");
+  const fromUrl = after.split("/").filter(Boolean);
+  if (fromUrl.length) return fromUrl.map(decodeURIComponent);
 
-  if (!segments.length) {
-    /*
-     * Split the query off by hand rather than parsing with `new URL`, which
-     * resolves `..` before returning — so `/api/data/maps/../index.json` would
-     * arrive here already flattened and the traversal check below would have
-     * nothing left to reject. The allowlist would still have caught it, but a
-     * guard that cannot see what it is guarding against is not a guard.
-     */
-    const pathname = (req.url ?? "/").split(/[?#]/)[0];
-    const after = pathname.replace(/^\/+api\/+data\/*/, "");
-    segments = after.split("/").filter(Boolean).map(decodeURIComponent);
-  }
+  const raw = req?.query?.path;
+  const list = Array.isArray(raw) ? raw : typeof raw === "string" ? raw.split("/") : [];
+  return list.filter(Boolean).map(decodeURIComponent);
+}
+
+export function requested(req) {
+  const segments = segmentsFor(req);
 
   if (!segments.length) return null;
   if (segments.some((s) => !/^[A-Za-z0-9._-]+$/.test(s) || s === "." || s === "..")) return null;

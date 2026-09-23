@@ -4,7 +4,7 @@
  *   node scripts/build-data.mjs
  *
  * The pipeline itself lives in scripts/lib/build-data-core.mjs, because the
- * live endpoint (api/data/[...path].js) runs exactly the same code against an
+ * live endpoint (api/data.js) runs exactly the same code against an
  * in-memory filesystem. What this file produces is the *fallback*: the copy
  * that ships inside the bundle and gets served when the live endpoint is not
  * reachable — a static host with no functions, an upstream outage, a cold

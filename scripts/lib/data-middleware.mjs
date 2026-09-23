@@ -1,7 +1,7 @@
 /**
  * The live data endpoint, as connect middleware.
  *
- * `api/data/[...path].js` is a Vercel function, so it only exists once the
+ * `api/data.js` is a Vercel function, so it only exists once the
  * site is deployed. Without this, `npm run dev` and `npm run preview` served a
  * 404 for every `/api/data/…` request and fell back to the static snapshot —
  * which meant the path the deployed site actually takes was the one path never
@@ -11,7 +11,7 @@
  * same responses; the only difference is the adapter below, which gives a bare
  * Node response the two Express-shaped methods the handler expects.
  */
-import handler from "../../api/data/[...path].js";
+import handler from "../../api/data.js";
 
 const PREFIX = "/api/data/";
 

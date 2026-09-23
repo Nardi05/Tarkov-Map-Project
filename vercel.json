@@ -4,9 +4,15 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "functions": {
-    "api/**/*.js": {
+    "api/*.js": {
       "maxDuration": 60,
       "includeFiles": "{data,src/data,public/data}/**"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/api/data/:path*",
+      "destination": "/api/data?path=:path*"
+    }
+  ]
 }

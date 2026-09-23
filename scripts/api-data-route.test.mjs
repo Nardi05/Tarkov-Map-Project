@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { requested } from "../api/data/[...path].js";
+import { requested } from "../api/data.js";
 
 /**
  * Which payload a request is asking for.
@@ -27,11 +27,30 @@ test("per-map payloads are two segments under maps/", () => {
   assert.equal(requested({ url: "/api/data/maps/customs.json" }), "maps/customs.json");
 });
 
-test("the router's own answer still wins where it gives one", () => {
+test("a rewrite that moves the path into a query param still resolves", () => {
+  // What `/api/data/:path*` -> `/api/data?path=:path*` hands the function.
+  assert.equal(requested({ url: "/api/data", query: { path: "maps/woods.json" } }), "maps/woods.json");
+  assert.equal(requested({ url: "/api/data", query: { path: "index.json" } }), "index.json");
+});
+
+test("and so does a catch-all route handing over an array", () => {
   assert.equal(
-    requested({ url: "/ignored", query: { path: ["maps", "woods.json"] } }),
+    requested({ url: "/api/data", query: { path: ["maps", "woods.json"] } }),
     "maps/woods.json",
   );
+});
+
+test("the URL wins over the query when both say something", () => {
+  // A direct request is the truth; the query is only how a rewrite relays it.
+  assert.equal(
+    requested({ url: "/api/data/index.json", query: { path: "maps/woods.json" } }),
+    "index.json",
+  );
+});
+
+test("a rewritten traversal is refused too", () => {
+  assert.equal(requested({ url: "/api/data", query: { path: "maps/../index.json" } }), null);
+  assert.equal(requested({ url: "/api/data", query: { path: "../../etc/passwd" } }), null);
 });
 
 test("the directory itself is not a payload", () => {

@@ -15,7 +15,7 @@
  *                            build time, but only to lay down the offline
  *                            fallback the site uses when nothing better is
  *                            reachable.
- *   api/data/[...path].js    the live endpoint, running the same pipeline on
+ *   api/data.js    the live endpoint, running the same pipeline on
  *                            request against an in-memory filesystem and
  *                            serving the result behind a one-day CDN cache.
  *
