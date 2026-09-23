@@ -9,15 +9,24 @@
       "summary": "Kozlov, Anastasia, Skier and Reshala. Ends with the incriminating audio tape in a Shoreline flower bed — major evidence 1 of 9.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/Accidental_Witness",
       "howToStart": "White scribbled-on car in the courtyard between Customs dorms.",
-      "maps": ["customs", "streets-of-tarkov", "shoreline"],
-      "endings": ["savior", "debtor"],
+      "maps": [
+        "customs",
+        "streets-of-tarkov",
+        "shoreline"
+      ],
+      "endings": [
+        "savior",
+        "debtor"
+      ],
       "steps": [
         {
           "id": "aw-car",
           "title": "Find the scribbled-on car between Customs dorms",
           "detail": "White sedan covered in writing, courtyard of the two-storey and three-storey dorms. Walking up to it starts the chapter.",
           "kind": "quest",
-          "maps": ["customs"],
+          "maps": [
+            "customs"
+          ],
           "location": "Dorm courtyard, Customs",
           "parallel": true
         },
@@ -26,18 +35,25 @@
           "title": "Kozlov lived in dorm 110 — read the note on the door",
           "detail": "First floor of the two-storey dorms. Note for Kozlov is on the wall just below the room number.",
           "kind": "quest",
-          "maps": ["customs"],
+          "maps": [
+            "customs"
+          ],
           "location": "Dorm room 110 door",
           "parallel": true
         },
         {
           "id": "aw-kozlov-room",
           "title": "Enter room 110 and read the letter on the nightstand",
-          "detail": "Needs Dorm room 110 key. Optional: Note from the repair shop on the kitchen wall next to 110.",
+          "detail": "Needs the Dorm room 110 key. Read the letter on the nightstand. Optional: Note from the repair shop on the kitchen wall next to room 110.",
           "kind": "item",
-          "maps": ["customs"],
-          "keys": ["Dorm room 110 key"],
-          "parallel": true
+          "maps": [
+            "customs"
+          ],
+          "keys": [
+            "Dorm room 110 key"
+          ],
+          "parallel": true,
+          "location": "Two-storey dorms, room 110, first floor — letter on the nightstand"
         },
         {
           "id": "aw-skier-anastasia",
@@ -50,11 +66,15 @@
         {
           "id": "aw-zmeisky",
           "title": "Streets: Zmeisky 3 apartment 7 — read four documents",
-          "detail": "First floor, backyard entrance. Needs Zmeisky 3 apartment key. Read Ninth Circle #19, Tarkov Herald summary, FSB report, Ninth Circle #14 (multiple spawns in the living room and kitchen). Then extract Survived or Run-Through.",
+          "detail": "First floor of Zmeisky 3, backyard entrance, Streets. Needs the Zmeisky 3 apartment key. Four items, each with several spawns: Ninth Circle #19 (living-room walls), Tarkov Herald summary (shelf by the TV, armchair, or bookshelf), FSB report (TV drawer or windowsill), Ninth Circle #14 (kitchen wall). Extract Streets Survived or Run-Through.",
           "kind": "quest",
-          "maps": ["streets-of-tarkov"],
+          "maps": [
+            "streets-of-tarkov"
+          ],
           "location": "Zmeisky 3, apartment 7",
-          "keys": ["Zmeisky 3 apartment key"],
+          "keys": [
+            "Zmeisky 3 apartment key"
+          ],
           "parallel": true
         },
         {
@@ -70,7 +90,9 @@
           "title": "Locate Anastasia's apartment, then the mailbox",
           "detail": "Chekannaya 13, second floor, Streets. Go back down and read the letter and Tarkov Herald newspaper in the building mailbox.",
           "kind": "quest",
-          "maps": ["streets-of-tarkov"],
+          "maps": [
+            "streets-of-tarkov"
+          ],
           "location": "Chekannaya 13 mailbox",
           "parallel": true
         },
@@ -79,25 +101,34 @@
           "title": "Courier Pasha's ambush — note by the bicycle",
           "detail": "Next to the two-storey dorms on Customs. Unsealed envelope beside the bike. Then talk to Skier again.",
           "kind": "item",
-          "maps": ["customs"],
+          "maps": [
+            "customs"
+          ],
           "location": "Dorm courtyard bicycle",
           "parallel": true
         },
         {
           "id": "aw-reshala",
           "title": "Search Reshala's bunkhouse on Customs",
-          "detail": "Needs Reshala's bunkhouse key. Three notes inside (wall, stool, wall). Optional: kill Reshala for the key.",
+          "detail": "Bunkhouse on Customs. Needs Reshala's bunkhouse key. Read three notes inside: Reshala's work notes and courier Pasha's belongings are among them. Optional: kill Reshala for the key if you do not already have it.",
           "kind": "quest",
-          "maps": ["customs"],
-          "keys": ["Reshala's bunkhouse key"],
-          "parallel": true
+          "maps": [
+            "customs"
+          ],
+          "keys": [
+            "Reshala's bunkhouse key"
+          ],
+          "parallel": true,
+          "location": "Reshala's bunkhouse, Customs"
         },
         {
           "id": "ev-tape",
           "title": "MAJOR EVIDENCE: audio tape in the Shoreline flower bed",
           "detail": "Kozlov's hideout is house no. 3, eastern west-village on Shoreline. Tape is in the flower bed by the entrance — pick it up and listen. Optional newspaper clipping is on the floor inside.",
           "kind": "item",
-          "maps": ["shoreline"],
+          "maps": [
+            "shoreline"
+          ],
           "location": "West village house 3, flower bed",
           "parallel": true
         }
@@ -112,16 +143,32 @@
       "summary": "The Bogatyr BEAR squad. Ends with the agent network deployment report on a red crate at Lightkeeper — major evidence 2 of 9. Needs Intelligence Center 3.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/Batya",
       "howToStart": "Bogatyr patch: Customs power-station sofa, Woods BRDM, Reserve white-king roof, or Lighthouse BEAR-camp stump.",
-      "maps": ["customs", "woods", "interchange", "lighthouse", "reserve", "shoreline"],
-      "endings": ["savior", "debtor"],
+      "maps": [
+        "customs",
+        "woods",
+        "interchange",
+        "lighthouse",
+        "reserve",
+        "shoreline"
+      ],
+      "endings": [
+        "savior",
+        "debtor"
+      ],
       "steps": [
         {
           "id": "batya-patch",
           "title": "Pick up and read a Bogatyr patch",
-          "detail": "Four starts: couch in the cabin SW of the new gas station on Customs; ground by the convoy BRDM on Woods; package on the white-king radar roof on Reserve; tree stump in the BEAR camp on Lighthouse. Keep the patch — Lightkeeper wants it later.",
+          "detail": "Pick up and read a Bogatyr squad patch. One spawn is the couch in the cabin on the hill south-west of New Gas on Customs. Other spawns are on Woods, Reserve and Lighthouse.",
           "kind": "item",
-          "maps": ["customs", "woods", "reserve", "lighthouse"],
-          "parallel": true
+          "maps": [
+            "customs",
+            "woods",
+            "reserve",
+            "lighthouse"
+          ],
+          "parallel": true,
+          "location": "Cabin on the hill south-west of New Gas on Customs, plus other Bogatyr patch spawns"
         },
         {
           "id": "batya-jaeger",
@@ -136,7 +183,9 @@
           "title": "Woods: Ryabina outpost north of the sawmill",
           "detail": "Read Hostage evacuation report from Voevoda on a pallet. Strelets' amulet is on a green crate at the sniper nest — move it to off-raid quest inventory.",
           "kind": "quest",
-          "maps": ["woods"],
+          "maps": [
+            "woods"
+          ],
           "location": "Ryabina camp, north of sawmill",
           "parallel": true
         },
@@ -145,7 +194,9 @@
           "title": "Interchange: Carousel outpost opposite IDEA checkout",
           "detail": "Inside ULTRA. Pick up Taran's postcard and personal file, Voevoda's recorder and tape, Voevoda's and Strelets' files upstairs. Strelets' note has radio code 27.893.2000. Move postcard and recorder to off-raid quest inventory.",
           "kind": "quest",
-          "maps": ["interchange"],
+          "maps": [
+            "interchange"
+          ],
           "location": "ULTRA, opposite IDEA checkout",
           "parallel": true
         },
@@ -154,7 +205,9 @@
           "title": "Interchange: Gnezdo outpost east of ULTRA",
           "detail": "Tent and rock camp. Audio tape on the radio, Moreman's file on a bed, triangulated-signal map in a sleeping bag, operations report by the guitar, first radio-code note on a pallet.",
           "kind": "quest",
-          "maps": ["interchange"],
+          "maps": [
+            "interchange"
+          ],
           "location": "East of ULTRA",
           "parallel": true
         },
@@ -163,7 +216,9 @@
           "title": "Woods: Moreman's grave near ZB-016",
           "detail": "Second radio-code note in a boot, Moreman's phone by the cross, dogtag on the sleeping bag. The two code notes together are frequency 35.70. Move phone and dogtag off-raid.",
           "kind": "item",
-          "maps": ["woods"],
+          "maps": [
+            "woods"
+          ],
           "location": "East Woods, near ZB-016",
           "parallel": true
         },
@@ -172,7 +227,10 @@
           "title": "Craft and listen to Moreman's tapes at Workbench 1",
           "detail": "Two crafts, ~12 hours each. Hideout power must stay on or the craft dies.",
           "kind": "craft",
-          "hideout": { "station": "Workbench", "level": 1 },
+          "hideout": {
+            "station": "Workbench",
+            "level": 1
+          },
           "parallel": true
         },
         {
@@ -180,7 +238,10 @@
           "title": "Build Intelligence Center 3, then radio the squad",
           "detail": "Frequency 35.70, then code 27.893.2000 from Strelets' note.",
           "kind": "hideout",
-          "hideout": { "station": "Intelligence Center", "level": 3 },
+          "hideout": {
+            "station": "Intelligence Center",
+            "level": 3
+          },
           "parallel": true
         },
         {
@@ -189,7 +250,9 @@
           "detail": "Mechanic's Network Provider chain + encoded DSP transmitter. Do not harm Zryachiy. Hand Taran's postcard, Voevoda's recorder, Strelets' amulet, Moreman's dogtag and the Bogatyr patch (move them into in-raid quest inventory first).",
           "kind": "quest",
           "trader": "Lightkeeper",
-          "maps": ["lighthouse"],
+          "maps": [
+            "lighthouse"
+          ],
           "parallel": true
         },
         {
@@ -206,7 +269,9 @@
           "detail": "Note on a metal pole. Then trader screen.",
           "kind": "quest",
           "trader": "Prapor",
-          "maps": ["lighthouse"],
+          "maps": [
+            "lighthouse"
+          ],
           "parallel": true
         },
         {
@@ -214,8 +279,14 @@
           "title": "Cultist mark: Shoreline island photo, or Woods/Customs marked-room note",
           "detail": "Voevoda's photo with a cultist mark is on the floor of the Shoreline island house. Note mentioning General: marked circle west of Woods sawmill, or dorm 314 marked room on Customs.",
           "kind": "quest",
-          "maps": ["shoreline", "woods", "customs"],
-          "keys": ["Dorm room 314 marked key"],
+          "maps": [
+            "shoreline",
+            "woods",
+            "customs"
+          ],
+          "keys": [
+            "Dorm room 314 marked key"
+          ],
           "parallel": true
         },
         {
@@ -223,7 +294,9 @@
           "title": "MAJOR EVIDENCE: agent network report on Lightkeeper's red crate",
           "detail": "Talk to Lightkeeper, wait 6 hours, return to his locked area and read the Agent network deployment report on a red wooden box.",
           "kind": "item",
-          "maps": ["lighthouse"],
+          "maps": [
+            "lighthouse"
+          ],
           "location": "Lightkeeper island, red crate",
           "trader": "Lightkeeper",
           "wait": "6 hours",
@@ -240,16 +313,31 @@
       "summary": "The EMP and Object 1156. Ends with the Item #1156 specification in the Streets Rus Post van — major evidence 3 of 9.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/Blue_Fire",
       "howToStart": "EMERCOM leaflet: green container at Woods Scav-base camp, Interchange highway tents, ULTRA medical unit, or Labyrinth prototype table.",
-      "maps": ["woods", "interchange", "streets-of-tarkov", "the-lab", "ground-zero", "lighthouse"],
-      "endings": ["savior", "debtor"],
+      "maps": [
+        "woods",
+        "interchange",
+        "streets-of-tarkov",
+        "the-lab",
+        "ground-zero",
+        "lighthouse"
+      ],
+      "endings": [
+        "savior",
+        "debtor"
+      ],
       "steps": [
         {
           "id": "bf-leaflet",
           "title": "Read an EMERCOM leaflet to start the chapter",
-          "detail": "Woods Scav-base green container; Interchange tent west of Path to River or on the highway; ULTRA ground-floor medical; or Note by Item #1156 in the Labyrinth prototype-weapon area.",
+          "detail": "Read an EMERCOM leaflet. One spawn is the tent west of the highway near Path to River on Interchange. Others are on Woods and in the Labyrinth. Reading any one starts the chapter.",
           "kind": "item",
-          "maps": ["woods", "interchange", "the-labyrinth"],
-          "parallel": true
+          "maps": [
+            "woods",
+            "interchange",
+            "the-labyrinth"
+          ],
+          "parallel": true,
+          "location": "Tent west of the highway near Path to River on Interchange, or the other EMERCOM leaflet spawns"
         },
         {
           "id": "bf-mechanic",
@@ -262,19 +350,27 @@
         {
           "id": "bf-fragment",
           "title": "Find a device fragment and hand it to Mechanic",
-          "detail": "Streets: LexOs second-floor closed section (Car dealership closed section key, Claymores on the lot) or Chekannaya 13 marked room flower pot (Mysterious room marked key). Then trader screen.",
+          "detail": "Unknown device fragment. Either the closed section on the second floor of LexOs (Car dealership closed section key — the lot is mined with claymores) or the marked room in Chekannaya 13 (Mysterious room marked key). Only one spawn is required. Hand it to Mechanic.",
           "kind": "item",
-          "maps": ["streets-of-tarkov"],
-          "keys": ["Car dealership closed section key", "Mysterious room marked key"],
+          "maps": [
+            "streets-of-tarkov"
+          ],
+          "keys": [
+            "Car dealership closed section key",
+            "Mysterious room marked key"
+          ],
           "trader": "Mechanic",
-          "parallel": true
+          "parallel": true,
+          "location": "LexOs closed section (2nd floor) or Chekannaya 13 marked room"
         },
         {
           "id": "bf-hack",
           "title": "Plant the local-network hacking device in Labs server room",
           "detail": "First floor, next to the office chairs. Mechanic mails one. Auto-completes if you already planted it for Boreas.",
           "kind": "quest",
-          "maps": ["the-lab"],
+          "maps": [
+            "the-lab"
+          ],
           "location": "Labs server room, first floor",
           "parallel": true
         },
@@ -292,8 +388,14 @@
           "title": "Find a lead on Item 1156",
           "detail": "Note mentioning Item #1156: Ground Zero TG office 4 (level 21+, science office key); northern blue chalet bookshelf on Lighthouse; or Labs office O22 desk.",
           "kind": "item",
-          "maps": ["ground-zero", "lighthouse", "the-lab"],
-          "keys": ["TerraGroup science office key"],
+          "maps": [
+            "ground-zero",
+            "lighthouse",
+            "the-lab"
+          ],
+          "keys": [
+            "TerraGroup science office key"
+          ],
           "parallel": true
         },
         {
@@ -301,7 +403,9 @@
           "title": "Streets Rus Post: listen to three audio tapes",
           "detail": "Needs an audio recorder. Tape 1: desk with the screen behind the counter. Tape 2: on the coffee machine by storage. Tape 3: back-office desk through the hallway.",
           "kind": "quest",
-          "maps": ["streets-of-tarkov"],
+          "maps": [
+            "streets-of-tarkov"
+          ],
           "location": "Rus Post office",
           "parallel": true
         },
@@ -310,9 +414,13 @@
           "title": "MAJOR EVIDENCE: Item #1156 spec in the Rus Post van",
           "detail": "Rus Post car key spawns every raid by the back-right wheel. The van is parked in front of the post office. Spec is in the back — read it. Unlocks Inferno.",
           "kind": "item",
-          "maps": ["streets-of-tarkov"],
+          "maps": [
+            "streets-of-tarkov"
+          ],
           "location": "Rus Post van, Streets",
-          "keys": ["Rus Post car key"],
+          "keys": [
+            "Rus Post car key"
+          ],
           "parallel": true
         }
       ]
@@ -326,15 +434,28 @@
       "summary": "Paradigm Shipping and the icebreaker. Ends with Icebreaker archive data in the mail after decoding the drives — major evidence 4 of 9.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/Boreas",
       "howToStart": "Paradigm Shipping poster in raid, or Intelligence Center 3 radio distress signal.",
-      "maps": ["woods", "lighthouse", "reserve", "shoreline", "the-lab", "icebreaker"],
-      "endings": ["savior", "debtor"],
+      "maps": [
+        "woods",
+        "lighthouse",
+        "reserve",
+        "shoreline",
+        "the-lab",
+        "icebreaker"
+      ],
+      "endings": [
+        "savior",
+        "debtor"
+      ],
       "steps": [
         {
           "id": "bor-start",
           "title": "Start Boreas: poster in raid, or Intel Center 3 radio",
           "detail": "Either a Paradigm Shipping poster or the distress signal at Intelligence Center 3.",
           "kind": "quest",
-          "hideout": { "station": "Intelligence Center", "level": 3 },
+          "hideout": {
+            "station": "Intelligence Center",
+            "level": 3
+          },
           "parallel": true
         },
         {
@@ -350,7 +471,9 @@
           "title": "Woods: repair the gear under the cellular tower (Toolset)",
           "detail": "Scav bunker on Woods. The repair consumes a Toolset. Then report to Mechanic.",
           "kind": "quest",
-          "maps": ["woods"],
+          "maps": [
+            "woods"
+          ],
           "location": "Scav bunker / cell tower",
           "parallel": true
         },
@@ -359,7 +482,9 @@
           "title": "Lighthouse: Paradigm Shipping directive in the north freight warehouse",
           "detail": "On the table next to the lamp. Tell Mechanic about Boreas.",
           "kind": "item",
-          "maps": ["lighthouse"],
+          "maps": [
+            "lighthouse"
+          ],
           "location": "North freight yard warehouse",
           "parallel": true
         },
@@ -369,7 +494,9 @@
           "detail": "Quest-item AMG-10 only, six Reserve spawns (black-bishop basement and parade helicopter). If you kept the Falling Skies case, Prapor also wants 3 FiR military power filters. Then the BTR line — do not pick Choose Your Friends Wisely if you still need 0.4 for Savior.",
           "kind": "quest",
           "trader": "Prapor",
-          "maps": ["reserve"],
+          "maps": [
+            "reserve"
+          ],
           "parallel": true
         },
         {
@@ -377,7 +504,9 @@
           "title": "Board the Shoreline hovercraft (bring fare and a way back)",
           "detail": "Pier on Shoreline. Optional: 400,000 RUB in, green flare + 2,500 EUR out. Without the return kit you are stuck on the ship.",
           "kind": "extract",
-          "maps": ["shoreline"],
+          "maps": [
+            "shoreline"
+          ],
           "location": "Shoreline pier hovercraft",
           "parallel": true
         },
@@ -386,7 +515,10 @@
           "title": "Icebreaker: engine room, SZ-1 chained door, code 312220, thaw the hatch",
           "detail": "Ask Mechanic then Prapor to unlock SZ-1 at LL1. Wedge squad + teargas tripwire in crew quarters. Scientist on level-1 east intercom. Plant Labs server-room hacker if Blue Fire did not already. Code 3-1-2-2-2-0 never changes. BBQ-S43 torch in the level-3 kitchen.",
           "kind": "quest",
-          "maps": ["icebreaker", "the-lab"],
+          "maps": [
+            "icebreaker",
+            "the-lab"
+          ],
           "parallel": true
         },
         {
@@ -394,7 +526,9 @@
           "title": "Compartment C-1: three hard drives, then Mechanic's decode materials",
           "detail": "C-1 keycard in a level-9 body's left hand. Drives: left shelves, under the desk, on the servers. Hand Mechanic 3 Ultralink modules, 4 server RAM, 2 cryptographic processors, all FiR (lootable on the ship).",
           "kind": "item",
-          "maps": ["icebreaker"],
+          "maps": [
+            "icebreaker"
+          ],
           "trader": "Mechanic",
           "parallel": true
         },
@@ -404,7 +538,9 @@
           "detail": "Read it from the Handbook after Mechanic finishes the decode. Then BTR Driver: 20 icebreaker kills and 5 respirators (Hangover) to close the chapter.",
           "kind": "item",
           "trader": "BTR Driver",
-          "maps": ["icebreaker"],
+          "maps": [
+            "icebreaker"
+          ],
           "parallel": true
         }
       ]
@@ -418,8 +554,14 @@
       "summary": "Knossos underground under the Shoreline resort. Ends with the facility research report in a Shoreline pier drain — major evidence 5 of 9.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Labyrinth_(story_chapter)",
       "howToStart": "Shoreline resort west-wing basement. Needs the Knossos LLC facility key. Ask Jaeger.",
-      "maps": ["shoreline", "the-labyrinth"],
-      "endings": ["savior", "debtor"],
+      "maps": [
+        "shoreline",
+        "the-labyrinth"
+      ],
+      "endings": [
+        "savior",
+        "debtor"
+      ],
       "steps": [
         {
           "id": "lab-jaeger",
@@ -433,11 +575,16 @@
         {
           "id": "lab-transit",
           "title": "Shoreline west-wing basement: Labyrinth transit (Knossos key)",
-          "detail": "Health resort west wing basement. Each Labyrinth run consumes a Labrys card. Insurance does not work inside.",
+          "detail": "Jaeger mails Labrys keycards after 12–24 hours. The Labyrinth transit is in the Shoreline health-resort west-wing basement and needs the Knossos key.",
           "kind": "quest",
-          "maps": ["shoreline"],
+          "maps": [
+            "shoreline"
+          ],
           "location": "Resort west wing basement",
-          "keys": ["Knossos LLC facility key", "Labrys access keycard"],
+          "keys": [
+            "Knossos key",
+            "Labrys access card"
+          ],
           "parallel": true
         },
         {
@@ -445,25 +592,34 @@
           "title": "Clear your spawn chamber, then the BEAR traces",
           "detail": "Five hazard chambers (toxic, steam, fire, shotgun, puddle). Leshy's orders in a food container in front of chamber 2. Prototype-weapon area is the regroup. Squad leader is in the torture room with Leshy's diary.",
           "kind": "quest",
-          "maps": ["the-labyrinth"],
+          "maps": [
+            "the-labyrinth"
+          ],
           "parallel": true
         },
         {
           "id": "lab-staff",
           "title": "Five lab-staff bodies + observation-room tape, then hand the tape to Jaeger",
-          "detail": "One note per body (Groups #3, #8, #3+#10, #12, TG-Vi-24). Observation room key for the fourth. Deceased scientist tape under the right hand — listen, then hand to Jaeger (AXMC reward).",
+          "detail": "Pick up the note on each of five lab-staff bodies. Body 4 is behind the observation-room door and needs the Observation room key. The audio tape is in that office — hand it to Jaeger.",
           "kind": "quest",
-          "maps": ["the-labyrinth"],
+          "maps": [
+            "the-labyrinth"
+          ],
           "trader": "Jaeger",
-          "keys": ["Observation room key"],
-          "parallel": true
+          "keys": [
+            "Observation room key"
+          ],
+          "parallel": true,
+          "location": "Five scientist bodies; body 4 is in the observation room"
         },
         {
           "id": "ev-labyrinth",
           "title": "MAJOR EVIDENCE: Labyrinth facility report in the Shoreline pier drain",
           "detail": "Not inside the Labyrinth. Drain pipe next to the Shoreline pier. Read it. Unlocks Theseus.",
           "kind": "item",
-          "maps": ["shoreline"],
+          "maps": [
+            "shoreline"
+          ],
           "location": "Pier drain pipe",
           "parallel": true
         }
@@ -478,51 +634,81 @@
       "summary": "Purification notes, Factory catalyst, A.P.'s apartment. Two major pieces: Warden document and fuel-catalyst report.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Unheard",
       "howToStart": "Note with ramblings about the Purification: Streets TG security/office, or Ground Zero office 4 (level 21+, science office key).",
-      "maps": ["streets-of-tarkov", "ground-zero", "the-lab", "factory", "shoreline"],
-      "endings": ["savior", "debtor"],
+      "maps": [
+        "streets-of-tarkov",
+        "ground-zero",
+        "the-lab",
+        "factory",
+        "shoreline"
+      ],
+      "endings": [
+        "savior",
+        "debtor"
+      ],
       "steps": [
         {
           "id": "uh-note",
           "title": "Read the Purification note to start the chapter",
-          "detail": "Streets TG security-post surveillance room, Streets TG office cabinet by the meeting-room door, or Ground Zero office 4 (level 21+, TerraGroup science office key).",
+          "detail": "Read the Purification note. Streets: surveillance room inside the TerraGroup security post. Ground Zero (level 21+): office 4, second floor of the TerraGroup building — TerraGroup science office key. Either spawn starts the chapter.",
           "kind": "item",
-          "maps": ["streets-of-tarkov", "ground-zero"],
-          "keys": ["TerraGroup science office key"],
-          "parallel": true
+          "maps": [
+            "streets-of-tarkov",
+            "ground-zero"
+          ],
+          "keys": [
+            "TerraGroup science office key"
+          ],
+          "parallel": true,
+          "location": "TerraGroup security post surveillance room on Streets, or TerraGroup science office 4 on Ground Zero (level 21+)"
         },
         {
           "id": "uh-lab-docs",
           "title": "Labs: document on enterprise interactions + cargo fax",
           "detail": "Enterprise doc: lab next to the dome, first floor, beside the screen. Cargo fax: office O23, second floor, lowboard next to the safe.",
           "kind": "item",
-          "maps": ["the-lab"],
+          "maps": [
+            "the-lab"
+          ],
           "parallel": true
         },
         {
           "id": "uh-factory-log",
           "title": "Factory: transport log on the yellow barrel by the floor hole",
-          "detail": "Special catalyst shipment lead.",
+          "detail": "Pick up and read the transport log on the yellow barrel next to the hole in the Factory floor.",
           "kind": "item",
-          "maps": ["factory"],
-          "parallel": true
+          "maps": [
+            "factory"
+          ],
+          "parallel": true,
+          "location": "Yellow barrel by the hole in the floor, Factory"
         },
         {
           "id": "uh-rzhevsky",
           "title": "Streets: Rzhevsky's car hard drive, then Intel Center printout",
-          "detail": "Car near LexOs, drive on the centre console. Craft Hard drive printout at Intelligence Center 1 (power must stay on). Read the transcript.",
+          "detail": "The car is by the LexOs dealership on Streets. Take the hard drive from the centre console, then craft the printout at Intelligence Center 1 (power must stay on) and read it.",
           "kind": "craft",
-          "maps": ["streets-of-tarkov"],
-          "hideout": { "station": "Intelligence Center", "level": 1 },
-          "parallel": true
+          "maps": [
+            "streets-of-tarkov"
+          ],
+          "hideout": {
+            "station": "Intelligence Center",
+            "level": 1
+          },
+          "parallel": true,
+          "location": "Rzhevsky's car by LexOs — hard drive on the centre console"
         },
         {
           "id": "ev-fuel",
           "title": "MAJOR EVIDENCE: fuel catalyst report in Factory TG storage",
           "detail": "Underground tunnels, next to Camera Bunker Door scav extract. Needs TerraGroup storage room keycard. Report: bookshelf by the door, or the safe. Also grab the burnt document (table or right metal shelf).",
           "kind": "item",
-          "maps": ["factory"],
+          "maps": [
+            "factory"
+          ],
           "location": "Factory TG storage, underground",
-          "keys": ["TerraGroup storage room keycard"],
+          "keys": [
+            "TerraGroup storage room keycard"
+          ],
           "parallel": true
         },
         {
@@ -530,36 +716,49 @@
           "title": "Labs: A.P. whiteboard + two lecture-room tapes",
           "detail": "Whiteboard in O23 or admin R22. Tapes in the lecture room (stairs, and a desk by a laptop).",
           "kind": "quest",
-          "maps": ["the-lab"],
+          "maps": [
+            "the-lab"
+          ],
           "parallel": true
         },
         {
           "id": "uh-ap-resort",
           "title": "Shoreline east wing 305: A.P. flash drive and corporate apartment key",
-          "detail": "Sliderkey in the laptop, TerraGroup corporate apartment key on the right nightstand. Decrypt at Intel Center 1, then pay Mechanic 5,000,000 RUB + the drive. Wait 6–12h (90 min if you already know Kerman).",
+          "detail": "Optional first: Guard post note on the first floor of the west wing, desk by the southern security room — it names the room. A.P.'s flash drive and the corporate apartment key are in east wing 305. Decrypt the Sliderkey at Intelligence Center 1, then pay Mechanic 5,000,000 roubles to integrate it.",
           "kind": "item",
-          "maps": ["shoreline"],
+          "maps": [
+            "shoreline"
+          ],
           "trader": "Mechanic",
-          "location": "Resort east wing 305",
+          "location": "Health Resort east wing room 305. Room number is on the west-wing guard desk note.",
           "wait": "6–12 hours",
           "parallel": true
         },
         {
           "id": "uh-green-card",
           "title": "Craft the GREEN A.P. apartment keycard (blue/red are fakes)",
-          "detail": "Intelligence Center 1. Blue and red will not open the hidden room.",
+          "detail": "Craft the green Reprogrammed keycard for A.P.'s apartment at Intelligence Center 1. The blue and red cards are false leads and do not open the hidden room.",
           "kind": "craft",
-          "hideout": { "station": "Intelligence Center", "level": 1 },
-          "parallel": true
+          "hideout": {
+            "station": "Intelligence Center",
+            "level": 1
+          },
+          "parallel": true,
+          "location": "Hideout Intelligence Center 1"
         },
         {
           "id": "ev-warden",
           "title": "MAJOR EVIDENCE: Warden document in A.P.'s hidden office",
           "detail": "Cardinal apartments, 2F apartment 1, Streets. Corporate apartment key on the front door, green keycard on the hidden room down the hall. Four docs: Worldwide order on the floor, TG Worldwide copy left desk, protocol on the pile, Warden document right desk. Read all four.",
           "kind": "item",
-          "maps": ["streets-of-tarkov"],
+          "maps": [
+            "streets-of-tarkov"
+          ],
           "location": "Cardinal apt 1, hidden office",
-          "keys": ["TerraGroup corporate apartment key", "Reprogrammed A.P. keycard (Green)"],
+          "keys": [
+            "TerraGroup corporate apartment key",
+            "Reprogrammed A.P. keycard (Green)"
+          ],
           "parallel": true
         }
       ]
@@ -573,35 +772,66 @@
       "summary": "Cultists and ARRS Station 14-4. Reset the station BEFORE taking the flash drive or you lose major evidence 8 of 9.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/They_Are_Already_Here",
       "howToStart": "Note about the Eye of the World: Customs dorm 314, Reserve marked rooms, Woods north village circle, or Shoreline island house.",
-      "maps": ["customs", "reserve", "woods", "shoreline", "lighthouse", "streets-of-tarkov", "interchange"],
-      "endings": ["savior", "debtor"],
+      "maps": [
+        "customs",
+        "reserve",
+        "woods",
+        "shoreline",
+        "lighthouse",
+        "streets-of-tarkov",
+        "interchange"
+      ],
+      "endings": [
+        "savior",
+        "debtor"
+      ],
       "steps": [
         {
           "id": "taah-note",
           "title": "Read the Eye of the World note to start the chapter",
           "detail": "Customs 3-storey dorm marked room (314 key); Reserve RB-BK / RB-VO / RB-PKPM; Woods north dilapidated village marked circle; or Shoreline island house floor.",
           "kind": "item",
-          "maps": ["customs", "reserve", "woods", "shoreline"],
-          "keys": ["Dorm room 314 marked key", "RB-BK marked key", "RB-VO marked key", "RB-PKPM marked key"],
+          "maps": [
+            "customs",
+            "reserve",
+            "woods",
+            "shoreline"
+          ],
+          "keys": [
+            "Dorm room 314 marked key",
+            "RB-BK marked key",
+            "RB-VO marked key",
+            "RB-PKPM marked key"
+          ],
           "parallel": true
         },
         {
           "id": "taah-lighthouse-house",
           "title": "Lighthouse torture house: listen to tape #2, grab the apartment key",
-          "detail": "Needs an audio recorder. Tape on the chair. Key: fallen shelf, chair, wooden table or metal table.",
+          "detail": "Listen to tape #2 in the torture house. The Cult victim's apartment key can spawn in this house and opens the Streets apartment.",
           "kind": "item",
-          "maps": ["lighthouse"],
-          "keys": ["Cult victim's apartment key"],
-          "parallel": true
+          "maps": [
+            "lighthouse"
+          ],
+          "keys": [
+            "Cult victim's apartment key"
+          ],
+          "parallel": true,
+          "location": "Lighthouse torture house / blue chalet"
         },
         {
           "id": "taah-victim-apt",
           "title": "Streets: victim apartment 5 — Book of the Arrival, prep note, tape #1",
-          "detail": "Third floor of the old block behind Klimov mall. Breach the office door. Book on the bookshelf, note and tape on the desk.",
+          "detail": "Old apartment building behind Klimov, third floor, apartment 5. Needs the Cult victim's apartment key (also found in the Lighthouse torture house). Breach or unlock, then read two notes and listen to audio tape #1 in the office. The Book of the Arrival is here.",
           "kind": "quest",
-          "maps": ["streets-of-tarkov"],
-          "location": "Old apartments behind Klimov, apt 5",
-          "parallel": true
+          "maps": [
+            "streets-of-tarkov"
+          ],
+          "location": "Third floor, old apartments behind Klimov mall, apartment 5",
+          "parallel": true,
+          "keys": [
+            "Cult victim's apartment key"
+          ]
         },
         {
           "id": "taah-priest",
@@ -616,7 +846,11 @@
           "title": "Eye marks: Lighthouse blue chalet + Woods north village + Shoreline Sordi tower",
           "detail": "Lighthouse: small southern bedroom 2F northern blue chalet; damaged 14-4 KORD pass on an ATV by the garage. Woods: newspaper clipping on a whiteboard. Shoreline: red shack at the radio tower near Road to Customs — Programmer's note in a body's right hand, repair inside consumes a Toolset.",
           "kind": "quest",
-          "maps": ["lighthouse", "woods", "shoreline"],
+          "maps": [
+            "lighthouse",
+            "woods",
+            "shoreline"
+          ],
           "parallel": true
         },
         {
@@ -625,7 +859,10 @@
           "detail": "Intelligence Center 1. Power must stay on.",
           "kind": "craft",
           "trader": "Mechanic",
-          "hideout": { "station": "Intelligence Center", "level": 1 },
+          "hideout": {
+            "station": "Intelligence Center",
+            "level": 1
+          },
           "parallel": true
         },
         {
@@ -633,7 +870,9 @@
           "title": "Interchange power-station basement: restore power, cooling, plant a flash drive",
           "detail": "NGO Cobalt / ARRS 14-4. Swipe the restored pass at the panel inside. Cooling lever at the back of the grated server room. Secure flash drive to the left of that lever. Listen to the tape in the entrance safe once cooling is on. Extract Survived or Run-Through.",
           "kind": "quest",
-          "maps": ["interchange"],
+          "maps": [
+            "interchange"
+          ],
           "location": "Power station basement",
           "parallel": true
         },
@@ -642,16 +881,22 @@
           "title": "Return: read mechanic notes, restore backup, THEN take the flash drive",
           "detail": "Power on again. Button under the server-room table — one player per raid. Flash drive for ARRS is on the server next to the cooling lever. Reset first or you permanently miss the ARRS specs. Extract again, hand the drive to Mechanic, read the specs in the Handbook.",
           "kind": "quest",
-          "maps": ["interchange"],
+          "maps": [
+            "interchange"
+          ],
           "trader": "Mechanic",
           "parallel": true
         },
         {
           "id": "ev-arrs",
           "title": "MAJOR EVIDENCE: ARRS system specifications (mail / Handbook)",
-          "detail": "Only if you pressed the backup-reset button before taking the flash drive. Kerman has one documented second chance if you missed it.",
+          "detail": "Major evidence is the ARRS specification, delivered by mail after you extract with the flash drive. Do not take the drive before restoring the station to backup settings, or the evidence is blank.",
           "kind": "item",
-          "parallel": true
+          "parallel": true,
+          "maps": [
+            "interchange"
+          ],
+          "location": "ARRS station 14-4 KORD, Interchange — flash drive after the backup reset"
         }
       ]
     },
@@ -664,16 +909,28 @@
       "summary": "No story chapter. Cardinal apartment safe plus Labs Black. This is the free extra so you can miss one other chapter and still hit 8 of 9. Do not skip it.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
       "howToStart": "Cardinal apartment on Streets. Labs Black keycard opens the safe.",
-      "maps": ["streets-of-tarkov", "the-lab"],
-      "endings": ["savior", "debtor"],
+      "maps": [
+        "streets-of-tarkov",
+        "the-lab"
+      ],
+      "endings": [
+        "savior",
+        "debtor"
+      ],
       "steps": [
         {
           "id": "msa-keys",
           "title": "Get Cardinal apartment key and Labs Black keycard",
           "detail": "Both are required. Black is also used later to activate Kruglov's RFID on the Savior path.",
           "kind": "item",
-          "maps": ["streets-of-tarkov", "the-lab"],
-          "keys": ["Cardinal apartment key", "TerraGroup Labs keycard (Black)"],
+          "maps": [
+            "streets-of-tarkov",
+            "the-lab"
+          ],
+          "keys": [
+            "Cardinal apartment key",
+            "TerraGroup Labs keycard (Black)"
+          ],
           "parallel": true
         },
         {
@@ -681,9 +938,14 @@
           "title": "MAJOR EVIDENCE: Ms. A. conversation transcript in Cardinal's safe",
           "detail": "Open the Cardinal apartment safe with Labs Black. Read the transcript. Do not skip this piece.",
           "kind": "item",
-          "maps": ["streets-of-tarkov"],
+          "maps": [
+            "streets-of-tarkov"
+          ],
           "location": "Cardinal apartment safe",
-          "keys": ["Cardinal apartment key", "TerraGroup Labs keycard (Black)"],
+          "keys": [
+            "Cardinal apartment key",
+            "TerraGroup Labs keycard (Black)"
+          ],
           "parallel": true
         }
       ]

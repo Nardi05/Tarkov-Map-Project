@@ -24,32 +24,106 @@
       },
       "summary": "Accept Kerman, agree to dig up dirt on TerraGroup, hand in 8 of 9 major evidence, then extract through the Terminal carrying the Alpha-1 container.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
-      "choices": { "case": "keep", "kerman": "accept", "dirt": "agree", "evidence": "eight" },
+      "choices": {
+        "case": "keep",
+        "kerman": "accept",
+        "dirt": "agree",
+        "evidence": "eight"
+      },
       "accessItem": "Reprogrammed RFID keycard with Mr. Kerman's hash codes",
       "rewards": [
-        { "name": "Dogtag (Savior)", "group": "cosmetic" },
-        { "name": "Armband (For Humanity)", "group": "cosmetic" },
-        { "name": "Savior achievement", "group": "achievement" },
-        { "name": "For Humanity poster", "group": "cosmetic" },
-        { "name": "Savior hideout ceiling, walls and floor", "group": "cosmetic" },
-        { "name": "Peaceful Sky main menu background", "group": "cosmetic" },
-        { "name": "200,000 USD (40,000 in PvE)", "group": "stash" },
-        { "name": "Ballistic plate case", "group": "stash" },
-        { "name": "Magazine case", "group": "stash" },
-        { "name": "Medicine case", "group": "stash" },
-        { "name": "Money case", "group": "stash" },
-        { "name": "T H I C C Weapon case", "group": "stash" },
-        { "name": "T H I C C item case", "group": "stash" },
-        { "name": "2× Ammunition case", "group": "stash" },
-        { "name": "Red Rebel ice pick", "group": "stash" },
-        { "name": "UVSR Taiga-1 survival machete", "group": "stash" },
-        { "name": "3× AS VAL MOD.4", "group": "stash" },
-        { "name": "3× PKP 7.62×54R", "group": "stash" },
-        { "name": "3× Milkor M32A1 40mm", "group": "stash" },
-        { "name": "3× SWORD Mk-18 .338 LM", "group": "stash" },
-        { "name": "3× Saiga-12K", "group": "stash" },
-        { "name": "3× TKPD 9.3×64", "group": "stash" },
-        { "name": "Endgame ammo packs (.338 AP, 7.62 BS, 9.3 7N33, 9×39 BP, 40mm, AP-20)", "group": "stash" }
+        {
+          "name": "Dogtag (Savior)",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Armband (For Humanity)",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Savior achievement",
+          "group": "achievement"
+        },
+        {
+          "name": "For Humanity poster",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Savior hideout ceiling, walls and floor",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Peaceful Sky main menu background",
+          "group": "cosmetic"
+        },
+        {
+          "name": "200,000 USD (40,000 in PvE)",
+          "group": "stash"
+        },
+        {
+          "name": "Ballistic plate case",
+          "group": "stash"
+        },
+        {
+          "name": "Magazine case",
+          "group": "stash"
+        },
+        {
+          "name": "Medicine case",
+          "group": "stash"
+        },
+        {
+          "name": "Money case",
+          "group": "stash"
+        },
+        {
+          "name": "T H I C C Weapon case",
+          "group": "stash"
+        },
+        {
+          "name": "T H I C C item case",
+          "group": "stash"
+        },
+        {
+          "name": "2× Ammunition case",
+          "group": "stash"
+        },
+        {
+          "name": "Red Rebel ice pick",
+          "group": "stash"
+        },
+        {
+          "name": "UVSR Taiga-1 survival machete",
+          "group": "stash"
+        },
+        {
+          "name": "3× AS VAL MOD.4",
+          "group": "stash"
+        },
+        {
+          "name": "3× PKP 7.62×54R",
+          "group": "stash"
+        },
+        {
+          "name": "3× Milkor M32A1 40mm",
+          "group": "stash"
+        },
+        {
+          "name": "3× SWORD Mk-18 .338 LM",
+          "group": "stash"
+        },
+        {
+          "name": "3× Saiga-12K",
+          "group": "stash"
+        },
+        {
+          "name": "3× TKPD 9.3×64",
+          "group": "stash"
+        },
+        {
+          "name": "Endgame ammo packs (.338 AP, 7.62 BS, 9.3 7N33, 9×39 BP, 40mm, AP-20)",
+          "group": "stash"
+        }
       ]
     },
     {
@@ -66,16 +140,40 @@
       },
       "summary": "Refuse Kerman's offer, pay Prapor a fortune, take his letter, and extract through the Terminal. TerraGroup walks.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
-      "choices": { "case": "give", "kerman": "refuse" },
+      "choices": {
+        "case": "give",
+        "kerman": "refuse"
+      },
       "accessItem": "Prapor's letter for the port checkpoint",
       "rewards": [
-        { "name": "Dogtag (Survivor)", "group": "cosmetic" },
-        { "name": "Armband (Survivor)", "group": "cosmetic" },
-        { "name": "Survivor achievement", "group": "achievement" },
-        { "name": "Easy Way achievement", "group": "achievement" },
-        { "name": "Survivor poster", "group": "cosmetic" },
-        { "name": "Survivor hideout ceiling, walls and floor", "group": "cosmetic" },
-        { "name": "Bleak Horizon main menu background", "group": "cosmetic" }
+        {
+          "name": "Dogtag (Survivor)",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Armband (Survivor)",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Survivor achievement",
+          "group": "achievement"
+        },
+        {
+          "name": "Easy Way achievement",
+          "group": "achievement"
+        },
+        {
+          "name": "Survivor poster",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Survivor hideout ceiling, walls and floor",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Bleak Horizon main menu background",
+          "group": "cosmetic"
+        }
       ]
     },
     {
@@ -92,31 +190,102 @@
       },
       "summary": "Accept Kerman and agree to find dirt, hand in exactly two major evidence pieces, then refuse to continue. Lightkeeper is your way out.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
-      "choices": { "case": "keep", "kerman": "accept", "dirt": "agree", "evidence": "two" },
+      "choices": {
+        "case": "keep",
+        "kerman": "accept",
+        "dirt": "agree",
+        "evidence": "two"
+      },
       "accessItem": "RFID keycard with unknown name",
       "rewards": [
-        { "name": "Dogtag (Debtor)", "group": "cosmetic" },
-        { "name": "Armband (Lighthouse)", "group": "cosmetic" },
-        { "name": "Debtor achievement", "group": "achievement" },
-        { "name": "U-Turn achievement", "group": "achievement" },
-        { "name": "Lighthouse poster", "group": "cosmetic" },
-        { "name": "Mercenary hideout ceiling, walls and floor", "group": "cosmetic" },
-        { "name": "Storm Front main menu background", "group": "cosmetic" },
-        { "name": "120,000 EUR (30,000 in PvE)", "group": "stash" },
-        { "name": "Ballistic plate case", "group": "stash" },
-        { "name": "Magazine case", "group": "stash" },
-        { "name": "Money case", "group": "stash" },
-        { "name": "T H I C C Weapon case", "group": "stash" },
-        { "name": "2× Ammunition case", "group": "stash" },
-        { "name": "Red Rebel ice pick", "group": "stash" },
-        { "name": "UVSR Taiga-1 survival machete", "group": "stash" },
-        { "name": "3× AI AXMC .338 LM", "group": "stash" },
-        { "name": "3× AA-12 Gen 2", "group": "stash" },
-        { "name": "3× RShG-2", "group": "stash" },
-        { "name": "3× SIG MCX-SPEAR 6.8×51", "group": "stash" },
-        { "name": "3× Sako TRG M10 .338 LM", "group": "stash" },
-        { "name": "3× M60E6 (FDE)", "group": "stash" },
-        { "name": "Endgame ammo packs (.338 AP, 6.8 Hybrid, 7.62 M993, AP-20)", "group": "stash" }
+        {
+          "name": "Dogtag (Debtor)",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Armband (Lighthouse)",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Debtor achievement",
+          "group": "achievement"
+        },
+        {
+          "name": "U-Turn achievement",
+          "group": "achievement"
+        },
+        {
+          "name": "Lighthouse poster",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Mercenary hideout ceiling, walls and floor",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Storm Front main menu background",
+          "group": "cosmetic"
+        },
+        {
+          "name": "120,000 EUR (30,000 in PvE)",
+          "group": "stash"
+        },
+        {
+          "name": "Ballistic plate case",
+          "group": "stash"
+        },
+        {
+          "name": "Magazine case",
+          "group": "stash"
+        },
+        {
+          "name": "Money case",
+          "group": "stash"
+        },
+        {
+          "name": "T H I C C Weapon case",
+          "group": "stash"
+        },
+        {
+          "name": "2× Ammunition case",
+          "group": "stash"
+        },
+        {
+          "name": "Red Rebel ice pick",
+          "group": "stash"
+        },
+        {
+          "name": "UVSR Taiga-1 survival machete",
+          "group": "stash"
+        },
+        {
+          "name": "3× AI AXMC .338 LM",
+          "group": "stash"
+        },
+        {
+          "name": "3× AA-12 Gen 2",
+          "group": "stash"
+        },
+        {
+          "name": "3× RShG-2",
+          "group": "stash"
+        },
+        {
+          "name": "3× SIG MCX-SPEAR 6.8×51",
+          "group": "stash"
+        },
+        {
+          "name": "3× Sako TRG M10 .338 LM",
+          "group": "stash"
+        },
+        {
+          "name": "3× M60E6 (FDE)",
+          "group": "stash"
+        },
+        {
+          "name": "Endgame ammo packs (.338 AP, 6.8 Hybrid, 7.62 M993, AP-20)",
+          "group": "stash"
+        }
       ]
     },
     {
@@ -133,18 +302,49 @@
       },
       "summary": "Accept Kerman, then refuse to find dirt on TerraGroup. Pay Prapor in cargo and dollars. You still extract — on the darkest terms.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
-      "choices": { "case": "give", "kerman": "accept", "dirt": "refuse" },
+      "choices": {
+        "case": "give",
+        "kerman": "accept",
+        "dirt": "refuse"
+      },
       "accessItem": "Reprogrammed RFID keycard with Prapor's hash codes",
       "rewards": [
-        { "name": "Dogtag (Fallen)", "group": "cosmetic" },
-        { "name": "Armband (To Fall in the Darkness)", "group": "cosmetic" },
-        { "name": "Fallen achievement", "group": "achievement" },
-        { "name": "Enough of Your Games achievement", "group": "achievement" },
-        { "name": "To Fall in the Darkness poster", "group": "cosmetic" },
-        { "name": "Fallen in the Darkness hideout ceiling, walls and floor", "group": "cosmetic" },
-        { "name": "Dusk of Humanity main menu background", "group": "cosmetic" },
-        { "name": "10,000,000 RUB (3,000,000 in PvE)", "group": "stash" },
-        { "name": "Money case", "group": "stash" }
+        {
+          "name": "Dogtag (Fallen)",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Armband (To Fall in the Darkness)",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Fallen achievement",
+          "group": "achievement"
+        },
+        {
+          "name": "Enough of Your Games achievement",
+          "group": "achievement"
+        },
+        {
+          "name": "To Fall in the Darkness poster",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Fallen in the Darkness hideout ceiling, walls and floor",
+          "group": "cosmetic"
+        },
+        {
+          "name": "Dusk of Humanity main menu background",
+          "group": "cosmetic"
+        },
+        {
+          "name": "10,000,000 RUB (3,000,000 in PvE)",
+          "group": "stash"
+        },
+        {
+          "name": "Money case",
+          "group": "stash"
+        }
       ]
     }
   ],
@@ -234,104 +434,141 @@
       "summary": "Tutorial and map unlocks. No ending choice. Start the evidence storylines during Tour — on Savior that is 8 of 9 major pieces and it saves weeks.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/Tour",
       "howToStart": "Starts after the tutorial on Ground Zero.",
-      "maps": ["ground-zero"],
+      "maps": [
+        "ground-zero"
+      ],
       "steps": [
         {
           "id": "tour-ground-zero",
           "title": "Escape Ground Zero",
           "detail": "Tutorial raid. Extract Klimov Street, behind Skyside. On-screen hints are optional.",
           "kind": "quest",
-          "maps": ["ground-zero"],
+          "maps": [
+            "ground-zero"
+          ],
           "location": "Klimov Street extract, behind Skyside"
         },
         {
           "id": "tour-therapist",
           "title": "Talk to Therapist",
-          "detail": "She is the only trader you start with. Visit her from the trader screen.",
+          "detail": "Trader screen. She is the only trader at the start. The next dialogue asks for 250,000 roubles to unlock Streets of Tarkov.",
           "kind": "quest",
           "trader": "Therapist"
         },
         {
           "id": "tour-streets-pay",
           "title": "Hand Therapist 250,000 RUB to open Streets",
-          "detail": "Does not need to be found in raid. Streets is the first map you unlock, not the last.",
+          "detail": "Hand Therapist 250,000 roubles. Not found-in-raid. Optional: collect the cash first. Reward unlocks Streets of Tarkov.",
           "kind": "quest",
           "trader": "Therapist",
-          "maps": ["streets-of-tarkov"]
+          "maps": [
+            "streets-of-tarkov"
+          ],
+          "location": "Therapist trader screen"
         },
         {
           "id": "tour-interchange",
           "title": "Unlock Interchange — extract Survived or Run-Through (or visit 3 times)",
-          "detail": "Unlocks Skier and opens Customs.",
+          "detail": "Extract Interchange as Survived or Run-Through, or enter the map 3 times. Unlocks Skier and Customs.",
           "kind": "extract",
-          "maps": ["interchange"]
+          "maps": [
+            "interchange"
+          ],
+          "location": "Any Interchange extract"
         },
         {
           "id": "tour-customs",
           "title": "Unlock Customs — extract Survived or Run-Through (or visit 3 times)",
-          "detail": "Then Skier wants 5 FiR building materials or tools in one handover.",
+          "detail": "Extract Customs as Survived or Run-Through, or enter the map 3 times. Then Skier asks for 5 found-in-raid building materials or tools in one handover.",
           "kind": "extract",
-          "maps": ["customs"]
+          "maps": [
+            "customs"
+          ],
+          "location": "Any Customs extract"
         },
         {
           "id": "tour-skier-mats",
           "title": "Hand Skier 5 found-in-raid building materials",
-          "detail": "Partial handovers are refused. Unlocks Mechanic and Factory.",
+          "detail": "Hand over 5 found-in-raid items from building materials or tools. Partial handovers are refused. Unlocks Mechanic and Factory.",
           "kind": "item",
-          "trader": "Skier"
+          "trader": "Skier",
+          "location": "Skier trader screen"
         },
         {
           "id": "tour-factory",
           "title": "Unlock Factory — extract Survived or Run-Through (or visit 3 times)",
-          "detail": "Then Mechanic wants 2 FiR weapons.",
+          "detail": "Extract Factory as Survived or Run-Through, or enter the map 3 times. Then Mechanic asks for 2 found-in-raid weapons.",
           "kind": "extract",
-          "maps": ["factory"]
+          "maps": [
+            "factory"
+          ],
+          "location": "Any Factory extract"
         },
         {
           "id": "tour-mechanic-guns",
           "title": "Hand Mechanic 2 found-in-raid weapons",
-          "detail": "Unlocks Prapor and Woods.",
+          "detail": "Hand Mechanic any 2 found-in-raid weapons. Unlocks Prapor and Woods.",
           "kind": "item",
-          "trader": "Mechanic"
+          "trader": "Mechanic",
+          "location": "Mechanic trader screen"
         },
         {
           "id": "tour-woods",
           "title": "Unlock Woods — 3 kills and extract Survived or Run-Through",
-          "detail": "Kills and extract can be different raids. Unlocks Peacekeeper and Shoreline.",
+          "detail": "Kill any 3 targets on Woods (can be a different raid from the extract). Extract Survived or Run-Through, or visit 3 times. Unlocks Peacekeeper and Shoreline.",
           "kind": "extract",
-          "maps": ["woods"]
+          "maps": [
+            "woods"
+          ],
+          "location": "Any Woods extract"
         },
         {
           "id": "tour-intercom",
           "title": "Shoreline port intercom — press once, then extract",
           "detail": "South-east watchtower in front of Terminal. Do not walk the Terminal wall; the guards shoot accurately. Pressing the intercom again after being told to leave also kills you.",
           "kind": "quest",
-          "maps": ["shoreline"],
+          "maps": [
+            "shoreline"
+          ],
           "location": "Port intercom, SE Shoreline"
         },
         {
           "id": "tour-reserve",
           "title": "Hand Prapor 5 PMC dogtags to open Reserve",
-          "detail": "Need not be FiR, and you need not have got the kill. Looting tags counts.",
+          "detail": "Extract Shoreline Survived or Run-Through (or visit 3 times), then hand Prapor 5 PMC dogtags. Tags need not be found-in-raid and need not be your kills — loot them off dead PMCs. Unlocks Reserve.",
           "kind": "item",
           "trader": "Prapor",
-          "maps": ["reserve"]
+          "maps": [
+            "shoreline",
+            "reserve"
+          ],
+          "location": "Prapor trader screen, after a Shoreline extract"
         },
         {
           "id": "tour-lighthouse",
-          "title": "Hand Mechanic 20,000 USD to open Lighthouse",
-          "detail": "Buy dollars from Peacekeeper if you are short.",
+          "title": "Hand Mechanic 8,000 USD to open Lighthouse",
+          "detail": "Hand Mechanic 8,000 USD. Not found-in-raid. Dollars can be bought from Peacekeeper. Unlocks Lighthouse.",
           "kind": "item",
           "trader": "Mechanic",
-          "maps": ["lighthouse"]
+          "maps": [
+            "lighthouse"
+          ],
+          "location": "Mechanic trader screen"
         },
         {
           "id": "tour-lab",
           "title": "Transit into The Lab, search O21, the server room, and the drainage extract",
-          "detail": "Labs access keycard. Transits: Streets Klimova 16A underground (cosmonaut painting) or Factory flooded-sewer tunnel. Transits open one minute into the raid. O21 is the manager office on level 2; server room is level 1 by the hangar; drainage is the Sewage Conduit extract. You do not have to survive. Unlocks Lab in the location list.",
+          "detail": "Transit in with a TerraGroup Labs access keycard. Streets: underground in front of Klimova 16A (cosmonaut painting). Factory: sewer off the flooded underground. Transits open 1 minute after raid start. Search the lab manager office O21 on level 2, the server room beside the hangar on level 1, and the drainage path at Sewage Conduit in the basement. You do not have to extract.",
           "kind": "quest",
-          "maps": ["the-lab", "streets-of-tarkov", "factory"],
-          "keys": ["TerraGroup Labs access keycard"]
+          "maps": [
+            "the-lab",
+            "streets-of-tarkov",
+            "factory"
+          ],
+          "keys": [
+            "TerraGroup Labs access keycard"
+          ],
+          "location": "O21 (2nd floor), server room by the hangar (1st), Sewage Conduit (basement)"
         }
       ]
     },
@@ -343,30 +580,36 @@
       "summary": "Crashed plane on Woods. Loot the wreck, extract the armored case, then decide who keeps it. This is Lock 1.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/Falling_Skies",
       "howToStart": "Crashed plane on Woods.",
-      "maps": ["woods"],
+      "maps": [
+        "woods"
+      ],
       "lock": "case",
       "steps": [
         {
           "id": "skies-plane",
           "title": "Find the crashed plane on Woods",
-          "detail": "Eastern Woods. This starts Falling Skies after Tour.",
+          "detail": "Find the crashed plane in eastern Woods. Walking up to the wreck starts Falling Skies after Tour.",
           "kind": "quest",
-          "maps": ["woods"],
-          "location": "Eastern Woods wreck"
+          "maps": [
+            "woods"
+          ],
+          "location": "Eastern Woods, crashed plane"
         },
         {
           "id": "skies-prapor-ll2",
           "title": "Reach Prapor loyalty 2, then ask five traders about the plane",
-          "detail": "Prapor, Therapist, Skier, Mechanic, Jaeger. Prepare for Escape / Unheard / EoD skip the loyalty gate.",
+          "detail": "Reach Prapor loyalty 2, then ask Prapor, Therapist, Skier, Mechanic and Jaeger about the plane. Prepare for Escape, Edge of Darkness and The Unheard skip the loyalty gate.",
           "kind": "reputation",
           "trader": "Prapor"
         },
         {
           "id": "skies-g-wagon",
           "title": "Shoreline: G-Wagon flash drive (Tunnel extract)",
-          "detail": "Driver-side running board, FiR. Optional: pay Therapist 2,000 USD and she marks it. Hand the drive to Prapor and wait 1 hour.",
+          "detail": "Flash drive on the driver-side running board of the G-Wagon next to Tunnel extract on Shoreline. Found in raid. Optional: pay Therapist 2,000 USD and she marks the SUV. Hand the drive to Prapor and wait about 1 hour.",
           "kind": "item",
-          "maps": ["shoreline"],
+          "maps": [
+            "shoreline"
+          ],
           "location": "G-Wagon by Tunnel extract",
           "trader": "Prapor",
           "wait": "1 hour"
@@ -376,49 +619,69 @@
           "title": "Pull the flight recorder from the Woods wreck, stash it on Shoreline island",
           "detail": "Right side of the plane, broken section near the back, FiR. Stash it in the destroyed room of Fisher's Island house — do not hand it to a trader.",
           "kind": "item",
-          "maps": ["woods", "shoreline"],
+          "maps": [
+            "woods",
+            "shoreline"
+          ],
           "location": "Plane right-side wreck · Shoreline island house"
         },
         {
           "id": "skies-parts",
           "title": "Hand Prapor 2 FiR toolsets, 3 rechargeable batteries, 5 PCBs",
-          "detail": "Craftable at Workbench 1–2. Then wait 3–5 hours.",
+          "detail": "Hand Prapor 2 found-in-raid toolsets, 3 found-in-raid rechargeable batteries and 5 found-in-raid printed circuit boards. All three can be crafted at the workbench. Then wait 3–5 hours.",
           "kind": "item",
           "trader": "Prapor",
-          "wait": "3–5 hours"
+          "wait": "3–5 hours",
+          "location": "Prapor trader screen"
         },
         {
           "id": "skies-chairman",
           "title": "Chairman's house: crew transcript + Elektronik's flash drive",
-          "detail": "Shoreline. Transcript under the overturned-bed mattress. Drive on the shelf by the bed. Hand both to Prapor (300k, more with Intel Center). After 1–3 hours he asks if you read the transcript — say yes for a second payout.",
+          "detail": "Chairman's house on Shoreline. Pick up and read the flight-crew transcript under the mattress of the overturned bed. Elektronik's secure flash drive is on the shelf by the bed. Hand both to Prapor (300,000 roubles, more with Intelligence Center). Wait 1–3 hours.",
           "kind": "item",
-          "maps": ["shoreline"],
-          "location": "Chairman's house",
+          "maps": [
+            "shoreline"
+          ],
+          "location": "Chairman's house, Shoreline — transcript under the overturned-bed mattress; Elektronik drive on the shelf by the bed",
           "trader": "Prapor"
         },
         {
           "id": "skies-loot",
           "title": "Take the armored case from behind the cockpit",
-          "detail": "Woods plane. Dying in raid loses it. Optional: Note from Mr. Kerman on the pilot seat.",
+          "detail": "Take the armored case from behind the cockpit of the Woods wreck. Dying in raid loses it. Optional clue: Note from Mr. Kerman on the pilot seat.",
           "kind": "item",
-          "maps": ["woods"],
-          "location": "Behind the cockpit"
+          "maps": [
+            "woods"
+          ],
+          "location": "Woods plane, behind the cockpit"
         },
         {
           "id": "skies-keep",
           "title": "KEEP the armored case",
           "detail": "Do not give it to Prapor. Easiest Savior path: you open it yourself and skip the Lightkeeper retrieval.",
           "kind": "choice",
-          "choice": { "lock": "case", "value": "keep" },
-          "endings": ["savior", "debtor"]
+          "choice": {
+            "lock": "case",
+            "value": "keep"
+          },
+          "endings": [
+            "savior",
+            "debtor"
+          ]
         },
         {
           "id": "skies-give",
           "title": "Give the case to Prapor",
           "detail": "Cuts Survivor from 500M to 300M. For Savior or Debtor you will have to get the case back through Lightkeeper.",
           "kind": "choice",
-          "choice": { "lock": "case", "value": "give" },
-          "endings": ["survivor", "fallen"]
+          "choice": {
+            "lock": "case",
+            "value": "give"
+          },
+          "endings": [
+            "survivor",
+            "fallen"
+          ]
         }
       ]
     },
@@ -430,49 +693,77 @@
       "summary": "Only if you gave Prapor the case. Lightkeeper has to retrieve it before you can open it.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
       "howToStart": "After giving Prapor the case in Falling Skies, Kerman sends you to Lightkeeper.",
-      "maps": ["lighthouse", "interchange"],
-      "when": [{ "lock": "case", "is": "give" }],
-      "endings": ["savior", "debtor", "fallen"],
+      "maps": [
+        "lighthouse",
+        "interchange"
+      ],
+      "when": [
+        {
+          "lock": "case",
+          "is": "give"
+        }
+      ],
+      "endings": [
+        "savior",
+        "debtor",
+        "fallen"
+      ],
       "steps": [
         {
           "id": "retrieve-camp",
           "title": "Find Prapor's camp on Lighthouse",
-          "detail": "Locate the camp of Prapor's people and pick up the note about their intentions.",
+          "detail": "Find the camp of Prapor's people on the Lighthouse peninsula and pick up the note about their intentions.",
           "kind": "quest",
-          "maps": ["lighthouse"],
-          "location": "BEAR camp on Lighthouse"
+          "maps": [
+            "lighthouse"
+          ],
+          "location": "Prapor's BEAR camp, Lighthouse peninsula"
         },
         {
           "id": "retrieve-lightkeeper",
           "title": "Unlock Lightkeeper and stay on good terms",
-          "detail": "Mechanic offers To the Light — Trust but Verify. You need an encoded DSP radio transmitter to cross the bridge. Do not harm Zryachiy.",
+          "detail": "Mechanic's quest To the Light — Trust but Verify. You need an encoded DSP radio transmitter to cross the bridge to the lighthouse. Lightkeeper is on the 3rd floor. Do not harm Zryachiy.",
           "kind": "quest",
           "trader": "Lightkeeper",
-          "maps": ["lighthouse"]
+          "maps": [
+            "lighthouse"
+          ],
+          "location": "Lighthouse building, 3rd floor, peninsula",
+          "keys": [
+            "Encoded digital secure DSP radio transmitter"
+          ]
         },
         {
           "id": "retrieve-folders",
           "title": "Hand Lightkeeper 3 TerraGroup Blue Folders",
-          "detail": "Find three Blue Folders materials and bring them to Lightkeeper.",
+          "detail": "Find three TerraGroup Blue Folders in raid and hand them to Lightkeeper.",
           "kind": "item",
           "trader": "Lightkeeper",
-          "maps": ["lighthouse"]
+          "maps": [
+            "lighthouse"
+          ],
+          "location": "Lightkeeper, Lighthouse 3rd floor"
         },
         {
           "id": "retrieve-flare",
           "title": "Yellow flare at ULTRA, then 15 kills on Interchange",
           "detail": "Fire a yellow signal flare in front of ULTRA's main entrance, then eliminate 15 targets in one Interchange raid. Extracting early resets both.",
           "kind": "quest",
-          "maps": ["interchange"],
+          "maps": [
+            "interchange"
+          ],
           "location": "ULTRA main entrance"
         },
         {
           "id": "retrieve-case-back",
           "title": "Collect the armored case from Lightkeeper",
-          "detail": "Talk to Lightkeeper with a free special slot. He returns the case.",
+          "detail": "Talk to Lightkeeper with a free special slot. He returns the armored case.",
           "kind": "item",
           "trader": "Lightkeeper",
-          "maps": ["lighthouse"]
+          "maps": [
+            "lighthouse"
+          ],
+          "location": "Lightkeeper, Lighthouse 3rd floor"
         }
       ]
     },
@@ -484,19 +775,24 @@
       "summary": "Workbench plus a Labs jammer. The craft takes about 55 hours. Inside: Kruglov's RFID and the manual.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
       "howToStart": "Ask Mechanic for help once you have the armored case.",
-      "maps": ["the-lab"],
+      "maps": [
+        "the-lab"
+      ],
       "steps": [
         {
           "id": "open-intel-1",
           "title": "Build Intelligence Center 1",
           "detail": "Needed to talk to Kerman on the laptop. Start this as soon as you can afford it.",
           "kind": "hideout",
-          "hideout": { "station": "Intelligence Center", "level": 1 }
+          "hideout": {
+            "station": "Intelligence Center",
+            "level": 1
+          }
         },
         {
           "id": "open-mechanic",
           "title": "Ask Mechanic how to open the case",
-          "detail": "He points you at an experimental signal jammer in The Lab.",
+          "detail": "Trader screen. He sends you after an experimental signal jammer in The Lab. It must be found in raid.",
           "kind": "quest",
           "trader": "Mechanic"
         },
@@ -505,22 +801,31 @@
           "title": "Find the experimental signal jammer (found in raid)",
           "detail": "Three Labs spots: containment block glass lab (middle desks), recreational area R21 (round table in Cat, near Red), lecture hall R16 (conference desks downstairs from the kitchen).",
           "kind": "item",
-          "maps": ["the-lab"],
+          "maps": [
+            "the-lab"
+          ],
           "location": "Labs containment / R21 / R16",
-          "keys": ["TerraGroup Labs access keycard"]
+          "keys": [
+            "TerraGroup Labs access keycard"
+          ]
         },
         {
           "id": "open-craft",
           "title": "Craft the case open at Workbench 1 (~55 hours)",
-          "detail": "Start the armored-case recipe, wait it out, then unpack it.",
+          "detail": "Start the armored-case opening craft at Workbench 1. It takes about 55 hours. Then unpack the result.",
           "kind": "craft",
-          "hideout": { "station": "Workbench", "level": 1 }
+          "hideout": {
+            "station": "Workbench",
+            "level": 1
+          },
+          "location": "Hideout Workbench 1"
         },
         {
           "id": "open-unpack",
           "title": "Unpack Kruglov's RFID and read the manual",
-          "detail": "Right-click the opened case → unpack. RFID goes to stash; the manual is in the Handbook. Read the manual.",
-          "kind": "item"
+          "detail": "Right-click the opened case and unpack it. Kruglov's RFID goes to your stash. The manual is in the Handbook — open and read it.",
+          "kind": "item",
+          "location": "Inventory — right-click the opened case"
         },
         {
           "id": "open-contact",
@@ -539,7 +844,11 @@
       "summary": "Kerman offers to activate the keycard. Accept for Savior, Debtor or Fallen. Refuse for Survivor.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
       "howToStart": "After the case is open and you have read the RFID manual.",
-      "maps": ["shoreline", "the-lab", "streets-of-tarkov"],
+      "maps": [
+        "shoreline",
+        "the-lab",
+        "streets-of-tarkov"
+      ],
       "lock": "kerman",
       "steps": [
         {
@@ -547,66 +856,139 @@
           "title": "ACCEPT Kerman's offer",
           "detail": "Point of no return. Declining ends every route except Survivor.",
           "kind": "choice",
-          "choice": { "lock": "kerman", "value": "accept" },
-          "endings": ["savior", "debtor", "fallen"]
+          "choice": {
+            "lock": "kerman",
+            "value": "accept"
+          },
+          "endings": [
+            "savior",
+            "debtor",
+            "fallen"
+          ]
         },
         {
           "id": "kerman-refuse",
           "title": "REFUSE Kerman's offer",
           "detail": "Locks Survivor. You will pay Prapor 300 or 500 million roubles.",
           "kind": "choice",
-          "choice": { "lock": "kerman", "value": "refuse" },
-          "endings": ["survivor"]
+          "choice": {
+            "lock": "kerman",
+            "value": "refuse"
+          },
+          "endings": [
+            "survivor"
+          ]
         },
         {
           "id": "kerman-labs-black",
           "title": "Get Labs Black keycard and Kruglov's master pass",
-          "detail": "Laboratory master pass (Labs Black) is used to activate Kruglov's RFID.",
+          "detail": "You need a TerraGroup Labs access keycard (single use, bought or found) and Kruglov's master pass from the unpacked case. Used later for the Terminal and Cardinal routes.",
           "kind": "item",
-          "maps": ["the-lab"],
-          "keys": ["TerraGroup Labs keycard (Black)"],
-          "endings": ["savior", "debtor", "fallen"],
-          "when": [{ "lock": "kerman", "is": "accept" }]
+          "maps": [
+            "the-lab",
+            "streets-of-tarkov"
+          ],
+          "keys": [
+            "TerraGroup Labs access keycard"
+          ],
+          "endings": [
+            "savior",
+            "debtor",
+            "fallen"
+          ],
+          "when": [
+            {
+              "lock": "kerman",
+              "is": "accept"
+            }
+          ],
+          "location": "Labs access keycard (any Labs entrance) and Kruglov's master pass from the opened case"
         },
         {
           "id": "kerman-btc",
           "title": "Farm 40 Physical Bitcoin for Mechanic",
-          "detail": "Start Bitcoin Farm as early as you can. Mechanic needs 40 to finish the encryption device.",
+          "detail": "Produce or otherwise obtain 40 Physical Bitcoin and hand them to Mechanic. This is the Savior/Debtor payment, not a raid pickup.",
           "kind": "item",
           "trader": "Mechanic",
-          "hideout": { "station": "Bitcoin Farm", "level": 1 },
-          "endings": ["savior", "debtor", "fallen"],
-          "when": [{ "lock": "kerman", "is": "accept" }]
+          "hideout": {
+            "station": "Bitcoin Farm",
+            "level": 1
+          },
+          "endings": [
+            "savior",
+            "debtor",
+            "fallen"
+          ],
+          "when": [
+            {
+              "lock": "kerman",
+              "is": "accept"
+            }
+          ],
+          "location": "Bitcoin farm, then Mechanic"
         },
         {
           "id": "kerman-elektronik",
           "title": "Streets: Elektronik apartment device",
-          "detail": "Collect the RFID card encryption device from Elektronik's apartment (his key).",
+          "detail": "Find and use the device in Elektronik's apartment on Streets. Check the quest item spawns inside the apartment after you have the key the quest names.",
           "kind": "item",
-          "maps": ["streets-of-tarkov"],
-          "location": "Elektronik's apartment on Streets",
-          "endings": ["savior", "debtor", "fallen"],
-          "when": [{ "lock": "kerman", "is": "accept" }]
+          "maps": [
+            "streets-of-tarkov"
+          ],
+          "location": "Elektronik apartment, Streets of Tarkov",
+          "endings": [
+            "savior",
+            "debtor",
+            "fallen"
+          ],
+          "when": [
+            {
+              "lock": "kerman",
+              "is": "accept"
+            }
+          ]
         },
         {
           "id": "kerman-activate",
           "title": "Activate Kruglov's RFID (~50 hour craft)",
           "detail": "Intelligence Center 1 craft. Then swipe it at the Shoreline intercom — the first swipe fails. That is normal.",
           "kind": "craft",
-          "maps": ["shoreline"],
+          "maps": [
+            "shoreline"
+          ],
           "location": "Shoreline port intercom",
-          "endings": ["savior", "debtor", "fallen"],
-          "when": [{ "lock": "kerman", "is": "accept" }]
+          "endings": [
+            "savior",
+            "debtor",
+            "fallen"
+          ],
+          "when": [
+            {
+              "lock": "kerman",
+              "is": "accept"
+            }
+          ]
         },
         {
           "id": "kerman-fail-swipe",
           "title": "Swipe Shoreline intercom — it fails. That is normal.",
           "detail": "21:00–06:00 at the port intercom. The failed swipe is scripted. Do not panic. Kerman will ask for the dirt job next.",
           "kind": "quest",
-          "maps": ["shoreline"],
+          "maps": [
+            "shoreline"
+          ],
           "location": "Shoreline port intercom, 21:00–06:00",
-          "endings": ["savior", "debtor", "fallen"],
-          "when": [{ "lock": "kerman", "is": "accept" }]
+          "endings": [
+            "savior",
+            "debtor",
+            "fallen"
+          ],
+          "when": [
+            {
+              "lock": "kerman",
+              "is": "accept"
+            }
+          ]
         }
       ]
     },
@@ -620,33 +1002,64 @@
       "howToStart": "After the first Shoreline swipe fails.",
       "maps": [],
       "lock": "dirt",
-      "endings": ["savior", "debtor", "fallen"],
-      "when": [{ "lock": "kerman", "is": "accept" }],
+      "endings": [
+        "savior",
+        "debtor",
+        "fallen"
+      ],
+      "when": [
+        {
+          "lock": "kerman",
+          "is": "accept"
+        }
+      ],
       "steps": [
         {
           "id": "dirt-agree",
           "title": "AGREE to find dirt on TerraGroup",
           "detail": "Point of no return. You will need Intelligence Center 3 to turn evidence in. After two pieces he offers an early exit — do not take it on Savior.",
           "kind": "choice",
-          "choice": { "lock": "dirt", "value": "agree" },
-          "endings": ["savior", "debtor"]
+          "choice": {
+            "lock": "dirt",
+            "value": "agree"
+          },
+          "endings": [
+            "savior",
+            "debtor"
+          ]
         },
         {
           "id": "dirt-refuse",
           "title": "REFUSE the dirt job",
           "detail": "Locks Fallen. Prapor wants $1,000,000 and the Case with dangerous cargo.",
           "kind": "choice",
-          "choice": { "lock": "dirt", "value": "refuse" },
-          "endings": ["fallen"]
+          "choice": {
+            "lock": "dirt",
+            "value": "refuse"
+          },
+          "endings": [
+            "fallen"
+          ]
         },
         {
           "id": "dirt-intel-3",
           "title": "Build Intelligence Center 3",
           "detail": "You cannot turn major evidence in until this is up. Long build — start it the moment you agree.",
           "kind": "hideout",
-          "hideout": { "station": "Intelligence Center", "level": 3 },
-          "endings": ["savior", "debtor"],
-          "when": [{ "lock": "dirt", "is": "agree" }]
+          "hideout": {
+            "station": "Intelligence Center",
+            "level": 3
+          },
+          "endings": [
+            "savior",
+            "debtor"
+          ],
+          "when": [
+            {
+              "lock": "dirt",
+              "is": "agree"
+            }
+          ]
         }
       ]
     },
@@ -658,26 +1071,54 @@
       "summary": "Nine major pieces. Savior needs any 8. Do not skip Ms. A. After two hand-ins Kerman offers an exit — that exit is Debtor.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
       "howToStart": "Optional chapters can be started during Tour. Hand-in is Intelligence Center 3.",
-      "maps": ["shoreline", "lighthouse", "streets-of-tarkov", "icebreaker", "the-labyrinth", "factory", "customs", "woods", "the-lab"],
+      "maps": [
+        "shoreline",
+        "lighthouse",
+        "streets-of-tarkov",
+        "icebreaker",
+        "the-labyrinth",
+        "factory",
+        "customs",
+        "woods",
+        "the-lab"
+      ],
       "lock": "evidence",
-      "endings": ["savior", "debtor"],
-      "when": [{ "lock": "dirt", "is": "agree" }],
+      "endings": [
+        "savior",
+        "debtor"
+      ],
+      "when": [
+        {
+          "lock": "dirt",
+          "is": "agree"
+        }
+      ],
       "steps": [
         {
           "id": "evidence-eight",
           "title": "Hand in 8 of 9 major evidence",
           "detail": "Tick the pieces below as you extract them. Confirm with Kerman only when you have eight. Never stop at two on a Savior run.",
           "kind": "choice",
-          "choice": { "lock": "evidence", "value": "eight" },
-          "endings": ["savior"]
+          "choice": {
+            "lock": "evidence",
+            "value": "eight"
+          },
+          "endings": [
+            "savior"
+          ]
         },
         {
           "id": "evidence-two",
           "title": "Hand in exactly 2, then refuse to continue",
           "detail": "Locks Debtor (U-Turn achievement). Lightkeeper becomes the way out.",
           "kind": "choice",
-          "choice": { "lock": "evidence", "value": "two" },
-          "endings": ["debtor"]
+          "choice": {
+            "lock": "evidence",
+            "value": "two"
+          },
+          "endings": [
+            "debtor"
+          ]
         }
       ]
     },
@@ -689,9 +1130,21 @@
       "summary": "Fence 4.0, the two co-op extracts, and BTR Driver 0.4. PvE replaces the extracts with PMC-kill raids.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
       "howToStart": "Kerman's trusted contact (Fence) reaches out after the evidence is in.",
-      "maps": ["woods", "reserve", "interchange", "shoreline"],
-      "endings": ["savior"],
-      "when": [{ "lock": "evidence", "is": "eight" }],
+      "maps": [
+        "woods",
+        "reserve",
+        "interchange",
+        "shoreline"
+      ],
+      "endings": [
+        "savior"
+      ],
+      "when": [
+        {
+          "lock": "evidence",
+          "is": "eight"
+        }
+      ],
       "steps": [
         {
           "id": "gates-fence",
@@ -705,7 +1158,10 @@
           "title": "PvP: extract Friendship Bridge (co-op) on Woods",
           "detail": "Need a teammate. PvE instead: eliminate 5 PMCs in one Interchange raid without killing Scavs.",
           "kind": "extract",
-          "maps": ["woods", "interchange"],
+          "maps": [
+            "woods",
+            "interchange"
+          ],
           "location": "Woods Friendship Bridge · PvE: Interchange, 5 PMCs, no Scavs"
         },
         {
@@ -713,7 +1169,10 @@
           "title": "PvP: extract Scav Lands (co-op) on Reserve",
           "detail": "Need a teammate. PvE instead: eliminate 5 PMCs in one Shoreline raid without killing Scavs.",
           "kind": "extract",
-          "maps": ["reserve", "shoreline"],
+          "maps": [
+            "reserve",
+            "shoreline"
+          ],
           "location": "Reserve Scav Lands · PvE: Shoreline, 5 PMCs, no Scavs"
         },
         {
@@ -733,37 +1192,56 @@
       "summary": "Intelligence Center 3, Solar Power 1, 40 bitcoin, Labs Black plus Cardinal, then the final Kerman hash-code RFID craft.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
       "howToStart": "These builds are long. Start Solar Power the moment you can afford it.",
-      "maps": ["the-lab", "streets-of-tarkov"],
-      "endings": ["savior"],
+      "maps": [
+        "the-lab",
+        "streets-of-tarkov"
+      ],
+      "endings": [
+        "savior"
+      ],
       "steps": [
         {
           "id": "pay-intel-3",
           "title": "Intelligence Center level 3",
           "detail": "Already required to turn evidence in. Confirm it is finished.",
           "kind": "hideout",
-          "hideout": { "station": "Intelligence Center", "level": 3 }
+          "hideout": {
+            "station": "Intelligence Center",
+            "level": 3
+          }
         },
         {
           "id": "pay-solar",
           "title": "Solar Power level 1",
           "detail": "Long build. Start when you can afford it, not the night before Terminal.",
           "kind": "hideout",
-          "hideout": { "station": "Solar Power", "level": 1 }
+          "hideout": {
+            "station": "Solar Power",
+            "level": 1
+          }
         },
         {
           "id": "pay-btc",
           "title": "Hand Mechanic 40 Physical Bitcoin",
-          "detail": "Pays for Elektronik's encryption work.",
+          "detail": "Hand Mechanic 40 Physical Bitcoin from the Bitcoin farm or your stash. Not a raid spawn.",
           "kind": "item",
-          "trader": "Mechanic"
+          "trader": "Mechanic",
+          "location": "Mechanic trader screen"
         },
         {
           "id": "pay-cardinal",
           "title": "Labs Black keycard + Cardinal apartment key",
-          "detail": "Needed for the Ms. A. transcript in Cardinal's safe, and for the final RFID craft.",
+          "detail": "Savior needs both a TerraGroup Labs access keycard and the Cardinal apartment key before the Ms. A. transcript in the Cardinal safe.",
           "kind": "item",
-          "maps": ["the-lab", "streets-of-tarkov"],
-          "keys": ["TerraGroup Labs keycard (Black)", "Cardinal apartment key"]
+          "maps": [
+            "streets-of-tarkov",
+            "the-lab"
+          ],
+          "keys": [
+            "TerraGroup Labs access keycard",
+            "Cardinal apartment key"
+          ],
+          "location": "Cardinal apartments, Streets — and a Labs Black keycard"
         },
         {
           "id": "pay-hash",
@@ -781,16 +1259,27 @@
       "summary": "300 million if you gave him the case, 500 million if you kept it. Kept-case also starts a 72-hour timer.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
       "howToStart": "After refusing Kerman, talk to Prapor.",
-      "maps": ["the-lab", "streets-of-tarkov"],
-      "endings": ["survivor"],
-      "when": [{ "lock": "kerman", "is": "refuse" }],
+      "maps": [
+        "the-lab",
+        "streets-of-tarkov"
+      ],
+      "endings": [
+        "survivor"
+      ],
+      "when": [
+        {
+          "lock": "kerman",
+          "is": "refuse"
+        }
+      ],
       "steps": [
         {
           "id": "surv-pay",
           "title": "Hand Prapor the cash",
-          "detail": "300,000,000 RUB if you gave him the case. 500,000,000 RUB if you kept it. Stockpile before you refuse Kerman.",
+          "detail": "Hand Prapor cash. 300,000,000 roubles if you gave him the armored case in Falling Skies; 500,000,000 if you kept it.",
           "kind": "item",
-          "trader": "Prapor"
+          "trader": "Prapor",
+          "location": "Prapor trader screen"
         },
         {
           "id": "surv-timer",
@@ -798,15 +1287,24 @@
           "detail": "SSD with TerraGroup evidence from four Labs folders, 50 kills on Streets, and 4 PMC kills in one raid. Fail the timer and you hand over Kappa instead.",
           "kind": "quest",
           "trader": "Prapor",
-          "maps": ["the-lab", "streets-of-tarkov"],
-          "when": [{ "lock": "case", "is": "keep" }]
+          "maps": [
+            "the-lab",
+            "streets-of-tarkov"
+          ],
+          "when": [
+            {
+              "lock": "case",
+              "is": "keep"
+            }
+          ]
         },
         {
           "id": "surv-letter",
           "title": "Take Prapor's letter for the port checkpoint",
-          "detail": "This is your Terminal access item on Survivor.",
+          "detail": "After the payment (and the timed tasks if you kept the case), take Prapor's letter. Swipe it at the Shoreline port intercom between 21:00 and 06:00.",
           "kind": "item",
-          "trader": "Prapor"
+          "trader": "Prapor",
+          "location": "Prapor trader screen"
         }
       ]
     },
@@ -818,31 +1316,57 @@
       "summary": "Ask every trader how to leave, then pay Lightkeeper in work: maps, PMC kills, dogtags and six sacred amulets.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
       "howToStart": "After you refuse to hand in more than two major evidence pieces.",
-      "maps": ["lighthouse", "factory", "ground-zero", "customs", "woods", "streets-of-tarkov", "reserve"],
-      "endings": ["debtor"],
-      "when": [{ "lock": "evidence", "is": "two" }],
+      "maps": [
+        "lighthouse",
+        "factory",
+        "ground-zero",
+        "customs",
+        "woods",
+        "streets-of-tarkov",
+        "reserve"
+      ],
+      "endings": [
+        "debtor"
+      ],
+      "when": [
+        {
+          "lock": "evidence",
+          "is": "two"
+        }
+      ],
       "steps": [
         {
           "id": "debt-ask",
           "title": "Ask the traders how to escape — Lightkeeper last",
-          "detail": "Work down the trader list. Lightkeeper is the one who actually has a way out.",
+          "detail": "Ask the traders how to leave Tarkov. Lightkeeper is the one who actually offers the Debtor route — talk to him last, on the Lighthouse 3rd floor.",
           "kind": "quest",
-          "trader": "Lightkeeper"
+          "trader": "Lightkeeper",
+          "location": "Trader screens, Lightkeeper last"
         },
         {
           "id": "debt-maps",
           "title": "Compile topographic intel from 5 maps onto a military flash drive",
-          "detail": "Lighthouse, Factory, Ground Zero, Customs and Woods. Hand the drive to Lightkeeper.",
+          "detail": "Pick up the topographic intel documents on Lighthouse, Woods, Customs, Ground Zero and Factory, record them onto a military flash drive, and hand the drive to Lightkeeper.",
           "kind": "item",
-          "maps": ["lighthouse", "factory", "ground-zero", "customs", "woods"],
-          "trader": "Lightkeeper"
+          "maps": [
+            "lighthouse",
+            "woods",
+            "customs",
+            "ground-zero",
+            "factory"
+          ],
+          "trader": "Lightkeeper",
+          "location": "Marked intel spots on Lighthouse, Woods, Customs, Ground Zero and Factory"
         },
         {
           "id": "debt-woods",
           "title": "Eliminate 30 PMCs on Woods",
-          "detail": "The slow PvP grind. Bank kills whenever you are on Woods anyway.",
+          "detail": "Eliminate 30 PMCs on Woods. They do not have to be in one raid. Then continue Lightkeeper's amulet chain.",
           "kind": "quest",
-          "maps": ["woods"]
+          "maps": [
+            "woods"
+          ],
+          "location": "Anywhere on Woods"
         },
         {
           "id": "debt-tags",
@@ -856,7 +1380,12 @@
           "title": "Stash 6 sacred amulets in the Lighthouse marked room",
           "detail": "Customs dorm 314, two Streets marked rooms, three Reserve marked rooms (RB-VO, RB-PKPM, RB-BK). Stash each in the Lighthouse island stash.",
           "kind": "item",
-          "maps": ["customs", "streets-of-tarkov", "reserve", "lighthouse"],
+          "maps": [
+            "customs",
+            "streets-of-tarkov",
+            "reserve",
+            "lighthouse"
+          ],
           "keys": [
             "Dorm room 314 marked key",
             "Abandoned factory marked key",
@@ -885,8 +1414,15 @@
       "wiki": "https://escapefromtarkov.fandom.com/wiki/The_Ticket",
       "howToStart": "After refusing the dirt job, ask the traders how to leave, then talk to Prapor.",
       "maps": [],
-      "endings": ["fallen"],
-      "when": [{ "lock": "dirt", "is": "refuse" }],
+      "endings": [
+        "fallen"
+      ],
+      "when": [
+        {
+          "lock": "dirt",
+          "is": "refuse"
+        }
+      ],
       "steps": [
         {
           "id": "fall-ask",
@@ -901,7 +1437,12 @@
           "detail": "50 military or advanced electronics, a Theta / Epsilon / Kappa container, and 40 full-durability weapon and armor repair kits.",
           "kind": "item",
           "trader": "Prapor",
-          "when": [{ "lock": "case", "is": "keep" }]
+          "when": [
+            {
+              "lock": "case",
+              "is": "keep"
+            }
+          ]
         },
         {
           "id": "fall-cargo",
@@ -922,7 +1463,10 @@
           "title": "Solar Power level 1",
           "detail": "Required before Terminal on this route.",
           "kind": "hideout",
-          "hideout": { "station": "Solar Power", "level": 1 }
+          "hideout": {
+            "station": "Solar Power",
+            "level": 1
+          }
         },
         {
           "id": "fall-hash",
@@ -941,14 +1485,19 @@
       "summary": "Shoreline intercom 21:00–06:00, swipe your access item, fight through Terminal, extract Zubr. Dying resets the raid, not the lock.",
       "wiki": "https://escapefromtarkov.fandom.com/wiki/Terminal",
       "howToStart": "Shoreline port intercom, in-raid time 21:00–06:00.",
-      "maps": ["shoreline", "terminal"],
+      "maps": [
+        "shoreline",
+        "terminal"
+      ],
       "steps": [
         {
           "id": "term-swipe",
           "title": "Swipe your access item at the Shoreline intercom (21:00–06:00)",
           "detail": "Savior: Kerman hash-code RFID. Survivor: Prapor's letter. Debtor: Lightkeeper's unnamed RFID. Fallen: Prapor's hash-code RFID.",
           "kind": "finale",
-          "maps": ["shoreline"],
+          "maps": [
+            "shoreline"
+          ],
           "location": "Port intercom on Shoreline"
         },
         {
@@ -956,16 +1505,22 @@
           "title": "Armory: grab Alpha-1 and extract WITH it",
           "detail": "Savior only. The Alpha-1 container is on the desk under the window in the armory. You must extract with it on you or it is not Savior. Fail the raid and you retry — the lock stays.",
           "kind": "finale",
-          "maps": ["terminal"],
+          "maps": [
+            "terminal"
+          ],
           "location": "Terminal armory, desk under the window",
-          "endings": ["savior"]
+          "endings": [
+            "savior"
+          ]
         },
         {
           "id": "term-run",
           "title": "Pass security, reach the pier, extract Zubr",
           "detail": "Optional: drain the pumping station, grab the pier key, fight the last Black Division squad on the pier. The extract timer is three minutes. Everyone in the zone when it hits zero leaves, and the ending cinematic plays.",
           "kind": "finale",
-          "maps": ["terminal"],
+          "maps": [
+            "terminal"
+          ],
           "location": "Zubr boat at the pier"
         }
       ]
@@ -1062,83 +1617,212 @@
       "map": "streets-of-tarkov",
       "howToStart": "No story chapter. Cardinal's safe on Streets, opened with Labs Black.",
       "note": "Do not skip this. It is the free extra so you can miss one chapter and still hit 8 of 9.",
-      "keys": ["Cardinal apartment key", "TerraGroup Labs keycard (Black)"],
+      "keys": [
+        "Cardinal apartment key",
+        "TerraGroup Labs keycard (Black)"
+      ],
       "major": true
     }
   ],
   "minorEvidence": [
-    { "id": "min-fsb", "name": "FSB report" },
-    { "id": "min-kozlov", "name": "Letter from Kozlov's room" },
-    { "id": "min-reshala", "name": "Letter from Reshala's bunkhouse" },
-    { "id": "min-mailbox", "name": "Letter from the mailbox" },
-    { "id": "min-tape-report", "name": "Audio tape with report" },
-    { "id": "min-bogatyr", "name": "Bogatyr squad operations report" },
-    { "id": "min-voevoda-host", "name": "Hostage evacuation report from Voevoda" },
-    { "id": "min-moreman", "name": "Moreman's personnel file" },
-    { "id": "min-strelets", "name": "Strelets' personnel file" },
-    { "id": "min-taran", "name": "Taran's personnel file" },
-    { "id": "min-voevoda", "name": "Voevoda's personnel file" },
-    { "id": "min-scientist", "name": "Boreas scientist audio tape" },
-    { "id": "min-c1", "name": "Compartment C-1 access log" },
-    { "id": "min-paradigm", "name": "Paradigm Shipping directive" },
-    { "id": "min-sailor", "name": "Sailor's diary" },
-    { "id": "min-crew", "name": "Plane crew transcript" },
-    { "id": "min-g12", "name": "Assistant's notes on Group #12" },
-    { "id": "min-g3-g10", "name": "Assistant's notes on Group #3 and Group #10" },
-    { "id": "min-g3", "name": "Assistant's notes on Group #3" },
-    { "id": "min-g8", "name": "Assistant's notes on Group #8" },
-    { "id": "min-tgvi", "name": "Assistant's notes on TG-Vi-24 test subjects" },
-    { "id": "min-leshy", "name": "Leshy's diary" },
-    { "id": "min-ap1", "name": "A.P. meeting audio tape Part 1" },
-    { "id": "min-ap2", "name": "A.P. meeting audio tape Part 2" },
-    { "id": "min-fax", "name": "Cargo transport fax" },
-    { "id": "min-worldwide", "name": "Copy of report for TG Worldwide" },
-    { "id": "min-protocol", "name": "Document mentioning a protocol" },
-    { "id": "min-enterprise", "name": "Document on changes in enterprise interactions" },
-    { "id": "min-printout", "name": "Hard drive printout" },
-    { "id": "min-order", "name": "Order from TerraGroup Worldwide headquarters" },
-    { "id": "min-transport", "name": "Transport log with notes" },
-    { "id": "min-book", "name": "Book of the Arrival" },
-    { "id": "min-cult1", "name": "Cult victim audio tape #1" },
-    { "id": "min-cult2", "name": "Cult victim audio tape #2" },
-    { "id": "min-arrival", "name": "Note on preparations for the Arrival" },
-    { "id": "min-norvinsk", "name": "Folder with intelligence on Norvinsk region facilities" }
+    {
+      "id": "min-fsb",
+      "name": "FSB report"
+    },
+    {
+      "id": "min-kozlov",
+      "name": "Letter from Kozlov's room"
+    },
+    {
+      "id": "min-reshala",
+      "name": "Letter from Reshala's bunkhouse"
+    },
+    {
+      "id": "min-mailbox",
+      "name": "Letter from the mailbox"
+    },
+    {
+      "id": "min-tape-report",
+      "name": "Audio tape with report"
+    },
+    {
+      "id": "min-bogatyr",
+      "name": "Bogatyr squad operations report"
+    },
+    {
+      "id": "min-voevoda-host",
+      "name": "Hostage evacuation report from Voevoda"
+    },
+    {
+      "id": "min-moreman",
+      "name": "Moreman's personnel file"
+    },
+    {
+      "id": "min-strelets",
+      "name": "Strelets' personnel file"
+    },
+    {
+      "id": "min-taran",
+      "name": "Taran's personnel file"
+    },
+    {
+      "id": "min-voevoda",
+      "name": "Voevoda's personnel file"
+    },
+    {
+      "id": "min-scientist",
+      "name": "Boreas scientist audio tape"
+    },
+    {
+      "id": "min-c1",
+      "name": "Compartment C-1 access log"
+    },
+    {
+      "id": "min-paradigm",
+      "name": "Paradigm Shipping directive"
+    },
+    {
+      "id": "min-sailor",
+      "name": "Sailor's diary"
+    },
+    {
+      "id": "min-crew",
+      "name": "Plane crew transcript"
+    },
+    {
+      "id": "min-g12",
+      "name": "Assistant's notes on Group #12"
+    },
+    {
+      "id": "min-g3-g10",
+      "name": "Assistant's notes on Group #3 and Group #10"
+    },
+    {
+      "id": "min-g3",
+      "name": "Assistant's notes on Group #3"
+    },
+    {
+      "id": "min-g8",
+      "name": "Assistant's notes on Group #8"
+    },
+    {
+      "id": "min-tgvi",
+      "name": "Assistant's notes on TG-Vi-24 test subjects"
+    },
+    {
+      "id": "min-leshy",
+      "name": "Leshy's diary"
+    },
+    {
+      "id": "min-ap1",
+      "name": "A.P. meeting audio tape Part 1"
+    },
+    {
+      "id": "min-ap2",
+      "name": "A.P. meeting audio tape Part 2"
+    },
+    {
+      "id": "min-fax",
+      "name": "Cargo transport fax"
+    },
+    {
+      "id": "min-worldwide",
+      "name": "Copy of report for TG Worldwide"
+    },
+    {
+      "id": "min-protocol",
+      "name": "Document mentioning a protocol"
+    },
+    {
+      "id": "min-enterprise",
+      "name": "Document on changes in enterprise interactions"
+    },
+    {
+      "id": "min-printout",
+      "name": "Hard drive printout"
+    },
+    {
+      "id": "min-order",
+      "name": "Order from TerraGroup Worldwide headquarters"
+    },
+    {
+      "id": "min-transport",
+      "name": "Transport log with notes"
+    },
+    {
+      "id": "min-book",
+      "name": "Book of the Arrival"
+    },
+    {
+      "id": "min-cult1",
+      "name": "Cult victim audio tape #1"
+    },
+    {
+      "id": "min-cult2",
+      "name": "Cult victim audio tape #2"
+    },
+    {
+      "id": "min-arrival",
+      "name": "Note on preparations for the Arrival"
+    },
+    {
+      "id": "min-norvinsk",
+      "name": "Folder with intelligence on Norvinsk region facilities"
+    }
   ],
   "warnings": [
     {
       "id": "w-refuse-kerman",
       "text": "Refuse Kerman after the case opens = Survivor",
-      "endings": ["savior", "debtor", "fallen"]
+      "endings": [
+        "savior",
+        "debtor",
+        "fallen"
+      ]
     },
     {
       "id": "w-refuse-dirt",
       "text": "Refuse the dirt job after the failed swipe = Fallen",
-      "endings": ["savior", "debtor"]
+      "endings": [
+        "savior",
+        "debtor"
+      ]
     },
     {
       "id": "w-stop-two",
       "text": "Hand in only 2 major evidence then quit = Debtor",
-      "endings": ["savior"]
+      "endings": [
+        "savior"
+      ]
     },
     {
       "id": "w-alpha",
       "text": "Enter Terminal without the Alpha-1 container = not Savior",
-      "endings": ["savior"]
+      "endings": [
+        "savior"
+      ]
     },
     {
       "id": "w-friends",
       "text": "Choose Your Friends Wisely on the BTR line can brick 0.4 standing",
-      "endings": ["savior"]
+      "endings": [
+        "savior"
+      ]
     },
     {
       "id": "w-arrs",
       "text": "They Are Already Here: do not press the ARRS reset before taking the flash drive",
-      "endings": ["savior", "debtor"]
+      "endings": [
+        "savior",
+        "debtor"
+      ]
     },
     {
       "id": "w-timer",
       "text": "Kept the case on Survivor: miss the 72-hour tasks and you hand over Kappa",
-      "endings": ["survivor"]
+      "endings": [
+        "survivor"
+      ]
     }
   ]
 }
