@@ -446,14 +446,20 @@
           "maps": [
             "ground-zero"
           ],
-          "location": "Klimov Street extract, behind Skyside"
+          "location": "Klimov Street extract, behind Skyside",
+          "spawns": [
+            "Tutorial raid on Ground Zero. Extract is Klimov Street, behind the Skyside business center. On-screen hints are optional."
+          ]
         },
         {
           "id": "tour-therapist",
           "title": "Talk to Therapist",
           "detail": "Trader screen. She is the only trader at the start. The next dialogue asks for 250,000 roubles to unlock Streets of Tarkov.",
           "kind": "quest",
-          "trader": "Therapist"
+          "trader": "Therapist",
+          "spawns": [
+            "Not a raid. Trader screen. Therapist is the only trader you start with."
+          ]
         },
         {
           "id": "tour-streets-pay",
@@ -464,7 +470,10 @@
           "maps": [
             "streets-of-tarkov"
           ],
-          "location": "Therapist trader screen"
+          "location": "Therapist trader screen",
+          "spawns": [
+            "Not a raid pickup. Hand 250,000 roubles to Therapist. Streets unlocks after the handover."
+          ]
         },
         {
           "id": "tour-interchange",
@@ -474,7 +483,10 @@
           "maps": [
             "interchange"
           ],
-          "location": "Any Interchange extract"
+          "location": "Any Interchange extract",
+          "spawns": [
+            "Any Interchange extract with Survived or Run-Through, or enter the map three times. Unlocks Skier and Customs."
+          ]
         },
         {
           "id": "tour-customs",
@@ -484,7 +496,10 @@
           "maps": [
             "customs"
           ],
-          "location": "Any Customs extract"
+          "location": "Any Customs extract",
+          "spawns": [
+            "Any Customs extract with Survived or Run-Through, or enter the map three times."
+          ]
         },
         {
           "id": "tour-skier-mats",
@@ -492,7 +507,13 @@
           "detail": "Hand over 5 found-in-raid items from building materials or tools. Partial handovers are refused. Unlocks Mechanic and Factory.",
           "kind": "item",
           "trader": "Skier",
-          "location": "Skier trader screen"
+          "location": "Skier trader screen",
+          "needs": [
+            "5 found-in-raid building materials or tools, one handover"
+          ],
+          "spawns": [
+            "Not a placed quest item. Any FiR building-material or tool loot counts. Partial handovers are refused."
+          ]
         },
         {
           "id": "tour-factory",
@@ -502,7 +523,10 @@
           "maps": [
             "factory"
           ],
-          "location": "Any Factory extract"
+          "location": "Any Factory extract",
+          "spawns": [
+            "Any Factory extract with Survived or Run-Through, or enter the map three times."
+          ]
         },
         {
           "id": "tour-mechanic-guns",
@@ -510,7 +534,13 @@
           "detail": "Hand Mechanic any 2 found-in-raid weapons. Unlocks Prapor and Woods.",
           "kind": "item",
           "trader": "Mechanic",
-          "location": "Mechanic trader screen"
+          "location": "Mechanic trader screen",
+          "needs": [
+            "2 found-in-raid weapons"
+          ],
+          "spawns": [
+            "Not a placed quest item. Any two FiR weapons. Unlocks Prapor and Woods."
+          ]
         },
         {
           "id": "tour-woods",
@@ -520,7 +550,10 @@
           "maps": [
             "woods"
           ],
-          "location": "Any Woods extract"
+          "location": "Any Woods extract",
+          "spawns": [
+            "Kill any 3 targets anywhere on Woods. The kills and the Survived or Run-Through extract can be different raids, or visit Woods 3 times."
+          ]
         },
         {
           "id": "tour-intercom",
@@ -530,7 +563,10 @@
           "maps": [
             "shoreline"
           ],
-          "location": "Port intercom, SE Shoreline"
+          "location": "Port intercom, SE Shoreline",
+          "spawns": [
+            "South-east Shoreline, watchtower in front of the Terminal wall. Use the intercom once, then leave. Guards on the wall shoot accurately. Using it again after they tell you to leave kills you."
+          ]
         },
         {
           "id": "tour-reserve",
@@ -542,7 +578,15 @@
             "shoreline",
             "reserve"
           ],
-          "location": "Prapor trader screen, after a Shoreline extract"
+          "location": "Prapor trader screen, after a Shoreline extract",
+          "needs": [
+            "5 PMC dogtags"
+          ],
+          "spawns": [
+            "Extract Shoreline first (Survived, Run-Through, or 3 visits).",
+            "Dogtags come off dead PMCs. They do not have to be your kills and do not have to be found-in-raid.",
+            "Hand them to Prapor. That unlocks Reserve."
+          ]
         },
         {
           "id": "tour-lighthouse",
@@ -553,7 +597,13 @@
           "maps": [
             "lighthouse"
           ],
-          "location": "Mechanic trader screen"
+          "location": "Mechanic trader screen",
+          "needs": [
+            "8,000 USD"
+          ],
+          "spawns": [
+            "Not a raid spawn. Buy dollars from Peacekeeper if you are short, then hand them to Mechanic."
+          ]
         },
         {
           "id": "tour-lab",
@@ -568,7 +618,14 @@
           "keys": [
             "TerraGroup Labs access keycard"
           ],
-          "location": "O21 (2nd floor), server room by the hangar (1st), Sewage Conduit (basement)"
+          "location": "O21 (2nd floor), server room by the hangar (1st), Sewage Conduit (basement)",
+          "spawns": [
+            "Transit, Streets: underground in front of Klimova 16A, the building with the cosmonaut painting. Labs access keycard. Opens 1 minute after raid start.",
+            "Transit, Factory: sewer tunnel off the flooded underground. Same keycard, same 1-minute delay.",
+            "Search O21, lab manager office, second floor.",
+            "Search the server room beside the hangar, first floor.",
+            "Drainage path is the Sewage Conduit extract in the basement. You do not have to extract."
+          ]
         }
       ]
     },
@@ -593,14 +650,20 @@
           "maps": [
             "woods"
           ],
-          "location": "Eastern Woods, crashed plane"
+          "location": "Eastern Woods, crashed plane",
+          "spawns": [
+            "Eastern Woods. The wreck itself is the objective. Walking up to it starts the chapter."
+          ]
         },
         {
           "id": "skies-prapor-ll2",
           "title": "Reach Prapor loyalty 2, then ask five traders about the plane",
           "detail": "Reach Prapor loyalty 2, then ask Prapor, Therapist, Skier, Mechanic and Jaeger about the plane. Prepare for Escape, Edge of Darkness and The Unheard skip the loyalty gate.",
           "kind": "reputation",
-          "trader": "Prapor"
+          "trader": "Prapor",
+          "spawns": [
+            "Not a raid. Reach Prapor loyalty 2, then ask Prapor, Therapist, Skier, Mechanic and Jaeger. Prepare for Escape, Edge of Darkness and The Unheard skip the loyalty gate."
+          ]
         },
         {
           "id": "skies-g-wagon",
@@ -612,7 +675,11 @@
           ],
           "location": "G-Wagon by Tunnel extract",
           "trader": "Prapor",
-          "wait": "1 hour"
+          "wait": "1 hour",
+          "spawns": [
+            "Shoreline, G-Wagon parked at the Tunnel extract. Flash drive is on the driver-side running board. Found in raid.",
+            "Optional: pay Therapist 2,000 USD and she marks the SUV on your map."
+          ]
         },
         {
           "id": "skies-recorder",
@@ -623,7 +690,11 @@
             "woods",
             "shoreline"
           ],
-          "location": "Plane right-side wreck · Shoreline island house"
+          "location": "Plane right-side wreck · Shoreline island house",
+          "spawns": [
+            "Flight recorder: right side of the Woods plane, broken section near the back. Found in raid.",
+            "Stash it in the destroyed room of the house on the Shoreline island. Do not hand it to a trader."
+          ]
         },
         {
           "id": "skies-parts",
@@ -632,7 +703,15 @@
           "kind": "item",
           "trader": "Prapor",
           "wait": "3–5 hours",
-          "location": "Prapor trader screen"
+          "location": "Prapor trader screen",
+          "needs": [
+            "2 FiR toolsets",
+            "3 FiR rechargeable batteries",
+            "5 FiR printed circuit boards"
+          ],
+          "spawns": [
+            "Not placed quest items. Craft them at the workbench or find them as normal loot. One handover to Prapor, then wait 3–5 hours."
+          ]
         },
         {
           "id": "skies-chairman",
@@ -643,7 +722,13 @@
             "shoreline"
           ],
           "location": "Chairman's house, Shoreline — transcript under the overturned-bed mattress; Elektronik drive on the shelf by the bed",
-          "trader": "Prapor"
+          "trader": "Prapor",
+          "spawns": [
+            "Chairman's house, Shoreline.",
+            "Flight-crew transcript: under the mattress of the overturned bed.",
+            "Elektronik's secure flash drive: shelf by the bed.",
+            "Hand both to Prapor. Payout is 300,000 roubles, more with Intelligence Center."
+          ]
         },
         {
           "id": "skies-loot",
@@ -653,7 +738,11 @@
           "maps": [
             "woods"
           ],
-          "location": "Woods plane, behind the cockpit"
+          "location": "Woods plane, behind the cockpit",
+          "spawns": [
+            "Armored case: behind the cockpit of the Woods plane. Dying in the raid deletes it.",
+            "Optional Note from Mr. Kerman: on the pilot seat."
+          ]
         },
         {
           "id": "skies-keep",
@@ -667,6 +756,9 @@
           "endings": [
             "savior",
             "debtor"
+          ],
+          "spawns": [
+            "Not a raid. Keep the case in your stash. Do not give it to Prapor if you want Savior without the Lightkeeper retrieval."
           ]
         },
         {
@@ -681,6 +773,9 @@
           "endings": [
             "survivor",
             "fallen"
+          ],
+          "spawns": [
+            "Not a raid. Handing the case to Prapor cuts the Survivor payment from 500M to 300M roubles. Savior and Debtor then have to get the case back through Lightkeeper."
           ]
         }
       ]
@@ -717,7 +812,10 @@
           "maps": [
             "lighthouse"
           ],
-          "location": "Prapor's BEAR camp, Lighthouse peninsula"
+          "location": "Prapor's BEAR camp, Lighthouse peninsula",
+          "spawns": [
+            "Lighthouse peninsula, the camp used by Prapor's people. Pick up the note about their intentions."
+          ]
         },
         {
           "id": "retrieve-lightkeeper",
@@ -731,6 +829,11 @@
           "location": "Lighthouse building, 3rd floor, peninsula",
           "keys": [
             "Encoded digital secure DSP radio transmitter"
+          ],
+          "spawns": [
+            "Lightkeeper is on the 3rd floor of the lighthouse building on the peninsula.",
+            "You need an encoded DSP radio transmitter to cross the bridge. Mechanic's quest is To the Light — Trust but Verify.",
+            "Do not shoot Zryachiy."
           ]
         },
         {
@@ -742,7 +845,13 @@
           "maps": [
             "lighthouse"
           ],
-          "location": "Lightkeeper, Lighthouse 3rd floor"
+          "location": "Lightkeeper, Lighthouse 3rd floor",
+          "needs": [
+            "3 TerraGroup Blue Folders"
+          ],
+          "spawns": [
+            "Find three Blue Folders as quest items in raid, then hand them to Lightkeeper on the lighthouse 3rd floor."
+          ]
         },
         {
           "id": "retrieve-flare",
@@ -752,7 +861,11 @@
           "maps": [
             "interchange"
           ],
-          "location": "ULTRA main entrance"
+          "location": "ULTRA main entrance",
+          "spawns": [
+            "Fire a yellow signal flare in front of ULTRA's main entrance on Interchange.",
+            "Then kill 15 targets in that same raid. Extracting early resets both objectives."
+          ]
         },
         {
           "id": "retrieve-case-back",
@@ -763,7 +876,10 @@
           "maps": [
             "lighthouse"
           ],
-          "location": "Lightkeeper, Lighthouse 3rd floor"
+          "location": "Lightkeeper, Lighthouse 3rd floor",
+          "spawns": [
+            "Not a world spawn. Talk to Lightkeeper with a free special slot and he returns the armored case."
+          ]
         }
       ]
     },
@@ -787,14 +903,20 @@
           "hideout": {
             "station": "Intelligence Center",
             "level": 1
-          }
+          },
+          "spawns": [
+            "Not a raid. Hideout, Intelligence Center level 1. Required before Kerman will talk on the laptop."
+          ]
         },
         {
           "id": "open-mechanic",
           "title": "Ask Mechanic how to open the case",
           "detail": "Trader screen. He sends you after an experimental signal jammer in The Lab. It must be found in raid.",
           "kind": "quest",
-          "trader": "Mechanic"
+          "trader": "Mechanic",
+          "spawns": [
+            "Not a raid. Mechanic tells you the case opens with an experimental signal jammer from The Lab. The jammer spawns are on the next step."
+          ]
         },
         {
           "id": "open-jammer",
@@ -831,6 +953,9 @@
             "Experimental signal jammer",
             "Toolset",
             "Locked armored case"
+          ],
+          "spawns": [
+            "Not a raid. Workbench 1: experimental signal jammer + toolset + locked armored case. 25 hours. Generator must stay on."
           ]
         },
         {
@@ -853,7 +978,10 @@
           "title": "Contact Kerman on the Intel Center laptop",
           "detail": "This is the lead-in to Lock 2. Wait 2–6 hours for him to reach out, then talk to Prapor and back to Kerman.",
           "kind": "wait",
-          "wait": "2–6 hours"
+          "wait": "2–6 hours",
+          "spawns": [
+            "Not a raid. After you read the RFID manual, wait 2–6 hours. Kerman messages you. Talk to Prapor, then back to Kerman on the Intelligence Center laptop."
+          ]
         }
       ]
     },
@@ -885,6 +1013,9 @@
             "savior",
             "debtor",
             "fallen"
+          ],
+          "spawns": [
+            "Not a raid. Dialogue choice. Accepting opens Savior, Debtor and Fallen. You cannot undo it on this character."
           ]
         },
         {
@@ -898,6 +1029,9 @@
           },
           "endings": [
             "survivor"
+          ],
+          "spawns": [
+            "Not a raid. Dialogue choice. Refusing is the Survivor lock. The bill is 300 million roubles if you gave Prapor the case, 500 million if you kept it."
           ]
         },
         {
@@ -955,7 +1089,13 @@
               "is": "accept"
             }
           ],
-          "location": "Bitcoin farm, then Mechanic"
+          "location": "Bitcoin farm, then Mechanic",
+          "needs": [
+            "40 Physical Bitcoin"
+          ],
+          "spawns": [
+            "Not a raid spawn. Bitcoin farm, or any other bitcoin you already hold. Hand them to Mechanic so he will mail Elektronik's key."
+          ]
         },
         {
           "id": "kerman-elektronik",
@@ -1042,6 +1182,10 @@
               "lock": "kerman",
               "is": "accept"
             }
+          ],
+          "spawns": [
+            "Shoreline, south-east watchtower intercom in front of the Terminal. Only 21:00–06:00.",
+            "The first swipe with the activated Kruglov card is supposed to fail. Do not keep using the intercom or the garrison shoots you."
           ]
         }
       ]
@@ -1080,6 +1224,9 @@
           "endings": [
             "savior",
             "debtor"
+          ],
+          "spawns": [
+            "Not a raid. Agree to dig up dirt on TerraGroup. That is the Savior and Debtor branch."
           ]
         },
         {
@@ -1093,6 +1240,9 @@
           },
           "endings": [
             "fallen"
+          ],
+          "spawns": [
+            "Not a raid. Refuse the dirt job. That is the Fallen branch."
           ]
         },
         {
@@ -1113,6 +1263,9 @@
               "lock": "dirt",
               "is": "agree"
             }
+          ],
+          "spawns": [
+            "Not a raid. Intelligence Center level 3. Kerman will not take the evidence handover before this is built."
           ]
         }
       ]
@@ -1159,6 +1312,9 @@
           },
           "endings": [
             "savior"
+          ],
+          "spawns": [
+            "Not a raid. Hand Kerman 8 of the 9 major evidence items, then stop. The 36 minor pieces are optional. Confirm with him that the delivery is complete."
           ]
         },
         {
@@ -1172,6 +1328,9 @@
           },
           "endings": [
             "debtor"
+          ],
+          "spawns": [
+            "Not a raid. Hand Kerman exactly 2 major evidence items, then refuse to continue. That is the Debtor lock. A third piece pushes you off Debtor."
           ]
         }
       ]
@@ -1205,7 +1364,10 @@
           "title": "Fence reputation 4.0 and his assignments",
           "detail": "Keep standing above 4.0 while you finish what he asks.",
           "kind": "reputation",
-          "trader": "Fence"
+          "trader": "Fence",
+          "spawns": [
+            "Not a raid pickup. Fence reputation 4.0, his daily assignments done, and the standing kept above 4.0 until you report back."
+          ]
         },
         {
           "id": "gates-woods",
@@ -1216,7 +1378,11 @@
             "woods",
             "interchange"
           ],
-          "location": "Woods Friendship Bridge · PvE: Interchange, 5 PMCs, no Scavs"
+          "location": "Woods Friendship Bridge · PvE: Interchange, 5 PMCs, no Scavs",
+          "spawns": [
+            "PvP: extract Friendship Bridge, the co-op extract on Woods, with a player Scav.",
+            "PvE substitute: kill 5 PMCs on Interchange in one raid without killing Scavs."
+          ]
         },
         {
           "id": "gates-reserve",
@@ -1227,14 +1393,21 @@
             "reserve",
             "shoreline"
           ],
-          "location": "Reserve Scav Lands · PvE: Shoreline, 5 PMCs, no Scavs"
+          "location": "Reserve Scav Lands · PvE: Shoreline, 5 PMCs, no Scavs",
+          "spawns": [
+            "PvP: extract Scav Lands, the co-op extract on Reserve, with a player Scav.",
+            "PvE substitute: kill 5 PMCs on Shoreline in one raid without killing Scavs."
+          ]
         },
         {
           "id": "gates-btr",
           "title": "BTR Driver 0.4 via Price of Independence",
           "detail": "Do not pick Choose Your Friends Wisely on the BTR line — it can brick 0.4.",
           "kind": "reputation",
-          "trader": "BTR Driver"
+          "trader": "BTR Driver",
+          "spawns": [
+            "Not a map pin. BTR Driver standing 0.4, raised by finishing Price of Independence."
+          ]
         }
       ]
     },
@@ -1262,7 +1435,10 @@
           "hideout": {
             "station": "Intelligence Center",
             "level": 3
-          }
+          },
+          "spawns": [
+            "Not a raid. Intelligence Center level 3."
+          ]
         },
         {
           "id": "pay-solar",
@@ -1272,7 +1448,10 @@
           "hideout": {
             "station": "Solar Power",
             "level": 1
-          }
+          },
+          "spawns": [
+            "Not a raid. Solar Power level 1. Required before the final Kerman hash-code RFID craft."
+          ]
         },
         {
           "id": "pay-btc",
@@ -1280,7 +1459,13 @@
           "detail": "Hand Mechanic 40 Physical Bitcoin from the Bitcoin farm or your stash. Not a raid spawn.",
           "kind": "item",
           "trader": "Mechanic",
-          "location": "Mechanic trader screen"
+          "location": "Mechanic trader screen",
+          "needs": [
+            "40 Physical Bitcoin"
+          ],
+          "spawns": [
+            "Not a raid spawn. Same 40 bitcoin Mechanic asks for on the Savior path."
+          ]
         },
         {
           "id": "pay-cardinal",
@@ -1293,15 +1478,30 @@
           ],
           "keys": [
             "TerraGroup Labs access keycard",
-            "Cardinal apartment key"
+            "Cardinal apartment key",
+            "TerraGroup Labs keycard (Black)"
           ],
-          "location": "Cardinal apartments, Streets — and a Labs Black keycard"
+          "location": "Cardinal apartments, Streets — and a Labs Black keycard",
+          "spawns": [
+            "Labs access keycard: Therapist, jackets, filing cabinets, marked rooms, boss pockets. Single use to enter Labs.",
+            "Black keycard: Cultists, the Goons, Tagilla, Kaban, Partisan, rare valuables, marked rooms. Opens Kruglov's R22 office and the Cardinal bedroom safe.",
+            "Cardinal apartment key is a Streets key. The Ms. A. transcript is in that safe, not loose in the apartment."
+          ]
         },
         {
           "id": "pay-hash",
           "title": "Craft Kerman hash-code RFID",
           "detail": "This is the Terminal access item for Savior. Bring it.",
-          "kind": "craft"
+          "kind": "craft",
+          "needs": [
+            "RFID encryption device",
+            "Activated Kruglov RFID",
+            "Flash drive with Mr. Kerman's hash codes",
+            "Blank RFID"
+          ],
+          "spawns": [
+            "Intelligence Center 1 craft, about 5 hours 30 minutes, power on the whole time. This is the card you swipe for the Savior Terminal entry. It is not a raid pickup."
+          ]
         }
       ]
     },
@@ -1333,7 +1533,14 @@
           "detail": "Hand Prapor cash. 300,000,000 roubles if you gave him the armored case in Falling Skies; 500,000,000 if you kept it.",
           "kind": "item",
           "trader": "Prapor",
-          "location": "Prapor trader screen"
+          "location": "Prapor trader screen",
+          "needs": [
+            "300,000,000 roubles if you gave Prapor the case",
+            "500,000,000 roubles if you kept it"
+          ],
+          "spawns": [
+            "Not a raid spawn. Prapor trader screen."
+          ]
         },
         {
           "id": "surv-timer",
@@ -1350,6 +1557,12 @@
               "lock": "case",
               "is": "keep"
             }
+          ],
+          "spawns": [
+            "Only if you kept the armored case. 72 hours for three jobs or you lose Kappa.",
+            "Digitise the TerraGroup evidence folders onto an SSD: reports, staff, developments, finances.",
+            "Kill any 50 targets on Streets.",
+            "Kill 4 PMCs in one raid."
           ]
         },
         {
@@ -1358,7 +1571,10 @@
           "detail": "After the payment (and the timed tasks if you kept the case), take Prapor's letter. Swipe it at the Shoreline port intercom between 21:00 and 06:00.",
           "kind": "item",
           "trader": "Prapor",
-          "location": "Prapor trader screen"
+          "location": "Prapor trader screen",
+          "spawns": [
+            "Not a raid spawn. Prapor hands you the letter after the payment. Swipe it at the Shoreline port intercom, 21:00–06:00."
+          ]
         }
       ]
     },
@@ -1395,7 +1611,10 @@
           "detail": "Ask the traders how to leave Tarkov. Lightkeeper is the one who actually offers the Debtor route — talk to him last, on the Lighthouse 3rd floor.",
           "kind": "quest",
           "trader": "Lightkeeper",
-          "location": "Trader screens, Lightkeeper last"
+          "location": "Trader screens, Lightkeeper last",
+          "spawns": [
+            "Trader screens. Lightkeeper is the one who offers this route. He is on the Lighthouse 3rd floor. Talk to him last."
+          ]
         },
         {
           "id": "debt-maps",
@@ -1410,7 +1629,11 @@
             "factory"
           ],
           "trader": "Lightkeeper",
-          "location": "Marked intel spots on Lighthouse, Woods, Customs, Ground Zero and Factory"
+          "location": "Marked intel spots on Lighthouse, Woods, Customs, Ground Zero and Factory",
+          "spawns": [
+            "Topographic intel documents, one each: Lighthouse, Woods, Customs, Ground Zero, Factory.",
+            "Record them onto a military flash drive and hand that drive to Lightkeeper. The loose papers are not the turn-in."
+          ]
         },
         {
           "id": "debt-woods",
@@ -1420,14 +1643,23 @@
           "maps": [
             "woods"
           ],
-          "location": "Anywhere on Woods"
+          "location": "Anywhere on Woods",
+          "spawns": [
+            "30 PMC kills anywhere on Woods. They do not have to be in one raid."
+          ]
         },
         {
           "id": "debt-tags",
           "title": "Hand Lightkeeper 100 PMC dogtags",
           "detail": "Start banking tags the moment you target Debtor.",
           "kind": "item",
-          "trader": "Lightkeeper"
+          "trader": "Lightkeeper",
+          "needs": [
+            "100 PMC dogtags"
+          ],
+          "spawns": [
+            "Loot dogtags off dead PMCs, then hand 100 to Lightkeeper. Not a single placed spawn."
+          ]
         },
         {
           "id": "debt-amulets",
@@ -1448,6 +1680,12 @@
             "RB-PKPM marked key",
             "RB-BK marked key",
             "Lighthouse island stash key"
+          ],
+          "spawns": [
+            "One amulet in the Customs marked room (Dorm 314 key).",
+            "Two amulets in the two Streets marked rooms (abandoned factory marked key, and the Chekannaya 13 marked key).",
+            "Three amulets in the three Reserve marked rooms (RB-BK, RB-PKPM, RB-VO).",
+            "Stash each one in the Lighthouse marked stash room. Six separate stash trips."
           ]
         },
         {
@@ -1455,7 +1693,13 @@
           "title": "Buy Lightkeeper's RFID for 1 Blue Folders material",
           "detail": "This is your Terminal access item on Debtor.",
           "kind": "item",
-          "trader": "Lightkeeper"
+          "trader": "Lightkeeper",
+          "needs": [
+            "1 TerraGroup Blue Folders material"
+          ],
+          "spawns": [
+            "Not a world spawn. Lightkeeper sells the unnamed RFID once per raid for 1 Blue Folders material. You need a free special slot to hold it."
+          ]
         }
       ]
     },
@@ -1483,7 +1727,10 @@
           "title": "Ask the traders how to leave Tarkov",
           "detail": "Opens Prapor's smuggler line.",
           "kind": "quest",
-          "trader": "Prapor"
+          "trader": "Prapor",
+          "spawns": [
+            "Trader screens. This branch is the one that refuses to dig up dirt on TerraGroup."
+          ]
         },
         {
           "id": "fall-kept",
@@ -1496,6 +1743,14 @@
               "lock": "case",
               "is": "keep"
             }
+          ],
+          "needs": [
+            "50 military or advanced electronics",
+            "Secure container Theta, Epsilon or Kappa",
+            "40 full-durability weapon and armor repair kits"
+          ],
+          "spawns": [
+            "Only if you kept the armored case. Hand those three piles to Prapor. If you already gave him the case, skip this and go to the dangerous-cargo step."
           ]
         },
         {
@@ -1503,14 +1758,23 @@
           "title": "Hand over the Case with dangerous cargo",
           "detail": "Locate the case and give it to Prapor.",
           "kind": "item",
-          "trader": "Prapor"
+          "trader": "Prapor",
+          "spawns": [
+            "Hand Prapor the Case with dangerous cargo. It is a quest item from his task chain, not a loose Labs spawn."
+          ]
         },
         {
           "id": "fall-cash",
           "title": "Hand over 1,000,000 USD",
           "detail": "The smuggler fee. Then wait for Prapor and collect his hash codes.",
           "kind": "item",
-          "trader": "Prapor"
+          "trader": "Prapor",
+          "needs": [
+            "1,000,000 USD"
+          ],
+          "spawns": [
+            "Not a raid spawn. Hand the dollars to Prapor, then wait for his message."
+          ]
         },
         {
           "id": "fall-solar",
@@ -1520,14 +1784,20 @@
           "hideout": {
             "station": "Solar Power",
             "level": 1
-          }
+          },
+          "spawns": [
+            "Not a raid. Solar Power level 1, on the Fallen branch, before Prapor issues his hash-code RFID."
+          ]
         },
         {
           "id": "fall-hash",
           "title": "Take the RFID with Prapor's hash codes",
           "detail": "This is your Terminal access item on Fallen.",
           "kind": "item",
-          "trader": "Prapor"
+          "trader": "Prapor",
+          "spawns": [
+            "Prapor mails the RFID with his hash codes after the wait. Swipe it at the Shoreline port intercom, 21:00–06:00. Not a raid pickup."
+          ]
         }
       ]
     },
@@ -1552,7 +1822,12 @@
           "maps": [
             "shoreline"
           ],
-          "location": "Port intercom on Shoreline"
+          "location": "Port intercom on Shoreline",
+          "spawns": [
+            "Shoreline port intercom, 21:00–06:00.",
+            "Savior: Kerman hash-code RFID. Survivor: Prapor's letter. Debtor: Lightkeeper's unnamed RFID. Fallen: Prapor's hash-code RFID.",
+            "The card is consumed when you transit. Dying or extracting on Terminal returns you to the state you had before entry, except the spent card."
+          ]
         },
         {
           "id": "term-alpha",
@@ -1565,6 +1840,10 @@
           "location": "Terminal armory, desk under the window",
           "endings": [
             "savior"
+          ],
+          "spawns": [
+            "Terminal armory. Alpha-1 container is on the desk under the window.",
+            "Savior only. You must extract with it on you. Fail the raid and you retry the armory."
           ]
         },
         {
@@ -1575,7 +1854,18 @@
           "maps": [
             "terminal"
           ],
-          "location": "Zubr boat at the pier"
+          "location": "Zubr boat at the pier",
+          "keys": [
+            "Black Division keycard",
+            "Pier door key",
+            "Armory key"
+          ],
+          "spawns": [
+            "Black Division keycard: on the Black Division squad at the admin-building door. Opens the service passage.",
+            "Pumping station: two toolsets in static spots, every raid. Drain the water, then the pier-gate key is in the safe.",
+            "Pier: Zubr boat. A 3-minute extract timer starts when you reach the pier.",
+            "Boss, one per raid, in the medium container-ship berths. East bay avoids him. Centre bay walks into him."
+          ]
         }
       ]
     }

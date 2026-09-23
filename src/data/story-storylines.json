@@ -28,7 +28,10 @@
             "customs"
           ],
           "location": "Dorm courtyard, Customs",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Customs, courtyard between the two-storey and three-storey dorms. White sedan covered in writing. Walking up to it starts the chapter."
+          ]
         },
         {
           "id": "aw-kozlov-door",
@@ -39,7 +42,10 @@
             "customs"
           ],
           "location": "Dorm room 110 door",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Two-storey dorms, first floor, room 110. The note is on the wall just under the room number. You do not need the key for this note."
+          ]
         },
         {
           "id": "aw-kozlov-room",
@@ -53,7 +59,11 @@
             "Dorm room 110 key"
           ],
           "parallel": true,
-          "location": "Two-storey dorms, room 110, first floor — letter on the nightstand"
+          "location": "Two-storey dorms, room 110, first floor — letter on the nightstand",
+          "spawns": [
+            "Inside room 110, letter on the nightstand. Dorm room 110 key.",
+            "Optional repair-shop note: kitchen wall next to room 110, no key."
+          ]
         },
         {
           "id": "aw-skier-anastasia",
@@ -61,7 +71,10 @@
           "detail": "Trader screen. He points you at his accomplice's apartment.",
           "kind": "quest",
           "trader": "Skier",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid. Skier trader screen. He names the Zmeisky apartment."
+          ]
         },
         {
           "id": "aw-zmeisky",
@@ -89,7 +102,10 @@
           "detail": "Both through the trader screen.",
           "kind": "quest",
           "trader": "Skier",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid. Skier first, then Ragman, both on the trader screen. Extract Streets before this or the report is not available."
+          ]
         },
         {
           "id": "aw-anastasia",
@@ -100,7 +116,11 @@
             "streets-of-tarkov"
           ],
           "location": "Chekannaya 13 mailbox",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Chekannaya 13, Streets, second floor is the apartment.",
+            "Then go back down to the building mailbox and read the letter and the Tarkov Herald newspaper there."
+          ]
         },
         {
           "id": "aw-pasha",
@@ -111,7 +131,10 @@
             "customs"
           ],
           "location": "Dorm courtyard bicycle",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Customs, beside the two-storey dorms. Unsealed envelope next to the bicycle. Then talk to Skier again."
+          ]
         },
         {
           "id": "aw-reshala",
@@ -125,7 +148,12 @@
             "Reshala's bunkhouse key"
           ],
           "parallel": true,
-          "location": "Reshala's bunkhouse, Customs"
+          "location": "Reshala's bunkhouse, Customs",
+          "spawns": [
+            "Customs bunkhouse. Reshala's bunkhouse key.",
+            "Three notes inside: his work notes and Pasha's belongings are among them.",
+            "Optional: kill Reshala if you still need the key."
+          ]
         },
         {
           "id": "ev-tape",
@@ -136,7 +164,10 @@
             "shoreline"
           ],
           "location": "West village house 3, flower bed",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Shoreline, west village, house 3. The incriminating tape is in the flower bed. This is major evidence. Extract with it."
+          ]
         }
       ]
     },
@@ -174,7 +205,12 @@
             "lighthouse"
           ],
           "parallel": true,
-          "location": "Cabin on the hill south-west of New Gas on Customs, plus other Bogatyr patch spawns"
+          "location": "Cabin on the hill south-west of New Gas on Customs, plus other Bogatyr patch spawns",
+          "spawns": [
+            "Customs: couch in the cabin on the hill south-west of New Gas.",
+            "Also on the ground next to the BRDM in a cargo convoy.",
+            "Further spawns on Woods, Reserve and Lighthouse. Reading any one patch starts the asks."
+          ]
         },
         {
           "id": "batya-jaeger",
@@ -182,7 +218,10 @@
           "detail": "Trader screen.",
           "kind": "quest",
           "trader": "Jaeger",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid. Jaeger trader screen, after you have read a Bogatyr patch."
+          ]
         },
         {
           "id": "batya-ryabina",
@@ -193,7 +232,10 @@
             "woods"
           ],
           "location": "Ryabina camp, north of sawmill",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Woods, north of the sawmill. Read the notes in the Ryabina outpost. A keepsake of one Bogatyr is optional loot here."
+          ]
         },
         {
           "id": "batya-carousel",
@@ -204,7 +246,10 @@
             "interchange"
           ],
           "location": "ULTRA, opposite IDEA checkout",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Interchange, inside ULTRA, opposite the IDEA checkout. The squad's personal notes are in that outpost."
+          ]
         },
         {
           "id": "batya-gnezdo",
@@ -215,7 +260,10 @@
             "interchange"
           ],
           "location": "East of ULTRA",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Interchange, east of ULTRA. Search the Gnezdo outpost for what happened to the squad."
+          ]
         },
         {
           "id": "batya-grave",
@@ -226,7 +274,10 @@
             "woods"
           ],
           "location": "East Woods, near ZB-016",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Woods, east side, by the ZB-016 extract. Moreman's grave. Take his phone and, if it is there, a Bogatyr dogtag."
+          ]
         },
         {
           "id": "batya-phone-craft",
@@ -237,7 +288,10 @@
             "station": "Workbench",
             "level": 1
           },
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid. Workbench 1. Craft the playback of Moreman's phone, then listen to the tapes in your stash."
+          ]
         },
         {
           "id": "batya-intel-3",
@@ -248,7 +302,10 @@
             "station": "Intelligence Center",
             "level": 3
           },
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid. Intelligence Center level 3, then use the radio to contact the squad."
+          ]
         },
         {
           "id": "batya-lightkeeper",
@@ -259,7 +316,17 @@
           "maps": [
             "lighthouse"
           ],
-          "parallel": true
+          "parallel": true,
+          "needs": [
+            "Taran's postcard",
+            "Voevoda's audio recorder",
+            "Strelets' amulet",
+            "Moreman's dogtag",
+            "Bogatyr patch"
+          ],
+          "spawns": [
+            "Move all five keepsakes into your in-raid quest inventory and hand them to Lightkeeper on the lighthouse 3rd floor."
+          ]
         },
         {
           "id": "batya-voevoda",
@@ -267,7 +334,11 @@
           "detail": "LMG 5, AR 10, Stress Resistance 10, Strength 15, 15 kills without dying, 4 PMC kills without dying. Radio again at 35.70 / 27.893.2000.",
           "kind": "quest",
           "wait": "6–12 hours",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Wait 6–12 hours, then radio Voevoda.",
+            "He asks for Light machine guns 5, Assault rifles 10, Stress resistance 10, Strength 15, 15 kills without dying, and 4 PMCs without dying."
+          ]
         },
         {
           "id": "batya-traitors",
@@ -278,7 +349,12 @@
           "maps": [
             "lighthouse"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Lighthouse BEAR camp: the note that names Prapor.",
+            "Then interrogate Prapor on the trader screen.",
+            "Optional looks: Reserve command bunker, and the BEAR camp east of ULTRA on Interchange."
+          ]
         },
         {
           "id": "batya-cult",
@@ -293,7 +369,13 @@
           "keys": [
             "Dorm room 314 marked key"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Shoreline: Voevoda's photo with the cultist mark. One copy is on the island.",
+            "Or the marked-room note. Customs three-storey dorms, 3rd floor, Dorm 314 marked key.",
+            "Streets: 3rd floor of the northern abandoned factory, Abandoned factory marked key.",
+            "Reserve: black pawn barracks, RB-BK; command tunnels, RB-PKPM; security barracks, RB-VO. Only one of those notes is required."
+          ]
         },
         {
           "id": "ev-agent",
@@ -306,7 +388,10 @@
           "location": "Lightkeeper island, red crate",
           "trader": "Lightkeeper",
           "wait": "6 hours",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Lightkeeper's island. The agent-network report is in the red crate. Major evidence. Take it before you leave the island."
+          ]
         }
       ]
     },
@@ -343,7 +428,12 @@
             "the-labyrinth"
           ],
           "parallel": true,
-          "location": "Tent west of the highway near Path to River on Interchange, or the other EMERCOM leaflet spawns"
+          "location": "Tent west of the highway near Path to River on Interchange, or the other EMERCOM leaflet spawns",
+          "spawns": [
+            "Interchange: tent west of the highway, near Path to River.",
+            "Also on Woods, and inside the Labyrinth.",
+            "Reading any one leaflet starts the chapter."
+          ]
         },
         {
           "id": "bf-mechanic",
@@ -351,7 +441,10 @@
           "detail": "Trader screen.",
           "kind": "quest",
           "trader": "Mechanic",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid. Mechanic trader screen. You need him unlocked from Tour first."
+          ]
         },
         {
           "id": "bf-fragment",
@@ -383,7 +476,12 @@
             "the-lab"
           ],
           "location": "Labs server room, first floor",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "The Lab, server room on the first floor, next to the hangar.",
+            "Plant the local-network hacking device. Mechanic mails you one and also barters more.",
+            "This is a plant, not a pickup."
+          ]
         },
         {
           "id": "bf-keep-or-sell",
@@ -392,7 +490,10 @@
           "kind": "note",
           "trader": "Mechanic",
           "required": false,
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid. Keep the Item 1156 fragment, or sell it to Mechanic for about 1,500,000 roubles. Keeping it is what the later evidence step expects."
+          ]
         },
         {
           "id": "bf-lead",
@@ -407,7 +508,13 @@
           "keys": [
             "TerraGroup science office key"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Ground Zero: TerraGroup building, office 4, second floor. TerraGroup science office key. Level 21+.",
+            "Lighthouse: northern blue chalet, first floor, bookshelf by the central stairs.",
+            "The Lab: office O22, second floor, on a desk.",
+            "Any one lead is enough. Not every spawn needs the key."
+          ]
         },
         {
           "id": "bf-ruspost-tapes",
@@ -418,7 +525,10 @@
             "streets-of-tarkov"
           ],
           "location": "Rus Post office",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Streets, Rus Post office. Three audio tapes inside the post office. Listen to all three. No key named for the tapes themselves."
+          ]
         },
         {
           "id": "ev-1156",
@@ -432,7 +542,10 @@
           "keys": [
             "Rus Post car key"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Streets. The Item #1156 specification is in the Rus Post van, not inside the post office. Major evidence."
+          ]
         }
       ]
     },
@@ -467,7 +580,10 @@
             "station": "Intelligence Center",
             "level": 3
           },
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Read a Boreas poster in raid, or call it in from the Intelligence Center 3 radio. Either one starts the chapter."
+          ]
         },
         {
           "id": "bor-mechanic",
@@ -475,7 +591,10 @@
           "detail": "Trader screen.",
           "kind": "quest",
           "trader": "Mechanic",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid. Mechanic trader screen. Ask where the distress signal came from."
+          ]
         },
         {
           "id": "bor-woods-tower",
@@ -486,7 +605,13 @@
             "woods"
           ],
           "location": "Scav bunker / cell tower",
-          "parallel": true
+          "parallel": true,
+          "needs": [
+            "Toolset"
+          ],
+          "spawns": [
+            "Woods, under the cellular tower by the scav bunker. Repair the equipment with a toolset you bring in."
+          ]
         },
         {
           "id": "bor-directive",
@@ -497,7 +622,10 @@
             "lighthouse"
           ],
           "location": "North freight yard warehouse",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Lighthouse, warehouse in the freight yard on the north side of the map. Pick up and read the Paradigm Shipping directive."
+          ]
         },
         {
           "id": "bor-prapor-btr",
@@ -508,7 +636,13 @@
           "maps": [
             "reserve"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "AMG-10 hydraulic fluid is a quest item on Reserve, several loose spawns. The barter AMG-10 does not count.",
+            "If you kept the Falling Skies case, Prapor also wants 3 found-in-raid military power filters.",
+            "If you have not done Falling Skies: 30 kills on Reserve, then a yellow flare at the Woods transit on Reserve.",
+            "Then the BTR driver's jobs: either Price of Independence, or Choose Your Friends Wisely (200 7.62x54 BT, burn Skier's docs in the ditch between the scav base and the lab on Customs, 15 scav kills on smuggler ground)."
+          ]
         },
         {
           "id": "bor-hovercraft",
@@ -519,7 +653,17 @@
             "shoreline"
           ],
           "location": "Shoreline pier hovercraft",
-          "parallel": true
+          "parallel": true,
+          "needs": [
+            "Sudak-Tudak marine repair kit",
+            "Green RSP flare",
+            "2,400 euros"
+          ],
+          "spawns": [
+            "Hovercraft is at the pier on Shoreline or the pier on Lighthouse.",
+            "You must be carrying the marine repair kit to board.",
+            "Green flare and 2,400 euros are the fare to leave the icebreaker later."
+          ]
         },
         {
           "id": "bor-ship",
@@ -530,7 +674,19 @@
             "icebreaker",
             "the-lab"
           ],
-          "parallel": true
+          "parallel": true,
+          "keys": [
+            "Boreas engine room keycard"
+          ],
+          "spawns": [
+            "Scientist intercom: level 1, east side of the ship.",
+            "Engine-room keycard: centre medical room on level 1, next to an engineer body.",
+            "Engine-room door: level 0 east side, keycard reader by the control room, then the level 1 doors, then down to level -2.",
+            "Chained door: extraction side, down two levels, around the helipad, up to level 3. Try it so the quest asks for an SZ-1 charge.",
+            "Code door on level 6 is 312220 after Mechanic's second half.",
+            "Hatch on the bridge roof has to be thawed. Captain is behind it.",
+            "Compartment C-1 needs its own keycard."
+          ]
         },
         {
           "id": "bor-drives",
@@ -541,7 +697,16 @@
             "icebreaker"
           ],
           "trader": "Mechanic",
-          "parallel": true
+          "parallel": true,
+          "needs": [
+            "3 FiR Ultralink satellite modules",
+            "4 FiR server RAM modules",
+            "2 FiR cryptographic processors"
+          ],
+          "spawns": [
+            "Three hard drives are inside compartment C-1: on the shelves, by the workstation, and in the servers.",
+            "The decode materials also spawn on the icebreaker. Hand the drives plus those parts to Mechanic."
+          ]
         },
         {
           "id": "ev-ice",
@@ -552,7 +717,10 @@
           "maps": [
             "icebreaker"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid pickup. After Mechanic decodes the drives, the Icebreaker archive arrives in your mail. That mail item is the major evidence."
+          ]
         }
       ]
     },
@@ -581,7 +749,10 @@
           "kind": "quest",
           "trader": "Jaeger",
           "wait": "12–24 hours",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid. Jaeger trader screen. He mails the Labrys keycards 12–24 hours later."
+          ]
         },
         {
           "id": "lab-transit",
@@ -596,7 +767,10 @@
             "Knossos key",
             "Labrys access card"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Shoreline health resort, west wing basement. The Labyrinth transit door needs the Knossos key. Labrys cards are the ones Jaeger mailed."
+          ]
         },
         {
           "id": "lab-clear",
@@ -606,7 +780,11 @@
           "maps": [
             "the-labyrinth"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Your Labyrinth spawn chamber, then the food container on the ground in front of spawn chamber 2. Leshy's orders are in that container.",
+            "Squad leader and Leshy's diary are by the torture room."
+          ]
         },
         {
           "id": "lab-staff",
@@ -621,7 +799,12 @@
             "Observation room key"
           ],
           "parallel": true,
-          "location": "Five scientist bodies; body 4 is in the observation room"
+          "location": "Five scientist bodies; body 4 is in the observation room",
+          "spawns": [
+            "Five notes, one on each lab-staff body.",
+            "Body 4 is in the observation room. Observation room key.",
+            "Audio tape is in that same office. Hand the tape to Jaeger."
+          ]
         },
         {
           "id": "ev-labyrinth",
@@ -632,7 +815,10 @@
             "shoreline"
           ],
           "location": "Pier drain pipe",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Shoreline pier. The facility report is in the drain pipe. Major evidence."
+          ]
         }
       ]
     },
@@ -685,7 +871,11 @@
           "maps": [
             "the-lab"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "The Lab, first floor, laboratory next to the dome: document on enterprise interactions.",
+            "Same lab: cargo-transport fax. Read both."
+          ]
         },
         {
           "id": "uh-factory-log",
@@ -696,7 +886,10 @@
             "factory"
           ],
           "parallel": true,
-          "location": "Yellow barrel by the hole in the floor, Factory"
+          "location": "Yellow barrel by the hole in the floor, Factory",
+          "spawns": [
+            "Factory. Transport log on the yellow barrel next to the hole in the floor."
+          ]
         },
         {
           "id": "uh-rzhevsky",
@@ -711,7 +904,11 @@
             "level": 1
           },
           "parallel": true,
-          "location": "Rzhevsky's car by LexOs — hard drive on the centre console"
+          "location": "Rzhevsky's car by LexOs — hard drive on the centre console",
+          "spawns": [
+            "Streets, car by the LexOs dealership. Hard drive is on the centre console.",
+            "Craft the printout at Intelligence Center 1. Power must stay on or the craft stops. Then read the transcript."
+          ]
         },
         {
           "id": "ev-fuel",
@@ -725,7 +922,10 @@
           "keys": [
             "TerraGroup storage room keycard"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Factory, underground TerraGroup storage. The Blue Ice fuel-catalyst report is the major evidence."
+          ]
         },
         {
           "id": "uh-ap-lab",
@@ -735,7 +935,10 @@
           "maps": [
             "the-lab"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "The Lab. One of two whiteboards, plus two audio tapes in the lecture rooms. Listen to both tapes."
+          ]
         },
         {
           "id": "uh-ap-resort",
@@ -748,7 +951,11 @@
           "trader": "Mechanic",
           "location": "Health Resort east wing room 305. Room number is on the west-wing guard desk note.",
           "wait": "6–12 hours",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Optional first: west wing, first floor, desk by the southern security room. That note names the room.",
+            "East wing room 305: A.P.'s flash drive and the corporate apartment key."
+          ]
         },
         {
           "id": "uh-green-card",
@@ -760,7 +967,10 @@
             "level": 1
           },
           "parallel": true,
-          "location": "Hideout Intelligence Center 1"
+          "location": "Hideout Intelligence Center 1",
+          "spawns": [
+            "Not a raid. Intelligence Center 1 crafts the green apartment keycard. Blue and red cards are fakes and do not open the hidden room."
+          ]
         },
         {
           "id": "ev-warden",
@@ -775,7 +985,10 @@
             "TerraGroup corporate apartment key",
             "Reprogrammed A.P. keycard (Green)"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Streets, Cardinal apartment 1, hidden office behind the green keycard door. The Warden document is in that office. Major evidence."
+          ]
         }
       ]
     },
@@ -819,7 +1032,10 @@
             "RB-VO marked key",
             "RB-PKPM marked key"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Eye of the World note. Spawns on Customs, Reserve, Woods and Shoreline. Reading any one starts the chapter."
+          ]
         },
         {
           "id": "taah-lighthouse-house",
@@ -833,7 +1049,11 @@
             "Cult victim's apartment key"
           ],
           "parallel": true,
-          "location": "Lighthouse torture house / blue chalet"
+          "location": "Lighthouse torture house / blue chalet",
+          "spawns": [
+            "Lighthouse, cultist torture house. Audio tape #2 is inside.",
+            "Cult victim's apartment key can spawn in the same house."
+          ]
         },
         {
           "id": "taah-victim-apt",
@@ -860,7 +1080,14 @@
           "detail": "Priest note only spawns after the priest is dead, in one marked room: Customs 3-storey 3F, Streets northern abandoned factory 3F, or Reserve RB-BK / PKPM / VO.",
           "kind": "quest",
           "trader": "Mechanic",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a placed item. Kill any Cultist priest, then the priest note starts spawning in marked rooms.",
+            "Customs: 3rd floor, three-storey dorms, Dorm 314 marked key.",
+            "Streets: 3rd floor, northern abandoned factory, Abandoned factory marked key.",
+            "Reserve: black pawn barracks RB-BK; command tunnels RB-PKPM; security barracks RB-VO.",
+            "Only one of those notes is required, and it does not exist before the priest is dead."
+          ]
         },
         {
           "id": "taah-marks",
@@ -872,7 +1099,12 @@
             "woods",
             "shoreline"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Lighthouse: small southern bedroom, second floor of the northern blue chalet. Victim's note is on the balcony next to it. Damaged 14-4 KORD pass is on the ATV in front of the garage opposite the chalet.",
+            "Woods: cultist house in the north village, marked with the eye.",
+            "Shoreline: ground around the Sordi communications tower. Repair the tower there."
+          ]
         },
         {
           "id": "taah-restore-pass",
@@ -884,7 +1116,10 @@
             "station": "Intelligence Center",
             "level": 1
           },
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Not a raid. Mechanic, then craft the restored Station 14-4 KORD pass from the damaged one."
+          ]
         },
         {
           "id": "taah-cobalt",
@@ -895,7 +1130,11 @@
             "interchange"
           ],
           "location": "Power station basement",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Interchange, power-station basement, NGO Cobalt's room behind the restored pass.",
+            "Turn the station power on, turn cooling on in the server room, then plant a flash drive. Do not take the drive yet."
+          ]
         },
         {
           "id": "taah-reset",
@@ -906,7 +1145,12 @@
             "interchange"
           ],
           "trader": "Mechanic",
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Same Interchange basement, second trip.",
+            "Read the mechanic notes, restore the station to backup settings, and only then pull the flash drive.",
+            "Extract Interchange Survived or Run-Through. Taking the drive before the reset blanks the evidence."
+          ]
         },
         {
           "id": "ev-arrs",
@@ -917,7 +1161,10 @@
           "maps": [
             "interchange"
           ],
-          "location": "ARRS station 14-4 KORD, Interchange — flash drive after the backup reset"
+          "location": "ARRS station 14-4 KORD, Interchange — flash drive after the backup reset",
+          "spawns": [
+            "Not a floor spawn. After you extract with the flash drive, the ARRS specification arrives in the mail and the Handbook. That mail item is the major evidence."
+          ]
         }
       ]
     },
@@ -952,7 +1199,12 @@
             "Cardinal apartment key",
             "TerraGroup Labs keycard (Black)"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Cardinal apartment key: Streets, Cardinal complex.",
+            "Black keycard: Cultists, the Goons, Tagilla, Kaban, Partisan, rare valuables, and marked rooms. It opens both the Cardinal bedroom safe and Labs R22.",
+            "Labs access keycard is a separate single-use card if you still need to enter Labs for the master pass."
+          ]
         },
         {
           "id": "ev-msa",
@@ -967,7 +1219,10 @@
             "Cardinal apartment key",
             "TerraGroup Labs keycard (Black)"
           ],
-          "parallel": true
+          "parallel": true,
+          "spawns": [
+            "Streets, Cardinal apartment, locked bedroom. Black keycard opens the safe behind the painting. The Ms. A. transcript is in that safe. Major evidence, and it is easy to skip."
+          ]
         }
       ]
     }
