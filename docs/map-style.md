@@ -120,6 +120,26 @@ Marker filtering is by elevation `extents`, applied at render time after the
 floor filter — never at build time. Two points on different levels of
 Interchange are not one place however close they look from above.
 
+### Off-floor pips
+
+A floor filter is the one place the map throws information away, so it has to
+say so. Anything the active floor hides gets a faint dashed ring over where it
+actually is, in its layer's colour, with an arrow for which way to go; clicking
+it switches to that floor and opens the thing. `offFloorPoints()` in
+`lib/map-index.ts`.
+
+Three rules it must keep:
+
+- **Direction comes from elevation, not from the order of the floor menu.**
+  Every map lists its basement last, so reading the list sent players upstairs
+  to reach Factory's tunnels.
+- **One pip per name per floor.** A quest item with eleven spawns downstairs is
+  one pip that says "11 here", and a door both factions can use is one pip, not
+  two on the same pixel.
+- **Silence where the map does not know.** A point no floor claims gets no pip;
+  a guess is worse than nothing. A ground floor with no elevation band of its
+  own — Interchange — filters nothing, so it hides nothing, so it says nothing.
+
 ---
 
 ## 5. Interaction
@@ -130,6 +150,8 @@ Interchange are not one place however close they look from above.
 | Zoom | Wheel, pinch, or `+`/`-`. `zoomSnap: 0.1`, `zoomDelta: 0.25`, `wheelPxPerZoomLevel: 110` — fine enough to frame a building. |
 | Marker click | Opens the detail panel; on a phone, the bottom sheet |
 | Marker hover | Tooltip, and the glyph grows by `--marker-hover-scale` |
+| Off-floor pip click | Switches to the floor the thing is on and opens it |
+| Find on this map | Names every extract, transit, key, switch, hazard, boss zone, document spawn and task objective. Arrows move, Enter goes — turning on the layer, switching to the right floor, flying there and opening the card |
 | Quest step → map | `href.map(map, taskId)` focuses the map on that task and highlights its pins |
 | `0` | Fit the whole map |
 | `[` | Hide or show the side panel |
@@ -186,8 +208,8 @@ pile up, and return on hover, so the information is never actually lost.
 1. Add its georeferencing to `src/data/geo.json` — transform, bounds, rotation,
    `svgBounds`, floors, place labels.
 2. Point `svgPath` and/or `tilePath` at the art.
-3. That is all. Markers, colours, floors, tooltips, search and the layer panel
-   are inherited.
+3. That is all. Markers, colours, floors, tooltips, off-floor pips, search and
+   the layer panel are inherited.
 
 If step 3 is not true, the shell has a gap — fix the shell, not the map.
 
@@ -197,11 +219,19 @@ If step 3 is not true, the shell has a gap — fix the shell, not the map.
 
 Tracked honestly rather than quietly:
 
-- **Off-floor markers vanish** with no indication. tarkov.dev shows a badge for
-  "there is something on another floor here". Not built.
-- **No in-map marker search.** Search covers maps and tasks, not the pins on the
-  map you are looking at.
 - **Six maps cannot offer both styles** — see §1. Blocked on source art.
-- **Mixed-DPI / 4K unverified.** No drifted pins have been observed, but it has
-  not been measured on a real high-DPI display.
+- **Markers read small on a 4K desktop.** `--tk-marker-scale` is capped at 1, so
+  past about 1900px of map the pins stop growing with the artwork. The marker
+  size setting covers it, but the default could be better.
 - **Story steps have no photos.** `task-images.json` covers trader tasks only.
+
+### Measured, not assumed
+
+- **Mixed DPI.** Customs at 1440×900, `devicePixelRatio` 1 vs 2: the base SVG's
+  box and every marker's offset from it are identical to the pixel, and the
+  canvas backing store is exactly 2× its CSS size. Nothing drifts with density.
+- **4K.** 3840×2160 at 2×: no clipped canvas, no horizontal page scroll, art and
+  pins aligned. The artwork takes longer to parse at that size — closer to five
+  seconds than two on a cold load.
+- **Phone.** 390px: no horizontal overflow, and the panel is reachable as a
+  sheet with the search box in it.

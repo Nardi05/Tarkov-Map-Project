@@ -12,7 +12,9 @@ import {
 } from "../lib/base-layer";
 import { buildLayer, type Selection } from "../lib/build-layers";
 import { createDeclutterer } from "../lib/declutter";
-import { LAYERS, type LayerId } from "../lib/layers";
+import { LAYER_BY_ID, LAYERS, type LayerId } from "../lib/layers";
+import { offFloorIcon } from "../lib/marker-icons";
+import type { OffFloorPoint } from "../lib/map-index";
 import type { QuestMarker, TaskStatus } from "../types";
 import type { MapStyle } from "../store";
 import { icons } from "./ui";
@@ -40,6 +42,12 @@ interface Props {
   dimCompleted: boolean;
   selection: Selection | null;
   onSelect: (selection: Selection | null) => void;
+  /**
+   * What the active floor is hiding. Worked out by the page, which is the only
+   * place that knows both the layer switches and the quest filter.
+   */
+  offFloor: OffFloorPoint[];
+  onGoToFloor: (floorId: string) => void;
   focus: FocusRequest | null;
   /** Bumped to ask the map to fit the whole bounds again. */
   fitToken?: number;
@@ -51,6 +59,8 @@ interface Props {
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
 }
+
+const escapeHtml = (s: string) => s.replace(/[<>&"]/g, (c) => `&#${c.charCodeAt(0)};`);
 
 /** Where the currently selected thing sits, so we can ring it on the map. */
 function selectionPosition(selection: Selection | null): Vec3 | null {
@@ -85,6 +95,7 @@ export default function MapCanvas(props: Props) {
     layers,
     selection,
     onSelect,
+    onGoToFloor,
     focus,
     fitToken,
     isFullscreen,
@@ -106,6 +117,7 @@ export default function MapCanvas(props: Props) {
    */
   const questsFreshRef = useRef(false);
   const highlightRef = useRef<L.Layer | null>(null);
+  const offFloorRef = useRef<L.LayerGroup | null>(null);
   const declutterRef = useRef<(() => void) | null>(null);
   const refitRef = useRef<(() => void) | null>(null);
   const fitRef = useRef<(() => void) | null>(null);
@@ -250,6 +262,7 @@ export default function MapCanvas(props: Props) {
       labelsRef.current = null;
       markerLayersRef.current.clear();
       highlightRef.current = null;
+      offFloorRef.current = null;
       declutterRef.current = null;
       refitRef.current = null;
       fitRef.current = null;
@@ -411,6 +424,62 @@ export default function MapCanvas(props: Props) {
     declutterRef.current?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layers, ...baseDeps]);
+
+  /* --------------------------------------------------------------- off-floor */
+
+  /**
+   * The floor filter is the one place this map silently throws information
+   * away: pick a level on Interchange and every extract downstairs stops
+   * existing, with nothing on screen admitting it ever did. These pips sit over
+   * where the hidden thing actually is, in its layer's colour so you can still
+   * tell a key from an exit, and take you to its floor when clicked.
+   *
+   * Its own layer group rather than a LAYERS entry, because it is not a kind of
+   * thing on the map — it is a note about the view, and it appears and vanishes
+   * with the floor rather than with a switch.
+   */
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    if (offFloorRef.current) {
+      map.removeLayer(offFloorRef.current);
+      offFloorRef.current = null;
+    }
+    if (!props.offFloor.length) return;
+
+    const markers = props.offFloor.map((point) => {
+      const color = LAYER_BY_ID[point.layer].color;
+      const where = point.direction === "up" ? "up on" : "down on";
+      const detail = point.count > 1 ? `${point.count} here, ${where} ${point.floorName}` : `${where.charAt(0).toUpperCase()}${where.slice(1)} ${point.floorName}`;
+      const marker = L.marker(toLatLng(point.position), {
+        icon: offFloorIcon(color, point.direction, props.markerScale, point.count),
+        keyboard: true,
+        // Never over a real marker: this is a footnote, not a pin.
+        zIndexOffset: -300,
+        title: `${point.title} — ${detail}`,
+      });
+      marker.bindTooltip(
+        `<b>${escapeHtml(point.title)}</b><span>${escapeHtml(detail)} · click to go there</span>`,
+        { direction: "top", offset: [0, -10], className: "tk-tip" },
+      );
+      const go = () => {
+        onGoToFloor(point.floorId);
+        if (point.select) onSelect(point.select);
+      };
+      marker.on("click", go);
+      marker.on("keydown", (e) => {
+        const ev = (e as unknown as { originalEvent: KeyboardEvent }).originalEvent;
+        if (ev.key !== "Enter" && ev.key !== " " && ev.key !== "Spacebar") return;
+        ev.preventDefault();
+        go();
+      });
+      return marker;
+    });
+
+    const group = L.layerGroup(markers).addTo(map);
+    offFloorRef.current = group;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.offFloor, props.markerScale]);
 
   /* --------------------------------------------------------------- highlight */
   const highlightAt = useMemo(() => selectionPosition(selection), [selection]);

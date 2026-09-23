@@ -2323,7 +2323,7 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
 }
 
 .tk-marker:hover .marker-shape {
-  transform: scale(1.18);
+  transform: scale(var(--marker-hover-scale));
 }
 
 .tk-marker .marker-check {
@@ -2357,6 +2357,42 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
   line-height: 1.35;
   white-space: nowrap;
   pointer-events: none;
+}
+
+/*
+ * "There is something here, on another level."
+ *
+ * Held back to roughly the same strength as the dimmed ground plan it usually
+ * sits over, so the floor you chose still reads as the floor you chose. It
+ * comes up to full on hover, which is the moment you have asked about it.
+ */
+.tk-offfloor {
+  display: grid;
+  place-items: center;
+  opacity: 0.62;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.tk-offfloor .marker-shape {
+  transition: transform var(--dur-fast) var(--ease);
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.5));
+}
+
+.tk-offfloor:hover,
+.tk-offfloor:focus-visible {
+  opacity: 1;
+}
+
+.tk-offfloor:hover .marker-shape,
+.tk-offfloor:focus-visible .marker-shape {
+  transform: scale(var(--marker-hover-scale));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tk-offfloor,
+  .tk-offfloor .marker-shape {
+    transition: none;
+  }
 }
 
 .tk-spawn {

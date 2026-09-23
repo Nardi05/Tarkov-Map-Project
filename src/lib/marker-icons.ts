@@ -161,3 +161,48 @@ export function markerIcon({ shape, color, scale, label, labelPriority = 0, done
 export function swatchSvg(shape: MarkerShape, color: string, size = 18): string {
   return markerSvg(shape, color, size);
 }
+
+/* -------------------------------------------------------------- off-floor */
+
+/**
+ * "There is something here, but it is on another level."
+ *
+ * Deliberately not one of the GLYPHS: it is not a thing on the map, it is a
+ * note about a thing that is elsewhere, and it has to read that way at a
+ * glance. So it keeps the layer's colour — you can still tell an extract from
+ * a key — but drops to an open ring with an arrow through it, which no real
+ * marker looks like. It is quieter than everything around it on purpose; a
+ * signpost that shouted would just be the floor filter undone.
+ */
+export function offFloorSvg(color: string, direction: "up" | "down", size: number): string {
+  const arrow =
+    direction === "up"
+      ? "M12 16.4V8.4m-3 3 3-3 3 3"
+      : "M12 7.6v8m-3-3 3 3 3-3";
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" style="--mc:${color}" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="rgba(6,10,15,.62)" stroke="var(--mc)" stroke-width="2" stroke-dasharray="3.2 2.4"/>
+            <path d="${arrow}" fill="none" stroke="var(--mc)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>`;
+}
+
+export function offFloorIcon(
+  color: string,
+  direction: "up" | "down",
+  scale: number,
+  count: number,
+): L.DivIcon {
+  const cacheKey = `off|${color}|${direction}|${scale}|${count > 1 ? "n" : "1"}`;
+  const cached = iconCache.get(cacheKey);
+  if (cached) return cached;
+
+  const size = Math.round(19 * scale);
+  const icon = L.divIcon({
+    className: "tk-offfloor",
+    html: `<span class="marker-shape">${offFloorSvg(color, direction, size)}</span>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+  });
+  if (iconCache.size > 400) iconCache.clear();
+  iconCache.set(cacheKey, icon);
+  return icon;
+}

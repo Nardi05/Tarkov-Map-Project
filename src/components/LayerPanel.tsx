@@ -4,7 +4,10 @@ import { swatchSvg } from "../lib/marker-icons";
 import { useStore } from "../store";
 import type { DocumentSpawn, MapData } from "../types";
 import DocumentList from "./DocumentList";
+import MapSearch from "./MapSearch";
 import { Icon, icons, Section, Toggle } from "./ui";
+import type { Floor } from "../lib/base-layer";
+import type { SearchResult } from "../lib/map-index";
 
 /** How many of a layer's markers this map actually has, for the count badges. */
 function useCounts(data: MapData, visibleQuestCount: number): Record<LayerId, number> {
@@ -133,9 +136,15 @@ function LayerRow({
 export default function LayerPanel({
   data,
   visibleQuestCount,
+  floors,
+  floorId,
+  onFind,
 }: {
   data: MapData;
   visibleQuestCount: number;
+  floors: Floor[];
+  floorId: string;
+  onFind: (result: SearchResult) => void;
 }) {
   const layers = useStore((s) => s.layers);
   const toggleLayer = useStore((s) => s.toggleLayer);
@@ -166,6 +175,10 @@ export default function LayerPanel({
 
   return (
     <div>
+      {/* Above the layer switches on purpose: when you already know the name of
+          the thing you want, finding the right switch is the long way round. */}
+      <MapSearch data={data} floors={floors} currentFloorId={floorId} onPick={onFind} />
+
       <Section title="Quick views" hint="One tap to switch what the map is for.">
         <div className="flex flex-wrap gap-1.5">
           {PRESETS.map((preset) => (

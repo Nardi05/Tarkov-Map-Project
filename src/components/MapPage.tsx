@@ -13,6 +13,7 @@ import { LAYERS } from "../lib/layers";
 import { swatchSvg } from "../lib/marker-icons";
 import { filterQuests, type Selection } from "../lib/build-layers";
 import { useProgression } from "../lib/data";
+import { indexMap, offFloorPoints, type SearchResult } from "../lib/map-index";
 import { withinExtents } from "../lib/leaflet-crs";
 import { documentTypesOnMap, withSeasonTasks } from "../lib/kord-season";
 import { availableOnMap, computeAvailability } from "../lib/progression";
@@ -148,6 +149,23 @@ export default function MapPage({
   );
 
   /*
+   * Everything on this map as plain data, which the search box and the
+   * off-floor pips both read. Indexed once per map rather than per keystroke.
+   */
+  const points = useMemo(() => indexMap(mapData), [mapData]);
+
+  const offFloor = useMemo(() => {
+    const visibleQuestIds = new Set(visibleQuests.map((q) => q.id));
+    return offFloorPoints(points, floors, floorId, (point) => {
+      if (!layers[point.layer]) return false;
+      // A quest pin downstairs is only worth flagging if it would have been on
+      // screen at all — the quest filter is doing its job, not hiding a floor.
+      if (point.select?.kind === "quest") return visibleQuestIds.has(point.select.marker.id);
+      return true;
+    });
+  }, [points, floors, floorId, layers, visibleQuests]);
+
+  /*
    * Reset per-map view state when the map changes. This runs before the
    * deep-link effect below, so a `?q=` link still gets its task focused.
    */
@@ -193,6 +211,32 @@ export default function MapPage({
     setSelection(next);
     if (next) setSheetOpen(false);
   }, []);
+
+  /**
+   * A search result is a destination, so picking one does all three things a
+   * person means by "go there": switch to the floor it is on, fly to it, and
+   * open its detail card. `focusOn` already handles the floor, and it also
+   * makes sure the layer is showing — no point flying to a pin the switches
+   * have turned off.
+   */
+  const goToResult = useCallback(
+    (result: SearchResult) => {
+      if (!layers[result.layer]) setLayer(result.layer, true);
+      /*
+       * The quest layer draws your tasks, not every task, so a search hit on
+       * one you haven't ticked would fly you to an empty spot. Isolating it is
+       * what a deep link to a task already does, and it says so on screen with
+       * a banner you can dismiss.
+       */
+      const picked = result.select;
+      if (picked?.kind === "quest" && !visibleQuests.some((q) => q.id === picked.marker.id)) {
+        setQuestFilter("focusTask", picked.task.id);
+      }
+      focusOn(result.position);
+      if (result.select) setSelection(result.select);
+    },
+    [focusOn, layers, setLayer, setQuestFilter, visibleQuests],
+  );
 
   /* ---------------------------------------------------------- fullscreen */
 
@@ -315,7 +359,15 @@ export default function MapPage({
 
   const panel = (
     <>
-      {tab === "layers" && <LayerPanel data={mapData} visibleQuestCount={visibleQuests.length} />}
+      {tab === "layers" && (
+        <LayerPanel
+          data={mapData}
+          visibleQuestCount={visibleQuests.length}
+          floors={floors}
+          floorId={floorId}
+          onFind={goToResult}
+        />
+      )}
       {tab === "tasks" && (
         <TaskPanel data={mapData} availability={availability} onFocus={focusOn} />
       )}
@@ -540,6 +592,8 @@ export default function MapPage({
             dimCompleted={settings.dimCompleted}
             selection={selection}
             onSelect={handleSelect}
+            offFloor={offFloor}
+            onGoToFloor={setFloorId}
             focus={focus}
             fitToken={fitToken}
             isFullscreen={isFullscreen}
