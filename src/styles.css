@@ -1455,76 +1455,6 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     margin-top: 1.9rem;
   }
 
-  /* ------------------------------------------------------ one-screen task setup */
-
-  .setup-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 0.75rem 1rem;
-  }
-
-  .setup-character {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    gap: 0.75rem;
-    margin-top: 1rem;
-  }
-
-  .setup-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .setup-field .input {
-    width: auto;
-    min-width: 5rem;
-  }
-
-  .setup-tools {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1.25rem;
-  }
-
-  .setup-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin-top: 0.75rem;
-  }
-
-  .setup-chip-n {
-    min-width: 1.1rem;
-    padding: 0 0.3rem;
-    border-radius: 999px;
-    background: var(--accent);
-    color: var(--accent-ink);
-    font-size: 0.625rem;
-    font-weight: 700;
-    text-align: center;
-  }
-
-  /* Stays in reach however long the list gets, so Save is never a scroll away. */
-  .setup-bar {
-    position: sticky;
-    bottom: 0;
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin: 0.5rem -0.25rem 0;
-    padding: 0.7rem 0.75rem calc(0.7rem + env(safe-area-inset-bottom, 0px));
-    border: 1px solid var(--line);
-    border-radius: var(--r) var(--r) 0 0;
-    background: color-mix(in srgb, var(--panel) 94%, transparent);
-    backdrop-filter: blur(14px);
-    box-shadow: var(--shadow-sm);
-  }
-
   /* ---------------------------------------------- wiki detail (tasks, chapters) */
 
   .wiki-detail {
@@ -1655,69 +1585,54 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     color: var(--text);
   }
 
-  /* ------------------------------------------------------------ dialog */
+  /* ----------------------------------------------- stale / failed data notice */
 
-  .dialog-root {
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    display: grid;
-    place-items: end center;
-  }
-
-  @media (min-width: 640px) {
-    .dialog-root {
-      place-items: center;
-      padding: 1rem;
-    }
-  }
-
-  .dialog-scrim {
-    position: absolute;
-    inset: 0;
-    background: rgb(0 0 0 / 0.6);
-    backdrop-filter: blur(4px);
-  }
-
-  .dialog-panel {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 32rem;
-    max-height: calc(100dvh - 2rem);
-    overflow: auto;
-    overscroll-behavior: contain;
-    padding: 0 1rem 1rem;
-    box-shadow: var(--shadow-lg);
-    outline: none;
-  }
-
-  .dialog-panel[data-wide] {
-    max-width: 40rem;
-  }
-
-  @media (max-width: 639px) {
-    .dialog-panel {
-      max-height: calc(100dvh - 1rem);
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    }
-  }
-
-  /* The title and close button stay put while the body scrolls under them. */
-  .dialog-head {
-    position: sticky;
-    top: 0;
-    z-index: 2;
+  .health-banner {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin: 0 -1rem 0.75rem;
-    padding: 1rem 1rem 0.6rem;
-    background: var(--panel);
-    border-bottom: 1px solid var(--line-soft);
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    padding: 0.55rem 0.6rem 0.55rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--warn) 45%, transparent);
+    border-radius: var(--r-sm);
+    background: color-mix(in srgb, var(--warn) 12%, var(--panel));
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .health-banner-icon {
+    display: flex;
+    flex: none;
+    color: var(--warn);
+  }
+
+  .health-banner-detail {
+    margin-top: 0.1rem;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+  }
+
+  .health-banner-compact {
+    margin: 0;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Floats over the top of the map; the map itself is untouched underneath. */
+  .map-health {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    z-index: 800;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .map-health > * {
+    max-width: 44rem;
+    pointer-events: auto;
   }
 
   /* ------------------------------------------------------------- trackers */
@@ -1883,21 +1798,6 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     .dash-grid[data-columns="2"] > .dash-panel[data-wide="true"] {
       grid-column: 1 / -1;
     }
-  }
-
-  /* A new character's dashboard: one thing to do. */
-  .dash-empty {
-    padding: 1.5rem 1.4rem;
-  }
-
-  /* Panels with nothing to show, as one line instead of a stack of cards. */
-  .dash-folded {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem;
-    margin-top: 1rem;
-    font-size: 0.75rem;
   }
 
   .dash-panel {
@@ -2476,15 +2376,8 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
    * outgoing page out as well would need both mounted at once, for a frame of
    * motion nobody is looking at.
    */
-  /*
-   * `backwards`, not `both`: holding the end keyframe keeps a transform on this
-   * element after the slide finishes, and any transform makes it the box that
-   * `position: fixed` children are placed against. A sheet opened after a tab
-   * change then opened against the whole page — a screen or more below the
-   * fold. Sheets are portalled out now too (see Dialog in ui.tsx).
-   */
   .tab-body {
-    animation: tab-in 0.3s var(--ease) backwards;
+    animation: tab-in 0.3s var(--ease) both;
   }
 
   .tab-body[data-slide="fwd"] {

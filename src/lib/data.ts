@@ -11,6 +11,7 @@ import type {
   TaskImage,
   TaskImages,
 } from "../types";
+import { dataHealth, type DataProblem, type DataSource, type Health } from "./data-health";
 import { kordProgressionTasks } from "./kord-season";
 
 /**
@@ -37,7 +38,7 @@ const SNAPSHOT = `${import.meta.env.BASE_URL}data/`;
 /** How old a payload may get before a returning tab quietly refetches it. */
 const STALE_AFTER_MS = 12 * 60 * 60 * 1000;
 
-export type DataSource = "live" | "snapshot";
+export type { DataProblem, DataSource, Health } from "./data-health";
 
 export interface DataStatus {
   /** Null until the first payload lands. */
@@ -48,9 +49,20 @@ export interface DataStatus {
   fetchedAt: number | null;
   /** True while a refresh is in flight. */
   refreshing: boolean;
+  /** Why the data is not a fresh live build, when a fallback happened. */
+  problem: DataProblem | null;
+  /** The upstream task feed was thin and patched from fallbacks. */
+  degraded: boolean;
 }
 
-let status: DataStatus = { source: null, generated: null, fetchedAt: null, refreshing: false };
+let status: DataStatus = {
+  source: null,
+  generated: null,
+  fetchedAt: null,
+  refreshing: false,
+  problem: null,
+  degraded: false,
+};
 const statusListeners = new Set<() => void>();
 
 function setStatus(patch: Partial<DataStatus>) {
@@ -59,7 +71,9 @@ function setStatus(patch: Partial<DataStatus>) {
     next.source === status.source &&
     next.generated === status.generated &&
     next.fetchedAt === status.fetchedAt &&
-    next.refreshing === status.refreshing
+    next.refreshing === status.refreshing &&
+    next.problem === status.problem &&
+    next.degraded === status.degraded
   ) {
     return;
   }
@@ -76,6 +90,9 @@ function setStatus(patch: Partial<DataStatus>) {
  * at worst and not worth a lock to avoid.
  */
 let liveAvailable: boolean | null = null;
+
+/** Why the last live request fell through to the bundled copy, if it failed. */
+let liveFailure: string | null = null;
 
 /**
  * Bumped by `refreshData`. Every hook below depends on it, so incrementing it
@@ -100,6 +117,12 @@ function useGeneration() {
   );
 }
 
+/** Whether what is on screen deserves a warning, and the words for it. */
+export function useDataHealth(): Health {
+  const s = useDataStatus();
+  return dataHealth(s);
+}
+
 /** The freshness of the data on screen, for the footer and Settings. */
 export function useDataStatus(): DataStatus {
   return useSyncExternalStore(
@@ -117,28 +140,46 @@ async function fromLive(file: string): Promise<Response | null> {
   try {
     const res = await fetch(`${LIVE}${file}`, { headers: { Accept: "application/json" } });
     if (!res.ok) {
-      // 404/405 is a host that simply has no functions — stop asking. A 5xx is
-      // the endpoint itself failing, which it already handles by serving its
-      // own snapshot, so treat it as a one-off and keep trying next time.
+      // 404/405 is a host that simply has no functions — stop asking, and it
+      // is not a failure: the bundled copy is what that host serves. A 5xx is
+      // the endpoint itself failing, which is worth saying out loud.
       if (res.status === 404 || res.status === 405) liveAvailable = false;
+      else liveFailure = `The data endpoint answered HTTP ${res.status}.`;
       return null;
     }
     liveAvailable = true;
     return res;
   } catch {
     liveAvailable = false;
+    liveFailure = "The data endpoint could not be reached.";
     return null;
   }
+}
+
+/** Picks up the "is the feed thin" flag the index and progression payloads carry. */
+function degradedFlag(body: unknown): boolean | null {
+  if (!body || typeof body !== "object") return null;
+  const b = body as { feedDegraded?: unknown; degraded?: unknown };
+  const v = b.feedDegraded ?? b.degraded;
+  return typeof v === "boolean" ? v : null;
 }
 
 async function getJson<T>(file: string): Promise<T> {
   const live = await fromLive(file);
   if (live) {
     const body = (await live.json()) as T & { generated?: string };
+    const source = (live.headers.get("x-tk-source") as DataSource) ?? "live";
+    const degraded = degradedFlag(body);
     setStatus({
-      source: (live.headers.get("x-tk-source") as DataSource) ?? "live",
+      source,
       generated: live.headers.get("x-tk-generated") ?? body.generated ?? status.generated,
       fetchedAt: Date.now(),
+      // The endpoint answered, but with its fallback: the rebuild behind it failed.
+      problem:
+        source === "snapshot"
+          ? { kind: "upstream", detail: live.headers.get("x-tk-error") }
+          : status.problem,
+      ...(degraded === null ? {} : { degraded }),
     });
     return body;
   }
@@ -146,10 +187,13 @@ async function getJson<T>(file: string): Promise<T> {
   const res = await fetch(`${SNAPSHOT}${file}`);
   if (!res.ok) throw new Error(`Could not load ${file} (${res.status})`);
   const body = (await res.json()) as T & { generated?: string };
+  const degraded = degradedFlag(body);
   setStatus({
     source: "snapshot",
     generated: body.generated ?? status.generated,
     fetchedAt: Date.now(),
+    problem: liveFailure ? { kind: "endpoint", detail: liveFailure } : status.problem,
+    ...(degraded === null ? {} : { degraded }),
   });
   return body;
 }
@@ -191,9 +235,11 @@ function clearCaches() {
  */
 export async function refreshData(): Promise<void> {
   if (status.refreshing) return;
-  setStatus({ refreshing: true });
+  // A new chance for everything: the last failure may have been a blip, and a
+  // warning left over from it would outlive the problem it describes.
+  setStatus({ refreshing: true, problem: null });
   clearCaches();
-  // A new chance for the live endpoint: the last failure may have been a blip.
+  liveFailure = null;
   if (liveAvailable === false) liveAvailable = null;
   try {
     await loadIndex();

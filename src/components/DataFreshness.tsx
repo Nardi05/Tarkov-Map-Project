@@ -1,4 +1,4 @@
-import { describeAge, useDataRefresh, useDataStatus } from "../lib/data";
+import { describeAge, useDataHealth, useDataRefresh, useDataStatus } from "../lib/data";
 import { Icon, icons } from "./ui";
 
 /**
@@ -22,15 +22,21 @@ import { Icon, icons } from "./ui";
  */
 export default function DataFreshness({ compact = true }: { compact?: boolean }) {
   const status = useDataStatus();
+  const health = useDataHealth();
   const { refreshing, refresh } = useDataRefresh();
   const age = describeAge(status.generated);
+
+  // Green only when the data is a live build and nothing is wrong with it.
+  const healthy = status.source === "live" && health.level === "ok";
 
   const label =
     status.source === null
       ? "Loading game data…"
-      : status.source === "live"
-        ? `Game data rebuilt from tarkov.dev ${age ?? "recently"}`
-        : `Showing the bundled snapshot${age ? `, built ${age}` : ""}`;
+      : health.level !== "ok"
+        ? health.title
+        : status.source === "live"
+          ? `Game data rebuilt from tarkov.dev ${age ?? "recently"}`
+          : `Showing the bundled snapshot${age ? `, built ${age}` : ""}`;
 
   if (compact) {
     return (
@@ -38,12 +44,11 @@ export default function DataFreshness({ compact = true }: { compact?: boolean })
         <span
           className="inline-block h-1.5 w-1.5 flex-none rounded-full"
           style={{
-            background:
-              status.source === "live"
-                ? "var(--ok)"
-                : status.source === "snapshot"
-                  ? "var(--warn)"
-                  : "var(--line)",
+            background: healthy
+              ? "var(--ok)"
+              : status.source === null
+                ? "var(--line)"
+                : "var(--warn)",
           }}
           aria-hidden="true"
         />
@@ -65,9 +70,12 @@ export default function DataFreshness({ compact = true }: { compact?: boolean })
       <div className="min-w-0">
         <p className="text-[0.82rem] font-medium">{label}</p>
         <p className="mt-0.5 text-meta">
-          {status.source === "live"
-            ? "Maps, quests, keys and hideout requirements are pulled fresh each day — no redeploy needed."
-            : "The live feed could not be reached, so the site is using the copy that shipped with it. Everything still works."}
+          {health.detail ??
+            (healthy
+              ? "Maps, quests, keys and hideout requirements are pulled fresh each day — no redeploy needed."
+              : status.source === "snapshot"
+                ? "The site is using the copy that shipped with it. Everything still works."
+                : "Maps, quests, keys and hideout requirements are pulled fresh each day.")}
         </p>
       </div>
       <button type="button" className="btn flex-none" onClick={refresh} disabled={refreshing}>

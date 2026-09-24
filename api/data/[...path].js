@@ -165,6 +165,14 @@ export default async function handler(req, res) {
       // build again rather than pinning a whole day to an outage.
       res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
       res.setHeader("x-tk-source", "snapshot");
+      // Why, in words the site can show. Never the raw error: that can carry
+      // URLs and stack detail that mean nothing to a player.
+      res.setHeader(
+        "x-tk-error",
+        err?.name === "SparseFeedError"
+          ? "tarkov.dev's task feed came back incomplete, so today's rebuild was refused."
+          : "tarkov.dev could not be reached for today's rebuild.",
+      );
       return res.status(200).send(body);
     } catch {
       res.setHeader("Cache-Control", "no-store");

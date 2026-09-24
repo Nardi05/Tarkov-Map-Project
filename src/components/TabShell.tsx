@@ -2,6 +2,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { href, onNavClick, TAB_ORDER, type TabId } from "../lib/router";
 import { useStore } from "../store";
 import DataFreshness from "./DataFreshness";
+import DataHealthBanner from "./DataHealthBanner";
 import ModeSwitch from "./ModeSwitch";
 import { Icon, icons, SearchButton, SiteNav, TabBar, Wordmark } from "./ui";
 
@@ -84,6 +85,7 @@ export default function TabShell({
 
       <div ref={scroller} className="scroll-y min-h-0 flex-1">
         <div className="shell">
+          <DataHealthBanner />
           {/* Keyed on the tab so React replaces the subtree, which is what
               restarts the animation. */}
           <div key={current} className="tab-body" data-slide={direction ?? undefined}>

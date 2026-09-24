@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import DataHealthBanner from "./DataHealthBanner";
 import MapCanvas, { type FocusRequest } from "./MapCanvas";
 import LayerPanel from "./LayerPanel";
 import TaskPanel from "./TaskPanel";
@@ -48,10 +49,6 @@ export default function MapPage({
   deepLinkTask: string | null;
 }) {
   const layers = useStore((s) => s.layers);
-  const openMapLayers = useStore((s) => s.openMapLayers);
-
-  // Before paint, so a map never flashes the previous map's layers.
-  useLayoutEffect(() => openMapLayers(data.normalizedName), [data.normalizedName, openMapLayers]);
   const settings = useStore((s) => s.settings);
   const primerSeen = useStore((s) => s.ui.mapPrimerSeen);
   const setUiFlag = useStore((s) => s.setUiFlag);
@@ -527,6 +524,9 @@ export default function MapPage({
 
         {/* ---------------------------------------------------------- canvas */}
         <main className="relative min-w-0 flex-1">
+          <div className="map-health">
+            <DataHealthBanner compact />
+          </div>
           <MapCanvas
             key={data.normalizedName}
             data={data}
