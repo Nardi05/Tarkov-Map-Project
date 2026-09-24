@@ -7,6 +7,7 @@ import {
   movePanel,
   reorderPanels,
   setPanelFlag,
+  splitPanels,
   type DashPanel,
 } from "./dashboard.ts";
 
@@ -128,4 +129,29 @@ test("a tracker summary the player moved stays where they put it", () => {
   });
   assert.deepEqual(ids(out.panels).slice(0, 2), ["keys", "trackers"]);
   assert.equal(out.panels[1].visible, false);
+});
+
+test("empty panels fold into one line, keeping their order", () => {
+  const panels: DashPanel[] = [
+    { id: "trackers", visible: true, wide: true },
+    { id: "story", visible: true, wide: false },
+    { id: "keys", visible: false, wide: false },
+    { id: "raid", visible: true, wide: true },
+    { id: "season", visible: true, wide: false },
+  ];
+  const empty = new Set(["story", "season", "keys"]);
+  const out = splitPanels(panels, (id) => empty.has(id));
+  assert.deepEqual(ids(out.shown), ["trackers", "raid"]);
+  // A switched-off panel is neither shown nor listed as folded.
+  assert.deepEqual(ids(out.folded), ["story", "season"]);
+});
+
+test("nothing folds while the layout is being arranged", () => {
+  const panels: DashPanel[] = [
+    { id: "story", visible: true, wide: false },
+    { id: "keys", visible: false, wide: false },
+  ];
+  const out = splitPanels(panels, () => true, true);
+  assert.deepEqual(ids(out.shown), ["story"]);
+  assert.deepEqual(out.folded, []);
 });

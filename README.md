@@ -213,6 +213,12 @@ key acquired drops it from the list and the next row fills in.
 The header bar holds the raid clocks and the target task, so those are not
 separate dashboard tiles.
 
+A character with nothing tracked yet gets none of this: just **Mark active
+quests** and **Continue {last map}** (or **Just open Customs**), with the full
+dashboard one click away. **Edit layout** appears once anything is tracked, and
+a panel with nothing to show folds into a single "Nothing here yet" line of
+links instead of a full card.
+
 The **trackers** panel shows where tasks, story, season and hideout stand and
 offers the setup for anything not started. An older saved layout gets it added
 at the top; everything else new is appended.
