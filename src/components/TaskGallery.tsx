@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { TaskImage } from "../types";
 import { Icon, icons } from "./ui";
 
@@ -290,7 +291,10 @@ export default function TaskGallery({
         <span className="flex-none">EFT wiki</span>
       </p>
 
-      {expanded && (
+      {expanded &&
+        // Portalled for the same reason as Dialog: a transformed ancestor would
+        // otherwise pin this "fullscreen" view to the page instead of the screen.
+        createPortal(
         <div
           ref={dialogRef}
           className="fixed inset-0 z-[2000] flex flex-col"
@@ -331,8 +335,9 @@ export default function TaskGallery({
             />
             {count > 1 && arrows(40)}
           </div>
-        </div>
-      )}
+        </div>,
+          document.body,
+        )}
     </div>
   );
 }

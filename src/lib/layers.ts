@@ -43,7 +43,10 @@ export interface LayerDef {
   hint: string;
   color: string;
   shape: MarkerShape;
-  /** On by default. Kept deliberately sparse so a fresh map isn't a wall of dots. */
+  /**
+   * On by default: exactly the Questing quick view. A map nobody has opened
+   * before is about the raid you are running, not every spawn on it.
+   */
   defaultOn: boolean;
 }
 
@@ -96,7 +99,7 @@ export const LAYERS: LayerDef[] = [
     hint: "Where you and the other PMCs can start. Expect early fights near clusters of these.",
     color: "#4c8dff",
     shape: "dot",
-    defaultOn: true,
+    defaultOn: false,
   },
   {
     id: "scav-spawns",
@@ -123,7 +126,7 @@ export const LAYERS: LayerDef[] = [
     hint: "Known boss spawn positions, with the chance the boss shows up at all.",
     color: "#ef4444",
     shape: "skull",
-    defaultOn: true,
+    defaultOn: false,
   },
   {
     id: "sniper-spawns",
@@ -150,7 +153,7 @@ export const LAYERS: LayerDef[] = [
     hint: "Exits only available on a Scav run.",
     color: "#fb923c",
     shape: "exit",
-    defaultOn: true,
+    defaultOn: false,
   },
   {
     id: "shared-extracts",
@@ -198,7 +201,7 @@ export const LAYERS: LayerDef[] = [
     hint: "Doors, containers and gates that need a key, and which key opens them.",
     color: "#facc15",
     shape: "key",
-    defaultOn: false,
+    defaultOn: true,
   },
   {
     id: "switches",
@@ -274,3 +277,44 @@ export const PRESETS: Preset[] = [
     layers: LAYERS.map((l) => l.id),
   },
 ];
+
+/** The quick view a map opens on until the player picks another one for it. */
+export const DEFAULT_PRESET = "quests";
+
+function isLayerId(id: string): id is LayerId {
+  return id in LAYER_BY_ID;
+}
+
+/**
+ * A stored layer record read back into one that covers every layer.
+ *
+ * Unknown ids are dropped and a layer added since the save was written falls
+ * back to its default, so a new layer appears the way it ships rather than
+ * silently off — or on — forever.
+ */
+export function mergeLayerState(raw: unknown): Record<LayerId, boolean> {
+  const out = { ...DEFAULT_LAYER_STATE };
+  if (!raw || typeof raw !== "object") return out;
+  for (const [id, on] of Object.entries(raw as Record<string, unknown>)) {
+    if (isLayerId(id) && typeof on === "boolean") out[id] = on;
+  }
+  return out;
+}
+
+/** Per-map layer memory, cleaned the same way. Map slugs are kept as given. */
+export function mergeMapLayers(raw: unknown): Record<string, Record<LayerId, boolean>> {
+  const out: Record<string, Record<LayerId, boolean>> = {};
+  if (!raw || typeof raw !== "object") return out;
+  for (const [map, state] of Object.entries(raw as Record<string, unknown>)) {
+    if (map && state && typeof state === "object") out[map] = mergeLayerState(state);
+  }
+  return out;
+}
+
+/** What a map shows when it opens: its own last view, or the calm default. */
+export function layersForMap(
+  mapLayers: Record<string, Record<LayerId, boolean>>,
+  map: string,
+): Record<LayerId, boolean> {
+  return mapLayers[map] ? { ...mapLayers[map] } : { ...DEFAULT_LAYER_STATE };
+}

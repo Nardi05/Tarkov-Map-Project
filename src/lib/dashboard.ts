@@ -247,3 +247,25 @@ export function setPanelFlag(
 ): DashPanel[] {
   return panels.map((p) => (p.id === id ? { ...p, [key]: value } : p));
 }
+
+/**
+ * Splits the switched-on panels into the ones with something to show and the
+ * ones that would only say "nothing here yet".
+ *
+ * An empty panel is still a full card with a heading and a hint, and eleven
+ * of them stacked is how a new character's dashboard reached 5,700px. Empty
+ * ones fold into a single line instead; while arranging the layout nothing
+ * folds, so every panel stays movable.
+ */
+export function splitPanels(
+  panels: DashPanel[],
+  isEmpty: (id: DashPanelId) => boolean,
+  editing = false,
+): { shown: DashPanel[]; folded: DashPanel[] } {
+  const visible = panels.filter((p) => p.visible);
+  if (editing) return { shown: visible, folded: [] };
+  return {
+    shown: visible.filter((p) => !isEmpty(p.id)),
+    folded: visible.filter((p) => isEmpty(p.id)),
+  };
+}

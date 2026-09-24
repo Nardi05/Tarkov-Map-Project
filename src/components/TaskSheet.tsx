@@ -12,7 +12,7 @@ import TaskGallery from "./TaskGallery";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
 import TaskDetails from "./WikiDetail";
-import { Icon, icons } from "./ui";
+import { Dialog, Icon, icons } from "./ui";
 
 export default function TaskSheet({
   taskId,
@@ -47,10 +47,8 @@ export default function TaskSheet({
   const set = (next: TaskStatus | null) => setTaskStatus(taskId, next);
 
   return (
-    <div className="fixed inset-0 z-40 grid place-items-end sm:place-items-center" role="dialog" aria-modal="true">
-      <button type="button" className="absolute inset-0 bg-black/50" aria-label="Close" onClick={onClose} />
-      <div className="surface relative z-10 max-h-[90vh] w-full max-w-lg overflow-auto p-4 sm:rounded-2xl">
-        <header className="mb-3 flex items-start justify-between gap-3">
+    <Dialog label={displayName(task.name)} onClose={onClose}>
+        <header className="dialog-head">
           <div className="min-w-0">
             <h2 className="text-lg font-semibold leading-snug">
               <TaskName name={task.name} />
@@ -186,7 +184,6 @@ export default function TaskSheet({
             <TaskGallery images={images} taskName={displayName(task.name)} />
           </div>
         )}
-      </div>
-    </div>
+    </Dialog>
   );
 }
