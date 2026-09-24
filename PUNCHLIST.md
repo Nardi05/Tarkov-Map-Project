@@ -18,6 +18,8 @@ That means:
 
 Competitors prove players will live in an all-in-one if it is fast between raids. They bounce when setup is long, markers are noisy, or every screen screams “configure me.”
 
+**Quest graph imprint (locked) = data / progression logic, not a Tree UI:** Steal Tarkov Market interactive quests → **Tree → By chains** *knowledge* (dependency order, unlocks, frontier) — **not** their pannable Tree canvas. Tracker model = dependency / chain graph in data (not a flat trader list). **P0.6** = data half (synced actives = frontier; auto-fill prereq closure completed). Between-raid UI stays next ~3 objectives — **no** Quest Tree / graph-visualization milestone. See `IMPLEMENTATION_BRIEF.md`.
+
 ---
 ## Competitor snapshot (what wipe players actually praise / hate)
 
@@ -64,38 +66,41 @@ Competitors prove players will live in an all-in-one if it is fast between raids
 5. **“API 404s with silent fallbacks — am I looking at real wipe data or last week’s ghost?”**  
    *Fix intent:* Visible stale/error banner (“Tasks feed failed — showing cached YYYY-MM-DD”). No silent 200-looking UI on failed upstream.
 
+6. **P0.6 — late-wipe sync leaves early quests open (“Collector active, 200 early still open”).**  
+   *Fix intent / imprint:* Graph imprint = Market **by-chains** dependency/order knowledge (data model), **not** a Tree UI. After sync/OCR/bulk active import, fill prerequisite closure completed; keep actives active. (PR #14 already does prereq inference on setup tick/save; wire the same into non-setup sync paths.)
+
 ### P1 — trust & friction after first hour
 
-6. **“Why do Settings, map Settings, header toggles, and the landing all fight over the same character?”**  
+7. **“Why do Settings, map Settings, header toggles, and the landing all fight over the same character?”**  
    *Fix intent:* **One** character switcher (header). Settings edits level/faction/edition/loyalty only. Map sidebar keeps layers/style only — no second PvP/Season/PvE block.
 
-7. **“Landing is a brochure. I queued already — open the map.”**  
+8. **“Landing is a brochure. I queued already — open the map.”**  
    *Fix intent:* Returning visitors → Dashboard or last map. First visit → “Just browse maps” equal weight to setup; shrink hero copy.
 
-8. **“Savior is 0/112 — I don’t read novels between raids.”**  
+9. **“Savior is 0/112 — I don’t read novels between raids.”**  
    *Fix intent:* Story UI shows **next 3 actionable steps** + evidence progress; rest collapsed. “Set as target” should drive map markers and Dashboard, not a scroll marathon.
 
-9. **“Stash says 438 rows and duplicates the same moonshine twice.”**  
+10. **“Stash says 438 rows and duplicates the same moonshine twice.”**  
    *Fix intent:* Dedupe by item+quest; default view = **still needed** (FIR filter on); compact rows; stash audit as primary path.
 
-10. **“I’m on the Season page but the app scolds me that I’m on PvP Zone.”**  
+11. **“I’m on the Season page but the app scolds me that I’m on PvP Zone.”**  
     *Fix intent:* Opening Season auto-switches character **or** ticks work in-context without dual banners. One warning max, with an immediate Switch action that sticks.
 
-11. **“Every toggle has a paragraph. I’m in a raid queue.”**  
+12. **“Every toggle has a paragraph. I’m in a raid queue.”**  
     *Fix intent:* One-line labels; move essays to tooltips/`?`. Sidebar height for toggles, not copy.
 
-12. **“Continue Customs is the only useful button on the Dashboard — bury everything else.”**  
+13. **“Continue Customs is the only useful button on the Dashboard — bury everything else.”**  
     *Fix intent:* Promote **Continue {last map}** + **Do next (3)** as the dashboard. Raid clocks / Edit layout / Target Task search become secondary or progressive.
 
 ### P2 — polish / debt that still bleeds trust
 
-13. **“USEC or BEAR is still a placeholder on my character card.”**  
+14. **“USEC or BEAR is still a placeholder on my character card.”**  
     *Fix intent:* Bind faction from Settings or hide until set.
 
-14. **“Floating list FAB eats clicks on the right edge of every page.”**  
+15. **“Floating list FAB eats clicks on the right edge of every page.”**  
     *Fix intent:* Reposition or hide until there’s something to show; never overlap primary lists.
 
-15. **“Floor level lives in the top bar *and* map Settings.”**  
+16. **“Floor level lives in the top bar *and* map Settings.”**  
     *Fix intent:* One control. Same for character mode duplication noted in P1.
 
 ---
@@ -137,7 +142,7 @@ Stack stays **TS / React / Vite / Leaflet / Zustand**. Competitors win on speed-
 - [ ] Map defaults: not “Everything”; PMC spawns off by default; persist last Quick View
 - [ ] Hideout (and any) modal fully on-screen with internal scroll
 - [ ] Surface API/data failures (no silent fallback that looks live)
-- [ ] **Task sync infers completed prereqs:** after sync/OCR of actives (e.g. Collector), auto-fill prerequisite closure as completed; keep actives active (same as Settings recalc, automatic)
+- [ ] **Task sync infers completed prereqs (P0.6 — data half of by-chains imprint):** after sync/OCR of actives (e.g. Collector), auto-fill prerequisite closure as completed; keep actives active (same as Settings recalc, automatic). Imprint is data/order only — no Tree UI planned.
 
 ## P1 — first-hour trust
 
