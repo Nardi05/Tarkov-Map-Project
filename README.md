@@ -66,9 +66,7 @@ Late-wipe sync that fills earlier prerequisites when you mark a late quest activ
 
 ### Setup on this branch
 
-Task setup is still the trader-by-trader walkthrough (`#/quests/setup`), with optional in-browser screenshot reading per trader. Nothing writes until Finish, and ticks only ever add. A one-screen setup with search, optional OCR, and a fresh-wipe / level-1 skip is in progress (open **PR #14**) — not merged here yet.
-
-Story has its own short setup (`#/story/setup`): pick an ending (or “not decided”), record lock choices, tick chapters behind you. Season uses the same task walkthrough with a Kord Breach step first when you’re on the Season character.
+Task setup is one screen (`#/quests/setup`): search + tick actives + optional in-browser screenshot OCR, with a fresh-wipe / level-1 skip. Nothing writes until Finish, and ticks only ever add. Story has its own short setup (`#/story/setup`); Season uses the same task walkthrough with a Kord Breach step first on the Season character.
 
 ## Local progress
 
@@ -129,7 +127,7 @@ The repo is set up for Vercel (`vercel.json`: `npm run data && npm run build`). 
 
 **`main` is sacred** — do not merge there without Luke’s explicit yes. Product work lands on `claude/repo-review-preview-us4rgf` (or an agreed feature branch) first.
 
-Open wipe-ready work targeting that Claude branch (not merged yet): **#14** one-screen setup, **#16** dashboard empty state, **#17** calm map defaults, **#18** hideout modal in viewport. Quest-graph imprint wording: **#15**.
+P0.1–P0.5 land on this Claude preview branch as they merge. Next unfinished wipe item: **P0.6** (late-wipe sync fills prerequisite chains behind actives).
 
 ## Credits
 
