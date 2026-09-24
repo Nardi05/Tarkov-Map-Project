@@ -1,17 +1,21 @@
 {
- "generated": "2026-09-21T07:30:09.225Z",
+ "generated": "2026-09-24T12:44:52.656Z",
  "source": "https://escapefromtarkov.fandom.com — Infobox quest `previous` / `leads to`",
- "pages": 528,
- "edges": 305,
+ "pages": 526,
+ "edges": 303,
  "agreement": 67,
- "tasksWithPrereqs": 268,
+ "tasksWithPrereqs": 266,
  "unfetched": [
-  "Neuanfang",
-  "Neuanfang",
-  "Neuanfang",
   "Arena Business [PVP ZONE]\n"
  ],
  "unmatched": [
+  {
+   "name": "To the Light - The Other Side",
+   "count": 1,
+   "examples": [
+    "Getting Acquainted"
+   ]
+  },
   {
    "name": "To the Light - Getting Acquainted",
    "count": 1,
@@ -324,9 +328,6 @@
   "60effd818b669d08a35bfad5": [
    "59ca2eb686f77445a80ed049"
   ],
-  "6179ac7511973d018217d0b9": [
-   "59c50a9e86f7745fef66f4ff"
-  ],
   "6179ad0a6e9dd54ac275e3f2": [
    "5d25e2cc86f77443e47ae019"
   ],
@@ -347,9 +348,6 @@
   ],
   "6261483dc4874104f230c0cd": [
    "6261483ac48e6c62a440fab7"
-  ],
-  "626bd75c71bd851e971b82a5": [
-   "6179ac7511973d018217d0b9"
   ],
   "626bd75d5bef5d7d590bd415": [
    "6179b4f16e9dd54ac275e407"
@@ -389,6 +387,9 @@
    "62614836f7308432be1d44cc",
    "6261483dc4874104f230c0cd"
   ],
+  "63966faeea19ac7ed845db2c": [
+   "625d700cc48e6c62a440fab5"
+  ],
   "63966fbeea19ac7ed845db2e": [
    "63966faeea19ac7ed845db2c"
   ],
@@ -425,16 +426,13 @@
   "63a88045abf76d719f42d715": [
    "5d25b6be86f77444001e1b89"
   ],
-  "63a9ae24009ffc6a551631a5": [
-   "59ca2eb686f77445a80ed049"
-  ],
   "63a9b229813bba58a50c9ee5": [
    "5a27bc6986f7741c7358402b",
    "639135f286e646067c176a87"
   ],
   "63a9b36cc31b00242d28a99f": [
-   "6391372c8ba6894d155e77d7",
-   "6a45208043b8d7604d00b8d5"
+   "639136df4b15ca31f76bc31f",
+   "6391372c8ba6894d155e77d7"
   ],
   "64e7b971f9d6fa49d6769b44": [
    "5d25e2cc86f77443e47ae019",

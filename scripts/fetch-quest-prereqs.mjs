@@ -37,7 +37,9 @@ import { foldName, pageTitle, questEdges } from "./wiki-infobox.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SRC = path.join(ROOT, "public", "data");
 const OUT = path.join(ROOT, "data");
-const CACHE = path.join(ROOT, "node_modules", ".cache", "wiki-quests");
+// Shared with fetch-wiki-details.mjs, which fetches the same pages fifty to a
+// request — run that first and this reads them from disk.
+const CACHE = path.join(ROOT, "node_modules", ".cache", "wiki-pages");
 const WIKI = "https://escapefromtarkov.fandom.com/api.php";
 const TASKS_FEED = "https://json.tarkov.dev/regular/tasks";
 const TASKS_EN = "https://json.tarkov.dev/regular/tasks_en";

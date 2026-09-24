@@ -17,6 +17,7 @@
     "task-facts": "node scripts/build-task-facts.mjs",
     "kord-docs": "node scripts/fetch-kord-documents.mjs",
     "quest-prereqs": "node scripts/fetch-quest-prereqs.mjs",
+    "wiki-details": "node scripts/fetch-wiki-details.mjs",
     "setup-ocr": "node scripts/setup-ocr.mjs",
     "og": "node scripts/make-og-image.mjs",
     "audit-graph": "node scripts/audit-graph.mjs"

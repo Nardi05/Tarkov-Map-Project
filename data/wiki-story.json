@@ -1,0 +1,3835 @@
+{
+ "generated": "2026-09-24T12:42:15.961Z",
+ "source": "Escape from Tarkov Wiki (escapefromtarkov.fandom.com), CC BY-SA 3.0",
+ "chapters": {
+  "Accidental Witness": {
+   "start": "Locate the white scribbled-on car in the courtyard of the dormitories on Customs.",
+   "objectives": [
+    {
+     "heading": null,
+     "items": [
+      {
+       "text": "Figure out where Kozlov lived",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Read the note on Kozlov's door",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find out what Kozlov was involved in",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Access Kozlov's room",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Figure out where to get Kozlov's key",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Investigate Kozlov's room",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Ask the traders about Anastasia",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Access Skier's accomplice's apartment",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find the key to the apartment",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Learn more about Skier's accomplice",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Investigate the apartment",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Read the documents in Skier's accomplice's apartment",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survive and extract from Streets of Tarkov",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Report to Skier",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Ragman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate Anastasia's apartment",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about Anastasia",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Investigate the entrance of Anastasia's building",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate courier Pasha",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Search the ambush spot",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Skier",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate Reshala's stash",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and neutralize Reshala",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the key to Reshala's stash",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Investigate Reshala's bunkhouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain Reshala's work notes",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain courier Pasha's belongings",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate Kozlov's hideout",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain Kozlov's evidence",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    }
+   ],
+   "rewards": [],
+   "guide": [
+    {
+     "heading": "Figure out where Kozlov lived/Read the note on Kozlov's door",
+     "text": "Kozlov lived in dorm room 110 on the first floor of the two-story dorms on Customs. The note to pick up and read can be found below the room number."
+    },
+    {
+     "heading": "Find out what Kozlov was involved in",
+     "text": "To fulfill this objective, you first have to enter Kozlov's room with a Dorm room 110 key, then pick up and read the letter located on the nightstand.\n\nThe optional Note from the repair shop on the wall in the kitchen next to room 110."
+    },
+    {
+     "heading": "Ask the traders about Anastasia",
+     "text": "Visit Skier in the menu through the trader screen and ask him about Anastasia."
+    },
+    {
+     "heading": "Access Skier's accomplice's apartment",
+     "text": "The wanted apartment is located on the first floor of the Zmeisky 3 building on Streets of Tarkov. The entrance is on the backyard side. A Zmeisky 3 apartment key is required to enter it."
+    },
+    {
+     "heading": "Learn more about Skier's accomplice/Read the documents in Skier's accomplice's apartment",
+     "text": "Inside the apartment are 4 items to pick up and read. There are multiple spawns for them."
+    },
+    {
+     "heading": "Survive and extract from Streets of Tarkov",
+     "text": "Extract from Streets of Tarkov with either the \"Survived\" or \"Run-Through\" extraction status."
+    },
+    {
+     "heading": "Report to Skier",
+     "text": "Visit Skier in the menu through the trader screen."
+    },
+    {
+     "heading": "Talk to Ragman",
+     "text": "Visit Ragman in the menu through the trader screen."
+    },
+    {
+     "heading": "Locate Anastasia's apartment",
+     "text": "The wanted apartment is located on the second floor of the Chekannaya 13 apartment building on Streets of Tarkov."
+    },
+    {
+     "heading": "Learn more about Anastasia/Investigate the entrance of Anastasia's building",
+     "text": "To fulfill this objective, you first have to go back down the stairs, then pick up and read the letter and the newspaper located in the mailbox."
+    },
+    {
+     "heading": "Locate courier Pasha/Search the ambush spot",
+     "text": "The spot where Pasha was ambushed is located next to the two-story dorms on Customs. The note to pick up and read can be found next to the bicycle."
+    },
+    {
+     "heading": "Report to Skier",
+     "text": "Visit Skier in the menu through the trader screen."
+    },
+    {
+     "heading": "Locate and investigate Reshala's stash",
+     "text": "Reshala's stash is a bunkhouse on Customs. In the bunkhouse are 3 notes to pick up and read. A Reshala's bunkhouse key is required to enter it."
+    },
+    {
+     "heading": "Locate Kozlov's hideout and obtain his evidence",
+     "text": "Kozlov's hideout is house no. 3 in the eastern part of the west village on Shoreline. The evidence in the form of an audio tape to pick up and listen can be found in the flower bed next to the entrance.\n\nThe optional Newspaper clipping with a photo of Anastasia inside the house on the floor."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• +64,000 EXP\n• Unlocks achievement Pay Your Debt"
+    }
+   ]
+  },
+  "Batya": {
+   "start": "Visit one of the following locations:\n• Mattress below the \"жопа\" writing on the second floor of the Scav base on Customs\n\n• Radome on top of the white queen radar station building on Reserve\n\n• Bunker north of the health resort on Shoreline\n\n• Mattresses on top of the big rock at the USEC camp on Woods",
+   "objectives": [
+    {
+     "heading": null,
+     "items": [
+      {
+       "text": "Locate the traces of the BEAR special squad",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the Bogatyr squad patch",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Learn more about the Bogatyr squad from the traders",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the Ryabina outpost",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find more information about the Bogatyr squad",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain a keepsake of one of the Bogatyrs",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate the Carousel outpost",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find the Bogatyr squad's personal notes",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about Strelets",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about Taran",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain a personal item of one of the Bogatyrs",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Learn more about Voevoda",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find Voevoda's personal belongings",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the squad commander's recorder",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate the Gnezdo outpost",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Search the Gnezdo outpost",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Figure out what happened to the Bogatyr squad",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Figure out where the Bogatyr squad got ambushed",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about the Bogatyr squad's activities",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about the Bogatyr squad's members",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the ambush spot",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain more information about the Bogatyr squad",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Inspect Moreman's body",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain Moreman's phone",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate and obtain a dogtag of one of the Bogatyrs",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Retrieve more information about the ambush from Moreman's phone",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain Intelligence Center level 3",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Contact the Bogatyr squad",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Gain access to Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Stay on good terms with Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Bring all the Bogatyr squad's items to Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Wait for Voevoda to reach out",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Reach the Light Machine Guns skill level 5",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Reach the Assault Rifles skill level 10",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Reach the Stress Resistance skill level 10",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Reach the Strength skill level 15",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Eliminate any 15 targets without dying",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Eliminate 4 PMC operatives without dying",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Contact Voevoda",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the traces of the traitors",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Investigate the command bunker on Reserve",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Investigate the BEAR camp on Lighthouse",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Investigate the BEAR camp east of the Ultra mall on Interchange",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Interrogate Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Figure out how the cultists are connected to the General",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Wait for Lightkeeper to prepare the documents on The Unheard",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    }
+   ],
+   "rewards": [],
+   "guide": [
+    {
+     "heading": "Locate the traces of the BEAR special squad",
+     "text": "To fulfill this objective, you have to pick up and read the Bogatyrs patch from Customs, Woods, Reserve or Lighthouse."
+    },
+    {
+     "heading": "Customs",
+     "text": "On a couch inside the cabin located on top of the hill southwest of the new gas station."
+    },
+    {
+     "heading": "Woods",
+     "text": "On the ground next to the BRDM from the cargo convoy."
+    },
+    {
+     "heading": "Reserve",
+     "text": "On a package on the upper roof of the airspace control center marked with white king."
+    },
+    {
+     "heading": "Lighthouse",
+     "text": "On a sleeping bag in the BEAR camp."
+    },
+    {
+     "heading": "Learn more about the Bogatyr squad from the traders",
+     "text": "Visit Jaeger in the menu through the trader screen and ask him about the BEAR patch."
+    },
+    {
+     "heading": "Locate the Ryabina outpost",
+     "text": "The Ryabina outpost is located north of the sawmill on Woods."
+    },
+    {
+     "heading": "Find more information about the Bogatyr squad",
+     "text": "To fulfill this objective, you have to pick up and read a note as well as pick up a quest item from the camp. Strelets' amulet should be transferred to the off-raid quest inventory to not lose it in subsequent raids. It will be needed later."
+    },
+    {
+     "heading": "Locate the Carousel outpost",
+     "text": "The Carousel outpost is located opposite the IDEA store checkout area inside the ULTRA shopping mall on Interchange. From the outpost, you have to pick up two quest items, pick up and read 4 notes as well as pick up an audio tape. Taran's postcard and Voevoda's audio recorder should be transferred to the off-raid quest inventory to not lose them in subsequent raids. They will be needed later."
+    },
+    {
+     "heading": "Locate the Gnezdo outpost",
+     "text": "The Gnezdo outpost is located east of the ULTRA shopping mall on Interchange."
+    },
+    {
+     "heading": "Search the Gnezdo outpost",
+     "text": "To fulfill this objective, you have to pick up and read 5 notes as well as pick up an audio tape from the outpost."
+    },
+    {
+     "heading": "Locate the ambush spot",
+     "text": "The ambush spot, specifically Moreman's grave is located near the ZB-016 extraction in the east of Woods."
+    },
+    {
+     "heading": "Obtain more information about the Bogatyr squad",
+     "text": "To fulfill this objective, you have to pick up and read a note as well as pick up two quest items from the grave. Moreman's dogtag should be transferred to the off-raid quest inventory to not lose it in subsequent raids. It will be needed later."
+    },
+    {
+     "heading": "Retrieve more information about the ambush from Moreman's phone",
+     "text": "Craft Moreman's audio tape #1 and Moreman's audio tape #2 at the Workbench level 1 in the Hideout and listen to them. Electricity is required during the entire process, otherwise it will be interrupted."
+    },
+    {
+     "heading": "Obtain Intelligence Center level 3",
+     "text": "Upgrade the Intelligence Center to level 3 in the Hideout."
+    },
+    {
+     "heading": "Contact the Bogatyr squad",
+     "text": "Contact Voevoda through the radio system at the Intelligence Center in the Hideout. First enter the frequency \"35.70\", as hinted at from the First piece of code note and Second piece of code note. Next enter the code \"27.893.2000\" as hinted at from Strelets' note."
+    },
+    {
+     "heading": "Gain access to Lightkeeper",
+     "text": "Lightkeeper can be found on the Lighthouse location. He is located in a locked area on the 3rd floor of the lighthouse building at the peninsula territory.\n\nThe bridge that leads to the lighthouse is guarded by Zryachiy and full of Claymores. To safely pass the bridge and speak to Lightkeeper, an encoded Digital secure DSP radio transmitter is required. It deactivates the claymores and has Zryachiy not shoot you. The questline to obtain one starts with the quest To the Light - Trust but Verify.\n\nHarming Zryachiy, one of his followers, or a Lightkeeper acquainted PMC in the lighthouse premises will decode your Digital secure DSP radio transmitter if you have it equipped (Attention: Unequipping it does not prevent this in local PvE game mode raids). PMC's that are acquainted with Lightkeeper can kill unacquainted intruders without penalty."
+    },
+    {
+     "heading": "Bring all the Bogatyr squad's items to Lightkeeper",
+     "text": "Transfer Taran's postcard, Voevoda's audio recorder, Strelets' amulet, Moreman's dogtag and the Bogatyrs patch to the in-raid quest inventory and hand them over to Lightkeeper."
+    },
+    {
+     "heading": "Wait for Voevoda to reach out",
+     "text": "Wait 6-12 hours for Voevoda to reach out, then contact him through the radio system at the Intelligence Center Hideout. Enter frequency \"35.70\" and the code \"27.893.2000\" again."
+    },
+    {
+     "heading": "Complete Voevoda's tasks",
+     "text": "• Reach the Light Machine Guns skill level 5\n• Reach the Assault Rifles skill level 10\n• Reach the Stress Resistance skill level 10\n• Reach the Strength skill level 15\n• Eliminate any 15 targets without dying\n• Eliminate 4 PMC operatives without dying"
+    },
+    {
+     "heading": "Contact Voevoda",
+     "text": "Contact Voevoda through the radio system at the Intelligence Center in the Hideout. Enter frequency \"35.70\" and the code \"27.893.2000\" again."
+    },
+    {
+     "heading": "Locate the traces of the traitors",
+     "text": "The Note mentioning Prapor to pick up and read to fulfill this objective can be found at the BEAR camp on Lighthouse."
+    },
+    {
+     "heading": "Interrogate Prapor",
+     "text": "Visit Prapor in the menu through the trader screen."
+    },
+    {
+     "heading": "Figure out how the cultists are connected to the General",
+     "text": "*Not all spawn locations for the quest item require this key. It is not entirely needed to complete the objective.\n\nTo fulfill this objective, you have to pick up and read 2 notes from Shoreline and either Woods or Customs."
+    },
+    {
+     "heading": "Voevoda's photo with a cultist mark - Shoreline",
+     "text": "In the house on the island."
+    },
+    {
+     "heading": "Woods",
+     "text": "At the marked circle in the woods west of the sawmill near the checkpoint."
+    },
+    {
+     "heading": "Customs",
+     "text": "In the marked room on the third floor of the three-story dorms building. A Dorm room 314 marked key is required to enter it."
+    },
+    {
+     "heading": "Talk to Lightkeeper",
+     "text": "Visit Lightkeeper on Lighthouse."
+    },
+    {
+     "heading": "Wait for Lightkeeper to prepare the documents on The Unheard",
+     "text": "In a new raid, return to Lightkeeper's area on Lighthouse and pick up and read the Agent network deployment report. The objective will be completed after 6 hours."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• +144,000 EXP\n• Voevoda's audio recorder\n• Unlocks achievement This Is All (Not) Coincidence"
+    }
+   ]
+  },
+  "Blue Fire": {
+   "start": "Pick up and read EMERCOM leaflet or Note by Item #1156 from one of the following locations:\n• Inside a green shipping container at the Scav base/EMERCOM camp on Woods\n\n• On a tent west of the highway in the area near the \"Path to River\" extraction on Interchange\n\n• On a tent at the highway on Interchange\n\n• At the EMERCOM medical unit on the first floor of the ULTRA shopping mall on Interchange\n\n• On a table in the prototype weapon area inside The Labyrinth",
+   "objectives": [
+    {
+     "heading": null,
+     "items": [
+      {
+       "text": "Talk to Mechanic about the EMP blast",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Gain access to Mechanic",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate and obtain the device fragment",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the device fragment to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Plant the hacking device in the server room in the Lab",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Keep the fragment of Item 1156 for yourself or hand it over to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find a lead on Item 1156",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Investigate the Rus Post office",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the Rus Post Car",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the blueprint for Item 1156",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    }
+   ],
+   "rewards": [],
+   "guide": [
+    {
+     "heading": "Talk to Mechanic about the EMP blast",
+     "text": "Visit Mechanic in the menu through the trader screen and ask him about the EMP blast."
+    },
+    {
+     "heading": "Locate and obtain the device fragment",
+     "text": "*Only one of the keys is required to complete the objective.\n\nThe Unknown device fragment can either be obtained in the closed section on the second floor of the LexOs car dealership, or in the marked room located inside the Chekannaya 13 apartment building on Streets of Tarkov."
+    },
+    {
+     "heading": "LexOs car dealership",
+     "text": "A Car dealership closed section key is required to enter the closed section. Be aware that the premises of the LexOs car dealership are riddled with Claymores."
+    },
+    {
+     "heading": "Chekannaya 13 apartment building marked room",
+     "text": "A Mysterious room marked key is required to enter the room."
+    },
+    {
+     "heading": "Hand over the device fragment to Mechanic",
+     "text": "Visit Mechanic in the menu through the trader screen and hand over the device."
+    },
+    {
+     "heading": "Plant the hacking device in the server room in the Lab",
+     "text": "The Local network hacking device has to be stashed in the server room on the first floor of The Lab. Mechanic provides one via in-game mail and has a barter for more available."
+    },
+    {
+     "heading": "Talk to Mechanic",
+     "text": "Visit Mechanic in the menu through the trader screen."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• Unlocks achievement Better Served"
+    },
+    {
+     "heading": "Rewards",
+     "text": "• 1,500,000 Roubles"
+    },
+    {
+     "heading": "Find a lead on Item 1156",
+     "text": "*Not all spawn locations for the item require this key. It is not entirely needed.\n\nThe Note mentioning Item #1156 to pick up and read can be obtained on Ground Zero (Level 21+), Lighthouse or in The Lab."
+    },
+    {
+     "heading": "Ground Zero (Level 21+)",
+     "text": "In office no. 4 on the second floor of the TerraGroup main building. A TerraGroup science office key is required to enter."
+    },
+    {
+     "heading": "Lighthouse",
+     "text": "In the northern blue chalet, on the first floor in a bookshelf near the central stairs."
+    },
+    {
+     "heading": "The Lab",
+     "text": "On the second floor, in office O22 on a desk."
+    },
+    {
+     "heading": "Investigate the Rus Post office",
+     "text": "To fulfill this objective, you have to pick up and listen to 3 audio tapes located in the post office on Streets of Tarkov."
+    },
+    {
+     "heading": "Locate the Rus Post Car/Obtain the blueprint for Item 1156",
+     "text": "The car is located in front of the post office. The Item #1156 specification to pick up and read can be found in the back of the car. To unlock it, a Rus Post car key is required. A single key is guaranteed to spawn every raid on the ground next to the back right wheel of the car."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• +112,000 EXP\n• Unlocks achievement Inferno"
+    }
+   ]
+  },
+  "Boreas": {
+   "start": "Obtain a Paradigm Shipping poster or check the distress signal via the radio system at the Intelligence Center level 3 in the Hideout.",
+   "objectives": [
+    {
+     "heading": null,
+     "items": [
+      {
+       "text": "Find out from traders more about the connection between TerraGroup and Paradigm Shipping/Ask Mechanic where the distress signal came from",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the equipment under the cellular tower on Woods",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Repair the equipment under the cellular tower on Woods",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Report back to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the Paradigm Shipping documentation",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Tell Mechanic about \"Boreas\"",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Arrange a transport to the icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the AMG-10 fluid to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 3 found in raid Military power filters to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the AMG-10 fluid to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Eliminate any 30 targets on Reserve",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Launch a yellow signal flare at the Woods transit on Reserve",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the AMG-10 fluid to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find an alternative transport to the icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to the BTR Driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Return to the Hideout",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Return to the BTR Driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Tell Mechanic that you found transport to the icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 200 7.62x54mm R BT gzh",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain Skier's reports on Customs",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Burn Skier's reports on Customs",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Eliminate any 15 targets at the smugglers' territories",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Report back to the BTR Driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Tell Mechanic that you found transport to the icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Eliminate any 10 targets at the smugglers' territories",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Report back to the BTR Driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Tell Mechanic that you found transport to the icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Board the smuggler hovercraft on Shoreline or Lighthouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Bring a marine repair kit",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Bring a green RSP signal flare",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Bring 2,500 Euros to pay for the evacuation from the icebreaker",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Arrive at the Icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Check if any crew members survived on the ship",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Access the engine room",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the engine room keycard",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Reach the engine room",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Find a way into the icebreaker superstructure",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask Mechanic about explosives",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask Prapor about explosives",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Arrive at the Icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Reach the damaged door on the roof of the engine room",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Break the chain on the door on the roof of the engine room using the SZ-1 charge",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Enter the icebreaker superstructure from the roof of the engine room",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Inspect the crew living quarters in the icebreaker superstructure",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Find a way to the upper decks of the icebreaker superstructure",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask the surviving scientist how to open the code-locked door on level 6",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask Mechanic for help with finding the second part of the code for the locked door on level 6",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Plant the hacking device in the server room in The Lab",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Return to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Arrive at the Icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Reach the engine room",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the engine room keycard",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Reach the damaged door on the roof of the engine room",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Return to the BTR driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Return to the BTR driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Break the chain on the door on the roof of the engine room using the SZ-1 charge",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Reach the code-locked door",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Use the correct access code",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate compartment C-1",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the keycard with access to compartment C-1",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate the entrance to the bridge",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate an alternative path to the bridge",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Reach the upper decks",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Thaw the hatch on the roof of the bridge",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find something to thaw the hatch on the roof of the bridge",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Rescue the icebreaker captain",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Access Compartment C-1",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Search the shelves in compartment C-1",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Search the area near the workstation in compartment C-1",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Search the servers in compartment C-1",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask Mechanic for help decoding the hard drives from the icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 3 found in raid Ultralink satellite modules to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain Ultralink satellite modules on the icebreaker",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Hand over 4 found in raid server RAM modules to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the server RAM modules on the icebreaker",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Hand over 2 found in raid cryptographic processors to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the cryptographic processors on the icebreaker",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Analyse the data from the icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Inform the scientist about the captain's death",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask the BTR driver if he can help evacuate the scientist from the icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Assist the smugglers with their conflict against the Rogues",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Return to the BTR driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Eliminate 20 targets on the icebreaker",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 5 respirators to the BTR driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain respirators for the BTR driver",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Hand over 2 class 5 or higher ballistic plates to the BTR driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain class 5+ ballistic plates for the BTR driver",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Hand over the Kirasa-N body armor to the BTR driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the Kirasa-N body armor for the BTR driver",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Inform the scientist that everything is ready for his evacuation",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask the BTR driver how the scientist's rescue went",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    }
+   ],
+   "rewards": [],
+   "guide": [
+    {
+     "heading": "Talk to Mechanic",
+     "text": "Visit Mechanic in the menu through the trader screen and ask him about the distress signal."
+    },
+    {
+     "heading": "Locate and repair the equipment under the cellular tower on Woods",
+     "text": "Find and repair the equipment at the Scav bunker on Woods with a Toolset."
+    },
+    {
+     "heading": "Report back to Mechanic",
+     "text": "Visit Mechanic in the menu through the trader screen."
+    },
+    {
+     "heading": "Locate and obtain the Paradigm Shipping documentation",
+     "text": "The Paradigm Shipping directive to pick up and read can be found in the warehouse at the freight yard in the north of Lighthouse."
+    },
+    {
+     "heading": "Tell Mechanic about \"Boreas\"",
+     "text": "Visit Mechanic in the menu through the trader screen."
+    },
+    {
+     "heading": "Arrange a transport to the icebreaker",
+     "text": "Visit Prapor in the menu through the trader screen and ask him about the transport."
+    },
+    {
+     "heading": "Hand over 3 Military power filters to Prapor",
+     "text": "This objective only happens if you kept the Armored case from Prapor in Falling Skies."
+    },
+    {
+     "heading": "Eliminate any 30 targets on Reserve",
+     "text": "This objective only happens if you have not completed Falling Skies."
+    },
+    {
+     "heading": "Launch a yellow signal flare at the Woods transit on Reserve",
+     "text": "This objective only happens if you have not completed Falling Skies.\n\nShoot a yellow flare into the sky while being at the Woods transit on Reserve. If the flare doesn't reach a certain height, the quest objective won't complete. You can use either the handheld RSP-30 yellow flare which can be bought at Prapor LL1 or a 26x75mm yellow flare cartridge which can be bought at Jaeger LL1, and is fired from a signal pistol. If you use the handheld RSP-30 yellow flare, make sure to aim it upwards, but not too much or it lands behind you."
+    },
+    {
+     "heading": "Hand over the AMG-10 fluid to Prapor",
+     "text": "The AMG-10 hydraulic fluid (quest item) can be found on Reserve. There are multiple possible spawns throughout the location. Note: The barter item AMG-10 hydraulic fluid cannot be used for this objective."
+    },
+    {
+     "heading": "Find an alternative transport to the icebreaker",
+     "text": "Talk to the BTR Driver and ask him about the transport."
+    },
+    {
+     "heading": "Return to the Hideout",
+     "text": "This objective only happens if you have completed The Price of Independence.\n\nExit the raid by extracting or dying."
+    },
+    {
+     "heading": "Hand over 200 7.62x54mm R BT gzh rounds to the BTR driver",
+     "text": "This objective only happens if you have completed Choose Your Friends Wisely."
+    },
+    {
+     "heading": "Locate and obtain Skier's reports on Customs",
+     "text": "This objective only happens if you have completed Choose Your Friends Wisely.\n\nSkier's docs can be found in the ditch between the Scav base and the laboratory on Customs."
+    },
+    {
+     "heading": "Burn Skier's reports on Customs",
+     "text": "This objective only happens if you have completed Choose Your Friends Wisely.\n\nBurn Skier's docs at any fire barrel on Customs. The closest one to the pick up location is in the middle living quarters of the Scav base."
+    },
+    {
+     "heading": "Eliminate any 15 targets at the smugglers' territories",
+     "text": "This objective only happens if you have completed Choose Your Friends Wisely.\n\nKill any 15 targets at the smuggler bases on Shoreline or Interchange."
+    },
+    {
+     "heading": "Eliminate any 10 targets at the smugglers' territories",
+     "text": "This objective only happens if you have not completed either The Price of Independence or Choose Your Friends Wisely.\n\nKill any 10 targets at the smuggler bases on Shoreline or Interchange."
+    },
+    {
+     "heading": "Return to the BTR driver",
+     "text": "Talk to the BTR Driver."
+    },
+    {
+     "heading": "Tell Mechanic that you found transport to the icebreaker",
+     "text": "Visit Mechanic in the menu through the trader screen."
+    },
+    {
+     "heading": "Board the smuggler hovercraft on Shoreline or Lighthouse",
+     "text": "The hovercraft is located at the piers on Shoreline and Lighthouse. It can only be boarded while carrying a Sudak-Tudak marine repair kit. To extract from the icebreaker, a green flare and 2,400 Euros are required."
+    },
+    {
+     "heading": "Arrive at the Icebreaker",
+     "text": "Access Icebreaker through the Shoreline or Lighthouse transit."
+    },
+    {
+     "heading": "Check if any crew members survived on the ship",
+     "text": "Talk to the scientist through the intercom located on level 1 of the Icebreaker on the east side of the ship."
+    },
+    {
+     "heading": "Access the engine room",
+     "text": "Access the engine room by using the Boreas engine room keycard. Once the player reaches halfway through the engine room, Black Division operatives will come out of doors on the catwalks in front of the player."
+    },
+    {
+     "heading": "Locate and obtain the engine room keycard",
+     "text": "The engine room keycard is located in the center medical room at level 1, next to an engineer body."
+    },
+    {
+     "heading": "Reach the engine room",
+     "text": "Head to level 0 on the east side of the ship and find the locked door with a keycard reader right next to the control room.\n\nContinue to navigate the ship, and take the stairs to level 1 to find the doors to the engine room. Unseal them then enter the room and go downstairs to level -2."
+    },
+    {
+     "heading": "Find a way into the icebreaker superstructure",
+     "text": "The player needs to go to the extraction zone, but instead of extracting, go two levels down, turn around the helipad, and go all the way to the side of the ship, and go up to level 3 to find a door with a chain.\n\nA group of Black Division operatives will be waiting for the player on the helipad, and another group under the helipad.\n\nOnce you reach the objective, try to open the damaged door locked with chains and you will be asked to find an explosive. You can now extract from the Icebreaker. At this point the quest Stick to It is unlocked."
+    },
+    {
+     "heading": "Ask Mechanic about explosives",
+     "text": "Visit Mechanic in the menu through the trader screen."
+    },
+    {
+     "heading": "Ask Prapor about explosives",
+     "text": "Visit Prapor in the menu through the trader screen."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• Unlocks purchase of SZ-1 explosive charge (Icebreaker) at Prapor LL1"
+    },
+    {
+     "heading": "Reach the damaged door on the roof of the engine room",
+     "text": "The player needs to get back to the damaged door with chains."
+    },
+    {
+     "heading": "Break the chain on the door on the roof of the engine room using the SZ-1 charge",
+     "text": "Once the player reaches the damaged door, equipped with SZ-1 explosive charge (Icebreaker) the chain can be destroyed after placing the charge on it."
+    },
+    {
+     "heading": "Enter the icebreaker superstructure from the roof of the engine room",
+     "text": "After the door, the player need to enter the crew quarter. Be aware,The Wedge squad is present within the crew quarter. A teargas grenade is setup as a tripwire trap at the entrance door of the quarters."
+    },
+    {
+     "heading": "Find a way to the upper decks of the icebreaker superstructure",
+     "text": "Once the crew quarter have been cleared and The Wedge killed, head to level 5 of the ship and get outside of the quarters to take the stairs and find a code-locked door leading to the upper decks."
+    },
+    {
+     "heading": "Ask the surviving scientist how to open the code-locked door on level 6",
+     "text": "Talk to the scientist through the intercom located on level 1 of the Icebreaker on the east side of the ship."
+    },
+    {
+     "heading": "Ask Mechanic for help with finding the second part of the code for the locked door on level 6",
+     "text": "Visit Mechanic in the menu through the trader screen."
+    },
+    {
+     "heading": "Plant the hacking device in the server room in The Lab",
+     "text": "The Local network hacking device has to be stashed in the server room on the first floor of The Lab. Mechanic provides one via in-game mail and has a barter for more available."
+    },
+    {
+     "heading": "Return to Mechanic",
+     "text": "Visit Mechanic in the menu through the trader screen."
+    },
+    {
+     "heading": "Arrive at the Icebreaker",
+     "text": "Access Icebreaker through the Shoreline transit or through the menu."
+    },
+    {
+     "heading": "Access the engine room",
+     "text": "Access the engine room by using the Boreas engine room keycard. Once the player reaches halfway of the engine room, Black Division operatives will come out of doors on the catwalks in front of the player."
+    },
+    {
+     "heading": "Locate and obtain the engine room keycard",
+     "text": "The engine room keycard is located in the center medical room at level 1 next to an engineer body."
+    },
+    {
+     "heading": "Reach the engine room",
+     "text": "Head to level 0 on the east side of the ship and find the locked door with a keycard reader right next to the control room.\n\nContinue to navigate the ship, and take the stairs to level 1 to find the doors to the engine room. Unseal them then enter the room and go downstairs to level -2."
+    },
+    {
+     "heading": "Reach the damaged door on the roof of the engine room",
+     "text": "The player needs to get back to the damaged door with chains."
+    },
+    {
+     "heading": "Break the chain on the door on the roof of the engine room using the SZ-1 charge",
+     "text": "Once the player reaches the damaged door, equipped with SZ-1 explosive charge (Icebreaker) the chain can be destroyed after placing the charge on it."
+    },
+    {
+     "heading": "Reach the code-locked door",
+     "text": "Once the crew quarters have been cleared and The Wedge killed, head to level 5 of the ship and get outside of the quarters to take the stairs and find a code-locked door leading to the upper decks."
+    },
+    {
+     "heading": "Use the correct access code",
+     "text": "Use the code 3-1-2-2-2-0 on the pad to unlock the door. The code is the same every raid, does not change, and is the same for every door of the zone that leads to the exterior."
+    },
+    {
+     "heading": "Locate compartment C-1",
+     "text": "The C-1 compartment is located on level 7 next to the exit leading outside. The Compartment C-1 keycard is required to open it."
+    },
+    {
+     "heading": "Reach the upper decks",
+     "text": "Exit the level 7 rooms using the code 3-1-2-2-2-0 and go upstairs to find the bridge."
+    },
+    {
+     "heading": "Thaw the hatch on the roof of the bridge",
+     "text": "The hatch is located on the roof of the bridge, a frozen hatch with a frozen lever."
+    },
+    {
+     "heading": "Find something to thaw the hatch on the roof of the bridge",
+     "text": "The BBQ-S43 gas torch can be found at level 3 inside the kitchen where The Wedge appears."
+    },
+    {
+     "heading": "Access Compartment C-1",
+     "text": "The Compartment C-1 keycard is required to enter the room."
+    },
+    {
+     "heading": "Rescue the icebreaker captain",
+     "text": "This objective completes once the player reaches the captain's body in the bridge on level 9."
+    },
+    {
+     "heading": "Search the shelves in compartment C-1",
+     "text": "The Hard drive from compartment C-1 (3) is located on the shelves to the left once you enter the room."
+    },
+    {
+     "heading": "Search the area near the workstation in compartment C-1",
+     "text": "The Hard drive from compartment C-1 (1) is located under the desk, on the PC blocks."
+    },
+    {
+     "heading": "Search the servers in compartment C-1",
+     "text": "The Hard drive from compartment C-1 (2) is located on top of the servers on the floor."
+    },
+    {
+     "heading": "Ask Mechanic for help decoding the hard drives from the icebreaker",
+     "text": "Visit Mechanic in the menu through the trader screen and hand over the 3 hard drives.\n\nNote: After handing over the drives, the quests A Wedge Between Us, Fresh Stock, Oil Change and War Never Changes become available. Completing them is not required to continue this story chapter."
+    },
+    {
+     "heading": "Hand over 3 found in raid Ultralink satellite modules to Mechanic",
+     "text": "Visit Mechanic in the menu through the trader screen and hand over the 3 Ultralink satellite communication module."
+    },
+    {
+     "heading": "Hand over 4 found in raid server RAM modules to Mechanic",
+     "text": "Visit Mechanic in the menu through the trader screen and hand over the 4 Memento Server RAM Module."
+    },
+    {
+     "heading": "Hand over 2 found in raid cryptographic processors to Mechanic",
+     "text": "Visit Mechanic in the menu through the trader screen and hand over the 2 IBX Gigachad cryptographic processor."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• 1x Icebreaker archive data"
+    },
+    {
+     "heading": "Analyse the data from the icebreaker",
+     "text": "Read the Icebreaker archive data through the handbook after receiving it from your messages."
+    },
+    {
+     "heading": "Inform the scientist about the captain's death",
+     "text": "Talk to the scientist through the intercom located on the level 1 of the Icebreaker on the east side of the ship."
+    },
+    {
+     "heading": "Ask the BTR driver if he can help evacuate the scientist from the icebreaker",
+     "text": "Talk to the BTR Driver."
+    },
+    {
+     "heading": "Assist the smugglers with their conflict against the Rogues",
+     "text": "To fulfill this objective, you have to complete the quest Hangover."
+    },
+    {
+     "heading": "Return to the BTR driver",
+     "text": "Talk to the BTR Driver."
+    },
+    {
+     "heading": "Eliminate 20 targets on the icebreaker",
+     "text": "Kill any 20 targets on Icebreaker."
+    },
+    {
+     "heading": "Inform the scientist that everything is ready for his evacuation",
+     "text": "Talk to the scientist through the intercom located on level 1 of the Icebreaker on the east side of the ship."
+    },
+    {
+     "heading": "Ask the BTR driver how the scientist's rescue went",
+     "text": "Visit the BTR Driver on either Woods or Streets of Tarkov."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• +160,000 EXP\n• 1x Compartment C-3 keycard"
+    }
+   ]
+  },
+  "Falling Skies": {
+   "start": "Ask Mechanic about the downed plane while progressing through the story chapter Tour.",
+   "objectives": [
+    {
+     "heading": null,
+     "items": [
+      {
+       "text": "Locate the fallen plane",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Reach Loyalty Level 2 with Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask the traders about the fallen plane",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 2,000 USD to Therapist to learn details about the SUV",
+       "depth": 1,
+       "optional": true
+      },
+      {
+       "text": "Retrieve the flash drive from one of the G-Wagon SUVs",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the flash drive to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Wait for information from Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Retrieve the plane's flight recorder",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Leave the flight recorder in the specified spot",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Visit Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 3 found in raid Rechargeable batteries",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 5 found in raid Printed circuit boards",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 2 found in raid Toolsets",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Wait for information from Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the flight crew's transcript to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over Elektronik's secure flash drive to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Wait for information from Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Retrieve the armored case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find any additional clues",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Keep the armored case for yourself or hand it over to Prapor",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    }
+   ],
+   "rewards": [],
+   "guide": [
+    {
+     "heading": "Locate the fallen plane",
+     "text": "The fallen plane is located on the eastern side of Woods."
+    },
+    {
+     "heading": "Speak to Prapor",
+     "text": "Visit Prapor in the menu through the trader screen and ask him about the fallen plane."
+    },
+    {
+     "heading": "Reach Loyalty Level 2 with Prapor",
+     "text": "To get further information about the plane, you have to reach loyalty level 2 with Prapor and then ask him again about the fallen plane."
+    },
+    {
+     "heading": "Ask the traders about the fallen plane",
+     "text": "Visit Prapor, Therapist, Skier, Mechanic and Jaeger in the menu through the trader screen and ask them about the fallen plane."
+    },
+    {
+     "heading": "(Optional) Hand over 2,000 USD to Therapist to learn details about the SUV",
+     "text": "Visit Therapist in the menu through the trader screen and ask her about information on the fallen plane. Upon handing over 2,000 USD, she reveals the position of the wanted SUV."
+    },
+    {
+     "heading": "Retrieve the flash drive from one of the G-Wagon SUVs",
+     "text": "The G-Wagon flash drive can be found on the driver side running board of the G-Wagon SUV next to the \"Tunnel\" extraction on Shoreline.\n\nHand the G-Wagon flash drive over to Prapor through the trader screen."
+    },
+    {
+     "heading": "Wait for the information from Prapor",
+     "text": "Wait 1 hour then visit Prapor in the menu through the trader screen and ask him about the fallen plane."
+    },
+    {
+     "heading": "Retrieve the plane's flight recorder",
+     "text": "The fallen plane is located on the eastern side of Woods, where the Crashed plane's flight recorder can be found on the right side of the plane in the broken section near the back."
+    },
+    {
+     "heading": "Leave the flight recorder in the specified spot",
+     "text": "The Crashed plane's flight recorder has to be stashed at the destroyed room in the house on the Shoreline island."
+    },
+    {
+     "heading": "Visit Prapor",
+     "text": "Prapor asks for these items to continue."
+    },
+    {
+     "heading": "Wait for the information from Prapor",
+     "text": "Wait 3-5 hours then visit Prapor in the menu through the trader screen and ask him about the fallen plane."
+    },
+    {
+     "heading": "Hand over the flight crew's transcript and Elektronik's secure flash drive to Prapor",
+     "text": "Both items can be found in the chairman's house on Shoreline."
+    },
+    {
+     "heading": "Rewards",
+     "text": "You will receive the reward once you hand over both items.\n• 300,000 Roubles\n◦ 315,000 Roubles with Intelligence Center Level 1\n◦ 345,000 Roubles with Intelligence Center Level 2"
+    },
+    {
+     "heading": "Wait for the information from Prapor",
+     "text": "Wait 1-3 hours then visit Prapor in the menu through the trader screen and ask him about the fallen plane. Prapor asks if you read the transcript and if you answer with yes, you'll get a reward, if you answer with no you won't."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• 300,000 Roubles\n◦ 315,000 Roubles with Intelligence Center Level 1\n◦ 345,000 Roubles with Intelligence Center Level 2"
+    },
+    {
+     "heading": "Retrieve the armored case/Find any additional clues",
+     "text": "The Armored case can be found behind the cockpit of the fallen plane, and the optional Note from Mr. Kerman is located on the pilot seat."
+    },
+    {
+     "heading": "Keep the armored case for yourself or hand it over to Prapor",
+     "text": "This is an important point of no return choice! The rewards differ depending on the decision."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• +80,000 EXP\n• Prapor Rep -0.7\n• 1× Armored case\n• Unlocks achievement Just Business"
+    },
+    {
+     "heading": "Rewards",
+     "text": "• +80,000 EXP\n• 1,500,000 Roubles\n• Unlocks achievement Man of His Word"
+    },
+    {
+     "heading": "Rewards",
+     "text": "• +80,000 EXP\n• 1,000,000 Roubles\n• Unlocks achievement Man of His Word"
+    }
+   ]
+  },
+  "The Labyrinth (story chapter)": {
+   "start": "• Locate the The Labyrinth transit on Shoreline. The transit is located in the basement of the health resort west wing and requires the Knossos LLC facility key.",
+   "objectives": [
+    {
+     "heading": null,
+     "items": [
+      {
+       "text": "Ask the traders about the underground facility",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask Therapist how to access the underground facility",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Wait for Jaeger to gather the keycards",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Figure out what happened to the BEAR squad",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the entrance to the underground facility beneath the Health Resort",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Access the facility",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate the traces of the BEAR squad in The Labyrinth",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Investigate the BEAR squad regroup spot at Item 1156",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate the squad leader",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Gather more information about the squad",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Investigate the 5 lab staff bodies",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Access the locked office",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Listen to the audio tape from the office",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the audio tape to Jaeger",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Read the Labyrinth facility research report",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the Labyrinth facility research report",
+       "depth": 2,
+       "optional": true
+      }
+     ]
+    }
+   ],
+   "rewards": [],
+   "guide": [
+    {
+     "heading": "Speak to Jaeger",
+     "text": "Visit Jaeger in the menu through the trader screen and ask him about the underground facility."
+    },
+    {
+     "heading": "Wait for Jaeger to gather the keycards",
+     "text": "Wait 12-24 hours then visit Jaeger in the menu through the trader screen and ask him about the Labyrinth. After finishing the dialogue, Jaeger provides 2 Labrys access keycards via in-game mail and has a barter for more available."
+    },
+    {
+     "heading": "Access the underground facility",
+     "text": "The Labyrinth can only be entered with a Labrys access keycard through transiting from Shoreline. The transit is located in the basement of the health resort west wing and requires the Knossos LLC facility key. Note: This location has some unique features that you should read up on before your first visit."
+    },
+    {
+     "heading": "Locate the traces of the BEAR squad",
+     "text": "Leshy's orders need to be found to fulfill this objective. They can be found in a food container on the ground in front of spawn chamber 2."
+    },
+    {
+     "heading": "Investigate the BEAR squad regroup spot at Item 1156",
+     "text": "The regroup spot is located at the prototype weapon area."
+    },
+    {
+     "heading": "Locate the squad leader/Gather more information about the squad",
+     "text": "The squad leader is located at the torture room. Leshy's diary can be found next to him."
+    },
+    {
+     "heading": "Investigate the 5 lab staff bodies",
+     "text": "For this objective you have to pick up 5 notes located next to lab scientist bodies. #4 requires the Observation room key."
+    },
+    {
+     "heading": "Access the locked office",
+     "text": "The locked office is the observation room. The Observation room key is required to enter it."
+    },
+    {
+     "heading": "Listen to the audio tape from the office",
+     "text": "The audio tape is located on the ground under the right hand of the scientist."
+    },
+    {
+     "heading": "Hand over the audio tape to Jaeger",
+     "text": "Hand the Deceased scientist's audio tape over to Jaeger through the trader screen."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• 500,000 Roubles\n• 1× Accuracy International AXMC .338 LM bolt-action sniper rifle\n• 2× AI AXMC .338 LM 10-round magazine\n• 2× .338 Lapua Magnum FMJ ammo pack (20 pcs)"
+    },
+    {
+     "heading": "Obtain and read the Labyrinth facility research report",
+     "text": "The report is located at the drain pipe next to the pier on Shoreline."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• +160,000 EXP\n• Unlocks achievement Theseus"
+    }
+   ]
+  },
+  "The Ticket": {
+   "start": null,
+   "objectives": [
+    {
+     "heading": null,
+     "items": [
+      {
+       "text": "Obtain Intelligence Center level 1",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Wait for Mr. Kerman to reach out",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the camp of Prapor's people on Lighthouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find any clues about Prapor's people's intentions",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Gain access to Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Stay on good terms with Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain 3 TerraGroup \"Blue Folders\" materials",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Bring the found items to Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Launch a yellow signal flare in front of ULTRA's main entrance on Interchange",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Eliminate any 15 targets in one raid on Interchange",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Unlock the armored case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the \"Ticket\"",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask Mechanic for help",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the Experimental signal jammer",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Gain access to The Lab",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the TerraGroup Labs access keycard",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Use the Experimental signal jammer to unlock the case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Read the instructions from the armored case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Contact Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    },
+    {
+     "heading": "If you accept Mr. Kerman's offer",
+     "items": [
+      {
+       "text": "Accept Mr. Kerman's offer",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Activate the RFID card from the case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain Solar Power level 1",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain a Blank RFID keycard",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the Laboratory master pass",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Use the Laboratory master pass to activate Kruglov's keycard",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Gain access to The Lab",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain an RFID card encryption device",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Wait for a response from Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 40 Physical Bitcoins to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain Bitcoin Farm level 1",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain 40 Physical Bitcoins to pay for Elektronik's services",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Collect the RFID card encryption device to activate Kruglov's keycard",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Gain access to Streets of Tarkov",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Access Kruglov's apartment on Streets of Tarkov",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Arrive at the entrance pathway to the port Terminal",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Swipe the keycard at the intercom reader",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    },
+    {
+     "heading": "If you refuse Mr. Kerman's offer",
+     "items": [
+      {
+       "text": "Arrive at the entrance pathway to the port Terminal",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Swipe the keycard at the intercom reader",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the cash to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Collect the required amount in RUB: 300,000,000",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Hand over the cash to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Collect the required amount in RUB: 500,000,000",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Complete all Prapor's tasks in time",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Convert the evidence folders to digital format and save them to an SSD",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Obtain the item: Folder with TerraGroup Labs evidence (Reports)",
+       "depth": 3,
+       "optional": true
+      },
+      {
+       "text": "Obtain the item: Folder with TerraGroup evidence (Staff)",
+       "depth": 3,
+       "optional": true
+      },
+      {
+       "text": "Obtain the item: Folder with TerraGroup Labs evidence (Developments)",
+       "depth": 3,
+       "optional": true
+      },
+      {
+       "text": "Obtain the item: Folder with TerraGroup evidence (Finances)",
+       "depth": 3,
+       "optional": true
+      },
+      {
+       "text": "Eliminate any 50 targets on Streets of Tarkov",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Eliminate 4 PMC operatives in one raid",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Report to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over Secure container Kappa to Prapor",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    },
+    {
+     "heading": "If you accept Mr. Kerman's offer and agree to find evidence on TerraGroup",
+     "items": [
+      {
+       "text": "Talk to Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Agree to find dirt on TerraGroup for Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain Intelligence Center level 3",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Don't waste the second chance from Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Deliver the 8 major TerraGroup evidence to Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Deliver the 36 minor TerraGroup evidence to Mr. Kerman",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Negotiate with Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Confirm with Mr. Kerman that all the evidence has been delivered",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Wait for Mr. Kerman's trusted contact to get in touch",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Fence",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Reach 4.0 reputation with Fence",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Complete Fence's assignments",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Keep the standing with Fence above 4.0",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Extract through the Friendship Bridge (Co-Op) on Woods",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Extract through the Scav Lands (Co-Op) on Reserve",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Reach 0.4 standing with BTR Driver",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Tell Fence that the assignment is complete",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain Solar Power level 1",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    },
+    {
+     "heading": "If you accept Mr. Kerman's offer and agree to find evidence on TerraGroup, but refuse to hand in more than 2 major evidence",
+     "items": [
+      {
+       "text": "Ask the traders how to leave Tarkov",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the military flash drive with compiled data to Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Record the compiled data to a military flash drive",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the topographic intel documents on Lighthouse",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the topographic intel documents on Woods",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the topographic intel documents on Customs",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the topographic intel documents on Ground Zero",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the topographic intel documents on Factory",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Eliminate 30 PMCs on Woods",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 100 PMC dogtags to Lightkeeper",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain 100 PMC dogtags",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Stash the first amulet in the stash room on Lighthouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the amulet from the marked room on Customs",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Stash the second amulet in the stash room on Lighthouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the amulet from the first marked room on Streets of Tarkov",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Stash the third amulet in the stash room on Lighthouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the amulet from the second marked room on Streets of Tarkov",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Stash the fourth amulet in the stash room on Lighthouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the amulet from the first marked room on Reserve",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Stash the fifth amulet in the stash room on Lighthouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the amulet from the second marked room on Reserve",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Stash the sixth amulet in the stash room on Lighthouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the amulet from the third marked room on Reserve",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Report to Lightkeeper",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    },
+    {
+     "heading": "If you accept Mr. Kerman's offer and refuse to find evidence on TerraGroup",
+     "items": [
+      {
+       "text": "Talk to Mr. Kerman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask the traders how to leave Tarkov",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Complete Prapor's tasks",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over any military or advanced electronics to Prapor",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Obtain any 50 military or advanced electronics",
+       "depth": 3,
+       "optional": true
+      },
+      {
+       "text": "Hand over Secure container Theta, Epsilon or Kappa to Prapor",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Obtain Secure container Kappa",
+       "depth": 3,
+       "optional": true
+      },
+      {
+       "text": "Obtain Secure container Epsilon",
+       "depth": 3,
+       "optional": true
+      },
+      {
+       "text": "Obtain Secure container Theta",
+       "depth": 3,
+       "optional": true
+      },
+      {
+       "text": "Hand over 40 weapon and armor repair kits to Prapor",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Obtain 40 weapon and armor repair kits with full durability",
+       "depth": 3,
+       "optional": true
+      },
+      {
+       "text": "Hand over Case with dangerous cargo to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the Case with dangerous cargo",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Report to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 1,000,000 Dollars to Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Collect the required amount in USD: 1,000,000",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Wait for the info from Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Collect the updated hash codes from Prapor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain Solar Power level 1",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    },
+    {
+     "heading": "Identical for all endings",
+     "items": [
+      {
+       "text": "Arrive at the entrance pathway to the port Terminal",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Bring the Reprogrammed RFID keycard with Mr. Kerman's hash codes",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Bring the RFID keycard with unknown name",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Bring the Prapor's letter for the port checkpoint",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Bring the Reprogrammed RFID keycard with Prapor's hash codes",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Swipe the keycard at the intercom reader",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Access the port Terminal",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Bring the Secure container Alpha-1 with TerraGroup evidence",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Pass the security check",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Escape from Tarkov",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the armory with the confiscated equipment",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Retrieve the Secure container Alpha-1",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the keycard to unlock the service passage",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate the exit leading to the Terminal loading zone",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Unlock the service passage inside the seaport building",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Access the Terminal loading zone",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate the way into the fuel depot",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Figure out how to restore power to the pumping station",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the diagram of the electrical panels",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Drain the water in the pumping station",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain the key to the gate blocking the road to the pier",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate the exit leading to the pier",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Reach the evacuation area at the pier",
+       "depth": 2,
+       "optional": true
+      }
+     ]
+    }
+   ],
+   "rewards": [
+    {
+     "heading": "Savior ending",
+     "items": [
+      {
+       "text": "Dogtag (Savior)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Armband (For Humanity)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "\"Savior\" Achievement",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "For Humanity poster",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Savior's ceiling Hideout ceiling style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Savior's walls Hideout wall style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Savior's floor Hideout floor style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "\"Peaceful Sky\" main menu background",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "200,000 Dollars (40,000 in PvE)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× Ballistic plate case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× Magazine case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× Medicine case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× Money case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× T H I C C Weapon case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× T H I C C item case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "2× Ammunition case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× Red Rebel ice pick",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× UVSR Taiga-1 survival machete",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× AS VAL MOD.4 9x39 special assault rifle",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× Kalashnikov PKP 7.62x54R infantry machine gun",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× Milkor M32A1 MSGL 40mm grenade launcher",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× SWORD International Mk-18 .338 LM marksman rifle",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× Saiga-12K 12ga automatic shotgun",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× TKPD 9.3x64 carbine",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "10× .338 Lapua Magnum AP ammo pack (20 pcs)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "10× 7.62x54mm R BS ammo pack (20 pcs)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "10× 9.3x64mm 7N33 ammo pack (20 pcs)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "10× 9x39mm BP ammo pack (20 pcs)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "18× 40x46mm M433 (HEDP) grenade",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "18× 40x46mm M441 (HE) grenade",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "4× 12/70 AP-20 ammo pack (25 pcs)",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    },
+    {
+     "heading": "Debtor ending",
+     "items": [
+      {
+       "text": "Dogtag (Debtor)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Armband (Lighthouse)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "\"Debtor\" Achievement",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Lighthouse poster",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Mercenary's ceiling Hideout ceiling style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Mercenary's walls Hideout wall style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Mercenary's floor Hideout floor style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "\"Storm Front\" main menu background",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "120,000 Euros (30,000 in PvE)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× Ballistic plate case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× Magazine case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× Money case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× T H I C C Weapon case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "2× Ammunition case",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× Red Rebel ice pick",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× UVSR Taiga-1 survival machete",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× Accuracy International AXMC .338 LM bolt-action sniper rifle",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× MPS Auto Assault-12 Gen 2 12ga automatic shotgun",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× RShG-2 72.5mm rocket launcher",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× SIG MCX-SPEAR 6.8x51 assault rifle",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× Sako TRG M10 .338 LM bolt-action sniper rifle",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "3× U.S. Ordnance M60E6 7.62x51 light machine gun (FDE)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "10× .338 Lapua Magnum AP ammo pack (20 pcs)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "10× 6.8x51mm SIG Hybrid ammo pack (20 pcs)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "10× 7.62x51mm M993 ammo pack (20 pcs)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "4× 12/70 AP-20 ammo pack (25 pcs)",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    },
+    {
+     "heading": "Survivor ending",
+     "items": [
+      {
+       "text": "Dogtag (Survivor)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Armband (Survivor)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "\"Survivor\" Achievement",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survivor poster",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survivor's ceiling Hideout ceiling style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survivor's walls Hideout wall style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survivor's floor Hideout floor style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "\"Bleak Horizon\" main menu background",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    },
+    {
+     "heading": "Fallen ending",
+     "items": [
+      {
+       "text": "Dogtag (Fallen)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Armband (To Fall in the Darkness)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "\"Fallen\" Achievement",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "To Fall in the Darkness poster",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Fallen in the Darkness ceiling Hideout ceiling style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Fallen in the Darkness walls Hideout wall style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Fallen in the Darkness floor Hideout floor style",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "\"Dusk of Humanity\" main menu background",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "10,000,000 Roubles (3,000,000 in PvE)",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "1× Money case",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    }
+   ],
+   "guide": [
+    {
+     "heading": null,
+     "text": "Use the buttons below to select the ending you want to pursue."
+    },
+    {
+     "heading": "Arrive at the entrance pathway to the port Terminal",
+     "text": "You will have to use the corresponding access item on the keycard swiping system, or the intercom call button for the Survivor ending on the intercom between the times 21:00 and 06:00. The corresponding access item will be accepted and the intercom will tell you to proceed to the gate. If you do not have a proper access item, or it is the wrong time of day, the guard will deny you entry via the intercom."
+    },
+    {
+     "heading": "Access the port Terminal",
+     "text": "If you are authorized to approach, you will have to follow the left road to approach the transit area. Once you approach the transit area, your weapon will be automatically lowered. You won't be able to transit without having Secure container Alpha-1 with TerraGroup evidence in your task inventory if you are doing the Savior ending.\n\nA few actions can get you killed by the port garrison:\n• Going further than the first anti-tank barrier without presenting an access item.\n• Going outside of the road around the transit area.\n• Pulling out a weapon, or getting a weapon back in your hands after it has been lowered."
+    },
+    {
+     "heading": "Notes:",
+     "text": "• If you die with the Secure container Alpha-1 with TerraGroup evidence, a new one will be sent to you via in-game mail.\n• The RFID keycard with unknown name can be purchased once per raid from Lightkeeper for 1× TerraGroup \"Blue Folders\" materials. Note: Free special slot required.\n• Prapor's letter for the port checkpoint can be purchased twice per trader reset from Prapor for 5,000,000 Roubles."
+    },
+    {
+     "heading": "Pass the security check",
+     "text": "The security check consists of a cinematic of you entering the Terminal area."
+    },
+    {
+     "heading": "Locate the armory with your confiscated equipment",
+     "text": "You will need to find your way to the armory building, and enter the armory to retrieve your equipment. You will have to find the corresponding key on your way to the armory. Once you have retrieved your equipment and have exited the armory to the west, a squad of Black Division operatives will approach the armory building from the southwest. You will have to fight them in order to continue to the next objective"
+    },
+    {
+     "heading": "Obtain the keycard to unlock the service passage",
+     "text": "You will have to find the Black Division keycard located inside the seaport Terminal building (MS) west of the armory. The keycard is in a Weapon box (6x2) on a tipped over ATM. You will have to fight a squad of Black Division operatives guarding the inside of the building before getting the keycard."
+    },
+    {
+     "heading": "Access the Terminal loading zone",
+     "text": "To access the loading zone, you will have to get through the admin building. You will have to fight Scavs on the path to it and a team of Black Division operatives waiting at the entrance of the building. Once all Black Division operatives have been neutralized, you have to enter the building and swipe the Black Division keycard at the scanner next to the door. There are several resupply resources (Provisions, medical items) scattered about in the hallway immediately inside the door. Scavs spawning ahead will attempt to enter the hallway from the far end while you are inside."
+    },
+    {
+     "heading": "Locate the way into the fuel depot",
+     "text": "To continue, you must get through the metal gate blocking your path. You can do this by either using a nearby found SZ-1 explosive charge to open the door, by pushing it open with Elite level Strength, or by pushing it open together with another player.\n\nYou will have to fight a squad of Black Division operatives around the various SZ-1 explosive charge spawns. It is recommend to clear them first before looking for the charge."
+    },
+    {
+     "heading": "Drain the water in the pumping station",
+     "text": "*Electrical panels can be repaired with bare hands, but the chance to succeed is low. If you fail a repair, the panel will inflict damage to your arms.\n\nYou will need to find and repair one to five electrical panels scattered around Terminal in order to restore power to the pumping station. The amount of panels that are required to be repaired depends on the number of players in the raid:\n• Solo players will always have a single panel to repair (Either panel number 9 or 10).\n• With 2-5 players, at least 1, but up to 5 panels will need to be repaired across all panel locations.\n\nTwo Toolsets can be found on Terminal in static locations, both are guaranteed to spawn every raid."
+    },
+    {
+     "heading": "Obtain the key to the gate blocking the road to the pier",
+     "text": "The key can be obtained from a safe inside the pumping station, only after draining the water."
+    },
+    {
+     "heading": "Locate the exit leading to the pier",
+     "text": "You now need to access the pier to reach the Zubr Boat extraction. You can reach the door to the pier in a few ways:\n• You can go through the container loading bay in the east, this avoids fighting the Scav Boss that can spawn, but requires backtracking, and is a longer path. (Green path)\n• You can go through the container loading bay in the center, but you might have to fight the Scav Boss that can spawn, in addition to the team of Black Division operatives nearby. (Blue path)\n• You can go through the container loading bay in the west, sticking close to the water, this may avoid fighting the Scav Boss that can spawn, but can end up in a long distance battle with a squad of Black Division operatives at the end of the loading bay. (Purple path)\n\nOn all possible paths, you will have to fight squads of Black Division operatives before reaching the pier door."
+    },
+    {
+     "heading": "Escape from Tarkov",
+     "text": "Once the Pier door has been opened, all players in the raid will have 3 minutes to reach the Zubr Boat extraction at the end of the pier before the extraction becomes unavailable regardless of the current raid time left. You will have to fight a final team of Black Division operatives on the pier, before reaching the boat. The extraction timer coincides with the three minute timer, once the timer is up, any players in the extraction zone will escape and a cinematic related to the ending you chose will start.\n\nSuccessfully completing the raid will allow you to obtain one of the game's endings. Upon dying or extracting, the state of your character is returned to what it was before entering Terminal, besides the consumed access item."
+    }
+   ]
+  },
+  "The Unheard": {
+   "start": "Pick up and read Note with ramblings about the Purification from one of the following locations:\n• In the surveillance room inside the TerraGroup security post building on Streets of Tarkov\n\n• In the TerraGroup office on Streets of Tarkov\n\n• In office no. 4 on the second floor of the TerraGroup main building on Ground Zero (Level 21+). TerraGroup science office key required.",
+   "objectives": [
+    {
+     "heading": null,
+     "items": [
+      {
+       "text": "Learn more about The Unheard",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about TerraGroup's activities",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about the \"fuel\" mentioned in the note",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find more information about the special catalyst shipment",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate Rzhevsky's service vehicle and obtain his personal belongings",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Retrieve the data from the hard drive in Rzhevsky's car",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Read the transcript of Rzhevsky's conversation",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate and obtain the documents on the Blue Ice fuel catalyst research",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find as much information as possible about the plans of The Unheard",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about A.P.'s activities",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about A.P.'s role",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Search for any mention of A.P. in The Lab",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate A.P.'s room in the Health Resort",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find out which room A.P. was assigned to",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Obtain A.P.'s personal belongings",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain A.P.'s data storage device",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Decrypt the flash drive from A.P.'s room",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask Mechanic for help",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 5,000,000 Roubles to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the A.P. flash drive to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Wait for the news from Elektronik",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Integrate the tech files from A.P.'s flash drive into a TerraGroup keycard",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Access A.P.'s corporate apartment",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Investigate A.P.'s apartment",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Access the hidden room in A.P.'s apartment",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Study the TerraGroup documentation in A.P.'s office",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Study the role of the Blue Ice catalyst in The Unheard's protocol",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about The Unheard's protocol",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Figure out how The Unheard are connected to Tarkov",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    }
+   ],
+   "rewards": [],
+   "guide": [
+    {
+     "heading": "Learn more about The Unheard",
+     "text": "See requirements."
+    },
+    {
+     "heading": "Learn more about TerraGroup's activities/Learn more about the \"fuel\" mentioned in the note",
+     "text": "To fulfill these objectives, you have to pick up and read 2 notes from The Lab. The Document on changes in enterprise interactions can be found in the laboratory next to the dome on the first floor, and the Cargo transport fax can be found in office O23 on the second floor."
+    },
+    {
+     "heading": "Find more information about the special catalyst shipment",
+     "text": "The Transport log with notes to pick up and read can be found on Factory."
+    },
+    {
+     "heading": "Locate Rzhevsky's service vehicle and obtain his personal belongings",
+     "text": "The wanted car can be found near the LexOs car dealership on Streets of Tarkov. The Hard drive from Rzhevsky's car is located on the center console in the car."
+    },
+    {
+     "heading": "Retrieve the data from the hard drive in Rzhevsky's car/Read the transcript of Rzhevsky's conversation",
+     "text": "Craft the Hard drive printout at the Intelligence Center level 1 in the Hideout and read it from the off-raid quest inventory. Electricity is required during the entire process, otherwise it will be interrupted."
+    },
+    {
+     "heading": "Locate and obtain the documents on the Blue Ice fuel catalyst research/Find as much information as possible about the plans of The Unheard",
+     "text": "The Fuel catalyst test report and the Burnt document to pick up and read can be found in the TerraGroup storage room on Factory, which is located in the underground tunnels right next to the \"Camera Bunker Door\" Scav extraction. A TerraGroup storage room keycard is required to enter it. Both have multiple spawns throughout the room."
+    },
+    {
+     "heading": "Search for any mention of A.P. in The Lab/Learn more about A.P.'s role and activities",
+     "text": "To fulfill this objective, you have to locate 1 of 2 whiteboards and pick up and listen to 2 audio tapes located in The Lab."
+    },
+    {
+     "heading": "Locate A.P.'s room in the Health Resort/Obtain A.P.'s data storage device and his personal belongings",
+     "text": "A.P.'s room is east wing room 305 at the health resort on Shoreline. The Sliderkey flash drive marked with A.P. is stuck into the laptop on the table. A.P.'s belongings in the form of TerraGroup corporate apartment key can be found on the right nightstand. The optional Fragment of an unknown document can be found on the left nightstand.\n\nThe optional Guard post note to locate the room can be found on the first floor of the health resort west wing, on the desk next to the security room at the southern entrance."
+    },
+    {
+     "heading": "Decrypt the flash drive from A.P.'s room",
+     "text": "Craft the Decrypted Sliderkey flash drive marked with A.P. at the Intelligence Center level 1 in the Hideout. Electricity is required during the entire process, otherwise it will be interrupted."
+    },
+    {
+     "heading": "Ask Mechanic for help",
+     "text": "Visit Mechanic in the menu through the trader screen and ask him about the flash drive. He will say that he cannot help, but that Elektronik can if you hand over 5,000,000 Roubles."
+    },
+    {
+     "heading": "Hand over 5,000,000 Roubles and the A.P. flash drive to Mechanic",
+     "text": "Hand 5,000,000 Roubles and the Decrypted Sliderkey flash drive marked with A.P. over to Mechanic through the trader screen."
+    },
+    {
+     "heading": "Wait for the news from Elektronik",
+     "text": "If you haven't had contact with Mr. Kerman before: Wait 6-12 hours then visit Mechanic in the menu through the trader screen.\n\nIf you had contact with Mr. Kerman before: Wait 1 and half a hour for Mr. Kerman to contact you and speak to him."
+    },
+    {
+     "heading": "Integrate the files from A.P.'s flash drive into a keycard and access the hidden room in his apartment",
+     "text": "You first have to craft the Reprogrammed keycard for A.P.'s apartment lock (Green) at the Intelligence Center level 1 in the Hideout. The blue and red ones are false leads.\n\nA.P.'s apartment is apartment 1 on the second floor of the Cardinal apartment complex on Streets of Tarkov. A TerraGroup corporate apartment key is required to enter it. Once inside the apartment, you have to go down the hallway to find the hidden room opened with the crafted keycard. In the room are 4 notes to pick up and read."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• +128,000 EXP\n• Unlocks achievement Trail of Breadcrumbs"
+    }
+   ]
+  },
+  "They Are Already Here": {
+   "start": "Pick up and read Note about the Eye of the World from one of the following locations:\n• In the \"marked room\" at the three-story dorms on Customs\n\n• In the \"marked rooms\" RB-BK, RB-VO and RB-PKPM on Reserve\n\n• At the marked circle in the dilapidated village in the north of Woods\n\n• In the house on the island on Shoreline",
+   "objectives": [
+    {
+     "heading": null,
+     "items": [
+      {
+       "text": "Learn more about the hooded men/Learn more about the people leaving strange symbols in Tarkov",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate a place connected to the Eye of the World",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn more about the cultist's victim from the torture room",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the cult victim's apartment",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the key to the apartment",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Investigate the victim's apartment",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain the victim's first audio tape",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain and read the book that the cultists planted with Igor",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ask Mechanic about the Eye of the World",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Gain access to Mechanic",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate and neutralize a Cultist priest",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Obtain more information about the Eye of the World",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the place marked with the Eye of the World on Lighthouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Investigate the ransacked cultist room in the chalet",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the victim's belongings",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate and obtain the key mentioned in the victim's note",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the place marked with the Eye of the World on Woods",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Investigate the cultists' house marked with the Eye of the World",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the place marked with the Eye of the World on Shoreline",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Investigate the area around the Sordi communications tower",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Repair the Sordi tower",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Restore Arshavin's keycard",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Gain access to NGO Cobalt's secret facility",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Restore power at the station",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Turn on the cooling system in the server room",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Install a flash drive to download the data",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Investigate ARRS Station 14-4 KORD thoroughly",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survive and extract from Interchange",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find a way to disconnect the station from external agents",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Restore the ARRS station to backup settings",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Check that the station power is turned on",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Collect the flash drive from the ARRS station",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survive and extract from Interchange",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the flash drive with data to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Read the ARRS station specifications",
+       "depth": 1,
+       "optional": false
+      }
+     ]
+    }
+   ],
+   "rewards": [],
+   "guide": [
+    {
+     "heading": "Learn more about the hooded men/Learn more about the people leaving strange symbols in Tarkov",
+     "text": "See requirements."
+    },
+    {
+     "heading": "Locate a place connected to the Eye of the World/Learn more about the cultist's victim from the torture room",
+     "text": "To fulfill these objectives, you have to locate the Cultist's torture house on Lighthouse and pick up and listen to the audio tape found there.\n\nThe Cult victim's apartment key required for the next objective can also be obtained in the house."
+    },
+    {
+     "heading": "Locate the cult victim's apartment",
+     "text": "The wanted apartment is located on the third floor of the old apartment building behind the Klimov shopping mall on Streets of Tarkov. A Cult victim's apartment key is required to enter it."
+    },
+    {
+     "heading": "Investigate the victim's apartment/Obtain the victim's first audio tape and the book the Cultists planted",
+     "text": "To fulfill these objectives, you have to pick up and read 2 notes as well as pick up and listen to an audio tape from the office inside the apartment. The door has to be breached."
+    },
+    {
+     "heading": "Ask Mechanic about the Eye of the World",
+     "text": "Visit Mechanic in the menu through the trader screen and ask him about the Eye of the World."
+    },
+    {
+     "heading": "Locate and neutralize a Cultist priest",
+     "text": "Kill a Cultist priest on any location."
+    },
+    {
+     "heading": "Obtain more information about the Eye of the World",
+     "text": "*Only one of the keys is required to complete the objective.\n\nTo fulfill this objective, you have to pick up and read the Cultist priest's note from one of the marked rooms on Customs, Streets of Tarkov or Reserve. Note: The item doesn't spawn before the previous objective is completed."
+    },
+    {
+     "heading": "Customs",
+     "text": "Marked room on the third floor of the three-story dorms building. A Dorm room 314 marked key is required to enter it."
+    },
+    {
+     "heading": "Streets of Tarkov",
+     "text": "Marked room on the third floor of the northern abandoned factory building. A Abandoned factory marked key is required to enter it."
+    },
+    {
+     "heading": "RB-BK",
+     "text": "Marked room on the first floor of the black pawn barrack building. A RB-BK marked key is required to enter it."
+    },
+    {
+     "heading": "RB-PKPM",
+     "text": "Marked room next to the command office in the underground tunnel system. A RB-PKPM marked key is required to enter it."
+    },
+    {
+     "heading": "RB-VO",
+     "text": "Marked room in the security barrack building on Reserve. A RB-VO marked key is required to enter it."
+    },
+    {
+     "heading": "Locate the place marked with the Eye of the World on Lighthouse/Investigate the cultist room in the chalet/Obtain the victim's key",
+     "text": "The wanted place is the small southern bedroom on the second floor of the northern blue chalet on Lighthouse. The Victim's note to pick up and read can be found on the adjacent balcony.\n\nThe Station 14-4 KORD Arshavin K. pass (Damaged) is located on an ATV in front of the garage opposite the chalet."
+    },
+    {
+     "heading": "Locate the place marked with the Eye of the World on Woods",
+     "text": "The wanted place is a house in the dilapidated village in the north of Woods. The Newspaper clipping from the cultists' house to pick up and read can be found on a whiteboard next to the desk."
+    },
+    {
+     "heading": "Locate the place marked with the Eye of the World on Shoreline/Investigate the area/Repair the Sordi tower",
+     "text": "The wanted place is a red metal shack at the radio tower near the \"Road to Customs\" extraction on Shoreline. The Programmer's note to pick up and read can be found on a dead body next to the tower. To repair the tower, a Toolset has to be used inside the shack."
+    },
+    {
+     "heading": "Learn more about Station 14-4 KORD from Mechanic",
+     "text": "Visit Mechanic in the menu through the trader screen and ask him about the Eye of the World again."
+    },
+    {
+     "heading": "Restore Arshavin's keycard",
+     "text": "Craft the Station 14-4 KORD Arshavin K. pass (Restored) at the Intelligence Center level 1 in the Hideout. Electricity is required during the entire process, otherwise it will be interrupted."
+    },
+    {
+     "heading": "Gain access to NGO Cobalt's secret facility",
+     "text": "NGO Cobalt's secret facility is located in the basement of the power station on Interchange. A Station 14-4 KORD Arshavin K. pass (Restored) is required to enter it."
+    },
+    {
+     "heading": "Restore power at the station",
+     "text": "To restore the power you have to swipe the Station 14-4 KORD Arshavin K. pass (Restored) at the keycard panel directly next to the entrance door."
+    },
+    {
+     "heading": "Turn on the cooling system in the server room",
+     "text": "The server room is located behind the grate door. To turn on the cooling system, flip the lever in the back."
+    },
+    {
+     "heading": "Install a flash drive to download the data",
+     "text": "The Secure Flash drive has to be stashed to the left of the cooling system lever in the server room."
+    },
+    {
+     "heading": "Investigate ARRS Station 14-4 KORD thoroughly",
+     "text": "To fulfill this objective, you have to pick up and listen to the Mysterious audio tape from the safe next to the entrance door. The safe opens automatically after turning on the cooling system."
+    },
+    {
+     "heading": "Survive and extract from Interchange",
+     "text": "Extract from Interchange with either the \"Survived\" or \"Run-Through\" extraction status."
+    },
+    {
+     "heading": "Find a way to disconnect the station from external agents",
+     "text": "Return to the secret facility on Interchange and pick up and read the ARRS station mechanic's notes from the big desk."
+    },
+    {
+     "heading": "Restore the ARRS station to backup settings",
+     "text": "Turn on the power again, then go inside the server room and press the button under the table.\n\nNote: Only 1 player per raid can press the button and get progress on this objective. If you can't interact with it, return in a new raid."
+    },
+    {
+     "heading": "Collect the flash drive from the ARRS station",
+     "text": "Pick up the Flash drive for ARRS station from the server next to the cooling system lever."
+    },
+    {
+     "heading": "Survive and extract from Interchange",
+     "text": "Extract from Interchange with either the \"Survived\" or \"Run-Through\" extraction status."
+    },
+    {
+     "heading": "Hand over the flash drive with data to Mechanic",
+     "text": "Hand the Flash drive for ARRS station over to Mechanic through the trader screen."
+    },
+    {
+     "heading": "Read the ARRS station specifications",
+     "text": "Read the ARRS system specifications from the handbook."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• +128,000 EXP\n• Unlocks achievement Through Another's Eyes\n• Unlocks achievement When the Light Fades"
+    }
+   ]
+  },
+  "Tour": {
+   "start": "This chapter gets automatically added to the quest list upon starting the game.",
+   "objectives": [
+    {
+     "heading": null,
+     "items": [
+      {
+       "text": "Escape Ground Zero",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Therapist",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ensure access to the Streets of Tarkov",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over the cash to Therapist",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Collect the required 250,000 Roubles",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Talk to Ragman",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survive and extract from Interchange or visit Interchange 3 times",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Tell Ragman what you found during the recon",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Talk to Skier",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survive and extract from Customs or visit Customs 3 times",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over any 5 found in raid building materials items to Skier",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find any 5 items in raid from the building materials category",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Talk to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survive and extract from Factory or visit Factory 3 times",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over any 2 found in raid weapons to Mechanic",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find any 2 weapons in raid",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Talk to Skier",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Eliminate any 3 targets on Woods",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survive and extract from Woods or visit Woods 3 times",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Locate the entrance to the port Terminal",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Find a way to contact the soldiers at the Terminal",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Use the intercom to contact the port garrison",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Learn how to escape Tarkov",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Ensure access to Reserve",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Survive and extract from Shoreline or visit Shoreline 3 times",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Hand over 5 PMC dogtags to Prapor",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Find 5 PMC dogtags in raid",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Ensure access to Lighthouse",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Hand over 8,000 USD to Mechanic",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Collect the required 8,000 USD",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Ensure access to The Lab",
+       "depth": 1,
+       "optional": false
+      },
+      {
+       "text": "Access the secret TerraGroup facility",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Obtain a keycard or access codes to enter the facility",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate the entrance to the facility on Factory",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Locate the entrance to the facility on Streets of Tarkov",
+       "depth": 2,
+       "optional": true
+      },
+      {
+       "text": "Search the top management offices in The Lab",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Search the server room in The Lab",
+       "depth": 2,
+       "optional": false
+      },
+      {
+       "text": "Locate the escape path through the drainage system in The Lab",
+       "depth": 2,
+       "optional": false
+      }
+     ]
+    }
+   ],
+   "rewards": [],
+   "guide": [
+    {
+     "heading": "Escape Ground Zero",
+     "text": "Finish the tutorial raid by extracting via the \"Klimov Street\" extraction which is located behind the \"Skyside\" business center. During the tutorial, numerous hints on controls and game mechanics are displayed, but none of them need to be followed in order to complete the raid."
+    },
+    {
+     "heading": "Talk to Therapist",
+     "text": "Visit Therapist in the menu through the trader screen and hand over 250,000 Roubles when the dialogue option appears."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• Unlocks Streets of Tarkov in the location selection"
+    },
+    {
+     "heading": "Ragman - Interchange",
+     "text": "Extract from Interchange with either the \"Survived\" or \"Run-Through\" extraction status, or visit the location 3 times."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• Unlocks Skier as trader\n• Unlocks Customs in the location selection"
+    },
+    {
+     "heading": "Skier - Customs",
+     "text": "Extract from Customs with either the \"Survived\" or \"Run-Through\" extraction status, or visit the location 3 times."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• Unlocks Mechanic as trader\n• Unlocks Factory in the location selection"
+    },
+    {
+     "heading": "Mechanic - Factory",
+     "text": "Extract from Factory with either the \"Survived\" or \"Run-Through\" extraction status, or visit the location 3 times."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• Unlocks Prapor as trader\n• Unlocks Woods in the location selection"
+    },
+    {
+     "heading": "Skier - Woods",
+     "text": "Kill any 3 targets on Woods and extract with either the \"Survived\" or \"Run-Through\" extraction status, or visit the location 3 times. The kills don't need to be performed in the same raid as the \"survive\" objective."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• Unlocks Peacekeeper as trader\n• Unlocks Shoreline in the location selection"
+    },
+    {
+     "heading": "Terminal",
+     "text": "To complete the next few objectives you have to go to the south-east corner of Shoreline and interact with the intercom at the watchtower in front of the Terminal.\n\nBe careful not to get too close to the Terminal wall, as there are guards that will shoot at anyone. Do not try to kill them, they return fire with deadly precision. Interacting with the intercom too many times after being told to leave will also lead to your death by the guards."
+    },
+    {
+     "heading": "Prapor - Reserve",
+     "text": "Extract from Shoreline with either the \"Survived\" or \"Run-Through\" extraction status, or visit the location 3 times. Afterwards visit Prapor in the menu through the trader screen and hand over 5 Dogtags when the dialogue option appears. The Dogtags can be obtained by taking them off dead PMCs (they do not have to be killed by your hand)."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• Unlocks Reserve in the location selection"
+    },
+    {
+     "heading": "Mechanic - Lighthouse",
+     "text": "Visit Mechanic in the menu through the trader screen and hand over 8,000 Dollars when the dialogue option appears. Dollars can be purchased from Peacekeeper with Roubles."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• Unlocks Lighthouse in the location selection"
+    },
+    {
+     "heading": "Secret TerraGroup facility The Lab",
+     "text": "One of the following two transits has to be used to access The Lab:"
+    },
+    {
+     "heading": "Streets of Tarkov to The Lab",
+     "text": "Underground entrance in front of the Klimova 16A building with the Cosmonaut painting. TerraGroup Labs access keycard required. Transits are only available 1 min after raid start."
+    },
+    {
+     "heading": "Factory to The Lab",
+     "text": "In the sewer tunnel connected to the flooded area in the underground. TerraGroup Labs access keycard required. Transits are only available 1 min after raid start."
+    },
+    {
+     "heading": "Search the top management offices",
+     "text": "Laboratory manager's office (O21) on the second level."
+    },
+    {
+     "heading": "Search the server room",
+     "text": "Next to the hangar on the first level."
+    },
+    {
+     "heading": "Locate the escape path through the drainage",
+     "text": "In the basement at the \"Sewage Conduit\" extraction. The extraction does not need to be activated for this objective. You do not need to survive the raid."
+    },
+    {
+     "heading": "Rewards",
+     "text": "• Unlocks The Lab in the location selection\n• Unlocks achievement Pathfinder"
+    }
+   ]
+  }
+ }
+}

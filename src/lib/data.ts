@@ -5,6 +5,9 @@ import type {
   MapData,
   MapIndex,
   Progression,
+  StoryDetails,
+  TaskDetail,
+  TaskDetails,
   TaskImage,
   TaskImages,
 } from "../types";
@@ -164,6 +167,8 @@ let progressionPromise: Promise<Progression> | null = null;
 let imagesPromise: Promise<TaskImages> | null = null;
 let hideoutPromise: Promise<HideoutData> | null = null;
 let itemsPromise: Promise<ItemCatalog> | null = null;
+let taskDetailsPromise: Promise<TaskDetails> | null = null;
+let storyDetailsPromise: Promise<StoryDetails> | null = null;
 
 function clearCaches() {
   mapCache.clear();
@@ -172,6 +177,8 @@ function clearCaches() {
   imagesPromise = null;
   hideoutPromise = null;
   itemsPromise = null;
+  taskDetailsPromise = null;
+  storyDetailsPromise = null;
 }
 
 /**
@@ -332,6 +339,49 @@ export function useTaskImages(taskId: string | null) {
     };
   }, [taskId, gen]);
   return images;
+}
+
+/**
+ * Quest and story-chapter detail scraped from the wiki. Like the photos, loaded
+ * the first time somebody opens a task or a chapter and never before.
+ */
+export function loadTaskDetails(): Promise<TaskDetails> {
+  taskDetailsPromise ??= getJson<TaskDetails>("task-details.json").catch((err) => {
+    taskDetailsPromise = null;
+    throw err;
+  });
+  return taskDetailsPromise;
+}
+
+export function loadStoryDetails(): Promise<StoryDetails> {
+  storyDetailsPromise ??= getJson<StoryDetails>("story-details.json").catch((err) => {
+    storyDetailsPromise = null;
+    throw err;
+  });
+  return storyDetailsPromise;
+}
+
+/** One task's wiki detail: undefined while loading, null when there is none. */
+export function useTaskDetail(taskId: string | null): TaskDetail | null | undefined {
+  const [detail, setDetail] = useState<TaskDetail | null | undefined>(undefined);
+  const gen = useGeneration();
+  useEffect(() => {
+    if (!taskId) return setDetail(null);
+    let live = true;
+    setDetail(undefined);
+    loadTaskDetails().then(
+      (all) => live && setDetail(all.tasks[taskId] ?? null),
+      () => live && setDetail(null),
+    );
+    return () => {
+      live = false;
+    };
+  }, [taskId, gen]);
+  return detail;
+}
+
+export function useStoryDetails() {
+  return useAsync(loadStoryDetails, []);
 }
 
 export function loadMap(name: string): Promise<MapData> {

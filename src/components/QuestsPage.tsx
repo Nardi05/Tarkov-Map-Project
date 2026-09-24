@@ -20,6 +20,7 @@ import ItemAudit from "./ItemAudit";
 import NextRaid from "./NextRaid";
 import SavePanel from "./SavePanel";
 import TaskGraphPage from "./TaskGraphPage";
+import TaskSheet from "./TaskSheet";
 import { useSlashSearch } from "./ShortcutHelp";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
@@ -77,6 +78,9 @@ const EDITION_LABEL: Record<GameEdition, string> = {
   unheard: "The Unheard",
 };
 
+/** Asks the page to open a task's detail sheet, from however deep a row sits. */
+const OPEN_TASK = "tk:open-task";
+
 export default function QuestsPage({
   view = "list",
   focus = null,
@@ -96,6 +100,13 @@ export default function QuestsPage({
   const setTaskStatus = useStore((s) => s.setTaskStatus);
   const completeWithPrereqs = useStore((s) => s.completeWithPrereqs);
   const setKeyOwned = useStore((s) => s.setKeyOwned);
+
+  const [openTask, setOpenTask] = useState<string | null>(null);
+  useEffect(() => {
+    const onOpen = (e: Event) => setOpenTask((e as CustomEvent<string>).detail);
+    window.addEventListener(OPEN_TASK, onOpen);
+    return () => window.removeEventListener(OPEN_TASK, onOpen);
+  }, []);
 
   /* Committed search term; `typed` is what the box shows while you type. */
   const [query, setQuery] = useState("");
@@ -568,6 +579,7 @@ export default function QuestsPage({
       </div>
       </>
       )}
+      {openTask && <TaskSheet taskId={openTask} onClose={() => setOpenTask(null)} />}
     </Shell>
   );
 }
@@ -906,9 +918,14 @@ function TaskRow({
 
       <div className="min-w-0 flex-1">
         <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-          <span className="text-[0.8125rem] font-medium">
+          <button
+            type="button"
+            className="text-left text-[0.8125rem] font-medium hover:underline"
+            onClick={() => window.dispatchEvent(new CustomEvent(OPEN_TASK, { detail: row.id }))}
+            title="Objectives, rewards and guide"
+          >
             <TaskName name={row.name} />
-          </span>
+          </button>
           <span className="text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
             {/* Most tasks report level 0, which is not a requirement worth
                 printing 300 times. */}

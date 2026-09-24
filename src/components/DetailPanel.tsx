@@ -9,6 +9,7 @@ import type { MapData, TaskImage, TaskStatus } from "../types";
 import { documentImages } from "./DocumentList";
 import TaskGallery from "./TaskGallery";
 import TaskStatusControl from "./TaskStatusControl";
+import TaskDetails, { PlainLines, WikiCredit } from "./WikiDetail";
 import { Icon, icons } from "./ui";
 
 /**
@@ -264,25 +265,37 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
           lock.needsPower ? { label: "Power", value: "Must be switched on first" } : null,
         ].filter(Boolean) as View["facts"],
         body: (
-          <div className="flex items-center gap-2">
-            {key?.icon && (
-              <img
-                src={key.icon}
-                alt=""
-                width={48}
-                height={48}
-                className="surface-2 p-1"
-                loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.style.visibility = "hidden";
-                }}
+          <div className="flex flex-col gap-2.5">
+            {key?.detail && (
+              <KeyDetailView
+                detail={key.detail}
+                wikiTitle={
+                  key.wiki
+                    ? decodeURIComponent(key.wiki.split("/wiki/")[1] ?? key.name).replace(/_/g, " ")
+                    : key.name
+                }
               />
             )}
-            {key?.wiki && (
-              <a className="btn" href={key.wiki} target="_blank" rel="noreferrer noopener">
-                <Icon path={icons.external} size={14} /> Key details
-              </a>
-            )}
+            <div className="flex items-center gap-2">
+              {key?.icon && (
+                <img
+                  src={key.icon}
+                  alt=""
+                  width={48}
+                  height={48}
+                  className="surface-2 p-1"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.style.visibility = "hidden";
+                  }}
+                />
+              )}
+              {key?.wiki && (
+                <a className="btn" href={key.wiki} target="_blank" rel="noreferrer noopener">
+                  <Icon path={icons.external} size={14} /> Key details
+                </a>
+              )}
+            </div>
           </div>
         ),
       };
@@ -424,6 +437,11 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
                 </a>
               )}
             </div>
+
+            <details className="wiki-guide surface-2 px-2.5 py-2">
+              <summary>Every objective, reward and the guide</summary>
+              <TaskDetails taskId={task.id} compact />
+            </details>
           </div>
         ),
       };
@@ -508,4 +526,40 @@ function describe(selection: Selection, data: MapData, ctx: DescribeContext): Vi
       };
     }
   }
+}
+
+/** What the wiki says about a key: behind the lock first, since that decides whether to use it. */
+function KeyDetailView({
+  detail,
+  wikiTitle,
+}: {
+  detail: NonNullable<MapData["keys"][string]["detail"]>;
+  wikiTitle: string;
+}) {
+  return (
+    <div className="wiki-detail wiki-detail-compact">
+      {detail.behind && (
+        <section className="wiki-part">
+          <h3 className="kicker">Behind the lock</h3>
+          <PlainLines text={detail.behind} />
+        </section>
+      )}
+      {detail.lock && (
+        <section className="wiki-part">
+          <h3 className="kicker">Where the lock is</h3>
+          <PlainLines text={detail.lock} />
+        </section>
+      )}
+      {detail.found.length > 0 && (
+        <section className="wiki-part">
+          <h3 className="kicker">Where to find the key</h3>
+          <PlainLines text={detail.found.map((f) => `• ${f}`).join("\n")} />
+        </section>
+      )}
+      {detail.quests.length > 0 && (
+        <p className="text-meta">Used in: {detail.quests.join(", ")}</p>
+      )}
+      <WikiCredit title={wikiTitle} />
+    </div>
+  );
 }

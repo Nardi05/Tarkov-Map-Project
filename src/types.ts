@@ -336,6 +336,72 @@ export interface KeyItem {
   shortName: string;
   icon: string | null;
   wiki: string | null;
+  /** From the wiki, filtered to the map this record ships with. */
+  detail?: KeyDetail;
+}
+
+export interface KeyDetail {
+  usage: string | null;
+  /** Where the key spawns: generic containers first, then spots on this map. */
+  found: string[];
+  lock: string | null;
+  /** Loot behind the lock, one "• " line per entry. */
+  behind: string | null;
+  /** Wiki titles of the quests that use it. */
+  quests: string[];
+}
+
+/* ----------------------------------------------------- wiki detail payloads */
+
+export interface WikiLine {
+  text: string;
+  /** 1 for a top-level item, 2+ for one nested under it. */
+  depth: number;
+  optional: boolean;
+}
+
+export interface WikiBlock {
+  heading: string | null;
+  text: string;
+}
+
+export interface WikiQuestItem {
+  name: string;
+  amount: number | null;
+  requirement: string | null;
+  foundInRaid: boolean | null;
+  notes: string | null;
+}
+
+export interface TaskDetail {
+  title: string;
+  loyaltyLevel: number | null;
+  locations: string[];
+  requirements: string[];
+  objectives: WikiLine[];
+  rewards: WikiLine[];
+  items: WikiQuestItem[];
+  guide: WikiBlock[];
+}
+
+export interface TaskDetails {
+  generated: string | null;
+  source: string | null;
+  tasks: Record<string, TaskDetail>;
+}
+
+export interface ChapterDetail {
+  start: string | null;
+  objectives: { heading: string | null; items: WikiLine[] }[];
+  rewards: { heading: string | null; items: WikiLine[] }[];
+  guide: WikiBlock[];
+}
+
+export interface StoryDetails {
+  generated: string | null;
+  source: string | null;
+  /** Keyed by the chapter's wiki page title. */
+  chapters: Record<string, ChapterDetail>;
 }
 
 export interface BossSummary {

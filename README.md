@@ -377,6 +377,31 @@ says "snapshot" instead of "live". `vite.config.ts` mounts the same endpoint in
 `npm run dev` and `npm run preview`, so the path the deployed site takes is not
 the one path that never gets exercised locally.
 
+### What comes from the wiki
+
+tarkov.dev is built from the game files, so it wins wherever it has an answer.
+It does not carry everything, and its task feed has been thin lately (2.5% of
+tasks flagged Kappa, 55% with no level gate, where a healthy feed sits near 50%
+and 15%). `npm run wiki-details` (`scripts/fetch-wiki-details.mjs`) fills the
+gaps from the [Escape from Tarkov Wiki](https://escapefromtarkov.fandom.com)
+(CC BY-SA), fetching pages fifty to a request and caching them on disk:
+
+| From the wiki | Written to | Shown |
+| --- | --- | --- |
+| every quest's objectives (optional ones marked), rewards, quest-item table, how to start it, and guide — 530 of 531 quests | `data/wiki-tasks.json` → `public/data/task-details.json` | the task sheet (click a task name on Tasks, the dashboard or the graph), and on the map under a clicked objective |
+| every map key's spawn spots, lock location, what is behind the lock, and the quests that use it — all 203 keys | `data/wiki-keys.json` → each map payload's `keys[].detail` | on the map, when you click a locked door |
+| all ten story chapters: how each starts, every objective grouped by path, rewards, and the guide | `data/wiki-story.json` → `public/data/story-details.json` | "Full chapter from the wiki" in each chapter on the story page |
+| the "Required for Kappa" flag | used by the build | fills the Kappa flag while the feed is degraded (130 → 250 tasks) |
+
+What is deliberately **not** taken from the wiki: player levels. Where the wiki
+and the feed both state one they disagree 46% of the time, and in every
+disagreement the live feed could settle, it sided with the site's existing
+value. Quest prerequisites keep coming from `npm run quest-prereqs`, which now
+reads the same page cache instead of refetching.
+
+The scrape runs best-effort on every deploy (`npm run data`), and refuses to
+replace a committed file with one that lost more than a fifth of its entries.
+
 ## Deploying
 
 The repo is set up for Vercel: connect it as a project and every push to the

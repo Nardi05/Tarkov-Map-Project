@@ -84,6 +84,51 @@ export async function buildData({
     }
   })();
 
+  /**
+   * Detail scraped from the wiki by `npm run wiki-details` and committed to
+   * data/: quest objectives, rewards and guides, key spawns and what is behind
+   * each lock, and the story chapters' full objective lists. Read like the
+   * document spawns — from disk, never the network — and optional: a missing
+   * file only means the site shows less.
+   */
+  const readVendored = async (file, field) => {
+    try {
+      const raw = JSON.parse(await fs.readFile(path.join(ROOT, "data", file), "utf8"));
+      return { generated: raw.generated ?? null, source: raw.source ?? null, rows: raw[field] ?? {} };
+    } catch {
+      return { generated: null, source: null, rows: {} };
+    }
+  };
+  const wikiTasks = await readVendored("wiki-tasks.json", "tasks");
+  const wikiKeys = await readVendored("wiki-keys.json", "keys");
+  const wikiStory = await readVendored("wiki-story.json", "chapters");
+
+  const fold = (v) => String(v ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+  /**
+   * A key record with the wiki's detail for one map: where it spawns there
+   * (plus the generic "jackets and drawers" line), the lock, and what is
+   * behind it. A copy — the index record is shared by every map.
+   */
+  function withKeyDetail(record, mapName) {
+    const w = wikiKeys.rows[record.id];
+    if (!w) return record;
+    const here = fold(mapName);
+    const found = (w.found ?? [])
+      .filter((f) => !f.map || fold(f.map) === here)
+      .flatMap((f) => f.spots);
+    return {
+      ...record,
+      detail: {
+        usage: w.usage ?? null,
+        found,
+        lock: w.lock ?? null,
+        behind: w.behind ?? null,
+        quests: w.quests ?? [],
+      },
+    };
+  }
+
   /* ------------------------------------------------------------------ fetching */
 
   async function getJson(feed) {
@@ -411,6 +456,26 @@ export async function buildData({
       } catch {
         console.warn("  no data/task-facts.json to fall back on (run `npm run task-facts`)");
       }
+
+      /*
+       * The wiki's "Required for Kappa" flag, for tasks the snapshot never
+       * saw. It agreed with the site's own flags on 124 of 130 when measured.
+       *
+       * Its player levels are deliberately not used: where the wiki and the
+       * feed both state one they disagree more often than not, and the feed —
+       * read from the game files — was right every time it could be checked.
+       */
+      let wikiKappa = 0;
+      for (const task of tasks) {
+        if (task.kappaRequired) continue;
+        if (wikiTasks.rows[task.id]?.kappaRequired === true) {
+          task.kappaRequired = true;
+          fallbackIds.add(task.id);
+          wikiKappa++;
+        }
+      }
+      if (wikiKappa) console.warn(`  patched from data/wiki-tasks.json: ${wikiKappa} Kappa flags`);
+      patchedKappa += wikiKappa;
 
       /*
        * Judge the result over the tasks the fallback actually covers, not the
@@ -983,7 +1048,11 @@ export async function buildData({
       geo: cfg,
       markers: { spawns, bossSpawns, extracts, transits, locks, hazards, switches, quests, documents },
       tasks: Object.fromEntries([...usedTaskIds].map((id) => [id, taskIndex.get(id)]).filter(([, t]) => t)),
-      keys: Object.fromEntries([...usedKeyIds].map((id) => [id, keyIndex[id]]).filter(([, k]) => k)),
+      keys: Object.fromEntries(
+        [...usedKeyIds]
+          .map((id) => [id, keyIndex[id] && withKeyDetail(keyIndex[id], api.name)])
+          .filter(([, k]) => k),
+      ),
       generated,
     };
 
@@ -1557,6 +1626,40 @@ export async function buildData({
       JSON.stringify({ generated, items: catalog }),
     );
     console.log(`  wrote items.json (${Object.keys(catalog).length} items)`);
+  }
+
+  /*
+   * Quest and story detail from the wiki, as their own payloads. Loaded only
+   * when somebody opens a task or a chapter, so none of it sits on the path to
+   * a first map.
+   */
+  {
+    const details = {};
+    for (const [id, w] of Object.entries(wikiTasks.rows)) {
+      if (!progression[id]) continue;
+      details[id] = {
+        title: w.title,
+        loyaltyLevel: w.loyaltyLevel ?? null,
+        locations: w.locations ?? [],
+        requirements: w.requirements ?? [],
+        objectives: w.objectives ?? [],
+        rewards: w.rewards ?? [],
+        items: w.items ?? [],
+        guide: w.guide ?? [],
+      };
+    }
+    await fs.writeFile(
+      path.join(OUT, "task-details.json"),
+      JSON.stringify({ generated: wikiTasks.generated, source: wikiTasks.source, tasks: details }),
+    );
+    await fs.writeFile(
+      path.join(OUT, "story-details.json"),
+      JSON.stringify({ generated: wikiStory.generated, source: wikiStory.source, chapters: wikiStory.rows }),
+    );
+    console.log(
+      `  wrote task-details.json (${Object.keys(details).length} tasks) and story-details.json ` +
+        `(${Object.keys(wikiStory.rows).length} chapters)`,
+    );
   }
 
   const imagesSrc = path.join(ROOT, "data", "task-images.json");

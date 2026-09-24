@@ -1,0 +1,4846 @@
+{
+ "generated": "2026-09-24T12:42:15.961Z",
+ "source": "Escape from Tarkov Wiki (escapefromtarkov.fandom.com), CC BY-SA 3.0",
+ "keys": {
+  "5913915886f774123603c392": {
+   "title": "Military checkpoint key",
+   "usage": "Unlocks the military checkpoint tower on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "Sitting next to the Dead Scav on the couch in warehouse #7.",
+      "On a trash bag in the blue guard shack south of the red Paradigm warehouse.",
+      "On the ground next to the staircase at the construction site south of warehouse #17.",
+      "In the bloody tent at the campsite east of the three-story dorms building."
+     ]
+    }
+   ],
+   "lock": "Door to the military checkpoint tower on Customs.",
+   "behind": "• 2x Grenade box\n• 2x Wooden ammo box\n• 1x Weapon locker",
+   "quests": [
+    "Aid Stations"
+   ]
+  },
+  "5913877a86f774432f15d444": {
+   "title": "Gas station storage room key",
+   "usage": "Unlocks the gas station storage closet door on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "Under the desk in the new gas station office."
+     ]
+    }
+   ],
+   "lock": "The first room on the right in the hallway inside the new gas station on Customs.",
+   "behind": "• 1x Medbag\n• 1x Medcase",
+   "quests": []
+  },
+  "5780d0652459777df90dcb74": {
+   "title": "Gas station office key",
+   "usage": "Unlocks the gas station office door on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The last room on the right in the hallway inside the gas station on Customs.",
+   "behind": "• 1x Safe\n• 1x Pistols spawn on the desk\n• Gas station storage room key spawn, under the table\n• Loose loot (Currency, Ammo packs)\n• Possible Weapon box (4x4) in the corner",
+   "quests": []
+  },
+  "5938603e86f77435642354f4": {
+   "title": "Dorm room 206 key",
+   "usage": "Unlocks room 206 in the two-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The second floor of the two-story dorms on Customs.",
+   "behind": "• Bottle of water (0.6L)\n• Aquamari water bottle with filter\n• Water filter\n• Canister with purified water\n• Bottle of YMXC water\n• Emergency Water Ration\n\nThese locations are found tucked between the boxes, inside and ontop of the wooden crates.",
+   "quests": [
+    "Operation Aquarius"
+   ]
+  },
+  "591382d986f774465a6413a7": {
+   "title": "Dorm room 105 key",
+   "usage": "Unlocks dorm room 105 in the two-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms"
+     ]
+    }
+   ],
+   "lock": "The first floor of the two-story dorms on Customs in the fenced-off section that must be entered from outside the first floor north door.",
+   "behind": "• 1x Safe\n• Loose loot (Provisions, Other items)",
+   "quests": []
+  },
+  "59136e1e86f774432f15d133": {
+   "title": "Dorm room 110 key",
+   "usage": "Unlocks dorm room 110 in the two story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In warehouse #17 in a locker located in the changing room on the first floor next to the staircase behind the wall paintings. A single key is guaranteed to spawn every raid.",
+      "In warehouse #6 in a locker"
+     ]
+    }
+   ],
+   "lock": "The first floor of the two-story dorms on Customs.",
+   "behind": "• One Safe\n• Possible Fuel conditioner, Metal fuel tank, Secure Flash drive and Diary spawn (on the bed).\n• Possible Car battery on the bedside table.\n• Possible Intelligence folder spawn inside the bedside cabinet.\n• Possible loose Valuable at the bottom of the closet",
+   "quests": [
+    "Accidental Witness"
+   ]
+  },
+  "591383f186f7744a4c5edcf3": {
+   "title": "Dorm room 104 key",
+   "usage": "Unlocks dorm room 104 in the two-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms"
+     ]
+    }
+   ],
+   "lock": "The first floor of the two-story dorms on Customs in the fenced-off section that must be entered from outside the first floor north door.",
+   "behind": "• 1x Toolbox\n• 2x Jacket",
+   "quests": []
+  },
+  "59387a4986f77401cc236e62": {
+   "title": "Dorm room 114 key",
+   "usage": "Unlocks dorm room 114 in the two-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The first floor of the two-story dorms on Customs.",
+   "behind": "• 1x Medcase\n• 1x Safe\n• 1x PC block",
+   "quests": [
+    "Pharmacist"
+   ]
+  },
+  "59136a4486f774447a1ed172": {
+   "title": "Dorm guard desk key",
+   "usage": "Unlocks the guard desk room on the first floor of the two-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In the hand of the Dead Scav inside the shower on the first floor of the two-story dorms."
+     ]
+    }
+   ],
+   "lock": "Door to the guard desk room on the first floor of the two-story dorms on Customs.",
+   "behind": "• Dorm room 314 marked key spawn location\n• Dorm room 104 key spawn location\n• Dorm room 105 key spawn location\n• Dorm room 108 key spawn location\n• Dorm room 118 key spawn location\n• Dorm room 204 key spawn location\n• Dorm room 218 key spawn location\n• Dorm room 303 key spawn location\n• Dorm room 308 key spawn location\n• Dorm room 315 key spawn location\n• Trailer park portable cabin key spawn location\n• Tarcone Director's office key spawn location\n• 1x Weapon rack\n• 1x Weapon box (6x4)\n• 2x Wooden ammo box\n• Loose loot (Weapon mods)",
+   "quests": []
+  },
+  "5780cf692459777de4559321": {
+   "title": "Dorm room 315 key",
+   "usage": "Unlocks dorm room 315 in the three-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms"
+     ]
+    }
+   ],
+   "lock": "The third floor of the three-story dorms on Customs.",
+   "behind": "• Loose loot (Roubles)\n• FN SCAR-H 7.62x51 assault rifle spawn",
+   "quests": []
+  },
+  "5780cf722459777a5108b9a1": {
+   "title": "Dorm room 308 key",
+   "usage": "Unlocks room 308 in the three-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms"
+     ]
+    }
+   ],
+   "lock": "The third floor of the three-story dorms on Customs.",
+   "behind": "• Loose loot (Roubles)",
+   "quests": []
+  },
+  "5780cf7f2459777de4559322": {
+   "title": "Dorm room 314 marked key",
+   "usage": "Unlocks room 314 (Marked room) in the three story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms"
+     ]
+    }
+   ],
+   "lock": "Door to room 314 (Marked room) on the third floor of the three-story dorms building on Customs.",
+   "behind": "• Loose loot (multiple very rare Valuables, Weapons, Containers, Currency, Keycards)",
+   "quests": [
+    "They Are Already Here",
+    "The Ticket"
+   ]
+  },
+  "5672c92d4bdc2d180f8b4567": {
+   "title": "Dorm room 118 key",
+   "usage": "Unlocks dorm room 118 in the three story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms"
+     ]
+    }
+   ],
+   "lock": "The first floor of the three-story dorms on Customs.",
+   "behind": "• 2x Jacket\n• Weapon repair kit spawn\n• Possible CMMG Mk47 Mutant 7.62x39 assault rifle\n• Possible Desert Tech MDR 5.56x45 assault rifle\n• Possible Kalashnikov AK-104 7.62x39 assault rifle\n• Possible Kalashnikov AKS-74UB 5.45x39 assault rifle\n• Possible FN SCAR-H 7.62x51 assault rifle\n• Possible Springfield Armory M1A 7.62x51 rifle\n• Possible Rifle Dynamics RD-704 7.62x39 assault rifle\n• Loose loot (Provisions, Medical items)",
+   "quests": []
+  },
+  "5780cfa52459777dfb276eb1": {
+   "title": "Dorm room 220 key",
+   "usage": "Unlocks dorm room 220 in the three story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a train car on the western side of the location",
+      "In the back of the not destroyed yellow truck next to warehouse #7.",
+      "On a wooden crate on the second floor of the warehouse directly next to the ZB-1011 bunker extraction.",
+      "On a tool trolley in the small building between the northern fuel silos next to the ZB-1011 bunker extraction."
+     ]
+    }
+   ],
+   "lock": "The second floor of the three-story dorms on Customs.",
+   "behind": "• ZB-014 key spawn location\n• Jacket\n• Sports bag\n• Loose loot (Roubles)",
+   "quests": [
+    "Chemical - Part 1",
+    "Chemical - Part 2"
+   ]
+  },
+  "5938504186f7740991483f30": {
+   "title": "Dorm room 203 key",
+   "usage": "Unlocks dorm room 203 in the three-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "Inside a red mug in dorm room 214.",
+      "Warehouse #4 at the crane yard, on a table in the northern part of the top floor.",
+      "Warehouse #5 at the crane yard, on the table with the lamp near a forklift.",
+      "Warehouse #6 next to the fuel silos, on a table in the workshop in the southern part of the second floor."
+     ]
+    }
+   ],
+   "lock": "The second floor of the three-story dorms on Customs.",
+   "behind": "• 2x Sports bag",
+   "quests": [
+    "Shaking Up the Teller"
+   ]
+  },
+  "59148c8a86f774197930e983": {
+   "title": "Dorm room 204 key",
+   "usage": "Unlocks room 204 in the three-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "Warehouse #3 at the shipping yard: In the brown jacket that is located at the industrial shelf",
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms"
+     ]
+    }
+   ],
+   "lock": "The second floor of the three-story dorms on Customs.",
+   "behind": "• One blue standing weapons locker/Safe combo\n• Loose loot",
+   "quests": []
+  },
+  "593aa4be86f77457f56379f8": {
+   "title": "Dorm room 303 key",
+   "usage": "Unlocks door 303 in the three-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms",
+      "In the Tigr vehicle next to the military checkpoint (Scav Checkpoint extraction).",
+      "Warehouse #6 next to the fuel silos, in the northern part of the second floor in a hanging tool cabinet."
+     ]
+    }
+   ],
+   "lock": "The third floor of the three-story dorms on Customs.",
+   "behind": "• One Wooden crate\n• Loose loot (Weapons)\n• Possible Rare weapon spawn (HK G28 7.62x51 marksman rifle or FN SCAR-H 7.62x51 assault rifle)",
+   "quests": [
+    "Golden Swag",
+    "Aid Stations"
+   ]
+  },
+  "5914578086f774123569ffa4": {
+   "title": "Dorm room 108 key",
+   "usage": "Unlocks dorm room 108 in the three story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms"
+     ]
+    }
+   ],
+   "lock": "The first floor of the three-story dorms on Customs.",
+   "behind": "• 1x Drawers\n• 1x PC block\n• Loose loot (Currency, Ammo packs)",
+   "quests": []
+  },
+  "5780cda02459777b272ede61": {
+   "title": "Dorm room 306 key",
+   "usage": "Unlocks door 306 in the three-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The third floor of the three-story dorms on Customs.",
+   "behind": "• Loose loot (Currency)\n• Poster (Posters)\n• Possible Rare weapon spawn (HK G28 7.62x51 marksman rifle or FN SCAR-H 7.62x51 assault rifle or Desert Tech MDR 7.62x51 assault rifle)",
+   "quests": []
+  },
+  "664d4b0103ef2c61246afb56": {
+   "title": "Dorm overseer key",
+   "usage": "Unlocks the room between 209 and 211 on the second floor of the three-story dorms building on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "In one of four locations at the smugglers' base. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to the room between 209 and 211 on the second floor of the three-story dorms building on Customs.",
+   "behind": "• Loose loot (GP coins, Valuables, Provisions, Weapon mods)\n• 1x PMC body\n• Possible Lone Star TX-15 DML 5.56x45 carbine (variant D-WARRIOR)\n• Possible FN P90 5.7x28 submachine gun (variant DEVGRU)\n• Possible modified TDI KRISS Vector Gen.2 9x19 submachine gun\n• Possible modified FN SCAR-H 7.62x51 assault rifle\n• Possible modified Desert Tech MDR 5.56x45 assault rifle\n• Possible modified Kalashnikov AKMN 7.62x39 assault rifle\n• Possible modified AS VAL 9x39 special assault rifle\n• Possible MSA Sordin Supreme PRO-X/L headset\n• Possible Peltor ComTac II headset (OD Green)\n• Possible OPSMEN Earmor M32 headset\n• Possible MF-UNTAR body armor\n• Possible BNTI Zhuk body armor (EMR)\n• Possible LBT-6094A Slick Plate Carrier (Black)\n• Possible LBT-6094A Slick Plate Carrier (Olive Drab)\n• Possible LBT-6094A Slick Plate Carrier (Coyote Tan)\n• Possible BNTI Gzhel-K body armor\n• Possible 5.11 Tactical Hexgrid plate carrier",
+   "quests": [
+    "Against the Conscience - Part 1",
+    "Between Two Fires",
+    "Decisions, Decisions",
+    "Surprise Gift"
+   ]
+  },
+  "5938994586f774523a425196": {
+   "title": "Dorm room 103 key",
+   "usage": "Unlocks dorm room 103 in the three story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The first floor of the three-story dorms on Customs.",
+   "behind": "• All kinds of provisions",
+   "quests": []
+  },
+  "5780cf942459777df90dcb72": {
+   "title": "Dorm room 214 key",
+   "usage": "Unlocks dorm room 214 in the three-story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "The key can be found between pallets in a garage with the number 88 on the eastern side of Customs."
+     ]
+    }
+   ],
+   "lock": "Located on the second floor of the three-story dorms on Customs.",
+   "behind": "• One Safe\n• Loose loot (Ammunition)\n• Possible Dorm room 203 key in the red mug",
+   "quests": []
+  },
+  "5780cf9e2459777df90dcb73": {
+   "title": "Dorm room 218 key",
+   "usage": "Unlocks dorm room 218 in the three story dorms on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms"
+     ]
+    }
+   ],
+   "lock": "Located on the second floor of the three-story dorms on Customs.",
+   "behind": "• Loose loot (Weapon, Weapon mods)",
+   "quests": []
+  },
+  "5937ee6486f77408994ba448": {
+   "title": "Machinery key",
+   "usage": "Unlocks the driver-side door of the orange tanker truck at the construction site on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "Inside of the blue jackets in room 205 of the three-story dorms building. Guaranteed spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Used on the driver-side door of the fuel truck at the construction area on Customs.",
+   "behind": "Nothing unless the quest Background Check is active.",
+   "quests": [
+    "Background Check"
+   ]
+  },
+  "5780d0532459777a5108b9a2": {
+   "title": "Tarcone Director's office key",
+   "usage": "Unlocks the Tarcone director's office in the red Paradigm warehouse on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms",
+      "On a metal shelf in the storage room of the new gas station.",
+      "Warehouse #3 at the crane yard, on the ground next to the dead body.",
+      "Warehouse #5 at the crane yard, on the shelf with the water tanks next to the blue delivery van.",
+      "In a bunkhouse on the southern side of the courtyard of the \"Big Red\" warehouse, located in the cabinet under the plant"
+     ]
+    }
+   ],
+   "lock": "This key can be used at the top of the staircase in the eastern red Paradigm warehouse on the map Customs.",
+   "behind": "• Health Resort east wing room 306 key spawn location\n• 1× Sport bag\n• 3× PC blocks\n• 1× Safe\n• 1× Jacket\n• 1× Flyye MBSS backpack (UCP) spawn\n• 1× PACA Soft Armor spawn\n• 1× Intelligence folder spawn\n• Loose loot",
+   "quests": [
+    "Delivery From the Past",
+    "Farming"
+   ]
+  },
+  "5913611c86f77479e0084092": {
+   "title": "Trailer park portable cabin key",
+   "usage": "Unlocks a portable guard cabin at the trailer park on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In a key cabinet at the dorm guard desk that is located at the two-story dorms"
+     ]
+    }
+   ],
+   "lock": "Door to the portable guard cabin at the trailer park on Customs.",
+   "behind": null,
+   "quests": []
+  },
+  "5780d07a2459777de4559324": {
+   "title": "Portable cabin key",
+   "usage": "Unlocks a portable guard cabin next to the trailer park on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the portable guard cabin next to the trailer park on Customs.",
+   "behind": "• Three Jackets\n• Loose loot",
+   "quests": []
+  },
+  "5448ba0b4bdc2d02308b456c": {
+   "title": "Factory emergency exit key",
+   "usage": "* Unlocks two additional extractions and a room on Factory\n* Unlocks an extraction on Customs\n* Unlocks the doors to the guard building of the crane yard on Customs",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On a table next to the broken TV in the guard desk office located in the three-story dorms",
+      "In a blue locker inside warehouse #7."
+     ]
+    }
+   ],
+   "lock": null,
+   "behind": "===Factory===\n• Med Tent Gate extraction\n• Cellars extraction in the underground\n• Locked room on the 3rd floor of the office area:\n◦ Portable bunkhouse key spawn location\n◦ 1x Jacket\n\n===Customs===\n• ZB-013 extraction\n• Crane yard guard building:\n◦ Loose loot (Weapon mods)\n◦ TerraGroup Labs arsenal storage room key spawn location\n◦ 1x Drawer\n◦ 1x Wooden crate",
+   "quests": [
+    "Therapist",
+    "Health Care Privacy - Part 6",
+    "Fence",
+    "Is This a Reference?"
+   ]
+  },
+  "593962ca86f774068014d9af": {
+   "title": "Unknown key",
+   "usage": "Opens a cabin at the crane yard on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "Can be found on a dead Scav which is located in a bush behind garages. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Opens a cabin at the crane yard on Customs.",
+   "behind": "Nothing unless the quest The Extortionist is active.",
+   "quests": [
+    "The Extortionist"
+   ]
+  },
+  "5da743f586f7744014504f72": {
+   "title": "USEC stash key",
+   "usage": "Unlocks a storage room in warehouse #6 on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": null,
+   "behind": "• 2x Weapon box (4x4)\n• 2x Wooden crate\n• Metal fuel tank or Expeditionary fuel tank spawn\n• Loose loot (Weapon mods)\n• Possible weapon spawn (AUG A1, AUG A3, SR-25 (Taupe), Colt M16A2, Colt M16A1, M1A, G36, RFB, SCAR-L 5.56x45 and others)",
+   "quests": []
+  },
+  "6761a6f90575f25e020816a4": {
+   "title": "Company director's room key",
+   "usage": "Unlocks the director's room on the second floor of the boiler building on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On the floor next to trash bags opposite the staircase on the third floor of the three-story dorms building.",
+      "In the back of the white van left of the new gas station entrance.",
+      "On the ground next to the partial wall breakthrough from the crane yard to the new gas station."
+     ]
+    }
+   ],
+   "lock": "Door to the director's room on the second floor of the boiler building on Customs.",
+   "behind": "• 2x Weapon box (6x6)\n• 1x Sports bag\n• 2x Drawer\n• 2x Safe (locked)\n• 1× Intelligence folder spawn\n• 1x Poster spawn",
+   "quests": [
+    "Shipment Tracking"
+   ]
+  },
+  "5938144586f77473c2087145": {
+   "title": "Portable bunkhouse key",
+   "usage": "Unlocks the second story mobile trailer door across from the bus depot on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Factory",
+     "spots": [
+      "On the ground under a jacket in the locked room next to the office on Factory. Factory emergency exit key needed. Due to it's low spawn chance, it's not the most reliable way to obtain this key."
+     ]
+    }
+   ],
+   "lock": "Used on the second story portable cabin between the bus depot and the construction area on Customs.",
+   "behind": "• 1 or 2x Weapon box (6x2)\n• Loose loot (Ammo packs)",
+   "quests": []
+  },
+  "68e95f4fa4a577e907015787": {
+   "title": "Reshala's bunkhouse key",
+   "usage": "Unlocks Reshala's bunkhouse on Customs.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "On Reshala",
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to Reshala's bunkhouse on Customs.",
+   "behind": "• 1x Jacket\n• Possible TOZ-106 20ga bolt-action shotgun\n• Possible PPSh-41 7.62x25 submachine gun\n• Possible AS VAL 9x39 special assault rifle\n• Possible VSS Vintorez 9x39 special sniper rifle\n• Possible Soyuz-TM STM-9 Gen.2 9x19 carbine\n• Possible UVSR Taiga-1 survival machete or SP-8 Survival Machete\n• Possible modified Saiga-12K 12ga automatic shotgun\n• Loose loot (Valuables, Stimulants)",
+   "quests": [
+    "Accidental Witness"
+   ]
+  },
+  "64ccc25f95763a1ae376e447": {
+   "title": "Mysterious room marked key",
+   "usage": "Unlocks the marked room on the first floor of the Chekannaya 13 apartment building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Marked room on the first floor of the Chekannaya 13 apartment building at Streets of Tarkov.",
+   "behind": "• Loose loot (multiple very rare Valuables, Weapons, Containers, Currency, Keycards)",
+   "quests": [
+    "Broadcast - Part 5",
+    "Blue Fire",
+    "Car dealership closed section key",
+    "The Ticket"
+   ]
+  },
+  "66acd6702b17692df20144c0": {
+   "title": "TerraGroup storage room keycard",
+   "usage": "Unlocks the door to the TerraGroup storage room on Factory.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "On Cultists"
+     ]
+    }
+   ],
+   "lock": "Door to the TerraGroup storage room on Factory. Next to the \"Camera Bunker Door\" Scav extraction in the underground.",
+   "behind": "• 2x TerraGroup safe\n• 1x Jacket\n• 1x Toolbox\n• 1x Medbag\n• 1x Weapon locker\n• Possible LEDX Skin Transilluminator on the top corner of the left shelf\n• Possible Physical Bitcoin spawn",
+   "quests": [
+    "Dragnet",
+    "The Unheard"
+   ]
+  },
+  "5a0dc95c86f77452440fc675": {
+   "title": "Health Resort west wing office room 112 key",
+   "usage": "Unlocks room 112 of the Health Resort West wing on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On a seat in a bus at the bus depot",
+      "On a desk in west wing room 105 at the health resort.",
+      "In a key rack in west wing room 202 at the health resort.",
+      "On the floor below a key rack in the utility room next to west wing room 227 at the health resort.",
+      "On the floor in the hallway in front of east wing room 112 at the health resort.",
+      "In the key rack near the central stairs on the second floor of the east wing at the health resort.",
+      "On the floor below a key rack near the central stairs on the third floor of the east wing at the health resort."
+     ]
+    }
+   ],
+   "lock": "The first floor of the west wing in the Health Resort on the map Shoreline.",
+   "behind": "• Yellow keycard spawn location\n• Blue keycard spawn location\n• Loose Loot (Provisions) on the table left of the door\n• Two Sport bags",
+   "quests": [
+    "Vitamins"
+   ]
+  },
+  "658199972dc4e60f6d556a2f": {
+   "title": "Underground parking utility room key",
+   "usage": "Unlocks the utility room at the underground parking garage on Ground Zero.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the utility room at the underground parking garage at Ground Zero.",
+   "behind": "• Dead Scav\n• Wooden ammo box\n• Toolbox\n• Grenade box\n• Weapon box (4x4)\n• Weapon box (6x2)",
+   "quests": []
+  },
+  "6581998038c79576a2569e11": {
+   "title": "Unity Credit Bank cash register key",
+   "usage": "Unlocks the customer desk booth no. 2 in the Tarbank on Ground Zero.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the customer desk booth no. 2 in the Tarbank on at Ground Zero.",
+   "behind": "• Loose loot (Currency)\n• 1x Safe (locked)\n• 1x Drawer",
+   "quests": []
+  },
+  "658199aa38c79576a2569e13": {
+   "title": "TerraGroup science office key",
+   "usage": "Unlocks office no. 4 on the second floor of the TerraGroup building complex on Ground Zero.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Ground Zero",
+     "spots": [
+      "On the lab scientist in the TerraGroup main building. He can be found in a hallway behind the big TerraGroup sign in the entrance hall, buried under rubble. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to office no. 4 on the second floor of the TerraGroup main building at Ground Zero.",
+   "behind": "• 3x PC block\n• 4x Drawer\n• Provisions",
+   "quests": [
+    "Saving the Mole",
+    "Blue Fire"
+   ]
+  },
+  "69bb3ec9f609db77390b0e1a": {
+   "title": "Boreas crew quarters keycard",
+   "usage": "Unlocks crew rooms on Icebreaker.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In one of five locations on level 3 of Icebreaker. A single keycard is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": null,
+   "behind": "• Room no. 12:\n◦ Loose loot (Electronics, Medical supplies, Medical items, Provisions)\n\n• Room no. 15:\n◦ Loose loot (Electronics, Provisions)\n◦ 1x Sports bag\n\n• Room no. 16:\n◦ Loose loot (Medical supplies, Stimulants, Provisions)\n\n• Room no. 18:\n◦ Loose loot (Valuables, Provisions)\n◦ 1x Sports bag\n\n• Room no. 19:\n◦ Loose loot (Info items)\n\n• Room no. 22:\n◦ Loose loot (Valuables, Provisions)\n◦ 1x Sports bag\n\n• Room no. 23:\n◦ Loose loot (Valuables, Electronics, Provisions)\n◦ 1x Sports bag\n\n• Room no. 27:\n◦ Loose loot (Provisions)",
+   "quests": [
+    "The Ticket"
+   ]
+  },
+  "69bb3f278af9f360ee010a7a": {
+   "title": "Compartment C-1 keycard",
+   "usage": "Unlocks the door to the server room on Icebreaker.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In the left hand of a body on level 9 of Icebreaker. A single keycard is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to the server room on level 7 of Icebreaker.",
+   "behind": "• 2x PC block\n• Loose loot (Electronics)",
+   "quests": [
+    "Boreas"
+   ]
+  },
+  "69bb3e54d6c67f6265004ab9": {
+   "title": "Boreas engine room keycard",
+   "usage": "Unlocks the door to the changing room on Icebreaker.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In the hands or next to the head of the body on level 0 of Icebreaker. A single keycard is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to the changing room on level 0 of Icebreaker.",
+   "behind": "• 1x Sports bag\n• Loose loot (Valuables, Provisions, Medical supplies, Medical items, Stimulants)",
+   "quests": [
+    "Boreas"
+   ]
+  },
+  "69bb3f7df94327bc0f0230c9": {
+   "title": "Compartment C-3 keycard",
+   "usage": "Unlocks the door to the laboratory on Icebreaker.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "This keycard can only be obtained once while progressing through the story chapter Boreas."
+     ]
+    }
+   ],
+   "lock": "Door to the laboratory on level 1 of Icebreaker. Note: The door can't be opened when players without the required progress in the story chapter Boreas entered the raid.",
+   "behind": "• 1x Medbag\n• Loose loot (Medical supplies, Stimulants, Meds)\n• 4x LEDX Skin Transilluminator in the overseeing cabin\n• Boreas scientist audio tape in the overseeing cabin",
+   "quests": [
+    "The Ticket"
+   ]
+  },
+  "68cc09872bdcc15c010c2668": {
+   "title": "Station 14-4 KORD Arshavin K. pass (Restored)",
+   "usage": "Unlocks the door to the ARRS station 14-4 KORD in the power station on Interchange.",
+   "found": [],
+   "lock": "Door to the ARRS station 14-4 KORD in the basement of the power station on Interchange.",
+   "behind": "• 5x PC block\n• 1x Safe (locked) can be opened by pulling the lever after turning on power with the keypad on the wall, only containing the Mysterious audio tape when the story chapter They Are Already Here is active\n• Loose loot (Electronics, Provisions)\n• Intelligence folder spawns",
+   "quests": [
+    "They Are Already Here"
+   ]
+  },
+  "5ad5d49886f77455f9731921": {
+   "title": "Power substation utility cabin key",
+   "usage": "Unlocks the door to the power substation adjacent to the Ultra shopping mall on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": null,
+   "behind": "• 1x Wooden crate\n• 1x Weapon box (4x4)\n• 1x MP-153 spawn",
+   "quests": []
+  },
+  "664d3dd590294949fe2d81b7": {
+   "title": "Grumpy's hideout key",
+   "usage": "Unlocks Grumpy's hideout inside the power station on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "Can only be bartered from Ref LL2"
+     ]
+    }
+   ],
+   "lock": "Grumpy's hideout inside the power station on Interchange.",
+   "behind": "• Green keycard spawn location\n• RB-MP21 key spawn location\n• Loose loot (Armor plates, Paper ammo boxes)\n• 2x Jacket\n• 1x Sports bag\n• Possible CMMG Mk47 Mutant 7.62x39 assault rifle (variant Mace)\n• Possible Desert Tech MDR 7.62x51 assault rifle (variant Killtube)\n• Possible Lone Star TX-15 DML 5.56x45 carbine (variant D-WARRIOR)\n• Possible FN P90 5.7x28 submachine gun (variant DEVGRU)\n• Possible modified Kalashnikov AKS-74UN 5.45x39 assault rifle\n• Possible modified SIG MCX-SPEAR 6.8x51 assault rifle\n• Possible modified AS VAL 9x39 special assault rifle\n• Possible modified Kalashnikov AKMN 7.62x39 assault rifle\n• Possible modified SIG MCX .300 Blackout assault rifle\n• Possible modified Degtyarev RPDN 7.62x39 machine gun\n• Possible modified FN SCAR-H 7.62x51 assault rifle\n• Possible modified HK 416A5 5.56x45 assault rifle\n• Possible modified TDI KRISS Vector Gen.2 9x19 submachine gun\n• Possible modified FN P90 5.7x28 submachine gun\n• Possible Vulkan-5 LShZ-5 bulletproof helmet (Black)\n• Possible Rys-T assault helmet (Black)\n• Possible Altyn assault helmet (Olive Drab)\n• Possible Crye Precision AirFrame helmet (Tan)\n• Possible Ops-Core FAST MT Super High Cut helmet (Black)\n• Possible Ops-Core FAST MT Super High Cut helmet (Urban Tan)\n• Possible Peltor Tactical Sport headset\n• Possible Walker's XCEL 500BT Digital headset\n• Possible Peltor ComTac IV Hybrid headset (Coyote Brown)\n• Possible OPSMEN Earmor M32 headset\n• Possible 5.11 Tactical Hexgrid plate carrier\n• Possible LBT-6094A Slick Plate Carrier (Black)\n• Possible LBT-6094A Slick Plate Carrier (Olive Drab)\n• Possible LBT-6094A Slick Plate Carrier (Coyote Tan)\n• Possible HighCom Trooper TFO body armor (MultiCam)\n• Possible BNTI Zhuk body armor (EMR)\n• Possible BNTI Kirasa-N body armor\n• Possible BNTI Gzhel-K body armor\n• Possible MF-UNTAR body armor\n• Possible DRD body armor",
+   "quests": []
+  },
+  "5ad5d64486f774079b080af8": {
+   "title": "NecrusPharm pharmacy key",
+   "usage": "Unlocks the \"NecrusPharm\" pharmacy store in the shopping mall on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On the desk in west wing room 101 at the health resort."
+     ]
+    }
+   ],
+   "lock": "Door to the \"NecrusPharm\" pharmacy store in the shopping mall on Interchange.",
+   "behind": "• Loose loot (Meds, Medical supplies, Stimulants)",
+   "quests": []
+  },
+  "5ad5cfbd86f7742c825d6104": {
+   "title": "OLI logistics department office key",
+   "usage": "Unlocks the door to the OLI logistics department office on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "Inside the trunk of the blue car, Right beside the shortcut between the Factory area of Customs and the new Gas Station."
+     ]
+    }
+   ],
+   "lock": null,
+   "behind": "• 1x PC\n• Loose loot",
+   "quests": [
+    "A Big Loss",
+    "Ragman"
+   ]
+  },
+  "5ad5d20586f77449be26d877": {
+   "title": "OLI outlet utility room key",
+   "usage": "Unlocks the door to the utility room of the OLI outlet store on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": null,
+   "behind": "• Loose loot",
+   "quests": []
+  },
+  "5ad5ccd186f774446d5706e9": {
+   "title": "OLI administration office key",
+   "usage": "Unlocks the door to the OLI administrator office on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On a table in the health resort East wing, room 322."
+     ]
+    }
+   ],
+   "lock": "The OLI administrator office is across the restrooms, inside the OLI Hardware Store in the Ultra shopping mall on the map Interchange.",
+   "behind": "• 1x PC\n• Loose loot",
+   "quests": []
+  },
+  "5ad5db3786f7743568421cce": {
+   "title": "EMERCOM medical unit key",
+   "usage": "Unlocks the door to the EMERCOM medical care unit on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "Ambulance near the big gas station. You have to jump inside to grab the key off the seat."
+     ]
+    }
+   ],
+   "lock": "Located on the first floor of the ULTRA shopping mall on Interchange. On the north side of the center mall.\n• This location has 3 different doors that can be unlocked. Opening each door will use a point of durability on the key.",
+   "behind": "• 2x Medbag\n• 1x Sports bag\n• 1x Jacket\n• Loose loot (Meds, Medical supplies, Valuables)\n• Portable defibrillator spawn\n• LEDX Skin Transilluminator spawn",
+   "quests": [
+    "Vitamins"
+   ]
+  },
+  "5ad5d7d286f77450166e0a89": {
+   "title": "Kiba Arms outer door key",
+   "usage": "Unlocks the outer door to the KIBA firearms store on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "In the power station office, on a box in the metal shelf next to the cabinet",
+      "At the campsite in the Goshan store, behind the two tents"
+     ]
+    }
+   ],
+   "lock": "Located on the first floor of the ULTRA shopping mall on Interchange, near the center of the mall.",
+   "behind": "A second locked grate door that requires the Kiba Arms inner grate door key to be opened. Visit the grate door key page for details of loot available in the store.",
+   "quests": [
+    "Provocation"
+   ]
+  },
+  "5e42c81886f7742a01529f57": {
+   "title": "Object 11SR keycard",
+   "usage": "Unlocks the door to the Saferoom Exfil extraction on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "Pockets and bags of Scavs",
+      "On Cultists",
+      "On The Goons",
+      "In Rare valuables crates"
+     ]
+    },
+    {
+     "map": "Factory",
+     "spots": [
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On Partisan",
+      "At the three-story dorms in the \"marked room\"",
+      "At the \"giving tree\" behind the \"Old Gas Station\""
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "On Shturman",
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "On Killa",
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On Glukhar",
+      "In the \"marked rooms\" RB-BK, RB-PKPM and RB-VO"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On Kaban",
+      "In the \"marked room\" at the abandoned factory",
+      "In the \"marked room\" at Chekannaya 13"
+     ]
+    },
+    {
+     "map": "Lighthouse",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "In Kruglov's office (R22) and the safe inside of it"
+     ]
+    }
+   ],
+   "lock": "Behind a urinal that is located in the men's toilet at the \"Burger spot\" restaurant on the second floor of the mall on Interchange. The keypad is revealed upon flushing the urinal.",
+   "behind": "Unlocks the door to the Saferoom Exfil extraction on Interchange that is located in the parking lot section C.\n\nOn the inside can be found:\n• Multiple weapon mod spawns\n• Modded M4A1's\n• 1x Weapon box (4x4)\n• 1x Weapon box (6x4)\n• 1x Weapon box (6x6)\n\n• Rare item spawns\n• A lever to open the green TerraGroup Object-14 container that can also contain weapons and weapon mods",
+   "quests": [
+    "Provocation"
+   ]
+  },
+  "5e42c83786f7742a021fdf3c": {
+   "title": "Object 21WS keycard",
+   "usage": "Unlocks the red TerraGroup container in the container lot outside the mall on Interchange",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "Pockets and bags of Scavs",
+      "On Cultists",
+      "On The Goons",
+      "In Rare valuables crates"
+     ]
+    },
+    {
+     "map": "Factory",
+     "spots": [
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On Partisan",
+      "At the three-story dorms in the \"marked room\"",
+      "At the \"giving tree\" behind the \"Old Gas Station\":"
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "On Partisan",
+      "On Shturman"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "On Killa",
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On Glukhar",
+      "In the \"marked rooms\" RB-BK, RB-PKPM and RB-VO"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On Kaban",
+      "In the \"marked room\" at the abandoned factory",
+      "In the \"marked room\" at Chekannaya 13"
+     ]
+    },
+    {
+     "map": "Lighthouse",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "In Kruglov's office (R22) and the safe inside of it"
+     ]
+    }
+   ],
+   "lock": "Located south west of the mall in a container lot on Interchange. On the red TerraGroup container that is stacked on top of other containers.",
+   "behind": "• Loose loot (Weapon mods, Valuables)\n• 1x Weapon box (4x4)\n• 1x Weapon box (6x4)\n• 1x Weapon box (6x2)\n• 1x SIG MPX 9x19 submachine gun spawn\n• 1x HighCom Trooper TFO body armor (MultiCam) spawn",
+   "quests": [
+    "Provocation",
+    "Irresistible"
+   ]
+  },
+  "5addaffe86f77470b455f900": {
+   "title": "Kiba Arms inner grate door key",
+   "usage": "Unlocks the inner grate door to the KIBA firearms store on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Located on the first floor of the ULTRA shopping mall on Interchange, near the center of the mall.",
+   "behind": "• Loose loot (Weapon mods, Armor plates, Paper ammo boxes)\n• 2x Weapon box (4x4)\n• 1x Weapon box (6x6)\n• 2x Cash register (locked)\n• Possible in the cashier desk opposite the big gun wall:\n◦ SIG MCX-SPEAR 6.8x51 assault rifle (variant CQB)\n• Possible on the gun rack:\n◦ TDI KRISS Vector Gen.2 .45 ACP submachine gun\n• Possible in the weapon locker:\n◦ Molot Arms VPO-136 Vepr-KM 7.62x39 carbine\n◦ Saiga-12K ver.10 12ga semi-automatic shotgun\n◦ Saiga-9 9x19 carbine\n• Possible on the gun walls:\n◦ Modified SV-98 7.62x54R bolt-action sniper rifle\n◦ Standard or Neptune Spear variant SIG MCX .300 Blackout assault rifle\n◦ Standard or modified Colt M4A1 5.56x45 assault rifle\n◦ Standard or modified Kalashnikov AK-12 5.45x39 assault rifle\n◦ CMMG Mk47 Mutant 7.62x39 assault rifle\n◦ Degtyarev RPD 7.62x39 machine gun\n◦ Desert Tech MDR 5.56x45 assault rifle\n◦ Desert Tech MDR 7.62x51 assault rifle\n◦ DS Arms SA58 7.62x51 assault rifle\n◦ FN SCAR-H 7.62x51 assault rifle (FDE)\n◦ HK 416A5 5.56x45 assault rifle\n◦ HK G28 7.62x51 marksman rifle\n◦ HK MP5 9x19 submachine gun (Navy 3 Round Burst) (variant SD Spec)\n◦ Knight's Armament Company SR-25 7.62x51 marksman rifle\n◦ Lone Star TX-15 DML 5.56x45 carbine\n◦ Mossberg 590A1 12ga pump-action shotgun\n◦ Rifle Dynamics RD-704 7.62x39 assault rifle\n◦ SIG MCX-SPEAR 6.8x51 assault rifle\n◦ SIG MCX-SPEAR 6.8x51 assault rifle (variant CQB)\n◦ SV-98 7.62x54R bolt-action sniper rifle (variant OV)\n◦ Steyr AUG A1 5.56x45 assault rifle\n◦ Steyr AUG A3 5.56x45 assault rifle\n◦ Tokarev SVT-40 7.62x54R rifle\n◦ Tokarev SVT-40 7.62x54R rifle (variant Sniper)\n• Possible on the mannequins:\n◦ Diamond Age Bastion helmet (Black)\n◦ HighCom Striker ACHHC IIIA helmet (Olive Drab)\n◦ MSA ACH TC-2001 MICH Series helmet (Olive Drab)\n◦ Maska-1SCh bulletproof helmet (Olive Drab)\n◦ PSh-97 DJETA riot helmet\n◦ SSSh-94 SFERA-S helmet\n◦ ZSh-1-2M helmet (Black cover)\n◦ BNTI Kirasa-N body armor\n◦ BNTI Zhuk body armor (Press)\n◦ DRD body armor\n◦ 5.11 Tactical Hexgrid plate carrier\n◦ HighCom Trooper TFO body armor (MultiCam)\n◦ Interceptor OTV body armor (UCP)",
+   "quests": [
+    "Provocation"
+   ]
+  },
+  "5e42c71586f7747f245e1343": {
+   "title": "ULTRA medical storage key",
+   "usage": "Unlocks the storage room inside the \"AΠTEKA\" (Pharmacy) store on second floor of the shopping mall on Interchange.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the storage room inside the \"AΠTEKA\" (Pharmacy) store on the second floor of the shopping mall on Interchange.",
+   "behind": "• Loose loot (Valuables, Meds, Medical supplies, Stimulants)",
+   "quests": []
+  },
+  "61a64428a8c6aa1b795f0ba1": {
+   "title": "Convenience store storage room key",
+   "usage": "Unlocks the convenience store storage room on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The convenience store is located along the main road on Lighthouse. The storage room on the inside has a blue door.",
+   "behind": "• 1x Medcase\n• 1x Dead Scav\n• 1x Toolbox\n• Loose loot (Meds, Medical supplies, Valuables, Provisions)\n• MP-133 spawn on desk",
+   "quests": []
+  },
+  "62987cb98081af308d7558c8": {
+   "title": "Conference room key",
+   "usage": "Unlocks the conference room at the peninsula territory on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The conference room can be found on the second floor of the guard building at the lighthouse peninsula territory on Lighthouse. Note: The bridge that leads to the peninsula is guarded by Zryachiy and full of Claymores. To safely pass the bridge, an encoded Digital secure DSP radio transmitter is required.",
+   "behind": "• 1x Locked Safe - There is currently no key for it in the game, same applies to the one in the adjoining building\n• 1x Drawer\n• 1x PC block\n• 1x Weapon box (4x4)\n• Loose loot (Ammo packs, Electronics, Provisions, Meds, Medical supplies)\n• Valuables and Currency on the desk at the back of the office",
+   "quests": []
+  },
+  "6a8d581fe74010bf70069d83": {
+   "title": "Lighthouse island stash key",
+   "usage": "Unlocks a bedroom at the peninsula territory on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to a bedroom on the second floor of the house that is located next to the guard building at the lighthouse peninsula territory on Lighthouse. Note: The bridge that leads to the peninsula is guarded by Zryachiy and full of Claymores. To safely pass the bridge, an encoded Digital secure DSP radio transmitter is required.",
+   "behind": "• Loose loot (Containers, Valuables, Weapon mods, Paper ammo boxes, Stimulants)",
+   "quests": [
+    "The Ticket"
+   ]
+  },
+  "61aa5aed32a4743c3453d319": {
+   "title": "Police truck cabin key",
+   "usage": "Unlocks the cabin of a police truck on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The police truck is located on the road west of the water treatment plant on Lighthouse.",
+   "behind": "• Intelligence folder spawn in front of the seat\n• Kalashnikov AK-103 7.62x39 assault rifle spawn on the seat",
+   "quests": []
+  },
+  "61aa5b518f5e7a39b41416e2": {
+   "title": "Merin car trunk key",
+   "usage": "Unlocks the trunk of the Merin car on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The Merin car is located on a small parking lot in the west of Lighthouse.",
+   "behind": "• Valuables\n• Electronics\n• Stimulants\n• Currency",
+   "quests": []
+  },
+  "62987c658081af308d7558c6": {
+   "title": "Radar station commandant room key",
+   "usage": "Unlocks the radar station commandant's office at the peninsula territory on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The commandant's office can be found on the first floor of the radar station at the lighthouse peninsula territory on Lighthouse. Note: The bridge that leads to the peninsula is guarded by Zryachiy and full of Claymores. To safely pass the bridge, an encoded Digital secure DSP radio transmitter is required.",
+   "behind": "• Loose loot (Valuables, Weapon mods)\n• Jacket\n• Weapon box (4x4)\n• PC block",
+   "quests": [
+    "Top Secret"
+   ]
+  },
+  "61aa5b7db225ac1ead7957c1": {
+   "title": "USEC cottage first safe key",
+   "usage": "Unlocks a safe in the blue chalet on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "This key unlocks a safe that is located in the north-western bedroom on the second floor of the blue chalet on Lighthouse.",
+   "behind": "• Valuables\n• Virtex programmable processor\n• VPX Flash Storage Module\n• Military COFDM Wireless Signal Transmitter\n• Silicon Optoelectronic Integrated Circuits textbook",
+   "quests": []
+  },
+  "61aa5ba8018e9821b7368da9": {
+   "title": "USEC cottage second safe key",
+   "usage": "Unlocks a safe in the blue chalet on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "This key unlocks a safe that is located in the south-western bedroom on the second floor of the blue chalet on Lighthouse.",
+   "behind": "• Loose loot (Valuables)\n• Virtex programmable processor\n• VPX Flash Storage Module\n• Military COFDM Wireless Signal Transmitter\n• Silicon Optoelectronic Integrated Circuits textbook",
+   "quests": []
+  },
+  "66265d7be65f224b2e17c6aa": {
+   "title": "USEC cottage room key",
+   "usage": "Unlocks a room on the second floor of the garage at the blue chalet on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "This key unlocks a room that is located on the second floor of the garage at the blue chalet on Lighthouse.",
+   "behind": "• Loose loot (Valuables, Currency)",
+   "quests": []
+  },
+  "664d3de85f2355673b09aed5": {
+   "title": "Leon's hideout key",
+   "usage": "Unlocks Leon's hideout on the second floor of a house in the village on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "Can only be bartered from Ref LL4"
+     ]
+    }
+   ],
+   "lock": "Leon's hideout on the second floor of a house in the village on Lighthouse.",
+   "behind": "• Red keycard spawn location\n• Loose loot (Valuables, Electronics, Weapon mods, Armor plates, Stimulants)\n• 1x Sports bag\n• Graphics card spawn\n• Cyclon rechargeable battery spawn\n• Phased array element spawn\n• Possible Red Rebel ice pick\n• Possible UVSR Taiga-1 survival machete\n• Possible SP-8 Survival Machete\n• Possible Camper axe\n• Possible Springfield Armory M1A 7.62x51 rifle (variant 2k18 NY)\n• Possible HK G28 7.62x51 marksman rifle (variant Patrol)\n• Possible Remington Model 870 12ga pump-action shotgun (variant Breacher)\n• Possible modified Colt M4A1 5.56x45 assault rifle\n• Possible modified Springfield Armory M1A 7.62x51 rifle\n• Possible modified Mosin 7.62x54R bolt-action rifle (Sniper)\n• Possible standard HK G28 7.62x51 marksman rifle\n• Possible standard Remington R11 RSASS 7.62x51 marksman rifle\n• Possible L3Harris GPNVG-18 night vision goggles\n• Possible Walker's XCEL 500BT Digital headset\n• Possible Peltor ComTac IV Hybrid headset (Coyote Brown)\n• Possible BNTI Zhuk body armor (EMR)\n• Possible 5.11 Tactical Hexgrid plate carrier\n• Possible NPP KlASS Korund-VM body armor (Black)\n• Possible FORT Redut-M body armor\n• Possible LBT-6094A Slick Plate Carrier (Black)\n• Possible LBT-6094A Slick Plate Carrier (Olive Drab)\n• Possible LBT-6094A Slick Plate Carrier (Coyote Tan)\n• Possible DRD body armor\n• Possible NFM THOR Concealable Reinforced Vest body armor\n• Possible BNTI Gzhel-K body armor",
+   "quests": []
+  },
+  "61a6444b8c141d68246e2d2f": {
+   "title": "Hillside house key",
+   "usage": "Unlocks the hillside house on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The hillside house is located on Lighthouse.",
+   "behind": "• 1x Jacket\n• 1x Sport bag\n• Loose loot (Provisions, Valuables)\n• Military Electronics spawn in the sink (Phased array element, Virtex, etc.)",
+   "quests": []
+  },
+  "62987da96188c076bc0d8c51": {
+   "title": "Operating room key",
+   "usage": "Unlocks the operating room at the water treatment plant on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Lighthouse",
+     "spots": [
+      "Building #1 at the water treatment plant, in the laboratories on the first floor.",
+      "Building #2 at the water treatment plant, on the desk in the western office.",
+      "Building #2 at the water treatment plant, on a desk in the left hand upstairs office."
+     ]
+    }
+   ],
+   "lock": "At the ground floor of office building #1, which is located at the water treatment plant area in the north of Lighthouse.",
+   "behind": "• Loose loot (Valuables, Electronics)\n• 1x Medbag\n• 1x Dead Scav",
+   "quests": [
+    "Broadcast - Part 1"
+   ]
+  },
+  "62987e26a77ec735f90a2995": {
+   "title": "Water treatment plant storage room key",
+   "usage": "Unlocks a storage room at the water treatment plant on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "On the first floor of office building #2, which is located at the water treatment plant area in the north of Lighthouse.",
+   "behind": "• 1x Technical Supply Crate\n• 1x Toolbox\n• Loose military tech\n• Posters\n• Valuables",
+   "quests": [
+    "To the Light - Getting Acquainted"
+   ]
+  },
+  "62a9cb937377a65d7b070cef": {
+   "title": "Rogue USEC barrack key",
+   "usage": "Unlocks a Rogue barrack at the water treatment plant on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "On the first floor of office building #3, which is located at the water treatment plant area in the north of Lighthouse.",
+   "behind": "• Weapon box (6x2)\n• Weapon box (4x4)\n• Toolbox\n• Wooden ammo box\n• Physical Bitcoin spawn on the chair\n• Loose weapon mods",
+   "quests": [
+    "To the Light - Getting Acquainted"
+   ]
+  },
+  "61a64492ba05ef10d62adcc1": {
+   "title": "Rogue USEC stash key",
+   "usage": "Unlocks a cabin at the water treatment plant on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "This key opens a cabin that is located in the west of the water treatment plant on Lighthouse",
+   "behind": "• 1x Weapon box (6x2)\n• 1x Weapon box (4x4)\n• 1x Weapon box (6x6)\n• Weapon mods\n• Loose loot",
+   "quests": []
+  },
+  "61aa81fcb225ac1ead7957c3": {
+   "title": "Rogue USEC workshop key",
+   "usage": "Unlocks a cabin at the water treatment plant on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "This key opens a cabin that is located in the east of the water treatment plant on Lighthouse.",
+   "behind": "• 2x Toolbox\n• Weapon mods\n• 1x Jacket\n• Possible spawn of 6-STEN-140-M military battery (Under the table)",
+   "quests": []
+  },
+  "62987dfc402c7f69bf010923": {
+   "title": "Substation marked key",
+   "usage": "Unlocks the marked electrical substation at the water treatment plant on Lighthouse.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the the marked electrical substation at the water treatment plant on Lighthouse.",
+   "behind": "• Loose loot (Weapon case, modified Weapons, Weapon mods, Paper ammo boxes)",
+   "quests": []
+  },
+  "5d9f1fa686f774726974a992": {
+   "title": "RB-ST key",
+   "usage": "Unlocks a door in the Repair Warehouses of the Repair Point Buildings on Reserve.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "In different locations in the dining room on the third floor of the repair building marked with black knight."
+     ]
+    }
+   ],
+   "lock": "In the Repair Warehouses of the Repair Point Buildings on Reserve.",
+   "behind": "• One Weapon box (6x6)\n• One Weapon box (6x2)\n• One Weapon box (6x4)\n• Two Grenade boxes\n• Loose loot (Ammunition, Weapon mods and Electronics)\n• Two 6-STEN-140-M military battery spawns\n• Three OFZ 30x165mm shell spawns\n• Two Phased array element spawns\n• One Military gyrotachometer spawn\n• One Military cable spawn\n• One TP-200 TNT brick spawn",
+   "quests": [
+    "Surplus Goods",
+    "Revision - Reserve",
+    "Snatch"
+   ]
+  },
+  "6398fd8ad3de3849057f5128": {
+   "title": "Backup hideout key",
+   "usage": "Unlocks the hideout below the cinema stairs on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "In a sports bag which is located in an electrical operation room behind the small cinema. Guaranteed spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Hideout below the cinema stairs at Streets of Tarkov.",
+   "behind": "• 1x Wooden crate\n• 1x Sport bag\n• 1x Toolbox\n• Loose loot (Electronics, Valuables)",
+   "quests": [
+    "Missing Informant"
+   ]
+  },
+  "5c1e2d1f86f77431e9280bee": {
+   "title": "TerraGroup Labs weapon testing area key",
+   "usage": "Unlocks the door to the laboratory weapon testing area (O11) in The Lab.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "On the first level in room R15 (Gym) on a stool",
+      "On the second level in room B21 (above the Server Room - B12) on the kitchen counter",
+      "On the bottom of a shelf left of the entrance to room R23"
+     ]
+    }
+   ],
+   "lock": "Laboratory weapon testing area (O11) on the first level in The Lab.",
+   "behind": "• One Weapon box (4x4)\n• One Weapon box (6x6)\n• Possible weapon spawns\n• Loose loot (Weapon mods and ammunition)",
+   "quests": [
+    "Following the Bread Crumbs"
+   ]
+  },
+  "5c1d0f4986f7744bb01837fa": {
+   "title": "TerraGroup Labs keycard (Black)",
+   "usage": "* Unlocks the door to the laboratory experiment's area (G12) in The Lab.\n* Unlocks the door to Kruglov's office (R22) in The Lab.\n* Unlocks the safe in Kruglov's office (R22) in The Lab.\n* Unlocks the safe in the locked bedroom inside the Cardinal apartment on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "On Cultists",
+      "On The Goons",
+      "In Rare valuables crates"
+     ]
+    },
+    {
+     "map": "Factory",
+     "spots": [
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On Partisan",
+      "At the three-story dorms in the \"marked room\"",
+      "At the \"giving tree\" behind the \"Old Gas Station\""
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "On Shturman",
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "On Killa",
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On Glukhar",
+      "In the \"marked rooms\" RB-BK, RB-PKPM and RB-VO"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On Kaban",
+      "In the \"marked room\" at the abandoned factory",
+      "In the \"marked room\" at Chekannaya 13"
+     ]
+    },
+    {
+     "map": "Lighthouse",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "In Kruglov's office (R22) and the safe inside of it",
+      "In the laboratory block (G22), sitting next to a computer workstation. TerraGroup Labs keycard (Green) is required for entry.",
+      "Room O11, in front of the telephone on the desk with the computer, across from the toxic waste spill that's covered by the large orange dome.",
+      "In O11 on the large table of scientific supplies"
+     ]
+    }
+   ],
+   "lock": null,
+   "behind": "===The Lab===\n• Laboratory experiment's area:\n◦ 1x Medcase\n◦ Stimulants\n◦ LEDX Skin Transilluminator spawns\n\n• Kruglov's office:\n◦ 1x PC block\n◦ Valuables\n◦ Info items\n◦ Keycards\n◦ Advanced Electronic Materials textbook spawns on the desk\n◦ Silicon Optoelectronic Integrated Circuits textbook spawns on the desk\n◦ Folder with intelligence on Norvinsk region facilities\n\n• Kruglov's safe:\n◦ Valuables\n◦ Intelligence folder\n◦ TerraGroup \"Blue Folders\" materials\n◦ Keycards\n◦ Cardinal apartment key spawn location. A single key is guaranteed to spawn every raid.\n\n===Streets of Tarkov===\n• Cardinal apartment locked bedroom safe:\n◦ Valuables\n◦ Info items\n◦ Transcript of conversation with Ms. A.",
+   "quests": [
+    "Following the Bread Crumbs",
+    "The Ticket"
+   ]
+  },
+  "5d80c88d86f77440556dbf07": {
+   "title": "RB-AM key",
+   "usage": "Unlocks the Educational Building workshop on Reserve.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "Underground of Reserve, on the desk next to the toolbox in the big room before D-2 extraction"
+     ]
+    }
+   ],
+   "lock": "• The lock is located in the School building (Black Bishop), in front of the helicopter.\n• On the west side first floor of the building, at the bottom of the staircase",
+   "behind": "• Three Toolboxes\n• Loose loot (Building Materials, Tools, and Weapon mods)\n• Can spawn Intelligence folder\n\n• One Wooden Crate\n• One Jacket",
+   "quests": []
+  },
+  "5d80c78786f774403a401e3e": {
+   "title": "RB-AK key",
+   "usage": "Unlocks the Educational Building storage room on Reserve.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On a filing cabinet in the unlocked guard shack on the path to the radar station"
+     ]
+    }
+   ],
+   "lock": "• The lock is located in the School building (Black Bishop), in front of the helicopter.\n• The door is at the 2nd floor, on the west side staircase of the building.",
+   "behind": "• Two PC blocks\n• Loose tech loot\n• One Sport Bag\n• Virtex programmable processor spawns\n• Tetriz spawns\n• Phased array element spawns\n• Several ammo box spawns\n• Golden 1GPhone smartphone spawns",
+   "quests": []
+  },
+  "5d95d6be86f77424444eb3a7": {
+   "title": "RB-PSV2 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In the Common fund stash (Shturman's crate)",
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "This key opens the north-east caged off storage area in the Underground Storage Bunkers on Reserve (Highlighted in green). There is one unlockable door at the north and south end of the closed caged room.",
+   "behind": "• Three Medical supply crates\n• One Technical supply crate",
+   "quests": [
+    "Found in raid",
+    "Safe Corridor"
+   ]
+  },
+  "5d80cb5686f77440545d1286": {
+   "title": "RB-PSV1 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "In the basement of the white bishop building, in the storage room with the desk on a white chair"
+     ]
+    }
+   ],
+   "lock": "This key opens the south-east caged off storage area in the Underground Storage Bunkers on Reserve (Highlighted in green).",
+   "behind": "• Three Medical Supply Crate\n• Two Ration Supply Crates\n• One Technical Supply Crate",
+   "quests": [
+    "Found in raid",
+    "Safe Corridor"
+   ]
+  },
+  "5d80cb3886f77440556dbf09": {
+   "title": "RB-PSP1 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "This key opens the north-west caged off storage area in the Underground Storage Bunkers on Reserve (Highlighted in green). There is one unlockable door at the north and south end of the closed caged room.",
+   "behind": "• Four Ration supply crates\n• One Medical supply crate\n• One Technical supply crate\n• One Toolbox\n• Loose loot (Food, Drinks, Fuel)",
+   "quests": [
+    "Found in raid",
+    "Safe Corridor"
+   ]
+  },
+  "5d95d6fa86f77424484aa5e9": {
+   "title": "RB-PSP2 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "This key opens the south-west caged off storage area in the Underground Storage Bunkers on Reserve (Highlighted in green).",
+   "behind": "• One Medical Supply Crate\n• Two Ration Supply Crates\n• Two Technical Supply Crates",
+   "quests": [
+    "Found in raid",
+    "Safe Corridor"
+   ]
+  },
+  "5d80c60f86f77440373c4ece": {
+   "title": "RB-BK marked key",
+   "usage": "Unlocks the marked room on the first floor of the black pawn barrack building on Reserve.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the marked room on the first floor of the black pawn barrack building on Reserve.",
+   "behind": "• Loose loot (multiple very rare Valuables, Weapons, Containers, Currency, Keycards)",
+   "quests": [
+    "They Are Already Here",
+    "The Ticket"
+   ]
+  },
+  "5d80ccac86f77470841ff452": {
+   "title": "RB-ORB1 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "In bottom of tunnel in shower room on key case on wall next to the door"
+     ]
+    }
+   ],
+   "lock": "South barracks on Reserve. East end of the southern building, 4th floor. (Highlighted in green)",
+   "behind": "• 3 Weapon racks (AK-74N, AKS-74U, AKS-74N, AKS-74UB, AKS-74UN)\n• Loose loot (Weapon mods, Ammunition)\n• Two Drawers\n• Intelligence folder spawn on ground",
+   "quests": [
+    "Reserve Expert",
+    "Ragman"
+   ]
+  },
+  "5d80c6fc86f774403a401e3c": {
+   "title": "RB-TB key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On the train station lower roof, on the left side of the sleeping bag next to the sand bags."
+     ]
+    }
+   ],
+   "lock": "East barracks, In the basement of the east building marked with a black pawn near the parked helicopter on Reserve map. In the south section of the basement, the grated door is on the east side of the hallway. (Highlighted in green)",
+   "behind": "• 3 Weapon racks (AK-74N, AKS-74U, AKS-74N, AKS-74UB, AKS-74UN)\n• Loose loot (Weapon mods, Ammunition)",
+   "quests": []
+  },
+  "5d80ccdd86f77474f7575e02": {
+   "title": "RB-ORB2 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In the Common fund stash (Shturman's crate)",
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "Near the tank at the \"RUAF Gate\" extraction on a concrete wall piece that has a \"HELP\" inscription"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "Inside a locker which is located in a dressing room inside the connection tunnel from the radar station to the white pawn barracks",
+      "In different locations in the main room on the second floor of the barracks marked with white pawn."
+     ]
+    }
+   ],
+   "lock": "Eastern barracks area on Reserve. East end of the southern building (white pawn), 2nd floor. (Highlighted in green)",
+   "behind": "• Loose loot (Weapon mods, Ammunition)\n• One Drawer\n• One Weapon box (4x4)\n• One Weapon box (6x2)",
+   "quests": [
+    "Reserve Expert",
+    "Ragman"
+   ]
+  },
+  "5d80cd1a86f77402aa362f42": {
+   "title": "RB-ORB3 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "Front passenger seat of the Tigr vehicle closest to the bridge."
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "In different locations in the main room on the first floor of the barracks marked with white pawn."
+     ]
+    }
+   ],
+   "lock": "East barracks on Reserve. North end of the eastern building, 2nd floor. (Highlighted in green)",
+   "behind": "• 3 Weapon racks (AK-74N, AKS-74U, AKS-74N, AKS-74UB, AKS-74UN)\n• Loose loot (Weapon mods, Ammunition)\n• Two Drawers",
+   "quests": [
+    "Reserve Expert",
+    "Ragman"
+   ]
+  },
+  "5d80c6c586f77440351beef1": {
+   "title": "RB-OB key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "In different locations in the meeting room on the third floor of the airspace control center marked with white king."
+     ]
+    }
+   ],
+   "lock": "East barracks on Reserve. Northern end of the eastern building, 3rd floor.",
+   "behind": "• One Drawer\n• Intelligence folder on the desk\n• Multiple valuable loot spawns on the desk",
+   "quests": [
+    "Reserve Expert",
+    "Ragman"
+   ]
+  },
+  "5d947d4e86f774447b415895": {
+   "title": "RB-KSM key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Second floor of the HQ (White Bishop) building on Reserve. (Highlighted in green)",
+   "behind": "• Loose loot (Medical supplies)\n• One Sports bag",
+   "quests": [
+    "Disease History"
+   ]
+  },
+  "5d947d3886f774447b415893": {
+   "title": "RB-SMP key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In the Common fund stash (Shturman's crate)",
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Second floor of the HQ (White Bishop) Building on Reserve. (Highlighted in green)",
+   "behind": "• Loose loot (Medical supplies, Medical items, Stimulants)",
+   "quests": [
+    "Disease History"
+   ]
+  },
+  "5d8e0e0e86f774321140eb56": {
+   "title": "RB-KPRL key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Southern most small building at the radio tower on Reserve.Guard Building outside of the Radar Tower on Reserve.",
+   "behind": "• One Standing Weapon Safe\n• One Safe\n• One Weapon Cabinet\n• One Weapon box (6x2)\n• One small safe under desk\n• Two intelligence spawns, on the desk and on top of the safe",
+   "quests": []
+  },
+  "5d80c66d86f774405611c7d6": {
+   "title": "RB-AO key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "In the bunker to the north of the health resort, on the bed."
+     ]
+    }
+   ],
+   "lock": "Inside the Military Barracks in the North West of Reserve. (Highlighted in green)",
+   "behind": "• Loose loot (Weapon mods)\n• 5x Weapon racks (AK-74N, AKS-74U, AKS-74N, AKS-74UB, AKS-74UN)",
+   "quests": []
+  },
+  "5d80c62a86f7744036212b3f": {
+   "title": "RB-VO marked key",
+   "usage": "Unlocks the marked room in the security barrack building on Reserve.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the marked room in the security barrack building on Reserve.",
+   "behind": "• Loose loot (multiple very rare Valuables, Weapons, Containers, Currency, Keycards)",
+   "quests": [
+    "They Are Already Here",
+    "The Ticket"
+   ]
+  },
+  "5d8e0db586f7744450412a42": {
+   "title": "RB-KORL key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On a desk in the \"King\" building (west of helicopter), first floor"
+     ]
+    }
+   ],
+   "lock": "On the second floor of the Radar Station of Reserve; the first door on the left if you walk down the hallway after coming up the stairs.",
+   "behind": "• Two Drawers\n• Intelligence folder spawns on desk and on top of the two drawers.",
+   "quests": []
+  },
+  "5ede7b0c6d23e5473e6e8c66": {
+   "title": "RB-RLSA key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "White Queen building (dome) on Reserve. East end of the building on the 2nd floor.",
+   "behind": "• Loose loot (Weapon mods, Ammunition)\n• Three Drawers\n• One Intelligence folder\n• Loose military tech items",
+   "quests": []
+  },
+  "5da46e3886f774653b7a83fe": {
+   "title": "RB-RS key",
+   "usage": "Unlocks the last door on the left in the hallway of Reserve's southern Radar Station.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In the Common fund stash (Shturman's crate)",
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "On the middle floor of the Radar Station (Queen) of Reserve; through the last door in the hallway. (Highlighted in green)",
+   "behind": "• Between 0 and 5 Toolboxes.\n• Loose tech loot",
+   "quests": []
+  },
+  "5d8e3ecc86f774414c78d05e": {
+   "title": "RB-GN key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Basement level of the Airspace Control Center (king) on Reserve. (Highlighted in green)",
+   "behind": "• Two Toolboxes\n• Possible spawn of FP-100 filter absorber\n• Possible spawn of 6-STEN-140-M military battery\n• Possible spawn of Old firesteel",
+   "quests": []
+  },
+  "5d80c8f586f77440373c4ed0": {
+   "title": "RB-OP key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "In a shelf in the \"Generic\" store"
+     ]
+    }
+   ],
+   "lock": "Basement level of the Airspace Control Center (King) on Reserve.",
+   "behind": "• Loose loot (Valuables)\n• 1x Drawer\n• Intelligence folder spawn on the desk",
+   "quests": []
+  },
+  "5da5cdcd86f774529238fb9b": {
+   "title": "RB-RH key",
+   "usage": "Unlocks Airspace Control Center security room on Reserve.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The door is located in the White King building, third floor.\n\nPath 1: Run up the stairs after passing the grate door, once you reach the 3rd floor, u-turn right and head down the hallway. finally turn right.\n\nPath 2: Up the flight of metal stairs if entering from the White King server room.",
+   "behind": "• Weapon rack spawn\n• Weapon spawn on table.\n• 2x Drawers",
+   "quests": []
+  },
+  "5d80c95986f77440351beef3": {
+   "title": "RB-MP12 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "In the warehouse at the sawmill. The key can be found next to the boxes in the blue locker."
+     ]
+    }
+   ],
+   "lock": null,
+   "behind": "• 1x Jacket\n• 1x Wooden crate\n• One Intelligence folder (on top of the table, left of the wooden crate)\n• One 6-STEN-140-M military battery spawn\n• Loose loot, ammo",
+   "quests": []
+  },
+  "5d80ca9086f774403a401e40": {
+   "title": "RB-MP21 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "In Grumpy's hideout inside the power station, in the shelf directly left after entering"
+     ]
+    }
+   ],
+   "lock": "Second floor of the Western Repair Point Building (black knight) on Reserve. (Highlighted in green)",
+   "behind": "• Two Drawers\n• One Weapon rack (AK-74N, AKS-74U, AKS-74N, AKS-74UB, AKS-74UN)\n• One AKS-74N spawn\n• Loose loot (Weapon mods, Ammunition)\n• One Toolbox\n• One Weapon Box (4x4)\n• Intelligence folder spawn on desk & on cabinets.\n• 6-STEN-140-M military battery spawn (On the table to the right of the door.)",
+   "quests": []
+  },
+  "5d80c93086f7744036212b41": {
+   "title": "RB-MP11 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In the Common fund stash (Shturman's crate)",
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In the shipping yard container building. On the desk with the papers."
+     ]
+    }
+   ],
+   "lock": "Unlocks a door on the second story of black knight on Reserve",
+   "behind": "• One Jacket\n• One Toolbox\n• Intelligence folder spawns on the desks",
+   "quests": []
+  },
+  "5d80cab086f77440535be201": {
+   "title": "RB-MP22 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Second floor of the Western Repair Point Building marked with a white knight on Reserve. (Highlighted in green)",
+   "behind": "• Two Weapon racks (AK-74N, AKS-74U, AKS-74N, AKS-74UB, AKS-74UN)\n• 1-3 Wooden Ammo Box\n• 1-3 Toolbox\n• Possible 6-STEN-140-M military battery\n• Loose loot (Tools, Weapon mods)",
+   "quests": []
+  },
+  "5d80cbd886f77470855c26c2": {
+   "title": "RB-MP13 key",
+   "usage": null,
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "First floor of the eastern repair point building on Reserve. The building is labeled with a white chess knight on it. (Highlighted in green)",
+   "behind": "• Loose loot (Tools)\n• One Drawer\n• Possible spawn for 6-STEN-140-M military battery\n• Intelligence folder spawn on the chair beside the desk",
+   "quests": []
+  },
+  "5ede7a8229445733cb4c18e2": {
+   "title": "RB-PKPM marked key",
+   "usage": "Unlocks the marked room next to the command office in the underground tunnel system on Reserve.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the marked room next to the command office in the underground tunnel system on Reserve.",
+   "behind": "• Loose loot (multiple very rare Valuables, Weapons, Containers, Currency, Keycards)\n• 3x Drawer",
+   "quests": [
+    "They Are Already Here",
+    "The Ticket"
+   ]
+  },
+  "68e9654d72488961110dbf69": {
+   "title": "RB-PKPTS key",
+   "usage": "Unlocks the technical storeroom in the command part of the underground bunker system on Reserve.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the technical storeroom in the command part of the underground bunker system on Reserve.",
+   "behind": "• Loose loot (Valuables, Electronics, Provisions)\n• Intelligence folder spawn on the desk",
+   "quests": [
+    "The Ticket"
+   ]
+  },
+  "5a0eb38b86f774153b320eb0": {
+   "title": "SMW car key",
+   "usage": "Unlocks the trunk of the blue car at the unlocked villa on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On a box at the construction site near the locked villa"
+     ]
+    }
+   ],
+   "lock": "Trunk of the blue car at the unlocked villa on Shoreline.",
+   "behind": "• Yellow keycard spawn location\n• Weapon spawn\n• Loose loot (Roubles, Provisions)",
+   "quests": []
+  },
+  "5d8e15b686f774445103b190": {
+   "title": "HEP station storage room key",
+   "usage": "Unlocks the USEC stash inside the hydroelectric power station on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "On the second floor of the power station on Shoreline.\n• This location has 2 different doors that can be unlocked. Opening each door will use a point of durability on the key.",
+   "behind": "• 2x Weapon box (4x4)\n• 1x Weapon box (6x6)\n• 1x Weapon box (6x4)\n• 1x Toolbox\n• Loose loot (Weapon mods)\n• Intelligence folder spawn on the cabinet",
+   "quests": []
+  },
+  "664d3ddfdda2e85aca370d75": {
+   "title": "Voron's hideout key",
+   "usage": "Unlocks Voron's hideout inside the hydroelectric power station on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "Can only be bartered from Ref LL3"
+     ]
+    }
+   ],
+   "lock": "Voron's hideout inside the hydroelectric power station on Shoreline.",
+   "behind": "• Violet keycard spawn location\n• Loose loot (Valuables, Weapon mods, Armor plates, Stimulants)\n• 2x Sports bag\n• LEDX Skin Transilluminator spawns\n• Ophthalmoscope spawn\n• Graphics card spawn\n• Possible Lone Star TX-15 DML 5.56x45 carbine (variant D-WARRIOR)\n• Possible Kalashnikov AK-74N 5.45x39 assault rifle (variant Magpul)\n• Possible Saiga-12K ver.10 12ga semi-automatic shotgun (variant NERFGUN)\n• Possible FN P90 5.7x28 submachine gun (variant DEVGRU)\n• Possible modified Kalashnikov AKMN 7.62x39 assault rifle\n• Possible modified SIG MCX-SPEAR 6.8x51 assault rifle\n• Possible modified AS VAL 9x39 special assault rifle\n• Possible modified Kalashnikov AKS-74U 5.45x39 assault rifle\n• Possible modified Desert Tech MDR 5.56x45 assault rifle\n• Possible modified FN SCAR-H 7.62x51 assault rifle\n• Possible modified HK 416A5 5.56x45 assault rifle\n• Possible modified TDI KRISS Vector Gen.2 .45 ACP submachine gun\n• Possible modified TDI KRISS Vector Gen.2 9x19 submachine gun\n• Possible modified SIG MCX .300 Blackout assault rifle\n• Possible modified Colt M4A1 5.56x45 assault rifle\n• Possible Armasight N-15 night vision goggles\n• Possible Walker's XCEL 500BT Digital headset\n• Possible BNTI Gzhel-K body armor\n• Possible DRD body armor",
+   "quests": []
+  },
+  "5a0eb6ac86f7743124037a28": {
+   "title": "Cottage back door key",
+   "usage": "Unlocks the back door of the eastern cottage on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "In the yard of the locked villa, on top of the bundled barrels.",
+      "In a key rack in the unlocked villa.",
+      "In a key rack in the garage of house no. 5 located in the eastern part of the west village.",
+      "In a key rack in the barn of house no. 4 located in the eastern part of the west village."
+     ]
+    }
+   ],
+   "lock": "Back door of the eastern cottage on Shoreline.",
+   "behind": "• Yellow keycard spawn location\n• 1x PC block\n• 3x Sports bag\n• 2x Gun cabinet\n• 2x Safe (one locked)\n• 1x Jacket\n• Loose loot (Valuables, Provisions, Currency, Building materials, Others)\n• Kalashnikov AKS-74U 5.45x39 assault rifle spawn on the couch\n• Random Weapon spawn on a bed upstairs",
+   "quests": [
+    "Therapist",
+    "Tarkov-Style Diplomacy"
+   ]
+  },
+  "5eff09cd30a7dc22fd1ddfed": {
+   "title": "Health Resort office key with a blue tape",
+   "usage": "Unlocks the room 110 of the East wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "On Sanitar",
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "• The first floor, room 110 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• 1x PC\n• 1x Plastic suitcase\n• Loose loot (Medical supplies, Valuables)\n• Multiple LEDX spawns in the bathroom\n• Possible GPU spawn on the left side of the desk",
+   "quests": [
+    "Chemistry Closet"
+   ]
+  },
+  "5a0ea64786f7741707720468": {
+   "title": "Health Resort east wing office room 107 key",
+   "usage": "Unlocks office 107 of the East wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "Second floor of the Admin building: In the band room on a chair in the first row"
+     ]
+    }
+   ],
+   "lock": "First floor of the East wing in the Health Resort on Shoreline.",
+   "behind": "• One Medbag\n• One Medcase\n• One Sport bag\n• One LEDX spawn\n• One Graphics Card spawn\n• Loose loot (Money, Meds, Electronics)",
+   "quests": []
+  },
+  "5a0dc45586f7742f6b0b73e3": {
+   "title": "Health Resort west wing office room 104 key",
+   "usage": "Unlocks room 104 of the Health Resort West wing on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "In a locker inside the smaller building at the power plant",
+      "Inside a house in the village. It spawns in a shoe box on a bed frame."
+     ]
+    }
+   ],
+   "lock": "Room 104 on the first floor of the west wing in the health resort on Shoreline.",
+   "behind": "• Loose Loot (Meds, Currency)\n• 1 x LEDX spawn\n• Blue keycard spawn location",
+   "quests": []
+  },
+  "5a145d4786f7744cbb6f4a12": {
+   "title": "Health Resort east wing room 306 key",
+   "usage": "Unlocks the room 306 of the East wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "In the Tarcone Director's Office on the desk in the breachable room"
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "On the nightstand of the 2nd cabin with the safe"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On the desk with the computer on the second floor of the office building at the pier.",
+      "On the desk in the small office next to the entrance of the administration building at the health resort.",
+      "In a key rack in west wing room 202 at the health resort.",
+      "On the floor below the key rack in the utility room next to west wing room 227 at the health resort.",
+      "In the key rack near the central stairs on the second floor of the east wing at the health resort.",
+      "On the floor below the key rack near the central stairs on the third floor of the east wing at the health resort."
+     ]
+    }
+   ],
+   "lock": "The third floor, room 306 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 306:\n◦ 1× LEDX Skin Transilluminator spawn\n◦ 1× DVL-10 spawn\n◦ 1× Flyye MBSS backpack (UCP) spawn\n◦ 4× PC Blocks\n◦ 1× Weapon box (4x4)\n◦ Rare spawn\n◦ Loose loot (Currency)\n• Room 308:\n◦ 1× Weapon Rack\n◦ 1× Weapon spawn\n◦ 1× Medcase\n◦ Loose loot (Currency)",
+   "quests": []
+  },
+  "5a144dfd86f77445cb5a0982": {
+   "title": "Health Resort west wing room 203 key",
+   "usage": "Unlocks room 203 of the West wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "In the house closest to the bus stop in the Village. Walk through the door and it's on the chair beneath the Jackets. There is a spawn point just on the other side of the fence."
+     ]
+    }
+   ],
+   "lock": "The second floor, room 203 of the West Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 203:\n◦ Red keycard spawn location\n◦ LEDX spawn\n◦ 1× Weapon spawn (AR)\n◦ 1× Medbag\n◦ 1× Medcase\n◦ 1× Weapon box (6x2)\n◦ 1× Toolbox\n◦ 1× Sport bag\n◦ Loose loot (Meds, Medical supplies, Currency)\n• Room 205:\n◦ 1× LEDX spawn\n◦ 1× Graphics Card spawn\n◦ 1× Toolbox\n◦ 1× Medcase\n◦ Loose loot (Meds, Medical supplies, Provisions).",
+   "quests": []
+  },
+  "5a0ea79b86f7741d4a35298e": {
+   "title": "Health Resort universal utility room key",
+   "usage": "Unlocks utility rooms in the health resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "Underneath a key locker in the janitors closet by the east wing admin (glass) staircase on second floor of shoreline. Below where the East 226 key spawns."
+     ]
+    }
+   ],
+   "lock": "Two utility rooms in the health resort west wing on Shoreline:\n• 2nd floor, room next to room 227\n• 3rd floor, room next to room 327",
+   "behind": "• Room next to West 227:\n◦ Loose loot (Household materials, Building materials, Tools, Roubles)\n◦ 1x Jacket\n\n• Room next to West 327:\n◦ Loose loot (Household materials, Building materials, Tools)",
+   "quests": []
+  },
+  "5a13ef7e86f7741290491063": {
+   "title": "Health Resort west wing room 301 key",
+   "usage": "Unlocks room 301 of the West wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On a seat on the yellow bus by the collapsed tunnel."
+     ]
+    }
+   ],
+   "lock": "The third floor, room 301 of the West Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 301:\n◦ Loose loot\n◦ 1x Graphics card spawn\n◦ 1x LEDX spawn on the white crates.\n\n• Room 304:\n◦ One Weapon box (6x6)\n◦ Two PC's\n◦ Loose loot (Computer parts, Meds, Money)\n◦ 2x Graphics card spawn\n◦ One Weapon Spawn (SV-98)\n◦ Multiple LEDX spawns",
+   "quests": []
+  },
+  "5a0ee37f86f774023657a86f": {
+   "title": "Health Resort west wing room 221 key",
+   "usage": "Unlocks room 221 of the West wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On a deck-chair at the beach between the gas station and lighthouse."
+     ]
+    }
+   ],
+   "lock": "The second floor, room 221 of the West Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 221:\n◦ 1× Weapon box (6x4)\n◦ 1× weapon spawn on the balcony (M4A1, M1A)\n◦ Loose loot (Currency, Meds, Medical supplies)\n• Room 222:\n◦ 3× Sports bag\n◦ 2× Medbag\n◦ 1× weapon spawn on the bed (AKM, SV-98)\n◦ Loose loot (Roubles)\n• Room 218:\n◦ Red keycard spawn location\n◦ 2× weapon cabinets\n◦ 2× Wooden crate\n◦ 1× weapon spawn in bathroom (RSASS)\n◦ Loose loot (Currency, Provisions, Ammo packs)",
+   "quests": []
+  },
+  "5a0eec9686f77402ac5c39f2": {
+   "title": "Health Resort east wing room 310 key",
+   "usage": "Unlocks room 310 of the East wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On a seat inside the bus in the trailer park",
+      "In the front seat of the blue van at the crossroads extraction"
+     ]
+    }
+   ],
+   "lock": "The third floor, room 310 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• 2x Sport Bags\n• Loose Loot (Valuables)",
+   "quests": []
+  },
+  "5a0ee4b586f7743698200d22": {
+   "title": "Health Resort east wing room 206 key",
+   "usage": "Unlocks room 206 of the East wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "In the back of an SUV between the gas station and marina"
+     ]
+    }
+   ],
+   "lock": "The second floor, room 206 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 206:\n◦ Red keycard spawn location\n◦ 2× Weapon box (6x2)\n◦ 2× Weapon box (4x4)\n◦ 1× Weapon Spawn (AKM)\n◦ 1× Weapon Spawn (AKS-74UB)\n◦ Rare loose loot\n◦ Loose loot (Meds, Medical supplies)\n• Room 205:\n◦ 2× Medcase\n◦ 1× Sports bag\n◦ 1× Weapon cabinet\n◦ Loose loot (Currency)",
+   "quests": []
+  },
+  "5a0ee34586f774023b6ee092": {
+   "title": "Health Resort west wing room 220 key",
+   "usage": "Unlocks room 220 of the West wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "In a key rack in the unlocked villa",
+      "In a shelf in the southern warehouse at the smuggler base.",
+      "In a key rack in west wing room 202 at the health resort.",
+      "On the floor below a key rack in the utility room next to west wing room 227 at the health resort.",
+      "In the key rack near the central stairs on the second floor of the east wing at the health resort.",
+      "On the floor below a key rack near the central stairs on the third floor of the east wing at the health resort."
+     ]
+    }
+   ],
+   "lock": "The second floor, room 220 of the West Wing in the Health Resort on Shoreline.",
+   "behind": "• 1x Weapon box (4x4)\n• 2x Weapon box (6x2)\n• 1x Wooden crate\n• Loose loot (Valuables, Meds, Medical supplies, Currency)",
+   "quests": [
+    "I Need More Power",
+    "Health Resort west wing room 219 key"
+   ]
+  },
+  "5a0eecf686f7740350630097": {
+   "title": "Health Resort east wing room 313 key",
+   "usage": "Unlocks room 313 of the East wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The third floor, room 313 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 313:\n◦ 1x LEDX spawn\n◦ 1× Weapon box (6x4)\n◦ 1× Medbag\n◦ Loose Loot (Meds, Medical supplies Weapon mods, Currency)\n• Room 314:\n◦ 1× Weapon box (6x2)\n◦ 1× Weapon Spawn\n◦ Loose Loot (Meds, Medical supplies, Weapon mods, Currency)",
+   "quests": []
+  },
+  "5a0ee30786f774023b6ee08f": {
+   "title": "Health Resort west wing room 216 key",
+   "usage": "Unlocks room 216 of the West wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "In a key rack in west wing room 202 at the health resort.",
+      "On the floor below a key rack in the utility room next to west wing room 227 at the health resort.",
+      "On the desk in the office with the broken door on the second floor of the administration building at the health resort.",
+      "On a table in the hallway opposite east wing room 227 at the health resort.",
+      "In the key rack near the central stairs on the second floor of the east wing at the health resort.",
+      "On the floor below a key rack near the central stairs on the third floor of the east wing at the health resort."
+     ]
+    }
+   ],
+   "lock": "The second floor, room 216 of the West Wing in the Health Resort on Shoreline.",
+   "behind": "• 1x Weapon box (6x2)\n• 2x Weapon box (4x4)\n• 2x Grenade box\n• 1x weapon spawn M4A1\n• Loose loot (Electronics, Meds, Medical supplies, Provisions, loaded GEN M3 Magazines)\n• 1x LEDX Spawn",
+   "quests": []
+  },
+  "5a13f35286f77413ef1436b0": {
+   "title": "Health Resort east wing room 226 key",
+   "usage": "Unlocks room 226 of the Health Resort East wing on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "The second floor East wing of the resort, in a key rack near the central stairs.",
+      "In room East 218, in a knocked over shelf."
+     ]
+    }
+   ],
+   "lock": "The Second floor, room 226 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 226:\n◦ 1× Weapon box (6x4)\n◦ Multiple LEDX spawns\n◦ 1× MP-153 spawn\n◦ Loose loot (Currency, Provisions, Meds, Medical supplies)\n• Room 222:\n◦ 1× Physical Bitcoin spawn (inside of the cardboard box)\n◦ Three weapon spawns (one RSASS, one SV-98 and one MP5)\n◦ 1× Weapon box (6x4)\n◦ 1× Weapon Rack\n◦ 1× Grenade box\n◦ 1× Toolbox\n◦ Loose loot Valuables\n• Shared balcony:\n◦ 1x Weapon Locker",
+   "quests": []
+  },
+  "5a0eee1486f77402aa773226": {
+   "title": "Health Resort east wing room 328 key",
+   "usage": "Unlocks the door of room 328 in the East wing of the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On a table on the island, next to an outboard motor",
+      "On a desk inside the hydroelectric power station.",
+      "In a key rack in west wing room 202 at the health resort.",
+      "On the floor below a key rack in the utility room next to west wing room 227 at the health resort.",
+      "In the key rack near the central stairs on the second floor of the east wing at the health resort.",
+      "On the floor below a key rack near the central stairs on the third floor of the east wing at the health resort."
+     ]
+    }
+   ],
+   "lock": "The third floor, room 328 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 328:\n◦ 1× LEDX spawn\n◦ 1× Graphics card spawn\n◦ 2× Electronic Spawns\n◦ 1× Weapon Spawn\n◦ 1× PC block\n◦ 1× Sport bag\n◦ Loose loot (Weapon mods, Currency)\n• Connected utility room:\n◦ One table with Valuables and Roubles",
+   "quests": [
+    "Wet Job - Part 5"
+   ]
+  },
+  "5a0eed4386f77405112912aa": {
+   "title": "Health Resort east wing room 314 key",
+   "usage": "Unlocks room 314 of the East wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "At the \"checkpoint\" on the eastern side of the map, in a cabin on a wooden stool."
+     ]
+    }
+   ],
+   "lock": "The third floor, room 314 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 314:\n◦ 1× Weapon box (6x2)\n◦ 1× Weapon Spawn\n◦ Loose Loot (Meds, Medical supplies, Weapon mods, Currency)\n• Room 313:\n◦ 1x LEDX spawn\n◦ 1× Weapon box (6x4)\n◦ 1× Medbag\n◦ Loose Loot (Meds, Medical supplies, Weapon mods, Currency)",
+   "quests": []
+  },
+  "5a145d7b86f7744cbb6f4a13": {
+   "title": "Health Resort east wing room 308 key",
+   "usage": "Unlocks room 308 of the East wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "In cabin no. 1 in the lumber camp on top of a nightstand. The nightstand is between two beds that are end-to-end. The cabin is the closest one to the Yotota truck."
+     ]
+    }
+   ],
+   "lock": "The third floor, room 308 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 306:\n◦ 1× LEDX Skin Transilluminator spawn\n◦ 1× DVL-10 spawn\n◦ 1× Flyye MBSS backpack (UCP) spawn\n◦ 4× PC blocks\n◦ 1× Weapon box (4x4)\n◦ Rare spawn\n◦ Loose loot (Currency)\n• Room 308:\n◦ 1× Weapon Rack\n◦ 1× Weapon spawn\n◦ 1× Medcase\n◦ Loose loot (Currency)",
+   "quests": []
+  },
+  "5a145ebb86f77458f1796f05": {
+   "title": "Health Resort east wing room 316 key",
+   "usage": "Unlocks room 316 of the Health Resort East wing on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "Western side of the lake, in an open suitcase behind the crashed minivan."
+     ]
+    }
+   ],
+   "lock": "The third floor, room 316 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• Red keycard spawn location\n• One Weapon box (6x4)\n• One Weapon box (6x2)\n• One Medbag\n• One SV-98 Spawn\n• One attachment Spawn",
+   "quests": []
+  },
+  "5a13f46386f7741dd7384b04": {
+   "title": "Health Resort west wing room 306 key",
+   "usage": "Unlocks room 306 of the West wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "In the yard of the locked villa, on a stretcher next to the ambulance.",
+      "In the back of the ambulance that is parked in front of the health resort."
+     ]
+    },
+    {
+     "map": "Factory",
+     "spots": [
+      "In a locker on the second floor of the office area."
+     ]
+    }
+   ],
+   "lock": "The third floor, room 306 of the West Wing in the Health Resort on Shoreline.",
+   "behind": "• Blue keycard spawn location\n• Loose loot (Currency, Meds)\n• One weapon Spawn (M4A1)\n• Two dead Scavs",
+   "quests": [
+    "Health Care Privacy - Part 2"
+   ]
+  },
+  "5a13f24186f77410e57c5626": {
+   "title": "Health Resort east wing room 222 key",
+   "usage": "Unlocks room 222 of the East wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On a chair on the first floor of the power station"
+     ]
+    }
+   ],
+   "lock": "The second floor, room 222 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 222:\n◦ 1× Physical Bitcoin spawn (inside of the cardboard box)\n◦ Three weapon spawns (one RSASS, one SV-98 and one MP5)\n◦ 1× Weapon box (6x4)\n◦ 1× Weapon Rack\n◦ 1× Grenade box\n◦ 1× Toolbox\n◦ Loose loot Valuables\n• Room 226:\n◦ 1× Weapon box (6x4)\n◦ Multiple LEDX spawns\n◦ 1× MP-153 spawn\n◦ Loose loot (Currency, Provisions, Meds, Medical supplies)\n• Shared balcony:\n◦ 1x Weapon Locker",
+   "quests": []
+  },
+  "5a13eebd86f7746fd639aa93": {
+   "title": "Health Resort west wing room 218 key",
+   "usage": "Unlocks room 218 of the West wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "Spawns in a locker, in the toilet on the second floor of admin building in the resort"
+     ]
+    }
+   ],
+   "lock": "The second floor, room 218 of the West Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 218:\n◦ Red keycard spawn location\n◦ 2× weapon cabinets\n◦ 2× Wooden crate\n◦ 1× weapon spawn in bathroom (RSASS)\n◦ Loose loot (Currency, Provisions, Ammo packs)\n• Room 221:\n◦ 1× Weapon box (6x4)\n◦ 1× weapon spawn on the balcony (M4A1, M1A)\n◦ Loose loot (Currency, Meds, Medical supplies)\n• Room 222:\n◦ 3× Sports bag\n◦ 2× Medbag\n◦ 1× weapon spawn on the bed (AKM, SV-98)\n◦ Loose loot (Roubles)",
+   "quests": []
+  },
+  "5a0ec6d286f7742c0b518fb5": {
+   "title": "Health Resort west wing room 205 key",
+   "usage": "Unlocks room 205 of the West wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "Inside of the reception building at the boat launch. It sits on the ground at the base of the Drawers."
+     ]
+    }
+   ],
+   "lock": "The second floor, room 205 of the West Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 205:\n◦ 1× LEDX spawn\n◦ 1× Graphics Card spawn\n◦ 1× Toolbox\n◦ 1× Medcase\n◦ Loose loot (Meds, Medical supplies, Provisions).\n• Room 203:\n◦ Red keycard spawn location\n◦ LEDX spawn\n◦ 1× Weapon spawn (AR)\n◦ 1× Medbag\n◦ 1× Medcase\n◦ 1× Weapon box (6x2)\n◦ 1× Toolbox\n◦ 1× Sport bag\n◦ Loose loot (Meds, Medical supplies, Currency)",
+   "quests": []
+  },
+  "5a1452ee86f7746f33111763": {
+   "title": "Health Resort west wing room 222 key",
+   "usage": "Unlocks room 222 of the West wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The second floor, room 222 of the West wing in the Health Resort on Shoreline.",
+   "behind": "• Room 222:\n◦ 3× Sports bag\n◦ 2× Medbag\n◦ 1× weapon spawn on the bed (AKM, SV-98)\n◦ Loose loot (Roubles)\n• Room 221:\n◦ 1× Weapon box (6x4)\n◦ 1× weapon spawn on the balcony (M4A1, M1A)\n◦ Loose loot (Currency, Meds, Medical supplies)\n• Room 218:\n◦ Red keycard spawn location\n◦ 2× weapon cabinets\n◦ 2× Wooden crate\n◦ 1× weapon spawn in bathroom (RSASS)\n◦ Loose loot (Currency, Provisions, Ammo packs)",
+   "quests": []
+  },
+  "5a13ef0686f7746e5a411744": {
+   "title": "Health Resort west wing room 219 key",
+   "usage": "Unlocks room 219 of the West wing in the Health Resort on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "In the lighthouse at the pier, on the second floor on top of a broken wooden box.",
+      "In a key rack in the utility room next to west wing room 227 at the health resort.",
+      "In the key rack near the central stairs on the second floor of the east wing at the health resort."
+     ]
+    }
+   ],
+   "lock": "The second floor, room 219 of the West Wing in the Health Resort on Shoreline.",
+   "behind": "• Blue keycard spawn location\n• 1x Weapon cabinet\n• 1x Weapon box (6x4)\n• 1x BNTI Module-3M body armor spawn\n• 1x Weapon spawn (AK-74N)\n• Loose loot (Currency, Ammo packs, Meds, Medical supplies)",
+   "quests": [
+    "I Need More Power",
+    "Health Resort west wing room 220 key"
+   ]
+  },
+  "5a144bdb86f7741d374bbde0": {
+   "title": "Health Resort east wing room 205 key",
+   "usage": "Unlocks room 205 of the East wing in Health Resort on Shoreline",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "Spawns on a cardboard box, in the fenced off concrete area above the stream to the north of the resort"
+     ]
+    }
+   ],
+   "lock": "The second floor, room 205 of the East Wing in the Health Resort on Shoreline.",
+   "behind": "• Room 205:\n◦ 2× Medcase\n◦ 1× Sports bag\n◦ 1× Weapon cabinet\n◦ Loose loot (Currency)\n• Room 206:\n◦ Red keycard spawn location\n◦ 2× Weapon box (6x2)\n◦ 2× Weapon box (4x4)\n◦ 1× Weapon Spawn (AKM)\n◦ 1× Weapon Spawn (AKS-74UB)\n◦ Rare loose loot\n◦ Loose loot (Meds, Medical supplies)",
+   "quests": []
+  },
+  "679b9716597ba2ed120c3d3f": {
+   "title": "Knossos LLC facility key",
+   "usage": "Unlocks the door to the The Labyrinth transit on Shoreline.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In different locations at the health resort on Shoreline. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "In the basement of the health resort west wing on Shoreline.",
+   "behind": "Transit to The Labyrinth.",
+   "quests": [
+    "Offensive Reconnaissance",
+    "Hidden Layer"
+   ]
+  },
+  "63a39f08cd6db0635c197600": {
+   "title": "Pinewood hotel room 215 key",
+   "usage": "Unlocks Room 215 on the second floor of the Pinewood hotel on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Room 215 on the second floor of the northern Pinewood hotel building at Streets of Tarkov.",
+   "behind": "• 1x Plastic suitcase (locked)\n• Loose loot (Provisions, Electronics, Energy elements, Flammable materials)",
+   "quests": [
+    "Watching You"
+   ]
+  },
+  "6582dbf0b8d7830efc45016f": {
+   "title": "Relaxation room key",
+   "usage": "Unlocks the door to the \"Hive\" hookah lounge in the Malevicha street no. 5 building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "In different locations inside the Zmeisky 6 building at Streets of Tarkov. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to the \"Hive\" hookah lounge in the Malevicha street no. 5 building at Streets of Tarkov",
+   "behind": "• Loose loot (Valuables, Drinks)\n• Multiple Sports bags\n• Possible LBT-6094A Slick Plate Carrier (Black) on the mannequin\n• Possible LBT-6094A Slick Plate Carrier (Olive Drab) on the mannequin\n• Possible LBT-6094A Slick Plate Carrier (Coyote Tan) on the mannequin\n• Possible HighCom Trooper TFO body armor (MultiCam) on the mannequin\n• Possible BNTI Zhuk body armor (EMR) on the mannequin\n• Possible Interceptor OTV body armor (UCP) on the mannequin",
+   "quests": [
+    "The Secret to Productivity"
+   ]
+  },
+  "63a3a93f8a56922e82001f5d": {
+   "title": "Abandoned factory marked key",
+   "usage": "Unlocks the marked room on the third floor of the abandoned factory on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Marked room on the third floor of the northern abandoned factory building at Streets of Tarkov.",
+   "behind": "• 2x Weapon box (6x2)\n• Loose loot (multiple very rare Valuables, Weapons, Containers, Currency, Keycards)",
+   "quests": [
+    "Broadcast - Part 4",
+    "They Are Already Here",
+    "The Ticket"
+   ]
+  },
+  "63a71ed21031ac76fe773c7f": {
+   "title": "Financial institution small office key",
+   "usage": "Unlocks an office on the first floor of the financial institution on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Office on the first floor of the financial institution building at Streets of Tarkov.",
+   "behind": "• 1x Jacket\n• 3x Drawer\n• 1x Safe\n• 2x PC block",
+   "quests": []
+  },
+  "63a39667c9b3aa4b61683e98": {
+   "title": "Financial institution office key",
+   "usage": "Unlocks an office on the second floor of the financial institution on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Office on the second floor of the financial institution building at Streets of Tarkov.",
+   "behind": "• 5x PC block\n• 1x Sport bag\n• Loose loot (Valuables, Provisions, Building materials, Household materials, Energy elements)",
+   "quests": []
+  },
+  "63a39f6e64283b5e9c56b289": {
+   "title": "Iron gate key",
+   "usage": "Unlocks prison cells on the third floor of the Chekannaya 15 apartment building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": null,
+   "behind": "• 2x Dead Scav (both in Cell 1)\n• Loose loot (Valuables, Provisions, Stimulants, Electronics, Paper ammo boxes, Other items)",
+   "quests": [
+    "House Arrest",
+    "Debtor"
+   ]
+  },
+  "63a39fd1c9b3aa4b61683efb": {
+   "title": "Stair landing key",
+   "usage": "Unlocks a door to the eastern staircase on the second floor of the Chekannaya 15 apartment building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the eastern staircase on the second floor of the Chekannaya 15 apartment building at Streets of Tarkov. Only accessible via the western staircase from the third floor through a hole in the floor of cell #5. The debris in the second floor hallway can only be passed by proning.",
+   "behind": "No loot, but the ability to jump onto the stair landing that connects the second with the first floor, or straight down to the first floor.",
+   "quests": []
+  },
+  "63a39fc0af870e651d58e6ae": {
+   "title": "Chekannaya 15 apartment key",
+   "usage": "Unlocks the easternmost apartment on the second floor of the Chekannaya 15 apartment building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "The easternmost door on the second floor of the Chekannaya 15 apartment building at Streets of Tarkov. Only accessible via the western staircase from the third floor through a hole in the floor of cell #5. The debris in the second floor hallway can only be passed by proning.",
+   "behind": "• Loose loot (Valuables, Electronics, Stimulants)",
+   "quests": [
+    "Debtor",
+    "House Arrest"
+   ]
+  },
+  "63a39e1d234195315d4020bd": {
+   "title": "Primorsky 46-48 skybridge key",
+   "usage": "Unlocks a door at the skybridge which connects the Primorsky 46 and 48 buildings on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "Inside the \"Brodion\" pub, on the shelf behind the bar counter. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to the Primorsky 48 apartment no. 10 at the skybridge which connects it with the Primorsky 46 staircase at Streets of Tarkov. The apartment 10 entrance door can be breached from the inside to leave.",
+   "behind": "• 1x PC block\n• Loose loot (Valuables, Electronics)",
+   "quests": [
+    "Ballet Lover",
+    "Audiophile",
+    "Spotter"
+   ]
+  },
+  "63a71eb5b7f4570d3a29316b": {
+   "title": "Primorsky 48 apartment key",
+   "usage": "Unlocks the livingroom in apartment 6 on the second floor of the Primorsky 48 building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Living room door in apartment 6 on the second floor of the Primorsky 48 building at Streets of Tarkov. The entrance is on the backyard side.",
+   "behind": "• Loose loot (Valuables, Electronics)",
+   "quests": []
+  },
+  "64ccc2111779ad6ba200a139": {
+   "title": "Tarbank cash register department key",
+   "usage": "Unlocks two cash register booths on the first floor of the Tarbank on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Cash register booths on the first floor of the Tarbank on Streets of Tarkov",
+   "behind": "• 1x Bank cash register in each booth\n• 1x Bank safe in each booth",
+   "quests": []
+  },
+  "63a39dfe3901f439517cafba": {
+   "title": "Zmeisky 3 apartment 8 key",
+   "usage": "Unlocks apartment 8 on the second floor of the Zmeisky 3 building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to apartment 8 on the second floor of the Zmeisky 3 building at Streets of Tarkov. The entrance is on the backyard side.",
+   "behind": "• 1x Sport bag\n• 1x Jacket\n• Loose loot (Valuables)",
+   "quests": []
+  },
+  "68e960db934bf7b02d005dab": {
+   "title": "Zmeisky 3 apartment key",
+   "usage": "Unlocks apartment 7 on the first floor of the Zmeisky 3 building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to apartment 7 on the first floor of the Zmeisky 3 building at Streets of Tarkov. The entrance is on the backyard side.",
+   "behind": "• Loose loot (Valuables, Household materials, Provisions)",
+   "quests": [
+    "Accidental Witness"
+   ]
+  },
+  "63a39e49cd6db0635c1975fc": {
+   "title": "Archive room key",
+   "usage": "Unlocks the archive room on the second floor of the Zmeisky 3a building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the archive room on the second floor of the Zmeisky 3a building at Streets of Tarkov. The entrance to the building is on the backside.",
+   "behind": "• 2x Drawer\n• 1x Safe",
+   "quests": []
+  },
+  "63a39df18a56922e82001f25": {
+   "title": "Zmeisky 5 apartment 20 key",
+   "usage": "Unlocks apartment 20 on the fifth floor of the Zmeisky 5 building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to apartment 20 on the fifth floor of the Zmeisky 5 building at Streets of Tarkov.",
+   "behind": "• 1x Sport bag\n• Loose loot (Energy elements, Electronics, Provisions, Valuables)",
+   "quests": []
+  },
+  "63a39cb1c9b3aa4b61683ee2": {
+   "title": "Construction site bunkhouse key",
+   "usage": "Unlocks the second floor of the bunkhouse at the construction site on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door on the second floor of the bunkhouse which is located at the construction site at Streets of Tarkov.",
+   "behind": "• 2x Jacket\n• 1x Medcase\n• 1x Sport bag\n• Loose loot (Medical supplies)",
+   "quests": []
+  },
+  "63a399193901f439517cafb6": {
+   "title": "Car dealership director's office room key",
+   "usage": "Unlocks the director's office in the closed second floor section of the LexOs car dealership on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Office in the closed second floor section of the LexOs car dealership at Streets of Tarkov. Requires a Car dealership closed section key to enter.",
+   "behind": "• 2x Drawer\n• 1x PC block\n• Loose loot (Valuables)",
+   "quests": [
+    "Your Car Needs a Service"
+   ]
+  },
+  "63a397d3af870e651d58e65b": {
+   "title": "Car dealership closed section key",
+   "usage": "Unlocks the closed section on the second floor of the LexOs car dealership on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On Kaban"
+     ]
+    }
+   ],
+   "lock": "Grate door on the second floor of the LexOs car dealership at Streets of Tarkov.",
+   "behind": "• 1x Technical supply crate\n• 1x Wooden crate\n• 2x Weapon box (6x2)\n• 1x Weapon box (6x6)\n• 1x Weapon box (6x4)\n• 1x PC block\n• Loose loot (Weapon mods, Household materials, Other items)\n• Car dealership director's office room key lock location",
+   "quests": [
+    "Your Car Needs a Service",
+    "Blue Fire",
+    "Mysterious room marked key"
+   ]
+  },
+  "63a39fdf1e21260da44a0256": {
+   "title": "Cargo container mesh door key",
+   "usage": "Unlocks the closed section of a container behind the LexOs car dealership on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Grate door inside a shipping container between the LexOs car dealership and the car workshop at Streets of Tarkov.",
+   "behind": "• 1x Grenade box\n• 1x Weapon box (6x6)\n• 1x Weapon box (6x2)\n• Loose loot (Weapon mods)",
+   "quests": []
+  },
+  "64ce572331dd890873175115": {
+   "title": "Aspect company office key",
+   "usage": "Unlocks the door to the \"Aspect\" company building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On Kaban"
+     ]
+    }
+   ],
+   "lock": "Door to the \"Aspect\" company building at Streets of Tarkov.",
+   "behind": "The \"Aspect\" company building.",
+   "quests": []
+  },
+  "63a39ce4cd6db0635c1975fa": {
+   "title": "Supply department director's office key",
+   "usage": "Unlocks the supply director's office on the second floor of the \"Aspect\" LLC building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Office on the second floor of the \"Aspect\" LLC building at Streets of Tarkov.",
+   "behind": "• 1x Drawer\n• 1x Safe\n• Loose loot (Provisions, Flammable materials)",
+   "quests": []
+  },
+  "63a71e922b25f7513905ca20": {
+   "title": "Concordia apartment 64 key",
+   "usage": "Unlocks apartment 64 on the second floor of the Concordia building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to apartment 64 on the second floor of the Concordia building at Streets of Tarkov.",
+   "behind": "• Loose loot (Valuables, Provisions, Paper ammo boxes, Other items)\n• Concordia apartment 64 office room key lock location",
+   "quests": []
+  },
+  "64ccc1ec1779ad6ba200a137": {
+   "title": "Concordia apartment 8 home cinema key",
+   "usage": "Unlocks the home cinema room in apartment 8 on the third floor of the Concordia building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Home cinema door in apartment 8 on the third floor of the Concordia building at Streets of Tarkov.\n\nIt is also possible to reach the room through a breakthrough from apartment 34.",
+   "behind": "• Loose loot (Valuables, Electronics)",
+   "quests": []
+  },
+  "63a71e781031ac76fe773c7d": {
+   "title": "Concordia apartment 8 room key",
+   "usage": "Unlocks the bedroom in apartment 8 on the third floor of the Concordia building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Bedroom door in apartment 8 on the third floor of the Concordia building at Streets of Tarkov.\n\nIt is also possible to reach the room through a breakthrough from apartment 34.",
+   "behind": "• Loose loot (Valuables)",
+   "quests": []
+  },
+  "63a71e86b7f4570d3a293169": {
+   "title": "Concordia apartment 64 office room key",
+   "usage": "Unlocks the office in apartment 64 on the second floor of the Concordia building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the office in apartment 64 on the second floor of the Concordia building at Streets of Tarkov. Requires a Concordia apartment 64 key to enter.",
+   "behind": "• 1x PC block\n• Loose loot (Electronics, Other items)",
+   "quests": []
+  },
+  "64ccc1f4ff54fb38131acf27": {
+   "title": "Concordia apartment 63 room key",
+   "usage": "Unlocks the living room in apartment 63 on the second floor of the Concordia building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Living room door in apartment 63 on the second floor of the Concordia building at Streets of Tarkov.",
+   "behind": "• Loose loot (Valuables, Electronics, Medical items, Stimulants)",
+   "quests": []
+  },
+  "64ccc1d4a0f13c24561edf27": {
+   "title": "Concordia apartment 34 room key",
+   "usage": "Unlocks the bedroom in apartment 34 on the third floor of the Concordia building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Bedroom door in apartment 34 on the third floor of the Concordia building at Streets of Tarkov.",
+   "behind": "• Loose loot (Valuables, Electronics, Provisions, Paper ammo boxes)",
+   "quests": []
+  },
+  "63a39c7964283b5e9c56b280": {
+   "title": "Concordia security room key",
+   "usage": "Unlocks the security room in the parking garage of the Concordia building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door in the basement parking garage of the Concordia building at Streets of Tarkov.",
+   "behind": "• 2x PC block\n• 1x Safe\n• Loose loot (Weapons, Weapon mods)",
+   "quests": [
+    "Surveillance"
+   ]
+  },
+  "63a39c69af870e651d58e6aa": {
+   "title": "Store manager's key",
+   "usage": "Unlocks the manager's office on the second floor of the \"Sparja\" store on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Office on the second floor of the \"Sparja\" store at Streets of Tarkov. It can be accessed via the staircase in the eastern personnel tract.",
+   "behind": "• 2x Drawer\n• 1x PC block\n• 1x Safe\n• 1x Sport bag\n• Loose loot (Flammable materials, Household materials)",
+   "quests": []
+  },
+  "68e63b56ad8cba49190ea529": {
+   "title": "Rus Post car key",
+   "usage": "Unlocks the blue post service van in front of the post office on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On the ground next to the back right wheel of the blue post service van in front of the post office. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "The driver's door and the trunk of the blue post service van in front of the post office at Streets of Tarkov.",
+   "behind": "Nothing unless the story chapter Blue Fire is active.",
+   "quests": [
+    "Blue Fire"
+   ]
+  },
+  "68e96180901b9b10270f1eed": {
+   "title": "Cult victim's apartment key",
+   "usage": "Unlocks apartment 5 on the third floor of the old apartment building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": "Lighthouse",
+     "spots": [
+      "In one of four locations in one of the houses in the village on the eastern island. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to apartment 5 on the third floor of the old apartment building behind the Klimov shopping mall at Streets of Tarkov.",
+   "behind": "• Loose loot (Provisions)",
+   "quests": [
+    "They Are Already Here"
+   ]
+  },
+  "64ccc1fe088064307e14a6f7": {
+   "title": "Beluga restaurant director key",
+   "usage": "Unlocks the director's office on the third floor of the Beluga restaurant on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Doors to the director's office on the third floor of the Beluga restaurant at Streets of Tarkov.",
+   "behind": "• 1x Locked Safe - There is currently no key for it in the game\n• 1x PC block\n• 1x Jacket\n• 2x Drawer\n• 1x Sports bag\n• Loose loot (Valuables, Household materials, Provisions, Other items)",
+   "quests": [
+    "Beyond the Red Meat"
+   ]
+  },
+  "68c14b734a7e0bada00f8fd4": {
+   "title": "Reprogrammed keycard for A.P.'s apartment lock (Green)",
+   "usage": "Unlocks the door to the hidden room in apartment 1 on the second floor of the Cardinal apartment complex on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "None."
+     ]
+    }
+   ],
+   "lock": "Door to the hidden room in apartment 1 on the second floor of the Cardinal apartment complex on Streets of Tarkov. A TerraGroup corporate apartment key is required to acces it.",
+   "behind": "• 1x Weapon locker\n• Loose loot (Valuables)",
+   "quests": [
+    "The Unheard"
+   ]
+  },
+  "68c165f1903341d88b092b2a": {
+   "title": "Cardinal apartment key",
+   "usage": "* Unlocks apartment 2 on the second floor of the Cardinal apartment complex on Streets of Tarkov.\n* Unlocks the locked bedroom in apartment 2 on the second floor of the Cardinal apartment complex on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "In the safe inside Kruglov's office. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": null,
+   "behind": "• 2x Sports bag\n• 1x PC block\n• 2x Toolbox\n• 2x Safe (locked)\n• 1x Weapon locker\n• Loose loot (Valuables, Medical items, Paper ammo boxes, Provisions, Other items)\n• Locked bedroom:\n◦ Loose loot (Valuables)\n◦ 1x Sports bag\n◦ 1x Safe (locked) requiring TerraGroup Labs keycard (Black) to be swiped at the keycard panel behind the painting, while no use gets consumed",
+   "quests": []
+  },
+  "67ee7680562d5057e60ccc3a": {
+   "title": "TerraGroup corporate apartment key",
+   "usage": "Unlocks apartment 1 on the second floor of the Cardinal apartment complex on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On a nightstand in east wing room 305 at the health resort. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to apartment 1 on the second floor of the Cardinal apartment complex at Streets of Tarkov.",
+   "behind": "• 1x Plastic suitcase\n• Reprogrammed keycard for A.P.'s apartment lock (Green) lock location",
+   "quests": [
+    "The Unheard"
+   ]
+  },
+  "64ccc24de61ea448b507d34d": {
+   "title": "TerraGroup security armory key",
+   "usage": "Unlocks the security armory on the first floor of the TerraGroup security post building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Security armory on the first floor of the TerraGroup security post building at Streets of Tarkov.",
+   "behind": "• Loose loot (Paper ammo boxes)\n• 1x Weapon box (6x6)\n• 1x Weapon box (4x4)\n• 1x PC block\n• 2x Wooden crate\n• 1x Grenade box\n• 1x Weapon locker\n• 2x Weapon rack (possible M4A1 Carbine variant spawn)",
+   "quests": []
+  },
+  "64ccc206793ca11c8f450a38": {
+   "title": "TerraGroup meeting room key",
+   "usage": "Unlocks the meeting room on the first floor of the TerraGroup security post building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Meeting room on the first floor of the TerraGroup security post building at Streets of Tarkov.",
+   "behind": "• 2x Intelligence folder spawn\n\n• 1x Drawer",
+   "quests": [
+    "The Secret Recipe"
+   ]
+  },
+  "68e95d71a3d110355b03e529": {
+   "title": "Elektronik's key",
+   "usage": "Unlocks apartment 2 on the first floor of the Klimova 14A building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "None."
+     ]
+    }
+   ],
+   "lock": "Door to apartment 2 on the first floor of the Klimova 14A building at Streets of Tarkov. The entrance is on the backyard side.",
+   "behind": "• Loose loot (Provisions)\n• 1x Drawer",
+   "quests": [
+    "The Ticket"
+   ]
+  },
+  "64d4b23dc1b37504b41ac2b6": {
+   "title": "Rusted bloody key",
+   "usage": "Unlocks a door on the fourth floor of the Klimova 16A building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "Inside the Klimov shopping mall, on the first floor on a pegboard underneath the escalators. It can appear at both spawn locations in the same raid."
+     ]
+    }
+   ],
+   "lock": "Door on the fourth floor of the Klimova 16A building at Streets of Tarkov.",
+   "behind": "• Keys\n• Valuables\n• Medical supplies\n• Info items\n• Tools\n• Flammable materials\n• Medical items\n• Stimulants\n• Drinks\n• Paper ammo boxes\n• M9A3 spawn\n• M870 spawn\n• Mosin 7.62x54R bolt-action rifle (Sniper) spawn",
+   "quests": [
+    "The Door"
+   ]
+  },
+  "64ccc268c41e91416064ebc7": {
+   "title": "PE teacher's office key",
+   "usage": "Unlocks the physical education teacher's office in the sports hall on the first floor of the school no. 30 on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the physical education teacher's office in the sports hall on the first floor of the school no. 30 at Streets of Tarkov.",
+   "behind": "• Loose loot (Valuables, Provisions)",
+   "quests": []
+  },
+  "64ccc246ff54fb38131acf29": {
+   "title": "X-ray room key",
+   "usage": "Unlocks the x-ray control room on the second floor of the children's polyclinic no. 69 on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "In different locations in the vet clinic.",
+      "In different locations in the polyclinic."
+     ]
+    }
+   ],
+   "lock": "Door to the x-ray control room on the second floor of the children's polyclinic no. 69 at Streets of Tarkov.",
+   "behind": "• 1x Drawer\n• Loose loot (Medical supplies)",
+   "quests": [
+    "Pets Won't Need It"
+   ]
+  },
+  "6582dc4b6ba9e979af6b79f4": {
+   "title": "MVD academy entrance hall guard room key",
+   "usage": "Unlocks the guard room in the ministry of the interior academy building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the reception in the ministry of the interior academy building at Streets of Tarkov.",
+   "behind": "• Loose loot (Valuables, Paper ammo boxes)\n• Dead Scav\n• Sports bag\n• ORSIS T-5000M spawn\n• PB pistol spawn",
+   "quests": []
+  },
+  "6582dc5740562727a654ebb1": {
+   "title": "Real estate agency office room key",
+   "usage": "Unlocks an office on the second floor of the real estate agency on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On the first floor of the real estate agency, in a key rack behind the reception desk."
+     ]
+    }
+   ],
+   "lock": "Office on the second floor of the real estate agency at Streets of Tarkov.",
+   "behind": "• Loose loot (Valuables, Electronics, Energy elements)",
+   "quests": [
+    "Properties All Around"
+   ]
+  },
+  "6582dbe43a2e5248357dbe9a": {
+   "title": "\"Negotiation\" room key",
+   "usage": "Unlocks the negotiation room inside the Zmeisky 6 building on Streets of Tarkov.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "In the middle office inside the Zmeisky 6 building at Streets of Tarkov."
+     ]
+    }
+   ],
+   "lock": "Door to the negotiation room inside the Zmeisky 6 building at Streets of Tarkov.",
+   "behind": "• Loose loot (Valuables, Drinks, Building materials, Electronics)\n• Medbag\n• PC block\n• Relaxation room key spawn location on the metal table",
+   "quests": [
+    "Corporate Perks"
+   ]
+  },
+  "6866adbe09b973bf45094339": {
+   "title": "Pier door key",
+   "usage": "Unlocks the pier door on Terminal.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In a safe inside the pumping station building (PS) on Terminal. A single key is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to the pier on Terminal.",
+   "behind": "The \"Zubr Boat\" extraction. Entering the door starts the 3 minute extraction timer.",
+   "quests": []
+  },
+  "6866ad3853330f9b83064cf9": {
+   "title": "Black Division keycard",
+   "usage": "Unlocks a passageway in the administration building (D3) on Terminal.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In a Weapon box (6x2) inside the seaport terminal building (MS) on Terminal. A single keycard is guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to a passageway in the administration building (D3) on Terminal.",
+   "behind": "Way to the pumping station building.",
+   "quests": []
+  },
+  "5c1e2a1e86f77431ea0ea84c": {
+   "title": "TerraGroup Labs manager's office room key",
+   "usage": "Unlocks the door to the laboratory manager office (O21) in The Lab.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "Room O13 on a lit up desk, left of the glass door entrance",
+      "In room O22, in the conference room on the right side of the powered laptop",
+      "Y11 (the parking garage) sitting on the passenger side seat of the SUV that has the Weapon box (6x2) in the trunk"
+     ]
+    }
+   ],
+   "lock": "Laboratory manager office (O21) on the second level in The Lab.",
+   "behind": "• Blue keycard spawn location\n• 2x PC block\n• 1x Drawer\n• 1x Safe\n• 1x Weapon box (6x4)\n• 4x Valuables spawns\n• Intelligence folder spawn on the desk",
+   "quests": [
+    "Following the Bread Crumbs"
+   ]
+  },
+  "6a33c17933cff6b88c08902e": {
+   "title": "Admin's key",
+   "usage": "Unlocks the door to the system admin's office in The Lab.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "One is guaranteed to spawn in The Wedge's pockets on The Lab",
+      "The Wedge's guards on The Lab",
+      "Black Division on The Lab"
+     ]
+    }
+   ],
+   "lock": "System admin's office on the first level in The Lab.",
+   "behind": "• A switch to enable the extractions.\n• A code to unlock any keypad on the map. The code changes in every raid.\n• Loose Electronics on the shelves.",
+   "quests": [
+    "Key to Every Door",
+    "My Blood Type Mark is on the Sleeve",
+    "Patch the Vulnerability"
+   ]
+  },
+  "5c1f79a086f7746ed066fb8f": {
+   "title": "TerraGroup Labs arsenal storage room key",
+   "usage": "Unlocks the storage room door inside the laboratory security arsenal (R23) in The Lab.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "Sitting on a chair within a shack on top of the hill with the transmission tower",
+      "Room 215 of the three-story dorms: Inside a night stand",
+      "On the counter behind the cash registers in the new gas station",
+      "In the guard building of the crane yard next to the new gas station, in the right side shelf of the desk (Requires a Factory emergency exit key to access)."
+     ]
+    }
+   ],
+   "lock": "Door to the storage room inside the laboratory security arsenal (R23) on the second level in The Lab. A TerraGroup Labs keycard (Red) is required to access it.",
+   "behind": "• Valuables\n• Weapon mods\n• Meds and Medical supplies\n• One Drawer",
+   "quests": []
+  },
+  "5efde6b4f5448336730dbd61": {
+   "title": "Keycard with a blue marking",
+   "usage": "Unlocks Sanitar's room on the second level of The Lab.",
+   "found": [],
+   "lock": "The door just in front of the Laboratory block (G22) on the second level in The Lab.\n\nLocation marked on map\n\nThe door",
+   "behind": "• Loose loot (Meds and Medical supplies)\n• 1x Jacket\n• Ophthalmoscope spawns\n• Stimulants",
+   "quests": [
+    "Therapist",
+    "TerraGroup Employee",
+    "Therapist",
+    "Health Care Privacy - Part 6"
+   ]
+  },
+  "5c1d0efb86f7744baf2e7b7b": {
+   "title": "TerraGroup Labs keycard (Red)",
+   "usage": "Unlocks the door to the laboratory security arsenal (R23) in The Lab.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "On Cultists",
+      "On The Goons",
+      "In Rare valuables crates"
+     ]
+    },
+    {
+     "map": "Factory",
+     "spots": [
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On Partisan",
+      "At the three-story dorms in the \"marked room\"",
+      "At the \"giving tree\" behind the \"Old Gas Station\""
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "On Shturman",
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "On Killa",
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On Glukhar",
+      "In the \"marked rooms\" RB-BK, RB-PKPM and RB-VO"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On Kaban",
+      "In the \"marked room\" at the abandoned factory",
+      "In the \"marked room\" at Chekannaya 13"
+     ]
+    },
+    {
+     "map": "Lighthouse",
+     "spots": [
+      "On Partisan",
+      "In Leons's hideout on the second floor of a house in the village, tucked in the printer"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On Partisan",
+      "East wing room 206 (can also be accessed via East wing room 205) in the resort: On the floor between the nightstand and the bed.",
+      "East wing room 221 (through 218) in the resort on the table with the laptop",
+      "East wing room 316 in the resort: On the floor between the nightstand and the bed.",
+      "West wing in the resort: In the basement gym in a locker",
+      "West wing room 218 in the resort: On top of a water barrel (can also be accessed through West wing room 221 and West wing room 222)",
+      "West wing room 203 (can also be accessed via West wing room 205) in the resort: On the floor in front of the nightstand beside the bed.",
+      "In the resort: Administration building - next to the Health resort management office with locked safe, on the table under the ashtray"
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "In Kruglov's office (R22) and the safe inside of it",
+      "In the quarantine zone room (G11), on the desk with the desk lamp. TerraGroup Labs keycard (Blue) is required for entry.",
+      "In the parking garage alarm system control room, on a desk. TerraGroup Labs keycard (Yellow) is required for entry.",
+      "On the bench opposite the vending machines in the cafeteria (R24) on the second level."
+     ]
+    }
+   ],
+   "lock": "Laboratory security arsenal (R23) on the second level in The Lab.",
+   "behind": "• Multiple Ammunition spawns\n• Multiple Weapon mods spawns\n• Multiple MP5 and modded M4A1 spawns on the rack, as well as a M4A1 SOPMOD II spawn on the table\n• Possible Antique teapot or Antique vase on the ground behind the desk\n• Possible Intelligence folder on the desk\n• TerraGroup Labs arsenal storage room key lock location",
+   "quests": []
+  },
+  "5c1d0dc586f7744baf2e7b79": {
+   "title": "TerraGroup Labs keycard (Green)",
+   "usage": "Unlocks the door to the laboratory block (G22) in The Lab.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "On Cultists",
+      "On The Goons",
+      "In Rare valuables crates"
+     ]
+    },
+    {
+     "map": "Factory",
+     "spots": [
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On Partisan",
+      "At the three-story dorms in the \"marked room\"",
+      "At the \"giving tree\" behind the \"Old Gas Station\""
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "On Shturman",
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "On Killa",
+      "On Tagilla",
+      "In Grumpy's hideout inside the power station, on the floor between the lockers"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On Glukhar",
+      "In the \"marked rooms\" RB-BK, RB-PKPM and RB-VO"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On Kaban",
+      "In the \"marked room\" at the abandoned factory",
+      "In the \"marked room\" at Chekannaya 13"
+     ]
+    },
+    {
+     "map": "Lighthouse",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "In Kruglov's office (R22) and the safe inside of it",
+      "On a shelf between folders in the back part of the hallway that leads to the security arsenal (R23)",
+      "Next to a keyboard at the reception desk of the managers office (O21) on the second level",
+      "On a desk next to the quarantine zone room (G11)"
+     ]
+    }
+   ],
+   "lock": "Laboratory block (G22) on the second level in The Lab.",
+   "behind": "• 3x Medcase\n• Loose Medical supplies on shelves and tables\n• Black keycard spawn location on the table next to the computer\n• Possible LEDX Skin Transilluminator in the metal containers\n• Possible Intelligence folder and TerraGroup \"Blue Folders\" materials spawn near the laptop\n• Possible Intelligence folder and TerraGroup \"Blue Folders\" materials spawn on the shelf next to the door to the side room\n• 2x Weapon box (4x4)\n• Loose Weapon mods and Ammunition on the shelf\n• A possible Weapons spawn on the front desk",
+   "quests": []
+  },
+  "5c1d0d6d86f7744bb2683e1f": {
+   "title": "TerraGroup Labs keycard (Yellow)",
+   "usage": "Unlocks the door to the parking garage alarm system control room in The Lab.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "On Cultists",
+      "On The Goons",
+      "In Rare valuables crates"
+     ]
+    },
+    {
+     "map": "Factory",
+     "spots": [
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On Partisan",
+      "At the three-story dorms in the \"marked room\"",
+      "At the \"giving tree\" behind the \"Old Gas Station\""
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "On Shturman",
+      "On Partisan",
+      "In Shatun's hideout inside a house in the eastern village, tucked in the right side of the sofa"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On Partisan",
+      "West Wing Office 112 in the resort: On the table",
+      "West wing room 303 in the resort: On the floor under a pair of jeans next to the bed.",
+      "In the resort: Administration building - in the Health resort management office with locked safe, on the desk",
+      "Second floor of the locked cottage in the room with the safe and the gun locker, between books on the wall shelf",
+      "In the trunk of the blue SMW car at the unlocked cottage"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "On Killa",
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On Glukhar",
+      "In the \"marked rooms\" RB-BK, RB-PKPM and RB-VO"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On Kaban",
+      "In the \"marked room\" at the abandoned factory",
+      "In the \"marked room\" at Chekannaya 13"
+     ]
+    },
+    {
+     "map": "Lighthouse",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "In Kruglov's office (R22) and the safe inside of it",
+      "In R24 (cafeteria) on the center cafeteria table",
+      "In O21 on the table in front of the managers office",
+      "In O11 on one of the work tables"
+     ]
+    }
+   ],
+   "lock": "Parking garage alarm system control panel on the second level in The Lab",
+   "behind": "• Red keycard spawn location\n• One weapon safe\n• 1x PC block\n• 1x Drawer\n• Weapon mods on the tables\n• Valuables, Electronics and Medical supplies",
+   "quests": []
+  },
+  "5c1d0c5f86f7744bb2683cf0": {
+   "title": "TerraGroup Labs keycard (Blue)",
+   "usage": "Unlocks the door to the laboratory quarantine zone (G11) in The Lab.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "On Cultists",
+      "On The Goons",
+      "In Rare valuables crates"
+     ]
+    },
+    {
+     "map": "Factory",
+     "spots": [
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On Partisan",
+      "At the three-story dorms in the \"marked room\"",
+      "At the \"giving tree\" behind the \"Old Gas Station\""
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "On Shturman",
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "On Killa",
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On Glukhar",
+      "In the \"marked rooms\" RB-BK, RB-PKPM and RB-VO"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On Kaban",
+      "In the \"marked room\" at the abandoned factory",
+      "In the \"marked room\" at Chekannaya 13"
+     ]
+    },
+    {
+     "map": "Lighthouse",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On Partisan",
+      "On the step of the passenger side of the ambulance that is parked in front of the resort",
+      "West Wing Office 104 in the resort: On a desk between lamp and files",
+      "West Wing Office 112 in the resort: On a lowboard bottom left of the TV",
+      "West wing room 325 in the resort: On the floor under the bed.",
+      "West wing room 306 in the resort: On the sink in the bathroom.",
+      "West wing room 219 in the resort: On the table. Note: Currently not possible to be picked up."
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "In Kruglov's office (R22) and the safe inside of it",
+      "In the laboratory manager office (O21), on a lounge chair. TerraGroup Labs manager's office room key is required for entry.",
+      "On the first level in the recreation area (R11), under a bench on the parking garage side."
+     ]
+    }
+   ],
+   "lock": "Laboratory quarantine zone (G11) on the first level in The Lab.",
+   "behind": "• Red keycard spawn location\n• Possible LEDX Skin Transilluminator spawn on shelves\n• 2× Medcases\n• Loose loot (Meds, Medical supplies)",
+   "quests": []
+  },
+  "5c1e495a86f7743109743dfb": {
+   "title": "TerraGroup Labs keycard (Violet)",
+   "usage": "Unlocks the door to the laboratory security post (R23) in The Lab.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "On Cultists",
+      "On The Goons",
+      "In Rare valuables crates"
+     ]
+    },
+    {
+     "map": "Factory",
+     "spots": [
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On Partisan",
+      "At the three-story dorms in the \"marked room\"",
+      "At the \"giving tree\" behind the \"Old Gas Station\""
+     ]
+    },
+    {
+     "map": "Shoreline",
+     "spots": [
+      "On Partisan",
+      "In Voron's hideout inside the hydroelectric power station, on the table"
+     ]
+    },
+    {
+     "map": "Interchange",
+     "spots": [
+      "On Killa",
+      "On Tagilla"
+     ]
+    },
+    {
+     "map": "Reserve",
+     "spots": [
+      "On Glukhar",
+      "In the \"marked rooms\" RB-BK, RB-PKPM and RB-VO"
+     ]
+    },
+    {
+     "map": "Streets of Tarkov",
+     "spots": [
+      "On Kaban",
+      "In the \"marked room\" at the abandoned factory",
+      "In the \"marked room\" at Chekannaya 13"
+     ]
+    },
+    {
+     "map": "Lighthouse",
+     "spots": [
+      "On Partisan"
+     ]
+    },
+    {
+     "map": "Woods",
+     "spots": [
+      "On Shturman",
+      "On Partisan",
+      "On the passenger side footwell of the black SUV that is parked in front of the blue warehouse in the lumber camp",
+      "In a brick house north of the lumber camp on the edge of the desk right to the entrance, in front of the open book under the light emitted by the lamp",
+      "Inside the driver side door of the SUV at the checkpoint eastern of the lumber camp"
+     ]
+    },
+    {
+     "map": "The Lab",
+     "spots": [
+      "In Kruglov's office (R22) and the safe inside of it",
+      "Next to a sink behind the dome in the main working area (O11) on the first level",
+      "On a desk in the tented hallway between the quarantine zone (G11) and the experiment's area (G12) on the first level",
+      "On a chair in the glass conference room inside the administrative office (R22) on the second level"
+     ]
+    }
+   ],
+   "lock": "Laboratory security post (R23) on the second level in The Lab.",
+   "behind": "• Possible UHF RFID Reader on the server rack\n• Weapon mods on the shelves in the corners\n• 2x Weapon box (6x6)\n• 1x Weapon box (4x4)\n• Currency on the desk\n• Possible MP5SD on the server rack\n• Possible modded M4A1 on the ground next to the server rack\n• Possible TerraGroup \"Blue Folders\" materials spawn on the shelve to the right of the entrance\n• Possible Intelligence folder spawn on the shelve to the right of the entrance\n• Multiple Valuables on the shelf next to the door as well as on the table on the far left of the room",
+   "quests": []
+  },
+  "6711039f9e648049e50b3307": {
+   "title": "TerraGroup Labs residential unit keycard",
+   "usage": "Unlocks the door to the residential unit no. 7 inside the containment block in The Lab.",
+   "found": [
+    {
+     "map": "The Lab",
+     "spots": [
+      "In Kruglov's office (R22) and the safe inside of it",
+      "In different locations inside the containment block on the first level. A single keycard is guaranteed to spawn every raid."
+     ]
+    },
+    {
+     "map": "First spawn",
+     "spots": [
+      "On the desk in the security room (labeled 1) to the right after entering the block."
+     ]
+    },
+    {
+     "map": "Second spawn",
+     "spots": [
+      "On a red chair opposite the residential unit no. 7."
+     ]
+    },
+    {
+     "map": "Third spawn",
+     "spots": [
+      "On the floor next to a hazmat suit in front of the locked laboratory area."
+     ]
+    },
+    {
+     "map": "Locked laboratory area",
+     "spots": [
+      "To access this area, you need to open the locked door by turning on the power with the button located in the electrical operation room next to it."
+     ]
+    },
+    {
+     "map": "Fourth spawn",
+     "spots": [
+      "In the cup on the desk to the left after entering."
+     ]
+    },
+    {
+     "map": "Fifth spawn",
+     "spots": [
+      "Between the desk calendar on the desk to the right after entering."
+     ]
+    },
+    {
+     "map": "Sixth spawn",
+     "spots": [
+      "On the single desk to the right after entering."
+     ]
+    },
+    {
+     "map": "Seventh spawn",
+     "spots": [
+      "In a blue device on the middle desks."
+     ]
+    },
+    {
+     "map": "Eighth spawn",
+     "spots": [
+      "On the far mobile pedestal opposite the entrance, below the middle desks."
+     ]
+    },
+    {
+     "map": "Ninth spawn",
+     "spots": [
+      "On a cable box at the end of the hallway between the left and back glass laboratories."
+     ]
+    },
+    {
+     "map": "Tenth spawn",
+     "spots": [
+      "On the left side desks."
+     ]
+    },
+    {
+     "map": "Eleventh spawn",
+     "spots": [
+      "At the whiteboard in the far right corner, on the marker tray."
+     ]
+    }
+   ],
+   "lock": "Residential unit no. 7 inside the containment block on the first level in The Lab.",
+   "behind": "• Loose loot (Valuables)\n• Weapon spawns under the bed on the left\n• Intelligence folder spawns\n• TerraGroup \"Blue Folders\" materials spawns",
+   "quests": []
+  },
+  "679baa2c61f588ae2b062a24": {
+   "title": "Key 01",
+   "usage": "Unlocks a door in spawn chamber 1 in The Labyrinth.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "Different locations in spawn chamber 1 inside The Labyrinth."
+     ]
+    }
+   ],
+   "lock": "Spawn chamber 1 inside The Labyrinth.",
+   "behind": "Button to drain the toxic pool.",
+   "quests": []
+  },
+  "679baa4f59b8961f370dd683": {
+   "title": "Key 02",
+   "usage": "Unlocks a door in spawn chamber 2 in The Labyrinth.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "Different locations in spawn chamber 2 inside The Labyrinth."
+     ]
+    }
+   ],
+   "lock": "Spawn chamber 2 inside The Labyrinth.",
+   "behind": "The 2nd floor where the Valve handwheel can be found.",
+   "quests": []
+  },
+  "679baa5a59b8961f370dd685": {
+   "title": "Key 03",
+   "usage": "Unlocks a door in spawn chamber 3 in The Labyrinth.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "Different locations in spawn chamber 3 inside The Labyrinth."
+     ]
+    }
+   ],
+   "lock": "Spawn chamber 3 inside The Labyrinth.",
+   "behind": "Area where the BBQ-S43 gas torch can be found.",
+   "quests": []
+  },
+  "679baa9091966fe40408f149": {
+   "title": "Key 04",
+   "usage": "Unlocks a door in spawn chamber 4 in The Labyrinth.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "Different locations in spawn chamber 4 inside The Labyrinth."
+     ]
+    }
+   ],
+   "lock": "Spawn chamber 4 inside The Labyrinth.",
+   "behind": "Way to the lever that disables the shotgun trap.",
+   "quests": []
+  },
+  "679bab714e9ca6b3d80586b4": {
+   "title": "Corpse room key",
+   "usage": "Unlocks the corpse room in The Labyrinth.",
+   "found": [
+    {
+     "map": "The Labyrinth",
+     "spots": [
+      "On Shadow of Tagilla",
+      "In one of six locations. Guaranteed spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to the corpse room in The Labyrinth.",
+   "behind": "• Loose loot (multiple very rare Valuables, Containers)",
+   "quests": [
+    "Keeper's Word"
+   ]
+  },
+  "679baace4e9ca6b3d80586b2": {
+   "title": "Observation room key",
+   "usage": "Unlocks the observation room in The Labyrinth.",
+   "found": [
+    {
+     "map": "The Labyrinth",
+     "spots": [
+      "In the hand of one of five lab technicians. Guaranteed to spawn every raid."
+     ]
+    }
+   ],
+   "lock": "Door to the observation room in The Labyrinth.",
+   "behind": "• Loose loot (Valuables, Electronics, Tools, Stimulants, Meds)\n• Labrys research notes spawns",
+   "quests": [
+    "The Labyrinth (story chapter)"
+   ]
+  },
+  "664d3db6db5dea2bad286955": {
+   "title": "Shatun's hideout key",
+   "usage": "Unlocks Shatun's hideout inside a house in the eastern village on Woods.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "Can only be bartered from Ref LL1"
+     ]
+    }
+   ],
+   "lock": "Shatun's hideout inside a house in the eastern village on Woods.",
+   "behind": "• Yellow keycard spawn location\n• Loose loot (Valuables, Weapon mods, Electronics)\n• 1x Sports bag\n• Possible Springfield Armory M1A 7.62x51 rifle (variant 2k18 NY)\n• Possible modified Springfield Armory M1A 7.62x51 rifle\n• Possible standard or modified Remington R11 RSASS 7.62x51 marksman rifle\n• Possible Walker's XCEL 500BT Digital headset\n• Possible Peltor ComTac IV Hybrid headset (Coyote Brown)\n• Possible LBT-6094A Slick Plate Carrier (Black)\n• Possible LBT-6094A Slick Plate Carrier (Olive Drab)\n• Possible LBT-6094A Slick Plate Carrier (Coyote Tan)\n• Possible 5.11 Tactical Hexgrid plate carrier\n• Possible BNTI Gzhel-K body armor",
+   "quests": []
+  },
+  "591afe0186f77431bd616a11": {
+   "title": "ZB-014 key",
+   "usage": "Unlocks a room with an additional extraction in the ZB-014 bunker on Woods.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Drawers",
+      "In Jackets",
+      "Pockets and bags of Scavs"
+     ]
+    },
+    {
+     "map": "Customs",
+     "spots": [
+      "On the desk in dorm room 220 on the second floor of the three-story dorms."
+     ]
+    }
+   ],
+   "lock": "Inside the ZB-014 bunker in the west of Woods.",
+   "behind": "• 1x Weapon box (6x6)\n• ZB-014 extraction (Green flare = Open)",
+   "quests": [
+    "Aid Stations"
+   ]
+  },
+  "6939948dc2ceb9acd7082eb2": {
+   "title": "Old house toilet key",
+   "usage": "Unlocks the bathroom in the old house at the train depot on Woods.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to the bathroom in the old house at the train depot on Woods. Note: The street in front of the house is partially in the reach of border snipers, therefore it is recommended to stay close to the house while entering and leaving.",
+   "behind": "• Guaranteed 6-STEN-140-M military battery spawn\n• TerraGroup \"Blue Folders\" materials spawn in the sink\n• TarCoin spawn in the sink\n• Loose info items",
+   "quests": []
+  },
+  "6761a6ccd9bbb27ad703c48a": {
+   "title": "Old house room key",
+   "usage": "Unlocks a room in the old house at the train depot on Woods.",
+   "found": [
+    {
+     "map": null,
+     "spots": [
+      "In Jackets",
+      "In Drawers",
+      "Pockets and bags of Scavs"
+     ]
+    }
+   ],
+   "lock": "Door to a room in the old house at the train depot on Woods. Note: The street in front of the house is partially in the reach of border snipers, therefore it is recommended to stay close to the house while entering and leaving.",
+   "behind": "• 1x Sports bag\n• 2x Weapon box (4x4)\n• 6-STEN-140-M military battery spawn\n• Loose loot (Valuables)\n• Loose Military power filter spawns",
+   "quests": []
+  }
+ }
+}

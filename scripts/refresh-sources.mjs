@@ -4,7 +4,8 @@
  *   node scripts/refresh-sources.mjs
  *
  * Tarkov.dev JSON is required (maps, tasks, items, hideout). Wiki scrapes
- * (quest prereqs, Kord documents, task screenshots, task-facts) are best-effort:
+ * (quest and key detail, quest prereqs, Kord documents, task screenshots,
+ * task-facts) are best-effort:
  * a down wiki keeps the last committed file so a deploy still ships.
  *
  * Set TK_SKIP_WIKI=1 to skip the wiki and only rebuild from tarkov.dev.
@@ -41,7 +42,9 @@ function run(script, args = [], { required = false } = {}) {
 if (!skipWiki) {
   console.log("Refreshing wiki sources…");
   await run("fetch-kord-documents.mjs");
-  await run("fetch-quest-prereqs.mjs", ["--refresh"]);
+  // Batched page fetch first; the prerequisite scrape then reads its cache.
+  const details = await run("fetch-wiki-details.mjs", ["--refresh"]);
+  await run("fetch-quest-prereqs.mjs", details === 0 ? [] : ["--refresh"]);
 } else {
   console.log("TK_SKIP_WIKI=1 — using committed wiki snapshots");
 }

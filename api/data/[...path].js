@@ -52,6 +52,8 @@ const SHARED = new Set([
   "hideout.json",
   "kord-season.json",
   "task-images.json",
+  "task-details.json",
+  "story-details.json",
 ]);
 
 /**

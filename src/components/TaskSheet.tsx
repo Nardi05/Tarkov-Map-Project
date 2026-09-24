@@ -11,6 +11,7 @@ import type { TaskStatus } from "../types";
 import TaskGallery from "./TaskGallery";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
+import TaskDetails from "./WikiDetail";
 import { Icon, icons } from "./ui";
 
 export default function TaskSheet({
@@ -152,11 +153,27 @@ export default function TaskSheet({
           </ul>
         )}
 
+        {task.requires.some((set) => set.length > 0) && progression.data && (
+          <p className="mb-1 text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
+            Comes after:{" "}
+            {task.requires
+              .map((set) =>
+                set.map((r) => displayName(progression.data!.tasks[r.task]?.name ?? r.task)).join(" + "),
+              )
+              .filter(Boolean)
+              .join(" — or — ")}
+          </p>
+        )}
+
         {unlocks.length > 0 && progression.data && (
           <p className="mb-2 text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
             Unlocks: {unlocks.slice(0, 6).map((id) => displayName(progression.data!.tasks[id]?.name ?? id)).join(", ")}
           </p>
         )}
+
+        <div className="my-3 border-t pt-3" style={{ borderColor: "var(--line-soft)" }}>
+          <TaskDetails taskId={taskId} />
+        </div>
 
         {task.wiki && (
           <a className="text-sm underline" href={task.wiki} target="_blank" rel="noreferrer noopener">

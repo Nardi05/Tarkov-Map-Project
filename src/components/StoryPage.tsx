@@ -25,6 +25,10 @@ import {
 } from "../lib/story";
 import { useHideout, useStore, useStory } from "../store";
 import { EmptyState, Icon, icons, PageHeader, Tick } from "./ui";
+import { ChapterWiki } from "./WikiDetail";
+
+const wikiTitle = (url: string) =>
+  decodeURIComponent(url.split("/wiki/")[1] ?? "").replace(/_/g, " ");
 
 const TONE: Record<string, string> = {
   savior: "var(--ok)",
@@ -545,6 +549,7 @@ function ChapterCard({
               </li>
             ))}
           </ol>
+          {chapter.wiki && <ChapterWiki title={wikiTitle(chapter.wiki)} />}
           {chapter.wiki && (
             <p className="mt-3">
               <a
