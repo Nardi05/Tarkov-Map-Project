@@ -1820,6 +1820,21 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     }
   }
 
+  /* A new character's dashboard: one thing to do. */
+  .dash-empty {
+    padding: 1.5rem 1.4rem;
+  }
+
+  /* Panels with nothing to show, as one line instead of a stack of cards. */
+  .dash-folded {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+  }
+
   .dash-panel {
     display: flex;
     flex-direction: column;

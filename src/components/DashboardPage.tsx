@@ -1,10 +1,12 @@
 import { useCallback, useId, useMemo, useState } from "react";
 import { useHideoutData, useItemCatalog, useMapIndex, useProgression } from "../lib/data";
+import { splitPanels } from "../lib/dashboard";
 import { hideoutRows } from "../lib/hideout";
 import { KORD_SEASON, prettyMapName, seasonDaysLeft, SEASON_TITLE } from "../lib/kord-season";
 import { nextRaids, type RaidPick } from "../lib/next-raid";
 import { buildPlan } from "../lib/plan";
 import { MODE_META } from "../lib/mode";
+import { hasCharacterData } from "../lib/onboarding";
 import { chainDepth, computeAvailability, unlocksAfter } from "../lib/progression";
 import { collectKeys, collectTaskItems } from "../lib/quest-lists";
 import { href, navigate, onNavClick } from "../lib/router";
@@ -92,10 +94,19 @@ export default function DashboardPage() {
   const catalog = useItemCatalog();
 
   const [editing, setEditing] = useState(false);
+  const [showAnyway, setShowAnyway] = useState(false);
 
   const data = progression.data;
   const fresh = Object.keys(taskStatus).length === 0;
   const resume = maps.data?.maps.find((m) => m.normalizedName === lastMap);
+
+  /** Anything at all stored on this character: tasks, stash, keys, hideout, story. */
+  const tracked = useStore((s) =>
+    hasCharacterData({ [s.profile.mode]: s.progress[s.profile.mode] }),
+  );
+  const story = useStory();
+  const hideout = useHideout();
+  const seasonTracked = useStore((s) => Object.keys(s.progress.season.taskStatus).length > 0);
 
   const availability = useMemo(
     () => computeAvailability(data, taskStatus, profile),
@@ -186,11 +197,54 @@ export default function DashboardPage() {
     [stats, profile.level, profile.mode, raidPicks, upcoming, setTaskStatus, fresh, keys, keysOwned, setKeyOwned, mosaic, catalog.data, traders, maps.data, resume],
   );
 
+  /** Panels that would only say "nothing here yet" — folded into one line. */
+  const isEmpty = useCallback(
+    (id: DashPanelId) => {
+      switch (id) {
+        case "trackers":
+        case "maps":
+          return false;
+        case "progress":
+          return stats.total === 0;
+        case "raid":
+          return raidPicks.length === 0;
+        case "upcoming":
+          return upcoming.length === 0;
+        case "keys":
+          return keys.length === 0;
+        case "needs":
+          return mosaic.length === 0;
+        case "traders":
+          return traders.length === 0;
+        case "story":
+          return !story.target;
+        case "season":
+          return !seasonTracked && profile.mode !== "season";
+        case "hideout":
+          return Object.keys(hideout).length === 0;
+      }
+    },
+    [stats.total, raidPicks.length, upcoming.length, keys.length, mosaic.length, traders.length, story.target, seasonTracked, profile.mode, hideout],
+  );
+
+  /*
+   * A character with nothing stored gets one thing to do, not eleven panels of
+   * "not set up yet". The full dashboard is a click away for anyone curious.
+   */
+  if (!tracked && !showAnyway) {
+    return (
+      <>
+        <PageHeader title="Dashboard" lead={`Nothing tracked yet on ${MODE_META[profile.mode].label}.`} />
+        <EmptyDashboard resume={resume ?? null} onShowAnyway={() => setShowAnyway(true)} />
+      </>
+    );
+  }
+
   return (
     <>
       <PageHeader
         title="Dashboard"
-        lead="A summary of everything you track — tasks, story, season and hideout — and what to run next. Rearrange it with Edit layout."
+        lead="What to run next, and where everything you track stands."
       >
             {resume && (
               <a
@@ -201,15 +255,17 @@ export default function DashboardPage() {
                 Continue {resume.name}
               </a>
             )}
-            <button
-              type="button"
-              className="btn"
-              aria-pressed={editing}
-              onClick={() => setEditing((v) => !v)}
-            >
-              <Icon path={icons.layout} size={14} />
-              {editing ? "Done" : "Edit layout"}
-            </button>
+            {tracked && (
+              <button
+                type="button"
+                className="btn"
+                aria-pressed={editing}
+                onClick={() => setEditing((v) => !v)}
+              >
+                <Icon path={icons.layout} size={14} />
+                {editing ? "Done" : "Edit layout"}
+              </button>
+            )}
       </PageHeader>
 
         {/*
@@ -281,7 +337,7 @@ export default function DashboardPage() {
 
       {data && editing && <CustomiseBar />}
 
-      {data && <PanelGrid editing={editing} fresh={fresh} body={body} />}
+      {data && <PanelGrid editing={editing} fresh={fresh} body={body} isEmpty={isEmpty} />}
     </>
   );
 }
@@ -292,10 +348,12 @@ function PanelGrid({
   editing,
   fresh,
   body,
+  isEmpty,
 }: {
   editing: boolean;
   fresh: boolean;
   body: (id: DashPanelId) => React.ReactNode;
+  isEmpty: (id: DashPanelId) => boolean;
 }) {
   const panels = useStore((s) => s.dashboard.panels);
   const columns = useStore((s) => s.dashboard.columns);
@@ -304,7 +362,11 @@ function PanelGrid({
   const toggleDashPanel = useStore((s) => s.toggleDashPanel);
   const setDashPanelWide = useStore((s) => s.setDashPanelWide);
 
-  const visible = useMemo(() => panels.filter((p) => p.visible), [panels]);
+  // Drag positions index `visible`; nothing folds while editing, so they line up.
+  const { shown: visible, folded } = useMemo(
+    () => splitPanels(panels, isEmpty, editing),
+    [panels, isEmpty, editing],
+  );
   const hidden = useMemo(() => panels.filter((p) => !p.visible), [panels]);
 
   /*
@@ -364,6 +426,8 @@ function PanelGrid({
           </DashPanelCard>
         ))}
       </div>
+
+      {folded.length > 0 && <FoldedPanels folded={folded} />}
 
       {editing && hidden.length > 0 && <HiddenTray hidden={hidden} onAdd={toggleDashPanel} />}
 
@@ -506,6 +570,67 @@ function DashPanelCard({
       </header>
 
       <div className="dash-panel-body">{children}</div>
+    </section>
+  );
+}
+
+/** Where each folded panel's content would come from, so the chip goes somewhere useful. */
+const FOLDED_LINK: Record<DashPanelId, () => string> = {
+  trackers: href.dashboard,
+  progress: () => href.quests(),
+  raid: () => href.quests(),
+  upcoming: () => href.quests(),
+  keys: () => href.quests(),
+  needs: () => href.quests("items"),
+  traders: () => href.quests(),
+  story: href.storySetup,
+  season: href.season,
+  hideout: href.hideout,
+  maps: href.maps,
+};
+
+function FoldedPanels({ folded }: { folded: DashPanel[] }) {
+  return (
+    <p className="dash-folded">
+      <span className="faint">Nothing here yet:</span>
+      {folded.map((panel) => {
+        const to = FOLDED_LINK[panel.id]();
+        return (
+          <a key={panel.id} className="chip chip-button" href={to} onClick={onNavClick(to)}>
+            {DASH_PANEL_META[panel.id].title}
+          </a>
+        );
+      })}
+    </p>
+  );
+}
+
+function EmptyDashboard({
+  resume,
+  onShowAnyway,
+}: {
+  resume: MapIndexEntry | null;
+  onShowAnyway: () => void;
+}) {
+  const mapTo = href.map(resume?.normalizedName ?? "customs");
+  return (
+    <section className="surface dash-empty">
+      <h2 className="text-lg font-semibold">Mark the quests you're holding</h2>
+      <p className="mt-1.5 max-w-lg text-[0.875rem] muted">
+        Then this page shows which map to run and the next few objectives on it.
+      </p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <a className="btn btn-primary btn-lg" href={href.setup()} onClick={onNavClick(href.setup())}>
+          Mark active quests
+          <Icon path={icons.forward} size={16} />
+        </a>
+        <a className="btn btn-lg" href={mapTo} onClick={onNavClick(mapTo)}>
+          {resume ? `Continue ${resume.name}` : "Just open Customs"}
+        </a>
+      </div>
+      <button type="button" className="mt-4 text-[0.75rem] underline underline-offset-2 faint" onClick={onShowAnyway}>
+        Show the full dashboard anyway
+      </button>
     </section>
   );
 }
