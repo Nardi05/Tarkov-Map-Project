@@ -427,7 +427,7 @@ export default function MapCanvas(props: Props) {
       interactive: false,
       keyboard: false,
       zIndexOffset: -100,
-      icon: L.divIcon({ className: "tk-highlight", html: "<span></span>", iconSize: [0, 0] }),
+      icon: L.divIcon({ className: "tk-highlight", html: "<span></span>", iconSize: [40, 40] }),
     }).addTo(map);
   }, [highlightAt]);
 
