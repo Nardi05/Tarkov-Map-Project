@@ -3,6 +3,7 @@ import { test } from "node:test";
 import {
   STORY,
   STORY_ENDING_IDS,
+  chaptersForSetup,
   choiceConflicts,
   effectiveChoices,
   endingById,
@@ -13,6 +14,7 @@ import {
   progressFor,
   stepIsDone,
   stepsForEnding,
+  storyStepsOnMap,
   warningsForEnding,
 } from "./story.ts";
 import type { HideoutStation } from "../types.ts";
@@ -185,4 +187,34 @@ test("Debtor and Fallen each have their own grind chapter", () => {
   assert.ok(debtor.some((r) => /100 PMC dogtags/.test(r.step.title)));
   const fallen = stepsForEnding("fallen", effectiveChoices(endingById("fallen")!, {}));
   assert.ok(fallen.some((r) => /1,000,000 USD/.test(r.step.title)));
+});
+
+test("story setup with no ending offers only chapters every ending shares", () => {
+  const rows = chaptersForSetup(null, {});
+  assert.ok(rows.length > 0);
+  for (const row of rows) {
+    assert.equal(row.chapter.endings, undefined, row.chapter.id);
+    assert.ok(row.stepIds.length > 0);
+  }
+  assert.ok(rows.some((r) => r.chapter.id === "tour"));
+});
+
+test("story setup for an ending matches the guide's steps for it", () => {
+  for (const id of STORY_ENDING_IDS) {
+    const ending = endingById(id)!;
+    const choices = effectiveChoices(ending, {});
+    const fromSetup = chaptersForSetup(id, choices).flatMap((r) => r.stepIds).sort();
+    const fromGuide = stepsForEnding(id, choices).map((r) => r.step.id).sort();
+    assert.deepEqual(fromSetup, fromGuide, id);
+  }
+});
+
+test("the map lists only unfinished target steps pinned to that map", () => {
+  assert.deepEqual(storyStepsOnMap(emptyStory(), "ground-zero"), []);
+  const story = { ...emptyStory(), target: "survivor" };
+  const rows = storyStepsOnMap(story, "ground-zero");
+  assert.ok(rows.length > 0);
+  assert.ok(rows.every((r) => r.step.maps?.includes("ground-zero")));
+  const done = { ...story, ticks: Object.fromEntries(rows.map((r) => [r.step.id, true as const])) };
+  assert.deepEqual(storyStepsOnMap(done, "ground-zero"), []);
 });

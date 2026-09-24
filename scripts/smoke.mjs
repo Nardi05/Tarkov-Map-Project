@@ -2,8 +2,8 @@
  * End-to-end smoke test. Opens every map against a running preview server,
  * turns on every layer, walks every floor and every artwork style, and fails
  * if any map logs a console error or renders no base artwork. Then opens the
- * routes that are not maps — the dashboard, the quest tracker and its
- * walkthrough — and fails the same way if any logs an error or never renders.
+ * routes that are not maps — the dashboard, the trackers and their setup
+ * walkthroughs — and fails the same way if any logs an error or never renders.
  *
  *   npm run build && npm run preview &
  *   npm run smoke
@@ -150,16 +150,18 @@ for (const map of maps) {
  * thing that cannot be there unless the page got past its data load.
  */
 const routes = [
-  { hash: "#/", heading: "Know the map. Run the right raid." },
-  { hash: "#/welcome", heading: "Know the map. Run the right raid." },
+  { hash: "#/", heading: "Track the parts you care about." },
+  { hash: "#/welcome", heading: "Track the parts you care about." },
   { hash: "#/dashboard", heading: "Dashboard" },
   { hash: "#/maps", heading: "Maps" },
   { hash: "#/story", heading: "Story" },
+  { hash: "#/story/setup", heading: "Set up your story" },
   { hash: "#/story/savior", heading: "Savior" },
-  { hash: "#/quests", heading: "Quests" },
-  { hash: "#/quests/graph", heading: "Quests" },
-  { hash: "#/quests/items", heading: "Quests" },
-  { hash: "#/quests/setup", heading: "Set up your progress" },
+  { hash: "#/season", heading: "Season" },
+  { hash: "#/quests", heading: "Tasks" },
+  { hash: "#/quests/graph", heading: "Tasks" },
+  { hash: "#/quests/items", heading: "Tasks" },
+  { hash: "#/quests/setup", heading: "Set up your tasks" },
   { hash: "#/hideout", heading: "Hideout" },
   { hash: "#/settings", heading: "Settings" },
 ];

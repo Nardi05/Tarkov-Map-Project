@@ -1,32 +1,35 @@
 import { useCallback, useId, useMemo, useState } from "react";
-import { useItemCatalog, useMapIndex, useProgression } from "../lib/data";
-import { prettyMapName } from "../lib/kord-season";
+import { useHideoutData, useItemCatalog, useMapIndex, useProgression } from "../lib/data";
+import { hideoutRows } from "../lib/hideout";
+import { KORD_SEASON, prettyMapName, seasonDaysLeft, SEASON_TITLE } from "../lib/kord-season";
 import { nextRaids, type RaidPick } from "../lib/next-raid";
 import { buildPlan } from "../lib/plan";
 import { MODE_META } from "../lib/mode";
 import { chainDepth, computeAvailability, unlocksAfter } from "../lib/progression";
 import { collectKeys, collectTaskItems } from "../lib/quest-lists";
 import { href, navigate, onNavClick } from "../lib/router";
+import { endingById, hideoutLevels, mapLabel, progressFor } from "../lib/story";
 import { displayName, visibleInMode } from "../lib/task-variant";
 import { useDragReorder } from "../lib/use-drag-reorder";
 import type { GameMode } from "../lib/persist-migrate";
 import {
   DASH_PANEL_META,
+  useHideout,
   useItemCounts,
   useKeysOwned,
   useStore,
+  useStory,
   useTaskStatus,
   type DashPanel,
   type DashPanelId,
 } from "../store";
 import type { MapIndexEntry, Progression, TaskAvailability } from "../types";
 import NextRaid from "./NextRaid";
-import SeasonPanel from "./SeasonPanel";
 import RaidClock from "./RaidClock";
 import TargetPicker from "./TargetPicker";
 import TaskName from "./TaskName";
 import TaskSheet from "./TaskSheet";
-import { FirstSteps } from "./Onboarding";
+import { TrackerList } from "./Trackers";
 import { Callout, Card, EmptyState, Icon, icons, PageHeader, Term } from "./ui";
 
 /**
@@ -82,7 +85,6 @@ export default function DashboardPage() {
   const dashboard = useStore((s) => s.dashboard);
   const lastMap = useStore((s) => s.lastMap);
   const setTaskStatus = useStore((s) => s.setTaskStatus);
-  const cycleTaskStatus = useStore((s) => s.cycleTaskStatus);
   const setProfile = useStore((s) => s.setProfile);
   const itemCounts = useItemCounts();
   const keysOwned = useKeysOwned();
@@ -146,6 +148,12 @@ export default function DashboardPage() {
   const body = useCallback(
     (id: DashPanelId) => {
       switch (id) {
+        case "trackers":
+          return <TrackerList />;
+        case "story":
+          return <StorySummary />;
+        case "hideout":
+          return <HideoutSummary />;
         case "progress":
           return <ProgressPanel stats={stats} level={profile.level} mode={profile.mode} />;
         case "raid":
@@ -170,29 +178,19 @@ export default function DashboardPage() {
         case "traders":
           return <TraderList rows={traders} />;
         case "season":
-          return (
-            <SeasonPanel
-              mode={profile.mode}
-              taskStatus={taskStatus}
-              availability={availability}
-              onCycle={(id) => {
-                if (profile.mode === "season") cycleTaskStatus(id);
-              }}
-              compact
-            />
-          );
+          return <SeasonSummary />;
         case "maps":
           return <MapList maps={maps.data?.maps ?? []} resume={resume ?? null} picks={raidPicks} />;
       }
     },
-    [stats, profile.level, profile.mode, raidPicks, upcoming, setTaskStatus, cycleTaskStatus, taskStatus, availability, fresh, keys, keysOwned, setKeyOwned, mosaic, catalog.data, traders, maps.data, resume, plan.remainingToTarget],
+    [stats, profile.level, profile.mode, raidPicks, upcoming, setTaskStatus, fresh, keys, keysOwned, setKeyOwned, mosaic, catalog.data, traders, maps.data, resume],
   );
 
   return (
     <>
       <PageHeader
         title="Dashboard"
-        lead="What to do next, which map to queue for it, and what to take."
+        lead="A summary of everything you track — tasks, story, season and hideout — and what to run next. Rearrange it with Edit layout."
       >
             {resume && (
               <a
@@ -263,25 +261,19 @@ export default function DashboardPage() {
 
         {progression.loading && !data && <DashboardSkeleton />}
 
-        {data && !editing && (
-          <div className="mb-4">
-            <FirstSteps />
-          </div>
-        )}
-
         {data && fresh && !editing && (
           <Callout tone="accent" className="mb-4" icon={icons.info}>
             <b className="font-semibold" style={{ color: "var(--text)" }}>
               These are a guess, not your raid.
             </b>{" "}
             Until you tick the quests your <Term id="trader">traders</Term> have given you,
-            everything below is what the graph says a fresh character could pick up.{" "}
+            the task panels below show what the graph says a fresh character could pick up.{" "}
             <a
               className="underline underline-offset-2"
               href={href.setup()}
               onClick={onNavClick(href.setup())}
             >
-              Set up my progress
+              Set up tasks
             </a>
             .
           </Callout>
@@ -634,6 +626,169 @@ function DashboardSkeleton() {
 }
 
 /* ------------------------------------------------------------------ panels */
+
+function StorySummary() {
+  const story = useStory();
+  const hideout = useHideout();
+  const stations = useHideoutData().data?.stations;
+  const ending = endingById(story.target);
+  const stats = useMemo(
+    () =>
+      ending
+        ? progressFor(ending, story.ticks, story.choices, hideoutLevels(stations, hideout))
+        : null,
+    [ending, story, stations, hideout],
+  );
+
+  if (!ending || !stats) {
+    return (
+      <EmptyState
+        compact
+        title="No ending picked"
+        hint="Pick Savior, Survivor, Debtor or Fallen and mark the chapters you have done."
+        action={
+          <a className="btn btn-sm" href={href.storySetup()} onClick={onNavClick(href.storySetup())}>
+            Set up story
+          </a>
+        }
+      />
+    );
+  }
+
+  const pct = stats.required ? Math.round((stats.requiredDone / stats.required) * 100) : 0;
+  const next = [...stats.next, ...stats.parallel].slice(0, 3);
+
+  return (
+    <div>
+      <p className="text-[0.95rem] font-semibold">{ending.name}</p>
+      <Meter label={`Steps · ${stats.requiredDone} of ${stats.required}`} value={pct} />
+      {stats.evidenceNeed > 0 && (
+        <p className="mt-2 text-[0.72rem] faint">
+          Evidence {stats.evidenceHave} of {stats.evidenceNeed}
+        </p>
+      )}
+      {next.length > 0 ? (
+        <ul className="mt-3 space-y-1.5">
+          {next.map(({ step, chapter }) => (
+            <li key={step.id} className="surface-2 p-2">
+              <p className="text-[0.8rem] font-medium leading-snug">{step.title}</p>
+              <p className="mt-0.5 text-[0.68rem] faint">
+                {chapter.name}
+                {step.maps?.length ? ` · ${step.maps.map(mapLabel).join(", ")}` : ""}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-3 text-[0.78rem] muted">Every required step is ticked.</p>
+      )}
+      <a
+        className="btn btn-sm mt-3"
+        href={href.story(ending.id)}
+        onClick={onNavClick(href.story(ending.id))}
+      >
+        Open the guide
+      </a>
+    </div>
+  );
+}
+
+function SeasonSummary() {
+  const progression = useProgression();
+  const profile = useStore((s) => s.profile);
+  const seasonStatus = useStore((s) => s.progress.season.taskStatus);
+  const seasonProfile = useMemo(() => ({ ...profile, mode: "season" as const }), [profile]);
+  const availability = useMemo(
+    () => computeAvailability(progression.data, seasonStatus, seasonProfile),
+    [progression.data, seasonStatus, seasonProfile],
+  );
+
+  const line = KORD_SEASON.questline;
+  const done = line.filter((q) => seasonStatus[q.id] === "completed").length;
+  const days = seasonDaysLeft();
+  const next = line
+    .filter((q) => {
+      const stated = seasonStatus[q.id];
+      if (stated) return stated === "active";
+      return (availability[q.id] ?? "locked") !== "locked";
+    })
+    .slice(0, 3);
+
+  return (
+    <div>
+      <p className="flex flex-wrap items-baseline justify-between gap-2">
+        <span className="text-[0.95rem] font-semibold">{SEASON_TITLE}</span>
+        <span className="chip chip-season">
+          {days > 0 ? `${days} day${days === 1 ? "" : "s"} left` : "Ended"}
+        </span>
+      </p>
+      <Meter
+        label={`Season tasks · ${done} of ${line.length}`}
+        value={Math.round((done / line.length) * 100)}
+      />
+      {next.length > 0 && (
+        <ul className="mt-3 space-y-1.5">
+          {next.map((q) => (
+            <li key={q.id} className="surface-2 p-2">
+              <p className="text-[0.8rem] font-medium leading-snug">{q.name}</p>
+              <p className="mt-0.5 text-[0.68rem] faint">
+                {seasonStatus[q.id] === "active" ? "Active" : "Available"}
+                {q.maps.length ? ` · ${q.maps.map(prettyMapName).join(", ")}` : ""}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+      {profile.mode !== "season" && (
+        <p className="mt-2 text-[0.72rem] faint">
+          Tracked on your Season character — switch to it to tick these.
+        </p>
+      )}
+      <a className="btn btn-sm mt-3" href={href.season()} onClick={onNavClick(href.season())}>
+        Open season
+      </a>
+    </div>
+  );
+}
+
+function HideoutSummary() {
+  const data = useHideoutData();
+  const hideout = useHideout();
+  const rows = useMemo(() => hideoutRows(data.data, hideout), [data.data, hideout]);
+
+  if (!data.data) {
+    return <p className="text-[0.78rem] muted">Loading the hideout…</p>;
+  }
+
+  const ready = rows.filter((r) => r.next && r.status === "available");
+  const building = rows.filter((r) => r.next && r.status === "active");
+  const finished = rows.filter((r) => !r.next || r.status === "completed").length;
+
+  return (
+    <div>
+      <ul className="stat-row">
+        <Stat label="Ready" value={ready.length} tone="accent" />
+        <Stat label="Building" value={building.length} />
+        <Stat label="Maxed" value={finished} of={rows.length} />
+      </ul>
+      {[...building, ...ready].slice(0, 4).length > 0 && (
+        <ul className="mt-3 space-y-1">
+          {[...building, ...ready].slice(0, 4).map((r) => (
+            <li key={r.station.id} className="flex items-baseline justify-between gap-2 text-[0.8rem]">
+              <span className="truncate font-medium">{r.station.name}</span>
+              <span className="flex-none text-[0.7rem] faint">
+                {r.status === "active" ? "building" : "ready"} · level {r.next!.level}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <a className="btn btn-sm mt-3" href={href.hideout()} onClick={onNavClick(href.hideout())}>
+        Open hideout
+      </a>
+    </div>
+  );
+}
 
 function ProgressPanel({
   stats,

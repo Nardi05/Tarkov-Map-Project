@@ -11,13 +11,16 @@
  */
 
 export type DashPanelId =
+  | "trackers"
   | "progress"
   | "raid"
   | "upcoming"
   | "keys"
   | "needs"
   | "traders"
+  | "story"
   | "season"
+  | "hideout"
   | "maps";
 
 export interface DashPanel {
@@ -44,10 +47,15 @@ export interface DashPanelMeta {
 }
 
 export const DASH_PANEL_META: Record<DashPanelId, DashPanelMeta> = {
+  trackers: {
+    title: "Your trackers",
+    hint: "Where each part of your progress stands, and what is not set up yet.",
+    blurb: "Status and setup for tasks, story, season and hideout.",
+  },
   progress: {
-    title: "Progress",
-    hint: "Done, active, and still open on this character.",
-    blurb: "How far this character is through the quest list.",
+    title: "Task progress",
+    hint: "Trader tasks done, active, and still open on this character.",
+    blurb: "How far this character is through the trader tasks.",
   },
   raid: {
     title: "Next raid",
@@ -74,10 +82,20 @@ export const DASH_PANEL_META: Record<DashPanelId, DashPanelMeta> = {
     hint: "The next offer from each trader.",
     blurb: "One next task per trader.",
   },
+  story: {
+    title: "Story",
+    hint: "Your target ending and the next steps on its path.",
+    blurb: "Progress towards your chosen ending.",
+  },
   season: {
-    title: "Kord Breach",
-    hint: "The full Kord Breach story line, including Riding the Wave.",
-    blurb: "Tick the Kord Breach quests on a Season character.",
+    title: "Season",
+    hint: "The seasonal story line: what is next and how long is left.",
+    blurb: "Kord Breach progress on your seasonal character.",
+  },
+  hideout: {
+    title: "Hideout",
+    hint: "Stations you can build right now.",
+    blurb: "What the hideout can build next.",
   },
   maps: {
     title: "Jump back in",
@@ -93,18 +111,22 @@ export const UPCOMING_LIMITS = [5, 6, 8, 10, 12, 16, 20] as const;
 /**
  * The out-of-the-box dashboard.
  *
- * Ordered as the question a player actually asks on opening the site: where am
- * I, which map do I queue, what am I running, and what do I need to bring.
+ * A summary first — where every tracker stands — then the questions a player
+ * asks on opening the site: which map do I queue, what am I running, and what
+ * do I need to bring.
  */
 export const DEFAULT_DASHBOARD: DashboardLayout = {
   panels: [
-    { id: "progress", visible: true, wide: true },
+    { id: "trackers", visible: true, wide: true },
+    { id: "progress", visible: true, wide: false },
+    { id: "story", visible: true, wide: false },
     { id: "raid", visible: true, wide: true },
     { id: "upcoming", visible: true, wide: false },
+    { id: "season", visible: true, wide: false },
     { id: "keys", visible: true, wide: false },
+    { id: "hideout", visible: true, wide: false },
     { id: "needs", visible: true, wide: true },
     { id: "traders", visible: true, wide: true },
-    { id: "season", visible: true, wide: false },
     { id: "maps", visible: true, wide: false },
   ],
   upcomingLimit: 20,
@@ -159,8 +181,14 @@ export function mergeDashboard(
     }
   }
 
-  // Anything the stored layout has never heard of lands after it, as shipped.
+  const known = panels.length > 0;
+  // Anything the stored layout has never heard of lands after it, as shipped —
+  // except the tracker summary, which is the top of the page or nothing.
   for (const panel of DEFAULT_DASHBOARD.panels) push(panel.id, panel.visible, panel.wide);
+  if (known) {
+    const at = panels.findIndex((p) => p.id === "trackers");
+    if (at > 0 && !storedIds(raw).has("trackers")) panels.unshift(...panels.splice(at, 1));
+  }
 
   const limit = Number(raw.upcomingLimit);
   return {
@@ -170,6 +198,12 @@ export function mergeDashboard(
       : DEFAULT_DASHBOARD.upcomingLimit,
     columns: raw.columns === 1 ? 1 : 2,
   };
+}
+
+function storedIds(raw: { panels?: unknown; panelOrder?: unknown }): Set<unknown> {
+  if (Array.isArray(raw.panels)) return new Set(raw.panels.map((p) => (p as DashPanel | null)?.id));
+  if (Array.isArray(raw.panelOrder)) return new Set(raw.panelOrder);
+  return new Set();
 }
 
 /** Moves one panel to a new index, keeping every other panel's order. */

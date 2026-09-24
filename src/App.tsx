@@ -5,9 +5,11 @@ import HomePage from "./components/HomePage";
 import LandingPage from "./components/LandingPage";
 import MapPage from "./components/MapPage";
 import QuestsPage from "./components/QuestsPage";
+import SeasonPage from "./components/SeasonPage";
 import SettingsPage from "./components/SettingsPage";
 import SetupWizard from "./components/SetupWizard";
 import StoryPage from "./components/StoryPage";
+import StorySetup from "./components/StorySetup";
 import TabShell from "./components/TabShell";
 import CommandPalette from "./components/CommandPalette";
 import { Icon, icons, Spinner } from "./components/ui";
@@ -56,7 +58,9 @@ export default function App() {
       route.name === "map" && map.data
         ? `${map.data.name} — Tarkov Maps`
         : route.name === "quests"
-          ? "Quests — Tarkov Maps"
+          ? "Tasks — Tarkov Maps"
+          : route.name === "season"
+            ? "Season — Tarkov Maps"
           : route.name === "hideout"
             ? "Hideout — Tarkov Maps"
           : route.name === "settings"
@@ -64,7 +68,9 @@ export default function App() {
           : route.name === "story"
             ? "Story — Tarkov Maps"
           : route.name === "setup"
-            ? "Set up your progress — Tarkov Maps"
+            ? "Set up your tasks — Tarkov Maps"
+          : route.name === "storySetup"
+            ? "Set up your story — Tarkov Maps"
             : route.name === "welcome" || route.name === "root"
               ? "Tarkov Maps"
             : route.name === "dashboard"
@@ -161,6 +167,14 @@ export default function App() {
       </>
     );
   }
+  if (route.name === "storySetup") {
+    return (
+      <>
+        <StorySetup />
+        <CommandPalette />
+      </>
+    );
+  }
   if (route.name === "settings") {
     return (
       <>
@@ -200,6 +214,7 @@ export default function App() {
               focus={route.name === "quests" ? route.focus : null}
             />
           )}
+          {tab === "season" && <SeasonPage />}
           {tab === "hideout" && <HideoutPage />}
           {tab === "maps" &&
             (index.data ? <HomePage maps={index.data.maps} /> : <Loading label="Loading maps" inline />)}

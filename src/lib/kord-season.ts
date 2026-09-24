@@ -38,6 +38,11 @@ export const KORD_SEASON: SeasonData = season as SeasonData;
 
 export const KORD_TAG = "[KORD BREACH]";
 
+/** The season's name for running text; the data spells it in capitals. */
+export const SEASON_TITLE = KORD_SEASON.name
+  .toLowerCase()
+  .replace(/\b\w/g, (c) => c.toUpperCase());
+
 /** Days left in the season, or 0 if it has ended. */
 export function seasonDaysLeft(now = new Date()): number {
   const end = Date.parse(`${KORD_SEASON.ends}T23:59:59Z`);

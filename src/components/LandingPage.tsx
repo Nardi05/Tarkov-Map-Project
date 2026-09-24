@@ -1,59 +1,23 @@
 import { useMapIndex } from "../lib/data";
+import { hasCharacterData } from "../lib/onboarding";
 import { href, navigate, onNavClick } from "../lib/router";
 import { useStore } from "../store";
 import DataFreshness from "./DataFreshness";
 import { MapLegend } from "./Onboarding";
-import { Card, Icon, icons, Steps, Term, Wordmark } from "./ui";
+import { TrackerCards } from "./Trackers";
+import { Card, Icon, icons, Steps, Wordmark } from "./ui";
 
 const SOURCE = "https://github.com/Nardi05/Tarkov-Map-Project";
 
 /**
  * The first screen a new visitor sees.
  *
- * The old one opened with seven feature cards, a roadmap and a credits block —
- * a README rendered as a page. It asked the visitor to read about the site
- * before it let them use it, and then forked them into "just the maps" or a
- * five-hundred-task walkthrough, a decision nobody arriving for the first time
- * has any basis to make.
- *
- * This one leads with what the site is for in one sentence, offers one obvious
- * way in and one smaller one, and only then explains itself. Everything that
- * used to be above the fold is still here, further down, where somebody who
- * wants it will scroll.
+ * The site is several trackers — trader tasks, the story, the season, the
+ * hideout — plus maps and a dashboard that read from them. The previous page
+ * forked a visitor into "maps only" or one big tracker setup; this one lays
+ * the trackers out side by side, each with its own setup, so somebody who only
+ * cares about their ending never has to tick five hundred trader tasks first.
  */
-
-const WHAT_YOU_GET = [
-  {
-    icon: icons.map,
-    title: "Every playable map",
-    body: "Spawns, extracts, transits, keys, boss positions and hazards on all 13 maps, in a clean vector style or photographic satellite tiles.",
-  },
-  {
-    icon: icons.tasks,
-    title: "Your quests, on the map",
-    body: "Tick what your traders have given you. Only those objectives are drawn, so you see your raid instead of a wall of green.",
-  },
-  {
-    icon: icons.compass,
-    title: "What to run next",
-    body: "The dashboard ranks what is actually available to you, which map has most of it, and what to bring.",
-  },
-  {
-    icon: icons.book,
-    title: "Story endings",
-    body: "Savior, Survivor, Debtor and Fallen. Pick a target and follow the chapters, the locks and the item spots.",
-  },
-  {
-    icon: icons.home,
-    title: "Hideout",
-    body: "Station levels, what each upgrade needs, and which requirement is the one blocking it.",
-  },
-  {
-    icon: icons.spark,
-    title: "Screenshot import",
-    body: "Point it at a screenshot of your trader list and it reads the quest names off it, instead of you typing twenty.",
-  },
-];
 
 /**
  * What the site currently holds, counted from the live index rather than
@@ -108,15 +72,22 @@ function AtAGlance() {
 
 export default function LandingPage() {
   const setEntry = useStore((s) => s.setEntry);
+  const returning = useStore((s) => s.entry === "tracker" || hasCharacterData(s.progress));
 
   const mapsOnly = () => {
     setEntry("maps");
     navigate(href.home());
   };
 
-  const fullSetup = () => {
+  const toDashboard = () => {
     setEntry("tracker");
-    navigate(href.setup());
+    navigate(href.dashboard());
+  };
+
+  const chooseTrackers = () => {
+    const el = document.getElementById("trackers");
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    el?.querySelector<HTMLElement>("h2")?.focus({ preventScroll: true });
   };
 
   return (
@@ -153,85 +124,77 @@ export default function LandingPage() {
           <div className="min-w-0">
             <p className="eyebrow">Escape from Tarkov</p>
             <h1 className="hero-title mt-3">
-              Know the map.
+              Track the parts
               <br />
-              Run the right raid.
+              you care about.
             </h1>
             <p className="hero-lead">
-              Interactive maps for every location, and a tracker that puts <em>your</em> quests on
-              them. Free, no account, and everything you tick stays in this browser.
+              Separate trackers for trader tasks, the story, the season and your hideout. Maps
+              draw markers from whichever you use, and the dashboard sums them all up. Free, no
+              account, and everything stays in this browser.
             </p>
 
             <div className="hero-actions">
-              <button type="button" className="btn btn-primary btn-lg" onClick={fullSetup}>
-                Set up my character
-                <Icon path={icons.forward} size={16} />
+              <button type="button" className="btn btn-primary btn-lg" onClick={chooseTrackers}>
+                Choose what to track
+                <Icon path={icons.chevron} size={16} />
               </button>
-              <button type="button" className="btn btn-lg" onClick={mapsOnly}>
-                Just browse the maps
-              </button>
+              {returning ? (
+                <button type="button" className="btn btn-lg" onClick={toDashboard}>
+                  Go to my dashboard
+                </button>
+              ) : (
+                <button type="button" className="btn btn-lg" onClick={mapsOnly}>
+                  Just browse the maps
+                </button>
+              )}
             </div>
             <p className="mt-3 text-meta">
-              Setting up takes about two minutes and you can skip any part of it. Already been
-              here? The dashboard opens itself next time.
+              Each tracker has its own short setup, and you can skip any of them. Set up one and
+              the dashboard opens itself next time.
             </p>
           </div>
 
           <AtAGlance />
         </section>
 
-        {/* --------------------------------------------------- how it works */}
-        <section className="mt-6">
+        {/* ------------------------------------------------------ trackers */}
+        <section id="trackers" className="mt-8 scroll-mt-6">
+          <h2 className="display text-xl" tabIndex={-1}>
+            Choose what to track
+          </h2>
+          <p className="mt-1 max-w-2xl text-meta">
+            Tasks and Season share one walkthrough — a seasonal character is just a second set of
+            trader lists. The story has its own. Maps and the hideout need no setup at all.
+          </p>
+          <div className="mt-4">
+            <TrackerCards />
+          </div>
+        </section>
+
+        {/* --------------------------------------------------- how it fits */}
+        <section className="mt-10">
           <Card
-            title="How it works"
-            hint="Three steps, and only the first one needs anything from you."
+            title="How the pieces fit"
+            hint="Every tracker stands on its own. The maps and the dashboard are where they meet."
           >
             <Steps
               items={[
                 {
-                  title: "Tell it which quests you have accepted",
-                  body: (
-                    <>
-                      Tick them off a trader list, or import a screenshot. From those it works out
-                      everything you must already have finished — a <Term id="trader" /> will not
-                      hand you a task until the ones behind it are done.
-                    </>
-                  ),
+                  title: "Set up the trackers you want",
+                  body: "Tasks: tick the quests your traders have given you and the site works out what came before. Story: pick an ending and mark the chapters you have finished. Season: the same trader walkthrough, on your seasonal character.",
                 },
                 {
-                  title: "Open the map you are about to queue into",
-                  body: (
-                    <>
-                      Your active objectives are drawn on it, along with <Term id="pmc" /> and{" "}
-                      <Term id="scav" /> spawns, every <Term id="extract" />, <Term id="transit" />{" "}
-                      and locked door.
-                    </>
-                  ),
+                  title: "Open a map",
+                  body: "It draws your active task objectives, the story steps for your ending that happen there, and season document spawns — on top of spawns, extracts, keys and bosses.",
                 },
                 {
-                  title: "Tick things off as you go",
-                  body: "A task with three mark spots remembers which one you did. Nothing is uploaded; export a file when you want the same progress on another device.",
+                  title: "Check the dashboard",
+                  body: "A summary of every tracker in one place: what to run next, story progress, days left in the season. Rearrange it, hide what you do not use.",
                 },
               ]}
             />
           </Card>
-        </section>
-
-        {/* --------------------------------------------------- what you get */}
-        <section className="mt-10">
-          <h2 className="display text-xl">What's on the site</h2>
-          <ul className="tile-grid tile-grid-3 mt-4">
-            {WHAT_YOU_GET.map((f) => (
-              <li key={f.title} className="card card-tight">
-                <span className="mb-2.5 flex h-8 w-8 items-center justify-center rounded-[var(--r-xs)] border"
-                      style={{ borderColor: "var(--accent-line)", background: "var(--accent-soft)", color: "var(--accent)" }}>
-                  <Icon path={f.icon} size={16} />
-                </span>
-                <p className="text-[0.875rem] font-semibold">{f.title}</p>
-                <p className="mt-1 text-meta">{f.body}</p>
-              </li>
-            ))}
-          </ul>
         </section>
 
         {/* -------------------------------------------------------- the key */}

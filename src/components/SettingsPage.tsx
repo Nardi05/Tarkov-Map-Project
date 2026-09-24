@@ -286,6 +286,22 @@ export default function SettingsPage() {
           </div>
         </section>
 
+        <section className="surface mt-3 p-4">
+          <h2 className="text-sm font-semibold">Setup walkthroughs</h2>
+          <p className="mt-1 text-[0.75rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
+            Each tracker has its own. Running one again only adds to what is stored — nothing you
+            have ticked is removed.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a className="btn" href={href.setup()} onClick={onNavClick(href.setup())}>
+              Tasks & season
+            </a>
+            <a className="btn" href={href.storySetup()} onClick={onNavClick(href.storySetup())}>
+              Story
+            </a>
+          </div>
+        </section>
+
         <SavePanel />
 
         <section className="surface mt-3 p-4">

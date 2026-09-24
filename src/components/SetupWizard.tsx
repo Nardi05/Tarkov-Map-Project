@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useProgression } from "../lib/data";
+import { KORD_SEASON, SEASON_TITLE } from "../lib/kord-season";
+import { MODE_META, MODE_ORDER } from "../lib/mode";
 import { disposeOcr } from "../lib/ocr";
 import { prerequisiteClosure } from "../lib/progression";
-import { href, onNavClick } from "../lib/router";
+import { href, navigate, onNavClick } from "../lib/router";
 import { displayName, visibleInMode } from "../lib/task-variant";
 import { useStore, useTaskStatus } from "../store";
 import type { Faction, GameMode } from "../lib/persist-migrate";
@@ -54,6 +56,8 @@ const TRADER_ORDER = [
 ];
 
 interface TraderStep {
+  /** Heading for the step: the trader, or the season line. */
+  title: string;
   trader: string;
   tasks: { id: string; name: string; level: number; kappa: boolean; depth: number }[];
 }
@@ -94,6 +98,7 @@ export default function SetupWizard() {
   const steps = useMemo<TraderStep[]>(() => {
     if (!data) return [];
     const byTrader = new Map<string, TraderStep["tasks"]>();
+    const seasonLine: TraderStep["tasks"] = [];
     for (const [id, task] of Object.entries(data.tasks)) {
       if (!task.trader) continue;
       // A task locked to the other faction can never be in your list, so it is
@@ -102,25 +107,44 @@ export default function SetupWizard() {
         continue;
       }
       if (!visibleInMode(task.name, profile.mode)) continue;
-      const list = byTrader.get(task.trader) ?? [];
-      list.push({
+      const row = {
         id,
         name: task.name,
         level: task.minPlayerLevel,
         kappa: task.kappaRequired,
         depth: depth.get(id) ?? 0,
-      });
+      };
+      // The season line gets a step of its own rather than hiding in Prapor's.
+      if (id.startsWith("kord:")) {
+        seasonLine.push(row);
+        continue;
+      }
+      const list = byTrader.get(task.trader) ?? [];
+      list.push(row);
       byTrader.set(task.trader, list);
     }
 
     const known = TRADER_ORDER.filter((t) => byTrader.has(t));
     const rest = [...byTrader.keys()].filter((t) => !TRADER_ORDER.includes(t)).sort();
-    return [...known, ...rest].map((trader) => ({
+    const byDepth = (a: TraderStep["tasks"][number], b: TraderStep["tasks"][number]) =>
+      a.depth - b.depth || a.level - b.level || a.name.localeCompare(b.name);
+    const traderSteps = [...known, ...rest].map((trader) => ({
+      title: trader,
       trader,
-      tasks: (byTrader.get(trader) ?? []).sort(
-        (a, b) => a.depth - b.depth || a.level - b.level || a.name.localeCompare(b.name),
-      ),
+      tasks: (byTrader.get(trader) ?? []).sort(byDepth),
     }));
+    if (!seasonLine.length) return traderSteps;
+    const lineOrder = new Map(KORD_SEASON.questline.map((q, i) => [q.id, i]));
+    return [
+      {
+        title: SEASON_TITLE,
+        trader: "Prapor",
+        tasks: seasonLine.sort(
+          (a, b) => (lineOrder.get(a.id) ?? 0) - (lineOrder.get(b.id) ?? 0),
+        ),
+      },
+      ...traderSteps,
+    ];
   }, [data, profile.faction, profile.mode, depth]);
 
   /*
@@ -164,6 +188,15 @@ export default function SetupWizard() {
       return next;
     });
 
+  /** Starts the walkthrough over on another character. */
+  const restartOn = (mode: GameMode) => {
+    setProfile("mode", mode);
+    setStaged({});
+    setStep(0);
+    setQuery("");
+    setFinished(false);
+  };
+
   const finish = () => {
     const toWrite: Record<string, TaskStatus> = { ...staged };
     for (const id of implied) toWrite[id] = "completed";
@@ -193,9 +226,12 @@ export default function SetupWizard() {
   const trader = steps[step - 1];
 
   if (finished) {
+    const others = MODE_ORDER.filter((m) => m !== profile.mode);
     return (
       <Shell step={total} total={total}>
-        <h1 className="display text-2xl sm:text-3xl">Wipe reconstructed</h1>
+        <h1 className="display text-2xl sm:text-3xl">
+          {MODE_META[profile.mode].label} tasks set up
+        </h1>
         <p className="mt-2 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
           {activeCount} active and {doneCount + implied.size} done are stored in this browser.
           Download a file now if you want to restore this wipe later or on another phone or PC.
@@ -205,10 +241,31 @@ export default function SetupWizard() {
           <a className="btn is-active" href={href.dashboard()} onClick={onNavClick(href.dashboard())}>
             Open the dashboard
           </a>
-          <a className="btn" href={href.quests("items")} onClick={onNavClick(href.quests("items"))}>
-            Open the item list
+          <a className="btn" href={href.quests()} onClick={onNavClick(href.quests())}>
+            Open tasks
           </a>
         </div>
+
+        <section className="surface mt-6 p-4">
+          <h2 className="text-sm font-semibold">Set up something else?</h2>
+          <p className="mt-1 text-meta">
+            Each character keeps its own tasks, and the story is tracked on its own.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {others.map((m) => (
+              <button key={m} type="button" className="btn btn-sm" onClick={() => restartOn(m)}>
+                Tasks on {MODE_META[m].label}
+              </button>
+            ))}
+            <button
+              type="button"
+              className="btn btn-sm"
+              onClick={() => navigate(href.storySetup())}
+            >
+              Story progress
+            </button>
+          </div>
+        </section>
       </Shell>
     );
   }
@@ -219,7 +276,7 @@ export default function SetupWizard() {
 
       {trader && (
         <TraderStepView
-          key={trader.trader}
+          key={trader.title}
           step={trader}
           staged={staged}
           implied={implied}
@@ -359,11 +416,19 @@ function ProfileStep({
 
   return (
     <div>
-      <h1 className="display text-2xl sm:text-3xl">Set up your progress</h1>
+      <h1 className="display text-2xl sm:text-3xl">Set up your tasks</h1>
       <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed muted">
         Open the game, go through your <Term id="trader">traders</Term>, and tick the quests you
         have accepted. That is enough — a quest sitting in your list means everything behind it is
         already done, so the site fills in the rest of your wipe from it.
+      </p>
+      <p className="mt-2 max-w-2xl text-meta">
+        Pick the character first. Choose <b>Season</b> to set up your seasonal wipe — it adds a{" "}
+        {SEASON_TITLE} step before the traders. Story chapters have a{" "}
+        <a className="underline" href={href.storySetup()} onClick={onNavClick(href.storySetup())}>
+          separate setup
+        </a>
+        .
       </p>
 
       {/*
@@ -464,10 +529,11 @@ function TraderStepView({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">{step.trader}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{step.title}</h1>
       <p className="mt-2 max-w-2xl text-[0.9rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-        Tick anything in your {step.trader} list right now. Tick twice for one you have already
-        finished — useful when a trader has nothing active because you are through their chain.
+        {step.title === step.trader
+          ? `Tick anything in your ${step.trader} list right now. Tick twice for one you have already finished — useful when a trader has nothing active because you are through their chain.`
+          : `The seasonal story line, handed out by ${step.trader}. Tick the one you are on; tick twice for any you have already finished.`}
       </p>
 
       <ScreenshotImport
@@ -488,10 +554,10 @@ function TraderStepView({
           <input
             className="input input-icon"
             type="search"
-            placeholder={`Find a ${step.trader} quest…`}
+            placeholder={`Find a ${step.title} quest…`}
             value={query}
             onChange={(e) => onQuery(e.target.value)}
-            aria-label={`Search ${step.trader} quests`}
+            aria-label={`Search ${step.title} quests`}
           />
         </div>
         <span className="text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
@@ -532,7 +598,7 @@ function TraderStepView({
       </ul>
 
       {shown.length === 0 && (
-        <EmptyState title="Nothing matches" hint={`No ${step.trader} quest by that name.`} />
+        <EmptyState title="Nothing matches" hint={`No ${step.title} quest by that name.`} />
       )}
     </div>
   );

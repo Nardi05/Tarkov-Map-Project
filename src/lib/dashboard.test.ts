@@ -18,8 +18,8 @@ test("an empty store gets the shipped layout", () => {
 
 test("the original panelOrder shape keeps its order and gains the new panels", () => {
   const out = mergeDashboard({ panelOrder: ["needs", "upcoming", "keys"] } as never);
-  // What the player arranged comes first, untouched.
-  assert.deepEqual(ids(out.panels).slice(0, 3), ["needs", "upcoming", "keys"]);
+  // What the player arranged comes first, untouched, behind the new summary.
+  assert.deepEqual(ids(out.panels).slice(0, 4), ["trackers", "needs", "upcoming", "keys"]);
   // Everything added since is appended rather than dropped on the floor.
   assert.deepEqual([...ids(out.panels)].sort(), [...DASH_PANELS].sort());
   assert.equal(out.panels.every((p) => p.visible || !["needs", "upcoming", "keys"].includes(p.id)), true);
@@ -34,10 +34,10 @@ test("a stored layout keeps hidden and wide flags", () => {
     upcomingLimit: 12,
     columns: 1,
   });
-  assert.deepEqual(ids(out.panels).slice(0, 2), ["keys", "upcoming"]);
-  assert.equal(out.panels[0].visible, false);
-  assert.equal(out.panels[0].wide, true);
-  assert.equal(out.panels[1].wide, false);
+  assert.deepEqual(ids(out.panels).slice(0, 3), ["trackers", "keys", "upcoming"]);
+  assert.equal(out.panels[1].visible, false);
+  assert.equal(out.panels[1].wide, true);
+  assert.equal(out.panels[2].wide, false);
   assert.equal(out.upcomingLimit, 12);
   assert.equal(out.columns, 1);
 });
@@ -107,4 +107,25 @@ test("setPanelFlag touches one panel and copies rather than mutates", () => {
     hidden.filter((p) => !p.visible).length,
     panels.filter((p) => !p.visible).length + 1,
   );
+});
+
+test("the tracker summary arrives at the top of an older layout", () => {
+  const out = mergeDashboard({
+    panels: [
+      { id: "keys", visible: true, wide: false },
+      { id: "upcoming", visible: true, wide: false },
+    ],
+  });
+  assert.deepEqual(ids(out.panels).slice(0, 3), ["trackers", "keys", "upcoming"]);
+});
+
+test("a tracker summary the player moved stays where they put it", () => {
+  const out = mergeDashboard({
+    panels: [
+      { id: "keys", visible: true, wide: false },
+      { id: "trackers", visible: false, wide: true },
+    ],
+  });
+  assert.deepEqual(ids(out.panels).slice(0, 2), ["keys", "trackers"]);
+  assert.equal(out.panels[1].visible, false);
 });

@@ -12,6 +12,23 @@ Every piece of Tarkov jargon on the site — Kappa, found-in-raid, transits,
 Scavs, Kord Breach — explains itself on hover or tap, so a new player is not
 expected to arrive already fluent.
 
+## How the site is organised
+
+The site is a set of separate trackers, plus two places where they meet:
+
+| Section | What it tracks | Setup |
+| --- | --- | --- |
+| **Tasks** (`#/quests`) | trader side tasks, keys, find-in-raid items | Tasks & Season walkthrough (`#/quests/setup`) |
+| **Story** (`#/story`) | the main chapters, lock choices and the four endings | Story setup (`#/story/setup`) |
+| **Season** (`#/season`) | the Kord Breach line and battle-pass documents, on the seasonal character | the Tasks & Season walkthrough, on Season |
+| **Hideout** (`#/hideout`) | station levels | none — tick stations on the page |
+| **Maps** (`#/maps`) | — | none; draws task objectives, story steps for your ending and season documents from the trackers |
+| **Dashboard** (`#/dashboard`) | — | none; a customisable summary of every tracker |
+
+The landing page (`#/welcome`) lays the trackers out side by side, each with its
+own setup, so nobody has to tick five hundred trader tasks to follow the story.
+Once anything is tracked, `#/` opens the dashboard instead.
+
 ## Live
 
 - **Production** (`main`) — the stable build: https://tarkov-map-project.vercel.app
@@ -147,11 +164,14 @@ Quest names that gained a `[PVP ZONE]` / `[PVE ZONE]` suffix after 1.1 are strip
 in the UI and filtered by the mode you picked — a PvE character no longer sees the
 PvP Zone variants.
 
-Battle-pass documents are a first-class hunt: a type-to-map list on the quest
-page, a **Battle pass hunt** layer preset, and a "show documents" prompt on any
-map that has them. Daily pickup limits differ by mode (30 / 20 / 15).
+Season tracking has its own tab, `#/season`: the story line (always read from
+the Season character, so it can be viewed from any profile), days left, and the
+battle-pass documents as a first-class hunt — a type-to-map list, a **Battle pass
+hunt** layer preset, and a "show documents" prompt on any map that has them.
+Daily pickup limits differ by mode (30 / 20 / 15).
 
-The quest tracker also ranks **which map to queue** from your active tasks.
+Setting up a Season character uses the same walkthrough as the traders, with a
+Kord Breach step first.
 
 ## Story endings
 
@@ -165,17 +185,24 @@ with the right answer highlighted, chapter checklists, major-evidence spots
 Ticks and choices are stored per character (PvP / Season / PvE) with the rest
 of your progress.
 
+**Setting it up.** `#/story/setup` is separate from the task walkthrough: pick an
+ending (or "not decided"), record the lock choices you have already made, and
+tick the chapters behind you. Like the task setup it writes nothing until
+Finish and only ever adds. Maps then list the target ending's unfinished steps
+that happen on them, in the Tasks panel beside the map.
+
 The chapters are not in the tarkov.dev feed. They are vendored from the wiki
 into `src/data/story-endings.json`.
 
 ## The dashboard
 
-`#/` is the front page and the shortest answer to "what do I do next": which map
-to queue, the tasks that are open on it, the keys those tasks go through, and
-what to keep out of raid for a hand-in.
+`#/dashboard` is the home page for anyone tracking something: a summary of every
+tracker, then the shortest answer to "what do I do next" — which map to queue,
+the tasks open on it, the keys they go through, and what to keep for a hand-in.
 
-It is assembled from eight panels — progress, next raid, upcoming, keys, find in
-raid, by trader, season, jump back in — and **you arrange it**. Press
+It is assembled from eleven panels — your trackers, task progress, story,
+next raid, upcoming, season, keys, hideout, find in raid, by trader, jump back
+in — and **you arrange it**. Press
 **Customise** and each panel grows a grip you can drag it by, arrows for the
 keyboard, a control for full or half width, and an × that puts it in a tray at
 the bottom. The tray remembers where a panel came from, so switching one back on
@@ -186,9 +213,9 @@ key acquired drops it from the list and the next row fills in.
 The header bar holds the raid clocks and the target task, so those are not
 separate dashboard tiles.
 
-**Kord Breach** is listed in full on the seasonal panel, from Uninvited Guests
-through Digital Puzzle (and Riding the Wave). Tick the story line on a Season
-character.
+The **trackers** panel shows where tasks, story, season and hideout stand and
+offers the setup for anything not started. An older saved layout gets it added
+at the top; everything else new is appended.
 
 ## Settings, hideout and a save file
 
@@ -213,7 +240,7 @@ away, and **Reset layout** puts everything back as it shipped.
 Dragging is pointer-based rather than HTML5 drag-and-drop, so it works with a
 finger. Everything it can do is also on a button, so it works without one.
 
-## The quest tracker
+## The task tracker
 
 `#/quests` answers a different question from the maps. They tell you what is on
 a map; it tells you what you should be doing — your active tasks, what each
@@ -417,23 +444,25 @@ src/lib/use-drag-reorder.ts
                          pointer-based drag reordering, because HTML5
                          drag-and-drop does not fire on touch at all
 src/components/TabShell.tsx
-                         the frame the five tab pages share, mounted above the
+                         the frame the six tab pages share, mounted above the
                          route switch so the section nav is the same element
                          across a tab change — which is what lets its
                          highlight slide instead of being redrawn in place.
                          Also owns the phone's bottom tab bar
 src/components/PageShell.tsx
                          the same bar for the pages that are not a section —
-                         Settings and the setup walkthrough
+                         Settings and the setup walkthroughs
 src/components/ui.tsx    the shared component vocabulary: card, callout, empty
                          state, menu, page header, the nav, the glossary term.
                          Anything a page repeats more than twice lives here
 src/lib/glossary.ts      the jargon the site used to assume you already knew —
                          Kappa, FIR, transit, Scav, Kord Breach — each one
                          explained in a sentence, shown on hover or tap
+src/components/Trackers.tsx
+                         each progression system's status and setup, shared
+                         by the landing page and the dashboard
 src/components/Onboarding.tsx
-                         the first-run checklist and the map legend. Both
-                         disappear once they have done their job
+                         the map legend
 src/lib/persist-migrate.ts
                          the persisted-state migrations. The rule every
                          version has to clear: a migration may never drop a

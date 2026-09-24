@@ -6,16 +6,18 @@ import { useSyncExternalStore, useCallback, type MouseEvent } from "react";
  * server rewrite rules.
  *
  *   #/              smart home: landing, maps, or dashboard
- *   #/welcome       the first-run landing page, always
- *   #/dashboard     the dashboard, even for maps-only visitors
+ *   #/welcome       the landing page, always
+ *   #/dashboard     summary of every tracker, laid out by the player
  *   #/maps          map picker
  *   #/m/<map>       one map, optionally ?q=<taskId> to deep-link a task
- *   #/quests        the quest tracker
+ *   #/quests        trader (side) task tracker
  *   #/quests/graph  task dependency graph
  *   #/quests/items  item tracker + stash audit
- *   #/quests/setup  the first-run walkthrough of each trader
+ *   #/quests/setup  tasks & season setup: a walk through each trader
  *   #/story         story endings overview
+ *   #/story/setup   story setup: ending, locked choices, finished chapters
  *   #/story/<id>    one ending's guided path
+ *   #/season        the seasonal story line and document hunt
  *   #/hideout       hideout stations
  *   #/settings      profile, reset, backup
  */
@@ -28,7 +30,9 @@ export type Route =
   | { name: "home" }
   | { name: "quests"; view: QuestView; focus: string | null }
   | { name: "setup" }
+  | { name: "storySetup" }
   | { name: "story"; ending: string | null }
+  | { name: "season" }
   | { name: "hideout" }
   | { name: "settings" }
   | { name: "map"; map: string; task: string | null };
@@ -39,22 +43,24 @@ export type Route =
  * Exported because the shell animates the body in the direction you moved
  * along this row, and both have to agree on which way that is.
  */
-export type TabId = "dashboard" | "maps" | "story" | "quests" | "hideout";
+export type TabId = "dashboard" | "maps" | "quests" | "story" | "season" | "hideout";
 
 export const TAB_ORDER: Record<TabId, number> = {
   dashboard: 0,
   maps: 1,
-  story: 2,
-  quests: 3,
-  hideout: 4,
+  quests: 2,
+  story: 3,
+  season: 4,
+  hideout: 5,
 };
 
-/** The tab a route belongs to, or null for the map and the walkthrough. */
+/** The tab a route belongs to, or null for the map and the setup walkthroughs. */
 export function tabOf(route: Route): TabId | null {
   if (route.name === "dashboard" || route.name === "root") return "dashboard";
   if (route.name === "home") return "maps";
   if (route.name === "story") return "story";
   if (route.name === "quests") return "quests";
+  if (route.name === "season") return "season";
   if (route.name === "hideout") return "hideout";
   return null;
 }
@@ -75,9 +81,11 @@ function parse(hash: string): Route {
     return { name: "quests", view: "list", focus };
   }
   if (segments[0] === "story") {
+    if (segments[1] === "setup") return { name: "storySetup" };
     return { name: "story", ending: segments[1] ? decodeURIComponent(segments[1]) : null };
   }
   if (segments[0] === "hideout") return { name: "hideout" };
+  if (segments[0] === "season") return { name: "season" };
   if (segments[0] === "settings") return { name: "settings" };
   if (segments[0] === "maps") return { name: "home" };
   if (segments[0] === "welcome") return { name: "welcome" };
@@ -146,6 +154,8 @@ export const href = {
   setup: () => "#/quests/setup",
   story: (ending?: string | null) =>
     ending ? `#/story/${encodeURIComponent(ending)}` : "#/story",
+  storySetup: () => "#/story/setup",
+  season: () => "#/season",
   hideout: () => "#/hideout",
   settings: () => "#/settings",
   map: (map: string, task?: string | null) => `#/m/${encodeURIComponent(map)}${task ? `?q=${task}` : ""}`,

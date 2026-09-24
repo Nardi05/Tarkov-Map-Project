@@ -10,13 +10,15 @@ const GO_TO: { kind: string; label: string; href: string }[] = [
   { kind: "Go", label: "Dashboard", href: href.dashboard() },
   { kind: "Go", label: "Start page", href: href.welcome() },
   { kind: "Go", label: "Maps", href: href.home() },
+  { kind: "Go", label: "Tasks", href: href.quests() },
   { kind: "Go", label: "Story", href: href.story() },
-  { kind: "Go", label: "Quests", href: href.quests() },
+  { kind: "Go", label: "Season", href: href.season() },
   { kind: "Go", label: "Task graph", href: href.quests("graph") },
   { kind: "Go", label: "Items", href: href.quests("items") },
   { kind: "Go", label: "Hideout", href: href.hideout() },
   { kind: "Go", label: "Settings", href: href.settings() },
-  { kind: "Go", label: "Task sync", href: href.setup() },
+  { kind: "Go", label: "Set up tasks & season", href: href.setup() },
+  { kind: "Go", label: "Set up story", href: href.storySetup() },
 ];
 
 export default function CommandPalette() {

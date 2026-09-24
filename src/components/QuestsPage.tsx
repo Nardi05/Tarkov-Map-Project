@@ -19,7 +19,6 @@ import type { TaskAvailability, TaskStatus } from "../types";
 import ItemAudit from "./ItemAudit";
 import NextRaid from "./NextRaid";
 import SavePanel from "./SavePanel";
-import SeasonPanel from "./SeasonPanel";
 import TaskGraphPage from "./TaskGraphPage";
 import { useSlashSearch } from "./ShortcutHelp";
 import TaskName from "./TaskName";
@@ -240,11 +239,11 @@ export default function QuestsPage({
   return (
     <Shell>
       <PageHeader
-        title="Quests"
+        title="Tasks"
         lead={
           <>
-            Tick what your <Term id="trader">traders</Term> have given you. Every map then draws
-            those objectives and nothing else.
+            Trader side tasks. Tick what your <Term id="trader">traders</Term> have given you;
+            every map then draws those objectives. The story and the season have their own pages.
           </>
         }
       >
@@ -288,7 +287,7 @@ export default function QuestsPage({
               href={href.setup()}
               onClick={onNavClick(href.setup())}
             >
-              {trackedCount === 0 ? "Set up my progress" : "Run the walkthrough"}
+              {trackedCount === 0 ? "Set up tasks" : "Re-run task setup"}
             </a>
           }
         />
@@ -299,13 +298,6 @@ export default function QuestsPage({
           traders={gatingTraders}
           trackedCount={trackedCount}
           markerCount={Object.keys(markerDone).length}
-        />
-
-        <SeasonPanel
-          mode={profile.mode}
-          taskStatus={taskStatus}
-          availability={availability}
-          onCycle={cycleTaskStatus}
         />
 
         {trackedCount > 0 && (

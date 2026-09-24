@@ -73,30 +73,34 @@ export const icons = {
   minus: "M5 12h14",
   clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v5l3 2",
   bolt: "m13 2-8 12h6l-1 8 8-12h-6l1-8Z",
+  calendar: "M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm-1 5h16M8 3v4m8-4v4",
 };
 
 /** The icon each section carries in the nav and the phone tab bar. */
 export const TAB_ICON: Record<TabId, string> = {
   dashboard: icons.compass,
   maps: icons.map,
-  story: icons.book,
   quests: icons.tasks,
+  story: icons.book,
+  season: icons.calendar,
   hideout: icons.home,
 };
 
-const TAB_LABEL: Record<TabId, string> = {
+export const TAB_LABEL: Record<TabId, string> = {
   dashboard: "Dashboard",
   maps: "Maps",
+  quests: "Tasks",
   story: "Story",
-  quests: "Quests",
+  season: "Season",
   hideout: "Hideout",
 };
 
 const TAB_HREF: Record<TabId, string> = {
   dashboard: href.dashboard(),
   maps: href.maps(),
-  story: href.story(),
   quests: href.quests(),
+  story: href.story(),
+  season: href.season(),
   hideout: href.hideout(),
 };
 

@@ -7,6 +7,7 @@ import type { KeyItem, MapData, TaskAvailability, TaskStatus, Vec3 } from "../ty
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
 import { EmptyState, Icon, Tick, icons } from "./ui";
+import StoryOnMap from "./StoryOnMap";
 
 /**
  * The task board for one map.
@@ -161,16 +162,22 @@ export default function TaskPanel({
 
   if (modeGroups.length === 0) {
     return (
-      <EmptyState
-        title="No task objectives on this map"
-        hint="Nothing in the current quest data is anchored here. Try another map."
-      />
+      <>
+        <div className="px-3 pt-3">
+          <StoryOnMap map={data.normalizedName} />
+        </div>
+        <EmptyState
+          title="No task objectives on this map"
+          hint="Nothing in the current quest data is anchored here. Try another map."
+        />
+      </>
     );
   }
 
   return (
     <div className="flex h-full flex-col">
       <div className="flex-none px-3 pt-3">
+        <StoryOnMap map={data.normalizedName} />
         {!layers.quests && (
           <button
             type="button"

@@ -81,14 +81,11 @@ interface QuestFilters {
  * round for a first-run aid.
  */
 export interface UiFlags {
-  /** The new-player checklist on the dashboard, once they dismiss it. */
-  firstStepsDismissed: boolean;
   /** The colour-and-shape primer over the map, once they have read it. */
   mapPrimerSeen: boolean;
 }
 
 const DEFAULT_UI: UiFlags = {
-  firstStepsDismissed: false,
   mapPrimerSeen: false,
 };
 
@@ -160,6 +157,11 @@ interface Store {
   toggleStoryTick: (id: string) => void;
   setStoryChoice: (lockId: string, value: string | null) => void;
   resetStory: () => void;
+  /**
+   * Folds the story setup's answers in. Additive like `importTaskStatus`:
+   * ticks and choices made on the story page survive.
+   */
+  importStory: (patch: { target: string | null; choices: Record<string, string>; ticks: string[] }) => void;
 
   /** Wipes the current mode only — the other mode's progress is untouched. */
   clearProgress: () => void;
@@ -435,6 +437,25 @@ export const useStore = create<Store>()(
         ),
 
       resetStory: () => set((s) => editMode(s, (p) => ({ ...p, story: emptyMode().story }))),
+
+      importStory: ({ target, choices: chosen, ticks: done }) =>
+        set((s) =>
+          editMode(s, (p) => {
+            const ending = endingById(target);
+            const choices = { ...p.story.choices, ...chosen };
+            if (ending) {
+              for (const [lock, value] of Object.entries(ending.choices)) {
+                if (!choices[lock] && value) choices[lock] = value;
+              }
+            }
+            const ticks = { ...p.story.ticks };
+            for (const id of done) ticks[id] = true;
+            return {
+              ...p,
+              story: { target: ending ? ending.id : p.story.target, ticks, choices },
+            };
+          }),
+        ),
 
       clearProgress: () => set((s) => editMode(s, () => emptyMode())),
 

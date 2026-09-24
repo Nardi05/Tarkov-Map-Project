@@ -356,6 +356,48 @@ export function progressFor(
   };
 }
 
+export interface SetupChapter {
+  chapter: StoryChapter;
+  stepIds: string[];
+}
+
+/**
+ * Chapters the story setup offers to mark finished, with the step ids that
+ * marking one ticks. With no ending chosen yet, only what every ending shares.
+ */
+export function chaptersForSetup(
+  endingId: StoryEndingId | null,
+  choices: Record<string, string>,
+): SetupChapter[] {
+  const out: SetupChapter[] = [];
+  for (const chapter of STORY.chapters) {
+    if (endingId ? !onEnding(chapter.endings, endingId) : chapter.endings) continue;
+    if (!whenMatch(chapter.when, choices)) continue;
+    const stepIds = chapter.steps
+      .filter((step) => (endingId ? onEnding(step.endings, endingId) : !step.endings))
+      .filter((step) => whenMatch(step.when, choices))
+      .map((step) => step.id);
+    if (stepIds.length) out.push({ chapter, stepIds });
+  }
+  return out;
+}
+
+/** Unfinished steps for the targeted ending that happen on one map. */
+export function storyStepsOnMap(
+  story: StoryProgress,
+  map: string,
+  built: Record<string, number> = {},
+): VisibleStep[] {
+  const ending = endingById(story.target);
+  if (!ending) return [];
+  const choices = effectiveChoices(ending, story.choices);
+  return stepsForEnding(ending.id, choices).filter(
+    (row) =>
+      !!row.step.maps?.includes(map) &&
+      !stepIsDone(row.step, story.ticks, built),
+  );
+}
+
 export function storylineChaptersFor(endingId: StoryEndingId): StoryChapter[] {
   return STORY.chapters.filter((c) => c.storyline && onEnding(c.endings, endingId));
 }
