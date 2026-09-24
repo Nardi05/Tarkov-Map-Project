@@ -1455,6 +1455,76 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     margin-top: 1.9rem;
   }
 
+  /* ------------------------------------------------------ one-screen task setup */
+
+  .setup-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+  }
+
+  .setup-character {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .setup-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .setup-field .input {
+    width: auto;
+    min-width: 5rem;
+  }
+
+  .setup-tools {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .setup-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+  }
+
+  .setup-chip-n {
+    min-width: 1.1rem;
+    padding: 0 0.3rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* Stays in reach however long the list gets, so Save is never a scroll away. */
+  .setup-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.5rem -0.25rem 0;
+    padding: 0.7rem 0.75rem calc(0.7rem + env(safe-area-inset-bottom, 0px));
+    border: 1px solid var(--line);
+    border-radius: var(--r) var(--r) 0 0;
+    background: color-mix(in srgb, var(--panel) 94%, transparent);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow-sm);
+  }
+
   /* ---------------------------------------------- wiki detail (tasks, chapters) */
 
   .wiki-detail {
@@ -1748,6 +1818,21 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     .dash-grid[data-columns="2"] > .dash-panel[data-wide="true"] {
       grid-column: 1 / -1;
     }
+  }
+
+  /* A new character's dashboard: one thing to do. */
+  .dash-empty {
+    padding: 1.5rem 1.4rem;
+  }
+
+  /* Panels with nothing to show, as one line instead of a stack of cards. */
+  .dash-folded {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    font-size: 0.75rem;
   }
 
   .dash-panel {
