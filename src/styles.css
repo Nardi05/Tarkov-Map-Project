@@ -2345,8 +2345,9 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
   }
 }
 
+/* No `position` here: Leaflet's absolute positioning must win, or every pin
+   falls into normal flow and is pushed down by the pins before it. */
 .tk-marker {
-  position: relative;
   display: grid;
   place-items: center;
 }
