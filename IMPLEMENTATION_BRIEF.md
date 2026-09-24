@@ -150,6 +150,28 @@ Work in order. Each item should be its own PR or a tight PR group with screensho
 | P0.3 | “Map is already blue dots and skulls.” | Default Quick View = **Questing** (or Learning on first map visit). **PMC spawns off**. Never land on Everything. Persist last Quick View per map. |
 | P0.4 | “Hideout modal is off-screen.” | Modal fully in viewport: `max-height` + internal scroll (or centered drawer). Verify 1280×720 and 1920×1080. |
 | P0.5 | “Is this live data or a ghost?” | On API/wiki failure: **visible stale/error banner** with last-success time. Never look fully healthy on silent fallback. |
+| P0.6 | “Collector is active but 200 early quests still open.” | After **task sync / OCR / bulk active import**, auto-run the same fill as Settings recalc: for each active/pinned task, `fillCompleted(prerequisiteClosure(...))`. Keep actives **active**. Never clobber failed/ignored. Show “Marked N earlier tasks done…”. |
+
+
+#### P0.6 detail — infer completed chain on sync (Luke, 2026-09-25)
+
+Late wipe, Kappa done, target = all doable. Player task-syncs currently **active** quests. The site must treat that frontier as truth:
+
+- Active quests stay **active**
+- Every prerequisite leading up to those actives becomes **completed** (player clearly finished them already)
+- Other synced actives stay active and get the same treatment
+
+**Example:** Collector active → mark the prerequisite closure behind Collector completed (Kappa path) → keep Collector + any other actives as active.
+
+**Already exists (wire it; don’t reinvent):**
+- `prerequisiteClosure` — `src/lib/progression.ts`
+- `fillCompleted` / `completeWithPrereqs` — `src/store.ts`
+- Settings **Recalc** in `src/components/SettingsPage.tsx` already does this **only on button click**
+
+**Bug:** Sync / OCR / import marks actives but does **not** call that fill automatically.
+
+**Acceptance:** Sync with Collector (+ other actives) → Collector still active, prereq/Kappa chain completed, no manual Settings recalc required. Unit test: Debut→Checking→Collector; sync Collector active → Debut+Checking completed, Collector active.
+
 
 **P0 acceptance**
 
@@ -157,6 +179,7 @@ Work in order. Each item should be its own PR or a tight PR group with screensho
 - [ ] Dashboard above the fold answers: **what map / what ~3 things next**.  
 - [ ] Hideout dialog usable at 1080p without moving the window.  
 - [ ] Killing the task feed shows an explicit error/stale state.
+- [ ] Late-wipe sync fills prereq chain behind actives (Collector example) without Settings recalc.
 
 ### P1 — first-hour trust
 
