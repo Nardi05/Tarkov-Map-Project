@@ -127,7 +127,7 @@ The repo is set up for Vercel (`vercel.json`: `npm run data && npm run build`). 
 
 **`main` is sacred** — do not merge there without Luke’s explicit yes. Product work lands on `claude/repo-review-preview-us4rgf` (or an agreed feature branch) first.
 
-P0.1–P0.5 land on this Claude preview branch as they merge. Next unfinished wipe item: **P0.6** (late-wipe sync fills prerequisite chains behind actives).
+P0.1–P0.5 are on this Claude preview branch. Next unfinished wipe item: **P0.6** (late-wipe sync fills prerequisite chains behind actives).
 
 ## Credits
 
