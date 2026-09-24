@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useHideoutData, useItemCatalog } from "../lib/data";
 import { completeThrough, hideoutRows, hideoutStatusLabel, type HideoutRow } from "../lib/hideout";
 import { useHideout, useItemCounts, useStore } from "../store";
-import { Callout, Card, EmptyState, Icon, icons, PageHeader, SectionHead, Term } from "./ui";
+import { Callout, Card, Dialog, EmptyState, Icon, icons, PageHeader, SectionHead, Term } from "./ui";
 
 /**
  * The hideout.
@@ -71,14 +71,7 @@ export default function HideoutPage() {
     return { built, total, pct: total ? built / total : 0 };
   }, [rows]);
 
-  useEffect(() => {
-    if (!openId) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpenId(null);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [openId]);
+  const close = useCallback(() => setOpenId(null), []);
 
   return (
     <>
@@ -163,23 +156,8 @@ export default function HideoutPage() {
       )}
 
       {open && (
-        <div
-          className="fixed inset-0 z-50 grid place-items-end sm:place-items-center"
-          role="dialog"
-          aria-modal="true"
-          aria-label={open.station.name}
-        >
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            aria-label="Close"
-            onClick={() => setOpenId(null)}
-          />
-          <div
-            className="surface animate-sheet relative z-10 max-h-[90vh] w-full max-w-lg overflow-auto p-4 sm:animate-none"
-            style={{ boxShadow: "var(--shadow-lg)" }}
-          >
-            <header className="mb-3 flex items-start justify-between gap-2">
+        <Dialog label={open.station.name} onClose={close}>
+            <header className="dialog-head">
               <div className="min-w-0">
                 <h2 className="text-lg font-semibold">{open.station.name}</h2>
                 <p className="card-sub">{hideoutStatusLabel(open)}</p>
@@ -187,7 +165,7 @@ export default function HideoutPage() {
               <button
                 type="button"
                 className="btn btn-ghost btn-icon flex-none"
-                onClick={() => setOpenId(null)}
+                onClick={close}
                 aria-label="Close"
               >
                 <Icon path={icons.close} size={16} />
@@ -277,8 +255,7 @@ export default function HideoutPage() {
                 );
               })}
             </ol>
-          </div>
-        </div>
+        </Dialog>
       )}
     </>
   );
