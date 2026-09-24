@@ -1704,6 +1704,39 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     pointer-events: auto;
   }
 
+  /* ---------------------------------------- "filled in N earlier tasks" notice */
+
+  .fill-notice {
+    position: fixed;
+    left: 50%;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    z-index: 70;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: min(34rem, calc(100vw - 2rem));
+    padding: 0.55rem 0.55rem 0.55rem 0.8rem;
+    transform: translateX(-50%);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--panel);
+    box-shadow: var(--shadow-lg);
+    font-size: 0.8rem;
+  }
+
+  /* Clear of the phone's bottom tab bar. */
+  @media (max-width: 899px) {
+    .fill-notice {
+      bottom: calc(4.4rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  .fill-notice-icon {
+    display: flex;
+    flex: none;
+    color: var(--ok);
+  }
+
   /* ------------------------------------------------------------ dialog */
 
   .dialog-root {

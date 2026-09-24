@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useProgression } from "../lib/data";
 import { MODE_META, MODE_ORDER, modeLabel } from "../lib/mode";
 import { GAME_EDITIONS, GAME_MODES, type Faction, type GameEdition } from "../lib/persist-migrate";
-import { prerequisiteClosure } from "../lib/progression";
+import { prereqsToFill } from "../lib/prereq-fill";
 import { href, onNavClick } from "../lib/router";
 import { useStore, type Theme } from "../store";
 import DataFreshness from "./DataFreshness";
@@ -64,12 +64,9 @@ export default function SettingsPage() {
   }, [progression.data]);
 
   const recalc = () => {
-    const ids = new Set<string>();
-    for (const [id, status] of Object.entries(taskStatus)) {
-      if (status !== "active" && status !== "pinned") continue;
-      for (const prior of prerequisiteClosure(progression.data, id, taskStatus)) ids.add(prior);
-    }
-    const filled = fillCompleted([...ids]);
+    // The same rule every "mark active" write now applies on its own; this is
+    // the manual sweep over everything already stored.
+    const filled = fillCompleted(prereqsToFill(progression.data, taskStatus));
     setNote(
       filled
         ? `Filled in ${filled} earlier task${filled === 1 ? "" : "s"} behind what you have accepted. The plan re-ranks toward your target.`

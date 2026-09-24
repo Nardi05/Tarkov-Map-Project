@@ -200,7 +200,7 @@ Late wipe, Kappa done, target = all doable. Player task-syncs currently **active
 - [ ] Dashboard above the fold answers: **what map / what ~3 things next**.  
 - [ ] Hideout dialog usable at 1080p without moving the window.  
 - [ ] Killing the task feed shows an explicit error/stale state.
-- [ ] Late-wipe sync fills prereq chain behind actives (Collector example) without Settings recalc.
+- [x] Late-wipe sync fills prereq chain behind actives (Collector example) without Settings recalc.
 
 ### P1 — first-hour trust
 

@@ -31,6 +31,8 @@ import {
   type ModeStory,
   type Profile,
 } from "./lib/persist-migrate";
+import { currentGraph } from "./lib/graph-ref";
+import { cycleWithFill, importWithFill, setWithFill, undoFill, type FillResult } from "./lib/prereq-fill";
 import { endingById } from "./lib/story";
 import type { TaskStatus } from "./types";
 
@@ -96,6 +98,13 @@ const DEFAULT_UI: UiFlags = {
   mapPrimerSeen: false,
 };
 
+export interface FillNotice {
+  /** Earlier quests marked completed behind a quest marked active. */
+  ids: string[];
+  mode: GameMode;
+  at: number;
+}
+
 /** A layer combination the player saved themselves, alongside the built-ins. */
 export interface CustomView {
   id: string;
@@ -140,6 +149,11 @@ interface Store {
   entry: EntryPath | null;
   /** Dismissals for the first-run aids. See `UiFlags`. */
   ui: UiFlags;
+  /**
+   * The last time marking a quest active also filled in the chain behind it,
+   * so the page can say so and offer to take it back. Not persisted.
+   */
+  fillNotice: FillNotice | null;
 
   setLayer: (id: LayerId, on: boolean) => void;
   toggleLayer: (id: LayerId) => void;
@@ -199,7 +213,10 @@ interface Store {
    * what they know, and neither has an opinion about tasks the player ticked
    * by hand outside them. Those survive.
    */
-  importTaskStatus: (statuses: Record<string, TaskStatus>) => void;
+  importTaskStatus: (statuses: Record<string, TaskStatus>) => number;
+  /** Takes back the last automatic fill, if nothing has changed those quests since. */
+  undoLastFill: () => void;
+  dismissFillNotice: () => void;
   /**
    * Replaces both modes wholesale, from a restored save file.
    *
@@ -257,6 +274,18 @@ function withLayers(s: Store, layers: Record<LayerId, boolean>): Partial<Store> 
     : { layers };
 }
 
+/**
+ * Writes a status change for the current mode and, when it filled in earlier
+ * quests, records that for the notice. See lib/prereq-fill.ts for the rules.
+ */
+function applyFill(s: Store, result: FillResult): Partial<Store> {
+  const out: Partial<Store> = editMode(s, (p) => ({ ...p, taskStatus: result.taskStatus }));
+  if (result.filled.length) {
+    out.fillNotice = { ids: result.filled, mode: s.profile.mode, at: Date.now() };
+  }
+  return out;
+}
+
 function editMode(
   s: Store,
   edit: (p: ModeProgress) => ModeProgress,
@@ -280,6 +309,7 @@ export const useStore = create<Store>()(
       dashboard: { ...DEFAULT_DASHBOARD, panels: [...DEFAULT_DASHBOARD.panels] },
       entry: null,
       ui: { ...DEFAULT_UI },
+      fillNotice: null,
 
       setLayer: (id, on) => set((s) => withLayers(s, { ...s.layers, [id]: on })),
       toggleLayer: (id) => set((s) => withLayers(s, { ...s.layers, [id]: !s.layers[id] })),
@@ -331,26 +361,17 @@ export const useStore = create<Store>()(
       // and trader chips shouldn't yank the map back to selected-only.
       clearQuestFilters: () => set((s) => ({ quest: { ...DEFAULT_QUEST, showAll: s.quest.showAll } })),
 
+      // Marking a quest active or pinned also marks the chain behind it done —
+      // a trader would not have handed it over otherwise. Any other status
+      // touches only the quest itself.
       setTaskStatus: (taskId, status) =>
         set((s) =>
-          editMode(s, (p) => {
-            const taskStatus = { ...p.taskStatus };
-            if (status) taskStatus[taskId] = status;
-            else delete taskStatus[taskId];
-            return { ...p, taskStatus };
-          }),
+          applyFill(s, setWithFill(currentGraph(), s.progress[s.profile.mode].taskStatus, taskId, status)),
         ),
 
       cycleTaskStatus: (taskId) =>
         set((s) =>
-          editMode(s, (p) => {
-            const taskStatus = { ...p.taskStatus };
-            const current = taskStatus[taskId];
-            if (!current) taskStatus[taskId] = "active";
-            else if (current === "active" || current === "pinned") taskStatus[taskId] = "completed";
-            else delete taskStatus[taskId];
-            return { ...p, taskStatus };
-          }),
+          applyFill(s, cycleWithFill(currentGraph(), s.progress[s.profile.mode].taskStatus, taskId)),
         ),
 
       completeWithPrereqs: (taskId, prereqIds) =>
@@ -521,8 +542,29 @@ export const useStore = create<Store>()(
         return fresh.length;
       },
 
-      importTaskStatus: (statuses) =>
-        set((s) => editMode(s, (p) => ({ ...p, taskStatus: { ...p.taskStatus, ...statuses } }))),
+      importTaskStatus: (statuses) => {
+        const s = get();
+        const result = importWithFill(currentGraph(), s.progress[s.profile.mode].taskStatus, statuses);
+        set((state) => applyFill(state, result));
+        return result.filled.length;
+      },
+
+      undoLastFill: () =>
+        set((s) => {
+          const notice = s.fillNotice;
+          if (!notice) return {};
+          const mode = notice.mode;
+          const slice = s.progress[mode];
+          return {
+            fillNotice: null,
+            progress: {
+              ...s.progress,
+              [mode]: { ...slice, taskStatus: undoFill(slice.taskStatus, notice.ids) },
+            },
+          };
+        }),
+
+      dismissFillNotice: () => set({ fillNotice: null }),
 
       restoreProgress: (progress, profile) =>
         set((s) => ({
