@@ -21,7 +21,7 @@ Build the **ultimate Tarkov companion**: a **nice, neat, understandable front** 
 | **Without their pain** | Those tools feel confusing, ugly, cluttered, too much happening at once |
 | **eft-kappa look** | Clean, modern, sparse, readable (eft-kappa before it shut down) — visual north star |
 | **MapGenie maps** | Map quality and usefulness should feel like MapGenie (depth, layers, readability) |
-| **Tarkov Market systems, not UI** | Market-grade logic (value, flea, keep/sell **and** quest Tree/by-chains graph model) without Market’s chrome |
+| **Tarkov Market systems, not UI** | Market-grade logic (value, flea, keep/sell **and** quest by-chains dependency/order knowledge) without Market’s chrome or a Tree canvas |
 | **Compose, don’t reinvent** | Front for wiki + forums + Market + tarkov.dev + Tracker-style progress — not a new encyclopedia |
 
 ### One-line thesis
@@ -34,20 +34,22 @@ Build the **ultimate Tarkov companion**: a **nice, neat, understandable front** 
 - **Do not unfold every pillar on first paint.** Defaults and empty states show the *next useful action* only. Depth is one click away.
 - Between raids (≈30–90s): **Continue last map + next ~3 objectives**. Everything else waits.
 
-### Quest graph imprint (locked)
+### Quest graph imprint (locked) — data / progression logic, not a Tree UI
 
-**Reference:** [Tarkov Market — interactive quests](https://tarkov-market.com/progression/quests-interactive) → **Tree** → **By chains**.
+**Inspiration (knowledge only):** [Tarkov Market — interactive quests](https://tarkov-market.com/progression/quests-interactive) → **Tree** → **By chains**. Steal *how quests relate* (dependency order, unlocks, chain progress). Do **not** ship Market’s pannable Tree canvas, Tree chrome, or a graph-visualization screen.
 
-Task tracking in *our* product is a **dependency graph / chain graph**, not a flat trader checklist.
+**Imprint = data model + mental model for tracking, sync, planner, and map reasoning.** The site must *know* quests like that graph. The UI stays calm progressive disclosure (next ~3 objectives between raids) — **not** a Tree / graph-canvas milestone.
+
+Task tracking in *our* product is a **dependency / chain graph in data**, not a flat trader checklist and not a Tree view.
 
 | Rule | Meaning |
 |------|---------|
 | **Primary axis = by chains** | Prerequisite → successor stacks that can **cross traders**. Trader is a filter/label, not the only axis. |
 | **Nodes carry gates** | PMC level, trader loyalty/rep, karma, prior quests. |
 | **Edges unlock next** | Completing a node unlocks successor mission(s). Branches and mutually exclusive choices are first-class. |
-| **Progress overlays the graph** | Completed / active (**frontier**) / available / locked — know where you are and what unlocks next. |
-| **P0.6 = data half of this imprint** | Synced actives = frontier; auto-fill prerequisite closure as completed; keep actives active. See §P0.6 below. |
-| **Steal graph logic, not chrome** | Progressive disclosure: between-raid = **next ~3 on your chain**; full Tree is a power view later (calm UI, not Market’s dense overview). |
+| **Progress overlays the graph (in data)** | Completed / active (**frontier**) / available / locked — know where you are and what unlocks next (for sync, planner, map reasoning). |
+| **P0.6 = this imprint’s data half** | Synced actives = frontier; auto-fill prerequisite closure as completed; keep actives active. See §P0.6 below. |
+| **Steal graph knowledge, not Tree chrome** | Between-raid UI = **next ~3 on your chain**. No planned “Quest Tree UI” / pannable by-chains canvas. |
 
 Related: open **PR #14** already implements **P0.1** one-screen setup with prereq inference on tick/save (graph thinking on the setup path). Still need **P0.6** wired into sync / OCR / import paths that do not go through setup.
 
@@ -60,7 +62,7 @@ Related: open **PR #14** already implements **P0.1** one-screen setup with prere
 | **TarkovForge / TTracker** | Coverage: quests, hideout, maps, stash, wipe loop | Kitchen-sink home, long setup, visual noise |
 | **eft-kappa** (defunct) | Typography, spacing, calm hierarchy, “one job per view” | Narrow kappa-only scope (we’re broader) |
 | **MapGenie Tarkov** | Map interaction quality, filters, marker craft | Paywalled core maps, oversized noisy defaults |
-| **Tarkov Market** | Pricing / flea / value *systems* **and** quest **Tree → By chains** *graph model* (dependency/chain graph, cross-trader) | Dense Market UI chrome / overview density |
+| **Tarkov Market** | Pricing / flea / value *systems* **and** quest **by-chains** *dependency/order knowledge* (cross-trader unlocks, frontier) | Dense Market UI chrome; pannable Tree canvas; any “Quest Tree” power view as a product milestone |
 | **tarkov.dev** | Live wipe data + API as backbone | Treating the site as a personal progress diary |
 | **Official wiki / forums** | Authoritative text, locations, community nuance | Pasting walls of wiki prose into the app; use structured extracts + “Open on wiki” |
 
@@ -172,7 +174,7 @@ Work in order. Each item should be its own PR or a tight PR group with screensho
 
 #### P0.6 detail — infer completed chain on sync (Luke, 2026-09-25)
 
-**This is the data imprint of Quest graph (locked):** synced actives = frontier; prerequisite closure → completed; actives stay active. Full Tree UI stays Later.
+**This is the quest graph imprint (locked) — data / order, not UI:** synced actives = frontier; prerequisite closure → completed; actives stay active. No Tree canvas feature is planned; between-raid UI stays next ~3 objectives.
 
 Late wipe, Kappa done, target = all doable. Player task-syncs currently **active** quests. The site must treat that frontier as truth:
 
@@ -227,7 +229,7 @@ Late wipe, Kappa done, target = all doable. Player task-syncs currently **active
 Do **not** start these before P0 is green unless Luke says otherwise.
 
 - Market-grade **systems**: “what to keep / sell” using flea/value data, calm UI  
-- **Quest Tree UI** (Market Tree / By chains mental model): power view of the full chain graph with calm progressive disclosure — between-raid stays next ~3; do **not** ship Market’s dense overview chrome  
+- Deeper use of **quest chain knowledge** in planner / map reasoning (same by-chains data model) — still **not** a Tree / graph-canvas UI  
 - Deeper **wiki composition**: structured objectives/keys already started on Claude tip — extend carefully, link out for prose  
 - tarkov.dev as primary live feed with wiki fallback (already directionally there)  
 - Optional overlays / export for power users  
@@ -243,7 +245,8 @@ Do **not** start these before P0 is green unless Luke says otherwise.
 - No MapGenie PRO paywall imitation  
 - No pasting full wiki articles into panels  
 - No “redesign everything” cosmetic pass before P0 behavior fixes  
-- No deleting story / season / hideout / stash pillars to “simplify”
+- No deleting story / season / hideout / stash pillars to “simplify”  
+- No Tarkov Market–style Quest Tree / pannable by-chains canvas as a product feature (imprint is data/order only)
 
 ---
 
@@ -294,7 +297,7 @@ Do **not** start these before P0 is green unless Luke says otherwise.
 ## 12. Reference links
 
 - Punch-list PR: https://github.com/Nardi05/Tarkov-Map-Project/pull/12  
-- Quest graph imprint: https://tarkov-market.com/progression/quests-interactive (Tree → By chains)  
+- Quest graph imprint (data/order inspiration only): https://tarkov-market.com/progression/quests-interactive (Tree → By chains knowledge — not a UI to copy)  
 - Related open PR (P0.1 setup + prereq on tick/save): https://github.com/Nardi05/Tarkov-Map-Project/pull/14  
 - Preview branch: `claude/repo-review-preview-us4rgf`  
 - Prior pin fix on tracking line: PR #11 (historical; preview branch may differ)  

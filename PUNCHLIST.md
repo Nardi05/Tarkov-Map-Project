@@ -18,7 +18,7 @@ That means:
 
 Competitors prove players will live in an all-in-one if it is fast between raids. They bounce when setup is long, markers are noisy, or every screen screams “configure me.”
 
-**Quest graph imprint (locked):** Tarkov Market interactive quests → **Tree → By chains**. Tracker model = dependency / chain graph (not a flat trader list). **Data** = P0.6 (synced actives = frontier; auto-fill prereq closure completed). **Full Tree UI** = Later (calm, not Market chrome). See `IMPLEMENTATION_BRIEF.md`.
+**Quest graph imprint (locked) = data / progression logic, not a Tree UI:** Steal Tarkov Market interactive quests → **Tree → By chains** *knowledge* (dependency order, unlocks, frontier) — **not** their pannable Tree canvas. Tracker model = dependency / chain graph in data (not a flat trader list). **P0.6** = data half (synced actives = frontier; auto-fill prereq closure completed). Between-raid UI stays next ~3 objectives — **no** Quest Tree / graph-visualization milestone. See `IMPLEMENTATION_BRIEF.md`.
 
 ---
 ## Competitor snapshot (what wipe players actually praise / hate)
@@ -67,7 +67,7 @@ Competitors prove players will live in an all-in-one if it is fast between raids
    *Fix intent:* Visible stale/error banner (“Tasks feed failed — showing cached YYYY-MM-DD”). No silent 200-looking UI on failed upstream.
 
 6. **P0.6 — late-wipe sync leaves early quests open (“Collector active, 200 early still open”).**  
-   *Fix intent / imprint:* Graph imprint = Market **Tree → By chains**. Data half = after sync/OCR/bulk active import, fill prerequisite closure completed; keep actives active. Full Tree UI = Later. (PR #14 already does prereq inference on setup tick/save; wire the same into non-setup sync paths.)
+   *Fix intent / imprint:* Graph imprint = Market **by-chains** dependency/order knowledge (data model), **not** a Tree UI. After sync/OCR/bulk active import, fill prerequisite closure completed; keep actives active. (PR #14 already does prereq inference on setup tick/save; wire the same into non-setup sync paths.)
 
 ### P1 — trust & friction after first hour
 
@@ -142,7 +142,7 @@ Stack stays **TS / React / Vite / Leaflet / Zustand**. Competitors win on speed-
 - [ ] Map defaults: not “Everything”; PMC spawns off by default; persist last Quick View
 - [ ] Hideout (and any) modal fully on-screen with internal scroll
 - [ ] Surface API/data failures (no silent fallback that looks live)
-- [ ] **Task sync infers completed prereqs (P0.6 — data half of Market Tree/by-chains imprint):** after sync/OCR of actives (e.g. Collector), auto-fill prerequisite closure as completed; keep actives active (same as Settings recalc, automatic). Full Tree UI = Later.
+- [ ] **Task sync infers completed prereqs (P0.6 — data half of by-chains imprint):** after sync/OCR of actives (e.g. Collector), auto-fill prerequisite closure as completed; keep actives active (same as Settings recalc, automatic). Imprint is data/order only — no Tree UI planned.
 
 ## P1 — first-hour trust
 
