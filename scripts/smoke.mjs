@@ -161,7 +161,7 @@ const routes = [
   { hash: "#/quests", heading: "Tasks" },
   { hash: "#/quests/graph", heading: "Tasks" },
   { hash: "#/quests/items", heading: "Tasks" },
-  { hash: "#/quests/setup", heading: "Set up your tasks" },
+  { hash: "#/quests/setup", heading: "Mark your active quests" },
   { hash: "#/hideout", heading: "Hideout" },
   { hash: "#/settings", heading: "Settings" },
 ];

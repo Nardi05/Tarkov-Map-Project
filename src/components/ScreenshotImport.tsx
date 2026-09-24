@@ -112,7 +112,7 @@ export default function ScreenshotImport({
         </span>
         <span className="min-w-0">
           <span className="block text-[0.8125rem] font-medium">
-            Read it from a screenshot instead
+            Read {trader}&rsquo;s list from a screenshot
           </span>
           <span
             className="mt-0.5 block text-[0.7rem] leading-snug"

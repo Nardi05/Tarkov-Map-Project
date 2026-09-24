@@ -10,7 +10,14 @@ import {
   type DashboardLayout,
   type DashPanelId,
 } from "./lib/dashboard";
-import { DEFAULT_LAYER_STATE, LAYERS, PRESETS, type LayerId } from "./lib/layers";
+import {
+  DEFAULT_LAYER_STATE,
+  LAYERS,
+  PRESETS,
+  layersForMap,
+  mergeMapLayers,
+  type LayerId,
+} from "./lib/layers";
 import { hasCharacterData, parseEntry, type EntryPath } from "./lib/onboarding.ts";
 import {
   emptyMode,
@@ -97,7 +104,15 @@ export interface CustomView {
 }
 
 interface Store {
+  /** The open map's layers. Read and written through the actions below. */
   layers: Record<LayerId, boolean>;
+  /**
+   * Each map's own last view. A map missing from here opens on the calm
+   * default (Questing), so no map ever lands on every layer at once.
+   */
+  mapLayers: Record<string, Record<LayerId, boolean>>;
+  /** Which map `layers` currently belongs to. Not persisted. */
+  layerMap: string | null;
   /** The player's own quick views. Built-in PRESETS are not stored. */
   customViews: CustomView[];
   settings: Settings;
@@ -131,6 +146,8 @@ interface Store {
   setGroupLayers: (ids: LayerId[], on: boolean) => void;
   applyPreset: (presetId: string) => void;
   resetLayers: () => void;
+  /** Swaps `layers` to this map's remembered view, or the default. */
+  openMapLayers: (map: string) => void;
   /** Saves whatever is currently switched on as a named quick view. */
   saveCustomView: (label: string) => void;
   removeCustomView: (id: string) => void;
@@ -233,6 +250,13 @@ const DEFAULT_QUEST: QuestFilters = {
  * and write to a fixed one — the bug that would silently merge a player's PvE
  * run into their PvP progress.
  */
+/** Sets the open map's layers and remembers them for that map. */
+function withLayers(s: Store, layers: Record<LayerId, boolean>): Partial<Store> {
+  return s.layerMap
+    ? { layers, mapLayers: { ...s.mapLayers, [s.layerMap]: layers } }
+    : { layers };
+}
+
 function editMode(
   s: Store,
   edit: (p: ModeProgress) => ModeProgress,
@@ -245,6 +269,8 @@ export const useStore = create<Store>()(
   persist(
     (set, get) => ({
       layers: { ...DEFAULT_LAYER_STATE },
+      mapLayers: {},
+      layerMap: null,
       customViews: [],
       settings: { ...DEFAULT_SETTINGS },
       quest: { ...DEFAULT_QUEST },
@@ -255,12 +281,12 @@ export const useStore = create<Store>()(
       entry: null,
       ui: { ...DEFAULT_UI },
 
-      setLayer: (id, on) => set((s) => ({ layers: { ...s.layers, [id]: on } })),
-      toggleLayer: (id) => set((s) => ({ layers: { ...s.layers, [id]: !s.layers[id] } })),
+      setLayer: (id, on) => set((s) => withLayers(s, { ...s.layers, [id]: on })),
+      toggleLayer: (id) => set((s) => withLayers(s, { ...s.layers, [id]: !s.layers[id] })),
       setGroupLayers: (ids, on) =>
-        set((s) => ({
-          layers: { ...s.layers, ...Object.fromEntries(ids.map((id) => [id, on])) },
-        })),
+        set((s) =>
+          withLayers(s, { ...s.layers, ...Object.fromEntries(ids.map((id) => [id, on])) }),
+        ),
       applyPreset: (presetId) =>
         set((s) => {
           const chosen =
@@ -269,9 +295,11 @@ export const useStore = create<Store>()(
           const next = Object.fromEntries(
             LAYERS.map((l) => [l.id, chosen.layers.includes(l.id)]),
           ) as Record<LayerId, boolean>;
-          return { layers: next };
+          return withLayers(s, next);
         }),
-      resetLayers: () => set({ layers: { ...DEFAULT_LAYER_STATE } }),
+      resetLayers: () => set((s) => withLayers(s, { ...DEFAULT_LAYER_STATE })),
+      openMapLayers: (map) =>
+        set((s) => (s.layerMap === map ? {} : { layerMap: map, layers: layersForMap(s.mapLayers, map) })),
 
       saveCustomView: (label) =>
         set((s) => {
@@ -548,7 +576,7 @@ export const useStore = create<Store>()(
       // reset on reload; show-all is a view preference, so it sticks like the
       // layer toggles do.
       partialize: ({
-        layers,
+        mapLayers,
         customViews,
         settings,
         quest,
@@ -559,7 +587,7 @@ export const useStore = create<Store>()(
         entry,
         ui,
       }) => ({
-        layers,
+        mapLayers,
         customViews,
         settings,
         quest: { showAll: quest.showAll },
@@ -582,7 +610,11 @@ export const useStore = create<Store>()(
           // Zustand's merge is shallow, so every nested slice needs a line
           // here — one omitted comes back missing whatever shipped after the
           // user's last visit, or `undefined` outright.
-          layers: { ...DEFAULT_LAYER_STATE, ...(p.layers ?? {}) },
+          // Layers are per map now; the old single global set is not carried
+          // over, so every map opens on the calm default until it is changed.
+          layers: { ...DEFAULT_LAYER_STATE },
+          mapLayers: mergeMapLayers(p.mapLayers),
+          layerMap: null,
           customViews: p.customViews ?? [],
           settings: { ...DEFAULT_SETTINGS, ...(p.settings ?? {}) },
           profile: mergeProfile(p.profile),
