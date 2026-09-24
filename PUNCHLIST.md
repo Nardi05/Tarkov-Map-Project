@@ -133,8 +133,8 @@ Stack stays **TS / React / Vite / Leaflet / Zustand**. Competitors win on speed-
 ## P0 — must fix before calling preview “wipe ready”
 
 - [ ] Collapse quest setup from 13 trader steps → one tick/OCR screen + fresh-wipe skip
-- [x] Dashboard empty state: one CTA + Continue last map; no multi-thousand-px “Not set up” scroll; hide Edit layout until data exists
-- [ ] Map defaults: not “Everything”; PMC spawns off by default; persist last Quick View
+- [ ] Dashboard empty state: one CTA + Continue last map; no multi-thousand-px “Not set up” scroll; hide Edit layout until data exists
+- [x] Map defaults: not “Everything”; PMC spawns off by default; persist last Quick View
 - [ ] Hideout (and any) modal fully on-screen with internal scroll
 - [ ] Surface API/data failures (no silent fallback that looks live)
 - [ ] **Task sync infers completed prereqs:** after sync/OCR of actives (e.g. Collector), auto-fill prerequisite closure as completed; keep actives active (same as Settings recalc, automatic)
