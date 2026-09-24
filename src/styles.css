@@ -1585,6 +1585,56 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     color: var(--text);
   }
 
+  /* ----------------------------------------------- stale / failed data notice */
+
+  .health-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    padding: 0.55rem 0.6rem 0.55rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--warn) 45%, transparent);
+    border-radius: var(--r-sm);
+    background: color-mix(in srgb, var(--warn) 12%, var(--panel));
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .health-banner-icon {
+    display: flex;
+    flex: none;
+    color: var(--warn);
+  }
+
+  .health-banner-detail {
+    margin-top: 0.1rem;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+  }
+
+  .health-banner-compact {
+    margin: 0;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Floats over the top of the map; the map itself is untouched underneath. */
+  .map-health {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    z-index: 800;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .map-health > * {
+    max-width: 44rem;
+    pointer-events: auto;
+  }
+
   /* ------------------------------------------------------------- trackers */
 
   .tracker-grid {

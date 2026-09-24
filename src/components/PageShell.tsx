@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { href, onNavClick } from "../lib/router";
+import DataHealthBanner from "./DataHealthBanner";
 import { Icon, icons, Wordmark } from "./ui";
 
 /**
@@ -44,6 +45,7 @@ export default function PageShell({
 
       <div className="scroll-y min-h-0 flex-1">
         <div className="shell" style={width === "narrow" ? { maxWidth: "52rem" } : undefined}>
+          <DataHealthBanner />
           {children}
         </div>
       </div>

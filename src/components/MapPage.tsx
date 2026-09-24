@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import DataHealthBanner from "./DataHealthBanner";
 import MapCanvas, { type FocusRequest } from "./MapCanvas";
 import LayerPanel from "./LayerPanel";
 import TaskPanel from "./TaskPanel";
@@ -523,6 +524,9 @@ export default function MapPage({
 
         {/* ---------------------------------------------------------- canvas */}
         <main className="relative min-w-0 flex-1">
+          <div className="map-health">
+            <DataHealthBanner compact />
+          </div>
           <MapCanvas
             key={data.normalizedName}
             data={data}
