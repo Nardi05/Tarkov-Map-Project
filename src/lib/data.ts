@@ -12,6 +12,7 @@ import type {
   TaskImages,
 } from "../types";
 import { dataHealth, type DataProblem, type DataSource, type Health } from "./data-health";
+import { setCurrentGraph } from "./graph-ref";
 import { kordProgressionTasks } from "./kord-season";
 
 /**
@@ -288,6 +289,10 @@ export function loadIndex(): Promise<MapIndex> {
 export function loadProgression(): Promise<Progression> {
   progressionPromise ??= getJson<Progression>("progression.json")
     .then(withKordSeason)
+    .then((graph) => {
+      setCurrentGraph(graph);
+      return graph;
+    })
     .catch((err) => {
       progressionPromise = null;
       throw err;
