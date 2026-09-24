@@ -137,6 +137,7 @@ Stack stays **TS / React / Vite / Leaflet / Zustand**. Competitors win on speed-
 - [ ] Map defaults: not “Everything”; PMC spawns off by default; persist last Quick View
 - [ ] Hideout (and any) modal fully on-screen with internal scroll
 - [ ] Surface API/data failures (no silent fallback that looks live)
+- [ ] **Task sync infers completed prereqs:** after sync/OCR of actives (e.g. Collector), auto-fill prerequisite closure as completed; keep actives active (same as Settings recalc, automatic)
 
 ## P1 — first-hour trust
 
