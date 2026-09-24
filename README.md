@@ -18,9 +18,9 @@ The site is a set of separate trackers, plus two places where they meet:
 
 | Section | What it tracks | Setup |
 | --- | --- | --- |
-| **Tasks** (`#/quests`) | trader side tasks, keys, find-in-raid items | Tasks & Season walkthrough (`#/quests/setup`) |
+| **Tasks** (`#/quests`) | trader side tasks, keys, find-in-raid items | one-screen Tasks & Season setup (`#/quests/setup`) |
 | **Story** (`#/story`) | the main chapters, lock choices and the four endings | Story setup (`#/story/setup`) |
-| **Season** (`#/season`) | the Kord Breach line and battle-pass documents, on the seasonal character | the Tasks & Season walkthrough, on Season |
+| **Season** (`#/season`) | the Kord Breach line and battle-pass documents, on the seasonal character | the same setup screen, on Season |
 | **Hideout** (`#/hideout`) | station levels | none — tick stations on the page |
 | **Maps** (`#/maps`) | — | none; draws task objectives, story steps for your ending and season documents from the trackers |
 | **Dashboard** (`#/dashboard`) | — | none; a customisable summary of every tracker |
@@ -170,8 +170,8 @@ battle-pass documents as a first-class hunt — a type-to-map list, a **Battle p
 hunt** layer preset, and a "show documents" prompt on any map that has them.
 Daily pickup limits differ by mode (30 / 20 / 15).
 
-Setting up a Season character uses the same walkthrough as the traders, with a
-Kord Breach step first.
+Setting up a Season character uses the same setup screen as the traders, with
+the Kord Breach line as the first chip.
 
 ## Story endings
 
@@ -250,15 +250,18 @@ to find in raid.
 It runs on the full task graph, including the ~165 tasks that never appear on a
 map, which is why the per-map payloads cannot answer it alone.
 
-**Setting it up.** Open the walkthrough and go through the traders in the order
-they unlock, ticking whatever is in your list. That is the whole job: a quest
-sitting in your list means the trader already gave it to you, so everything
-behind it must be done, and the site fills in the rest of your wipe from there.
-Ticking one late Prapor quest fills in three earlier ones without being asked.
-Nothing is written until you press Finish, and the summary names every task it
-worked out for you before it does.
+**Setting it up.** `#/quests/setup` is one screen: pick the character, then
+tick whatever is in your traders' lists. Every trader is a chip, search covers
+all of them at once, and nothing forces an order. That is the whole job: a
+quest sitting in your list means the trader already gave it to you, so
+everything behind it must be done, and the site fills in the rest of your wipe
+from there. Ticking one late Prapor quest fills in three earlier ones without
+being asked. Nothing is written until you press Save, and the bar at the bottom
+names every task it worked out for you before it does. Starting a new wipe?
+**Fresh wipe · level 1** sets the character to level 1 with nothing done, and
+**Skip for now** goes straight to the dashboard.
 
-**Screenshots instead of ticking.** Each trader step can read its list off a
+**Screenshots instead of ticking.** The selected trader's list can be read off a
 screenshot. Because you have already said which trader you are on, a garbled
 line is matched against that trader's fifty-odd names rather than all 511, which
 is what makes it workable. It proposes and you confirm — strong matches start

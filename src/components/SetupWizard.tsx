@@ -3,670 +3,354 @@ import { useProgression } from "../lib/data";
 import { KORD_SEASON, SEASON_TITLE } from "../lib/kord-season";
 import { MODE_META, MODE_ORDER } from "../lib/mode";
 import { disposeOcr } from "../lib/ocr";
-import { prerequisiteClosure } from "../lib/progression";
+import { hasCharacterData } from "../lib/onboarding";
 import { href, navigate, onNavClick } from "../lib/router";
-import { displayName, visibleInMode } from "../lib/task-variant";
+import {
+  cycleStaged,
+  impliedDone,
+  matchesQuery,
+  setupGroups,
+  setupWrites,
+  stageActive,
+  type SetupGroup,
+} from "../lib/setup";
+import { displayName } from "../lib/task-variant";
 import { useStore, useTaskStatus } from "../store";
-import type { Faction, GameMode } from "../lib/persist-migrate";
-import type { Progression, TaskStatus } from "../types";
+import type { Faction } from "../lib/persist-migrate";
+import type { TaskStatus } from "../types";
 import ModeSwitch from "./ModeSwitch";
 import PageShell from "./PageShell";
-import SavePanel from "./SavePanel";
 import ScreenshotImport from "./ScreenshotImport";
 import TaskName from "./TaskName";
 import TaskStatusControl from "./TaskStatusControl";
-import { Callout, EmptyState, Icon, icons, Term } from "./ui";
+import { EmptyState, Icon, icons, Term } from "./ui";
 
 /**
- * The first-run walkthrough: what are you running at each trader right now?
+ * Task setup, on one screen: which quests are you holding right now?
  *
- * This replaced a TarkovTracker import, and it is not a downgrade. That API
- * only ever knew which tasks you had *finished*; it had no concept of one being
- * accepted at a trader. An active task is the stronger fact, because a trader
- * will not hand it to you until everything behind it is done — so twenty ticks
- * here reconstruct a whole wipe's history through `prerequisiteClosure`, and it
- * needs no third party to still be online in a year.
+ * It used to be a thirteen-step walk, one trader per screen — exactly the
+ * wizard a wipe-night player bounces off. Now every trader is a chip on the
+ * same screen, search spans all of them, the screenshot reader is one press
+ * away, and a fresh wipe needs no ticking at all.
  *
- * Two rules shape the whole screen:
+ * Two rules carried over from the wizard, because they are what make it safe:
  *
- *   Nothing is written until you press Finish. Ticks are staged locally so that
- *   unticking is free. Applying the closure on every keystroke would mean a
- *   mistaken tick silently marked a dozen tasks done and unticking left them
- *   there, which is exactly the kind of quiet wrongness this feature exists to
- *   avoid.
+ *   Nothing is written until Save. Ticks are staged, so unticking is free and a
+ *   mistaken tick never silently marks a dozen tasks done.
  *
- *   The inference is shown before it happens. Every step says how many earlier
- *   tasks your ticks imply, and the last step lists them. A player who disagrees
- *   can fix it on the dashboard afterwards — as ever, what they say wins.
+ *   The inference is shown before it happens. The bar says how many earlier
+ *   tasks your ticks imply, and "review" lists them by name.
  */
-
-/** The order traders unlock in game, so the walkthrough matches the player's mental map. */
-const TRADER_ORDER = [
-  "Prapor",
-  "Therapist",
-  "Skier",
-  "Peacekeeper",
-  "Mechanic",
-  "Ragman",
-  "Jaeger",
-  "Fence",
-  "Ref",
-  "Lightkeeper",
-  "BTR Driver",
-];
-
-interface TraderStep {
-  /** Heading for the step: the trader, or the season line. */
-  title: string;
-  trader: string;
-  tasks: { id: string; name: string; level: number; kappa: boolean; depth: number }[];
-}
-
 export default function SetupWizard() {
   const progression = useProgression();
   const profile = useStore((s) => s.profile);
   const setProfile = useStore((s) => s.setProfile);
   const importTaskStatus = useStore((s) => s.importTaskStatus);
+  const clearProgress = useStore((s) => s.clearProgress);
   const setEntry = useStore((s) => s.setEntry);
   const existing = useTaskStatus();
+  const modeHasData = useStore((s) =>
+    hasCharacterData({ [s.profile.mode]: s.progress[s.profile.mode] }),
+  );
 
-  /** Staged, not stored. See the note at the top of the file. */
   const [staged, setStaged] = useState<Record<string, TaskStatus>>({});
-  const [step, setStep] = useState(0);
   const [query, setQuery] = useState("");
-  const [finished, setFinished] = useState(false);
+  const [groupId, setGroupId] = useState<string | null>(null);
+  const [review, setReview] = useState(false);
+  const [saved, setSaved] = useState<{ active: number; done: number } | null>(null);
 
   const data = progression.data;
 
-  /*
-   * How far into a chain each task sits, as the number of tasks behind it.
-   *
-   * The lists were alphabetical, which for Prapor meant 66 names in an order
-   * with no relationship to the game: Debut, his very first quest, sat third,
-   * and the end of a chain could sit above its own beginning. Ordering by depth
-   * walks each chain the way the trader hands it to you, so scanning for "where
-   * am I up to" follows the list downwards instead of jumping about.
-   */
-  const depth = useMemo(() => {
-    const out = new Map<string, number>();
-    for (const id of Object.keys(data?.tasks ?? {})) {
-      out.set(id, prerequisiteClosure(data, id).length);
-    }
-    return out;
-  }, [data]);
+  const groups = useMemo(
+    () =>
+      setupGroups(
+        data,
+        { mode: profile.mode, faction: profile.faction },
+        { label: SEASON_TITLE, order: KORD_SEASON.questline.map((q) => q.id) },
+      ),
+    [data, profile.mode, profile.faction],
+  );
 
-  const steps = useMemo<TraderStep[]>(() => {
-    if (!data) return [];
-    const byTrader = new Map<string, TraderStep["tasks"]>();
-    const seasonLine: TraderStep["tasks"] = [];
-    for (const [id, task] of Object.entries(data.tasks)) {
-      if (!task.trader) continue;
-      // A task locked to the other faction can never be in your list, so it is
-      // noise on a screen whose whole job is "find yours quickly".
-      if (task.factionName && profile.faction !== "Any" && task.factionName !== profile.faction) {
-        continue;
-      }
-      if (!visibleInMode(task.name, profile.mode)) continue;
-      const row = {
-        id,
-        name: task.name,
-        level: task.minPlayerLevel,
-        kappa: task.kappaRequired,
-        depth: depth.get(id) ?? 0,
-      };
-      // The season line gets a step of its own rather than hiding in Prapor's.
-      if (id.startsWith("kord:")) {
-        seasonLine.push(row);
-        continue;
-      }
-      const list = byTrader.get(task.trader) ?? [];
-      list.push(row);
-      byTrader.set(task.trader, list);
-    }
-
-    const known = TRADER_ORDER.filter((t) => byTrader.has(t));
-    const rest = [...byTrader.keys()].filter((t) => !TRADER_ORDER.includes(t)).sort();
-    const byDepth = (a: TraderStep["tasks"][number], b: TraderStep["tasks"][number]) =>
-      a.depth - b.depth || a.level - b.level || a.name.localeCompare(b.name);
-    const traderSteps = [...known, ...rest].map((trader) => ({
-      title: trader,
-      trader,
-      tasks: (byTrader.get(trader) ?? []).sort(byDepth),
-    }));
-    if (!seasonLine.length) return traderSteps;
-    const lineOrder = new Map(KORD_SEASON.questline.map((q, i) => [q.id, i]));
-    return [
-      {
-        title: SEASON_TITLE,
-        trader: "Prapor",
-        tasks: seasonLine.sort(
-          (a, b) => (lineOrder.get(a.id) ?? 0) - (lineOrder.get(b.id) ?? 0),
-        ),
-      },
-      ...traderSteps,
-    ];
-  }, [data, profile.faction, profile.mode, depth]);
-
-  /*
-   * Everything the staged ticks imply, worked out fresh each render.
-   *
-   * A task you are running means every task behind it is done. Where a chain
-   * branches, `prerequisiteClosure` follows statuses you already declared and
-   * only then falls back to the shortest remaining path.
-   */
-  const implied = useMemo(() => {
-    const out = new Set<string>();
-    for (const id of Object.keys(staged)) {
-      for (const prior of prerequisiteClosure(data, id, staged)) {
-        if (!staged[prior]) out.add(prior);
-      }
-    }
-    return out;
-  }, [staged, data]);
-
-  const activeCount = Object.values(staged).filter((s) => s === "active").length;
-  const doneCount = Object.values(staged).filter((s) => s === "completed").length;
+  // Switching character changes the whole list; staged ticks belong to the old one.
+  useEffect(() => {
+    setStaged({});
+    setGroupId(null);
+    setSaved(null);
+  }, [profile.mode]);
 
   /* The reader holds several megabytes of wasm; let it go with the screen. */
   useEffect(() => () => void disposeOcr(), []);
 
-  const markActive = (ids: string[]) =>
-    setStaged((prev) => {
-      const next = { ...prev };
-      // Never downgrades: a task the player already marked done by hand is not
-      // demoted to active because a screenshot also showed it.
-      for (const id of ids) if (!next[id]) next[id] = "active";
-      return next;
-    });
+  const group: SetupGroup | undefined = groups.find((g) => g.id === groupId) ?? groups[0];
+  const implied = useMemo(() => impliedDone(data, staged), [data, staged]);
+  const activeCount = Object.values(staged).filter((s) => s === "active").length;
+  const doneCount = Object.values(staged).filter((s) => s === "completed").length + implied.size;
+  const anything = activeCount + doneCount > 0;
 
-  const cycle = (id: string) =>
-    setStaged((prev) => {
-      const next = { ...prev };
-      if (!next[id]) next[id] = "active";
-      else if (next[id] === "active") next[id] = "completed";
-      else delete next[id];
-      return next;
-    });
+  const searching = query.trim().length > 0;
+  const shown = useMemo(() => {
+    if (!searching) return group ? [{ group, tasks: group.tasks }] : [];
+    return groups
+      .map((g) => ({ group: g, tasks: g.tasks.filter((t) => matchesQuery(t, query)) }))
+      .filter((g) => g.tasks.length);
+  }, [searching, group, groups, query]);
 
-  /** Starts the walkthrough over on another character. */
-  const restartOn = (mode: GameMode) => {
-    setProfile("mode", mode);
-    setStaged({});
-    setStep(0);
-    setQuery("");
-    setFinished(false);
-  };
-
-  const finish = () => {
-    const toWrite: Record<string, TaskStatus> = { ...staged };
-    for (const id of implied) toWrite[id] = "completed";
-    importTaskStatus(toWrite);
+  const save = () => {
+    importTaskStatus(setupWrites(staged, implied));
     setEntry("tracker");
-    setFinished(true);
+    setSaved({ active: activeCount, done: doneCount });
   };
 
-  if (progression.error) {
-    return (
-      <Shell step={0} total={1}>
-        <EmptyState title="The task graph could not be loaded" hint={progression.error.message} />
-      </Shell>
-    );
-  }
-  if (!data) {
-    return (
-      <Shell step={0} total={1}>
-        <p className="py-16 text-center text-sm muted">Loading the task graph…</p>
-      </Shell>
-    );
-  }
+  const freshWipe = () => {
+    const label = MODE_META[profile.mode].label;
+    if (
+      modeHasData &&
+      !window.confirm(
+        `Start a fresh wipe on ${label}? This clears the quests, stash, hideout and story ` +
+          `stored for ${label}. Your other characters are not touched.`,
+      )
+    ) {
+      return;
+    }
+    if (modeHasData) clearProgress();
+    setProfile("level", 1);
+    setEntry("tracker");
+    navigate(href.dashboard());
+  };
 
-  const total = steps.length + 2; // profile, one per trader, summary
-  const onProfile = step === 0;
-  const onSummary = step === steps.length + 1;
-  const trader = steps[step - 1];
+  const skip = () => {
+    setEntry("tracker");
+    navigate(href.dashboard());
+  };
 
-  if (finished) {
+  if (saved) {
     const others = MODE_ORDER.filter((m) => m !== profile.mode);
     return (
-      <Shell step={total} total={total}>
-        <h1 className="display text-2xl sm:text-3xl">
-          {MODE_META[profile.mode].label} tasks set up
-        </h1>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed" style={{ color: "var(--text-dim)" }}>
-          {activeCount} active and {doneCount + implied.size} done are stored in this browser.
-          Download a file now if you want to restore this wipe later or on another phone or PC.
+      <PageShell>
+        <h1 className="display text-2xl sm:text-3xl">Saved</h1>
+        <p className="mt-2 text-sm muted">
+          {saved.active} active and {saved.done} done on {MODE_META[profile.mode].label}. Maps now
+          draw your active objectives.
         </p>
-        <SavePanel />
         <div className="mt-4 flex flex-wrap gap-2">
-          <a className="btn is-active" href={href.dashboard()} onClick={onNavClick(href.dashboard())}>
+          <a className="btn btn-primary" href={href.dashboard()} onClick={onNavClick(href.dashboard())}>
             Open the dashboard
           </a>
-          <a className="btn" href={href.quests()} onClick={onNavClick(href.quests())}>
-            Open tasks
+          <a className="btn" href={href.maps()} onClick={onNavClick(href.maps())}>
+            Open a map
           </a>
         </div>
-
-        <section className="surface mt-6 p-4">
-          <h2 className="text-sm font-semibold">Set up something else?</h2>
-          <p className="mt-1 text-meta">
-            Each character keeps its own tasks, and the story is tracked on its own.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {others.map((m) => (
-              <button key={m} type="button" className="btn btn-sm" onClick={() => restartOn(m)}>
-                Tasks on {MODE_META[m].label}
-              </button>
-            ))}
-            <button
-              type="button"
-              className="btn btn-sm"
-              onClick={() => navigate(href.storySetup())}
-            >
-              Story progress
+        <p className="mt-6 flex flex-wrap items-center gap-2 text-meta">
+          Also set up:
+          {others.map((m) => (
+            <button key={m} type="button" className="btn btn-sm" onClick={() => setProfile("mode", m)}>
+              {MODE_META[m].label}
             </button>
-          </div>
-        </section>
-      </Shell>
+          ))}
+          <a className="btn btn-sm" href={href.storySetup()} onClick={onNavClick(href.storySetup())}>
+            Story
+          </a>
+        </p>
+      </PageShell>
     );
   }
 
-  return (
-    <Shell step={step} total={total}>
-      {onProfile && <ProfileStep profile={profile} setProfile={setProfile} existing={existing} />}
-
-      {trader && (
-        <TraderStepView
-          key={trader.title}
-          step={trader}
-          staged={staged}
-          implied={implied}
-          query={query}
-          onQuery={setQuery}
-          onCycle={cycle}
-          onMarkActive={markActive}
-        />
-      )}
-
-      {onSummary && (
-        <SummaryStep
-          data={data}
-          implied={implied}
-          activeCount={activeCount}
-          doneCount={doneCount}
-        />
-      )}
-
-      <footer
-        className="mt-6 flex flex-wrap items-center gap-2 border-t pt-4"
-        style={{ borderColor: "var(--line)" }}
-      >
-        <button
-          type="button"
-          className="btn"
-          disabled={step === 0}
-          onClick={() => {
-            setQuery("");
-            setStep((s) => Math.max(0, s - 1));
-          }}
-        >
-          Back
-        </button>
-
-        {!onSummary ? (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => {
-              setQuery("");
-              setStep((s) => s + 1);
-            }}
-          >
-            {onProfile ? "Start" : "Next trader"}
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="btn btn-primary"
-            // Enabled, it silently returned you to the dashboard having written
-            // nothing, which reads as the save having failed.
-            disabled={activeCount === 0 && doneCount === 0}
-            onClick={finish}
-          >
-            Finish
-          </button>
-        )}
-
-        {/*
-          * The escape hatch, available from every step rather than only the
-          * last one. Thirteen screens is a long way to walk before your ticks
-          * count for anything, and there is no reason they should not count
-          * from the second trader onwards.
-          */}
-        {!onSummary && (activeCount > 0 || doneCount > 0) && (
-          <button type="button" className="btn" onClick={finish}>
-            Save and finish
-          </button>
-        )}
-
-        <span className="ml-auto text-[0.72rem] tabular-nums faint">
-          {activeCount} active · {doneCount + implied.size} done
-          {implied.size > 0 ? ` (${implied.size} worked out)` : ""}
-        </span>
-
-        <a
-          className="btn btn-ghost text-[0.72rem]"
-          href={href.dashboard()}
-          onClick={onNavClick(href.dashboard())}
-        >
-          {activeCount > 0 || doneCount > 0 ? "Discard" : "Cancel"}
-        </a>
-      </footer>
-    </Shell>
-  );
-}
-
-/* ------------------------------------------------------------------ layout */
-
-function Shell({ step, total, children }: { step: number; total: number; children: React.ReactNode }) {
   return (
     <PageShell
       aside={
-        <span className="text-[0.72rem] tabular-nums faint">
-          Step {Math.min(step + 1, total)} of {total}
-        </span>
+        <button type="button" className="btn btn-ghost btn-sm" onClick={skip}>
+          Skip for now
+        </button>
       }
     >
-      {/*
-        * How far through you are, above everything else on the page. A
-        * walkthrough with eleven trader steps and no sense of length is one
-        * people abandon at step three.
-        */}
-      <div
-        className="mb-6 h-1.5 w-full overflow-hidden rounded-full"
-        style={{ background: "var(--panel-2)" }}
-        role="progressbar"
-        aria-valuenow={step + 1}
-        aria-valuemin={1}
-        aria-valuemax={total}
-        aria-label="Setup progress"
-      >
-        <div
-          className="h-full rounded-full transition-[width] duration-200"
-          style={{ width: `${((step + 1) / total) * 100}%`, background: "var(--accent)" }}
-        />
-      </div>
+      <header className="setup-head">
+        <div className="min-w-0">
+          <h1 className="display text-2xl sm:text-3xl">Mark your active quests</h1>
+          <p className="mt-1.5 text-[0.9rem] muted">
+            Tick what your <Term id="trader">traders</Term> have given you. Everything before them
+            is filled in for you.
+          </p>
+        </div>
+        <button
+          type="button"
+          className="btn flex-none"
+          onClick={freshWipe}
+          title="Nothing to tick: start this character at level 1 with no quests done"
+        >
+          <Icon path={icons.refresh} size={14} />
+          Fresh wipe · level 1
+        </button>
+      </header>
 
-      {children}
-    </PageShell>
-  );
-}
-
-/* ------------------------------------------------------------------- steps */
-
-function ProfileStep({
-  profile,
-  setProfile,
-  existing,
-}: {
-  profile: { mode: GameMode; faction: Faction; level: number };
-  setProfile: (key: "mode" | "faction" | "level", value: never) => void;
-  existing: Record<string, TaskStatus>;
-}) {
-  const alreadyTracked = Object.keys(existing).length;
-
-  return (
-    <div>
-      <h1 className="display text-2xl sm:text-3xl">Set up your tasks</h1>
-      <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed muted">
-        Open the game, go through your <Term id="trader">traders</Term>, and tick the quests you
-        have accepted. That is enough — a quest sitting in your list means everything behind it is
-        already done, so the site fills in the rest of your wipe from it.
-      </p>
-      <p className="mt-2 max-w-2xl text-meta">
-        Pick the character first. Choose <b>Season</b> to set up your seasonal wipe — it adds a{" "}
-        {SEASON_TITLE} step before the traders. Story chapters have a{" "}
-        <a className="underline" href={href.storySetup()} onClick={onNavClick(href.storySetup())}>
-          separate setup
-        </a>
-        .
-      </p>
-
-      {/*
-        * Said plainly, and said first. The walkthrough is thirteen screens
-        * long, and the single most common reason somebody abandons one is
-        * believing they have to finish it. They do not: every tick is saved
-        * at the end, one trader is already useful, and the rest can be done
-        * from the tracker whenever.
-        */}
-      <Callout tone="accent" className="mt-4" icon={icons.info}>
-        <b className="font-semibold" style={{ color: "var(--text)" }}>
-          You can stop whenever you like.
-        </b>{" "}
-        Skip any trader you have nothing from, and press Finish at the end of any step. Even one
-        trader's worth of ticks gives the dashboard something real to rank.
-      </Callout>
-
-      <div className="surface mt-4 flex flex-wrap items-end gap-4 p-3.5">
-        <label className="block">
-          <span className="kicker mb-1 block">Mode</span>
-          <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m as never)} />
-        </label>
-
-        <label className="block">
-          <span className="kicker mb-1 block">Faction</span>
-          <select
-            className="input"
-            style={{ width: "auto", paddingRight: "1.75rem" }}
-            value={profile.faction}
-            onChange={(e) => setProfile("faction", e.target.value as never)}
-            aria-label="Faction"
-          >
-            {(["Any", "USEC", "BEAR"] as Faction[]).map((f) => (
-              <option key={f} value={f}>
-                {f}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="block">
-          <span className="kicker mb-1 block">Level</span>
+      <div className="setup-character">
+        <ModeSwitch value={profile.mode} onChange={(m) => setProfile("mode", m)} size="sm" />
+        <label className="setup-field">
+          <span className="kicker">Level</span>
           <input
             className="input tabular-nums"
-            style={{ width: "5rem" }}
             type="number"
             min={1}
             max={79}
             value={profile.level}
             onChange={(e) => {
               const n = Number(e.target.value);
-              if (Number.isFinite(n)) {
-                setProfile("level", Math.min(79, Math.max(1, Math.round(n))) as never);
-              }
+              if (Number.isFinite(n)) setProfile("level", Math.min(79, Math.max(1, Math.round(n))));
             }}
             aria-label="PMC level"
           />
         </label>
-      </div>
-
-      {alreadyTracked > 0 && (
-        <Callout className="mt-4">
-          You already have {alreadyTracked} task{alreadyTracked === 1 ? "" : "s"} tracked in this
-          mode. Nothing here removes them — what you tick is added on top, so a task you have
-          already marked done stays done.
-        </Callout>
-      )}
-    </div>
-  );
-}
-
-function TraderStepView({
-  step,
-  staged,
-  implied,
-  query,
-  onQuery,
-  onCycle,
-  onMarkActive,
-}: {
-  step: TraderStep;
-  staged: Record<string, TaskStatus>;
-  implied: Set<string>;
-  query: string;
-  onQuery: (q: string) => void;
-  onCycle: (id: string) => void;
-  onMarkActive: (ids: string[]) => void;
-}) {
-  const needle = query.trim().toLowerCase();
-  const shown = needle
-    ? step.tasks.filter(
-        (t) =>
-          t.name.toLowerCase().includes(needle) ||
-          displayName(t.name).toLowerCase().includes(needle),
-      )
-    : step.tasks;
-  const mine = step.tasks.filter((t) => staged[t.id]).length;
-
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold tracking-tight">{step.title}</h1>
-      <p className="mt-2 max-w-2xl text-[0.9rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-        {step.title === step.trader
-          ? `Tick anything in your ${step.trader} list right now. Tick twice for one you have already finished — useful when a trader has nothing active because you are through their chain.`
-          : `The seasonal story line, handed out by ${step.trader}. Tick the one you are on; tick twice for any you have already finished.`}
-      </p>
-
-      <ScreenshotImport
-        trader={step.trader}
-        candidates={step.tasks}
-        alreadyStaged={(id) => !!staged[id]}
-        onApply={onMarkActive}
-      />
-
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        <div className="relative w-full max-w-xs">
-          <span
-            className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2"
-            style={{ color: "var(--text-faint)" }}
+        <label className="setup-field">
+          <span className="kicker">Faction</span>
+          <select
+            className="input"
+            value={profile.faction}
+            onChange={(e) => setProfile("faction", e.target.value as Faction)}
+            aria-label="Faction"
           >
-            <Icon path={icons.search} size={15} />
-          </span>
-          <input
-            className="input input-icon"
-            type="search"
-            placeholder={`Find a ${step.title} quest…`}
-            value={query}
-            onChange={(e) => onQuery(e.target.value)}
-            aria-label={`Search ${step.title} quests`}
-          />
-        </div>
-        <span className="text-[0.72rem]" style={{ color: "var(--text-faint)" }}>
-          {mine} of {step.tasks.length} marked
-        </span>
+            {(["Any", "USEC", "BEAR"] as Faction[]).map((f) => (
+              <option key={f} value={f}>
+                {f === "Any" ? "Either" : f}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
-      <ul className="mt-3 space-y-1">
-        {shown.map((task) => {
-          const status = staged[task.id];
-          const inferred = !status && implied.has(task.id);
-          return (
-            <li
-              key={task.id}
-              className="surface-2 flex items-center gap-2.5 p-2"
-              style={inferred ? { opacity: 0.75 } : undefined}
-            >
-              <TaskStatusControl status={status} name={task.name} onCycle={() => onCycle(task.id)} />
-              <span className="min-w-0 flex-1">
-                <span className="text-[0.8125rem] font-medium">
-                  <TaskName name={task.name} />
-                </span>
-                {task.level > 1 && (
-                  <span className="ml-2 text-[0.68rem]" style={{ color: "var(--text-faint)" }}>
-                    lvl {task.level}
-                  </span>
-                )}
-                {task.kappa && <span className="chip ml-2">Kappa</span>}
-              </span>
-              {inferred && (
-                <span className="chip flex-none" title="Implied by something else you ticked">
-                  done for you
-                </span>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-
-      {shown.length === 0 && (
-        <EmptyState title="Nothing matches" hint={`No ${step.title} quest by that name.`} />
-      )}
-    </div>
-  );
-}
-
-function SummaryStep({
-  data,
-  implied,
-  activeCount,
-  doneCount,
-}: {
-  data: Progression;
-  implied: Set<string>;
-  activeCount: number;
-  doneCount: number;
-}) {
-  const impliedNames = useMemo(
-    () =>
-      [...implied]
-        .map((id) => displayName(data.tasks[id]?.name ?? id))
-        .sort((a, b) => a.localeCompare(b)),
-    [implied, data],
-  );
-
-  const nothing = activeCount === 0 && doneCount === 0;
-
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Ready to save</h1>
-
-      {nothing ? (
-        <EmptyState
-          title="Nothing ticked yet"
-          hint="Go back and mark the quests you have accepted — without them there is nothing to work out."
-        />
+      {progression.error ? (
+        <EmptyState title="The task list could not be loaded" hint={progression.error.message} />
+      ) : !data ? (
+        <p className="py-16 text-center text-sm muted">Loading the task list…</p>
       ) : (
         <>
-          <p className="mt-3 text-[0.95rem] leading-relaxed" style={{ color: "var(--text-dim)" }}>
-            <strong style={{ color: "var(--text)" }}>{activeCount}</strong> active,{" "}
-            <strong style={{ color: "var(--text)" }}>{doneCount}</strong> marked done by hand, and{" "}
-            <strong style={{ color: "var(--text)" }}>{implied.size}</strong> more worked out from
-            what has to have come first. Nothing you had already tracked is removed.
-          </p>
+          <div className="setup-tools">
+            <div className="relative min-w-0 flex-1">
+              <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 faint">
+                <Icon path={icons.search} size={15} />
+              </span>
+              <input
+                className="input input-icon"
+                type="search"
+                placeholder="Search every trader's quests…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                aria-label="Search quests"
+                data-search
+              />
+            </div>
+          </div>
 
-          {implied.size > 0 && (
-            <section className="surface mt-4 p-3">
-              <h2 className="text-sm font-semibold">Worked out for you</h2>
-              <p className="mt-1 text-[0.72rem] leading-snug" style={{ color: "var(--text-faint)" }}>
-                {/* Listed rather than summarised: this is the site making a claim
-                    about somebody's history, and it should be checkable before it
-                    is written, not after. */}
-                These have to be finished for your active quests to be in your list. Where a chain
-                branches, the shortest route is assumed — fix any of it on the dashboard.
-              </p>
-              <p className="mt-2 flex flex-wrap gap-1">
-                {impliedNames.slice(0, 60).map((name) => (
-                  <span key={name} className="chip">
-                    {name}
-                  </span>
-                ))}
-                {impliedNames.length > 60 && (
-                  <span className="chip">+{impliedNames.length - 60} more</span>
-                )}
-              </p>
-            </section>
+          <nav className="setup-chips" aria-label="Traders">
+            {groups.map((g) => {
+              const n = g.tasks.filter((t) => staged[t.id]).length;
+              const on = !searching && g.id === group?.id;
+              return (
+                <button
+                  key={g.id}
+                  type="button"
+                  className={on ? "chip chip-button chip-accent" : "chip chip-button"}
+                  aria-pressed={on}
+                  onClick={() => {
+                    setQuery("");
+                    setGroupId(g.id);
+                  }}
+                >
+                  {g.label}
+                  {n > 0 && <span className="setup-chip-n">{n}</span>}
+                </button>
+              );
+            })}
+          </nav>
+
+          {group && !searching && (
+            <ScreenshotImport
+              trader={group.trader}
+              candidates={group.tasks}
+              alreadyStaged={(id) => !!staged[id]}
+              onApply={(ids) => setStaged((prev) => stageActive(prev, ids))}
+            />
           )}
+
+          <div className="mt-3">
+            {shown.length === 0 && (
+              <EmptyState title="Nothing matches" hint="No quest or trader by that name." />
+            )}
+            {shown.map(({ group: g, tasks }) => (
+              <section key={g.id} className="mb-4">
+                {searching && <h2 className="kicker mb-1.5">{g.label}</h2>}
+                <ul className="space-y-1">
+                  {tasks.map((task) => {
+                    const status = staged[task.id];
+                    const inferred = !status && implied.has(task.id);
+                    const stored = existing[task.id];
+                    return (
+                      <li
+                        key={task.id}
+                        className="surface-2 flex items-center gap-2.5 px-2 py-1.5"
+                        style={inferred ? { opacity: 0.7 } : undefined}
+                      >
+                        <TaskStatusControl
+                          status={status}
+                          name={task.name}
+                          onCycle={() => setStaged((prev) => cycleStaged(prev, task.id))}
+                        />
+                        <span className="min-w-0 flex-1 text-[0.8125rem] font-medium">
+                          <TaskName name={task.name} />
+                          {task.level > 1 && (
+                            <span className="ml-2 text-[0.68rem] faint">lvl {task.level}</span>
+                          )}
+                          {task.kappa && <span className="chip ml-2">Kappa</span>}
+                        </span>
+                        {inferred && <span className="chip flex-none">done for you</span>}
+                        {!status && !inferred && stored && (
+                          <span className="chip flex-none" title="Already stored on this character">
+                            {stored === "completed" ? "already done" : "already active"}
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ))}
+          </div>
+
+          <div className="setup-bar">
+            <div className="min-w-0 flex-1">
+              <p className="text-[0.8rem] font-medium tabular-nums">
+                {anything
+                  ? `${activeCount} active · ${doneCount} done`
+                  : "Tick once for active, twice for done"}
+              </p>
+              {implied.size > 0 && (
+                <button
+                  type="button"
+                  className="text-[0.7rem] underline underline-offset-2 faint"
+                  aria-expanded={review}
+                  onClick={() => setReview((v) => !v)}
+                >
+                  {implied.size} earlier task{implied.size === 1 ? "" : "s"} worked out ·{" "}
+                  {review ? "hide" : "review"}
+                </button>
+              )}
+              {review && implied.size > 0 && (
+                <p className="mt-1.5 flex max-h-40 flex-wrap gap-1 overflow-auto">
+                  {[...implied]
+                    .map((id) => displayName(data.tasks[id]?.name ?? id))
+                    .sort((a, b) => a.localeCompare(b))
+                    .map((name) => (
+                      <span key={name} className="chip">
+                        {name}
+                      </span>
+                    ))}
+                </p>
+              )}
+            </div>
+            <button type="button" className="btn btn-primary flex-none" disabled={!anything} onClick={save}>
+              Save
+            </button>
+          </div>
         </>
       )}
-    </div>
+    </PageShell>
   );
 }
