@@ -1,6 +1,6 @@
 # Tarkov Map Project
 
-A calm all-in-one companion for Escape from Tarkov: interactive maps, trader tasks, story endings, the seasonal Kord Breach line, hideout stations, and a stash of what your quests still need. Built for wipe players who want Forge / TTracker coverage without the clutter — MapGenie-grade maps, eft-kappa clarity, and Market-style *systems* (value, flea intuition, quest chain order) behind a quiet UI.
+A calm all-in-one companion for Escape from Tarkov: interactive maps, trader tasks, story endings, the seasonal Kord Breach line, hideout stations, and a stash of what your quests still need. Built for wipe players who want TarkovForge / TarkovTracker coverage without the clutter — MapGenie-grade maps, eft-kappa clarity, and Tarkov Market *systems* knowledge (value, flea intuition, quest chain order) behind a quiet UI.
 
 Covers all 13 playable maps, works from phone to desktop, and rebuilds game data from tarkov.dev every day. Tarkov jargon on the site explains itself on hover or tap.
 
@@ -13,9 +13,9 @@ Covers all 13 playable maps, works from phone to desktop, and rebuilds game data
 
 | Section | What it does |
 | --- | --- |
-| **Maps** (`#/maps`) | Spawns, extracts, transits, keys, bosses, task objectives — layers you can calm down with Quick Views |
-| **Tasks** (`#/quests`) | Active / done trader tasks, keys, find-in-raid items, stash counts |
-| **Story** (`#/story`) | Main chapters, lock choices, four endings (Savior / Survivor / Debtor / Fallen) |
+| **Maps** (`#/maps`, `#/m/<map>`) | Spawns, extracts, transits, keys, bosses, task objectives — layers you can calm down with Quick Views |
+| **Tasks** (`#/quests`) | Active / done trader tasks; also `#/quests/items` (stash) and `#/quests/graph` (dependency graph) |
+| **Story** (`#/story`, `#/story/<id>`) | Main chapters, lock choices, four endings (Savior / Survivor / Debtor / Fallen) |
 | **Season** (`#/season`) | Kord Breach line + battle-pass document hunt (Season character) |
 | **Hideout** (`#/hideout`) | Station levels against the same stash counts |
 | **Dashboard** (`#/dashboard`) | Summary of every tracker + “what do I do next” |
@@ -60,7 +60,7 @@ Where the wiki has screenshots, the task detail panel shows them as a carousel �
 
 ### Quest graph (data, not a Tree screen)
 
-The site knows prerequisite → unlock order the way Tarkov Market’s Tree → By chains does: cross-trader dependency chains, gates (level, loyalty, prior quests), and a progress frontier. That knowledge drives setup inference, planning, and map reasoning. Between raids you still only see the next few objectives — there is **no** pannable Quest Tree UI planned.
+The site knows prerequisite → unlock order the way Tarkov Market’s Tree → By chains does: cross-trader dependency chains, gates (level, loyalty, prior quests), and a progress frontier. That knowledge drives setup inference, planning, and map reasoning — imprint is data/order, not a UI chrome goal. `#/quests/graph` is a dependency graph page over that same data; there is still **no** Market-style pannable Tree canvas planned. Between raids you still only see the next few objectives.
 
 Late-wipe sync that fills earlier prerequisites when you mark a late quest active is planned (**P0.6**). Setup already does some of this when you tick and save.
 
@@ -97,6 +97,10 @@ npm run wiki-details  # quest / key / story detail extracts from the wiki
 npm run quest-prereqs # rescrape quest prerequisites
 npm run kord-docs     # battle-pass document spawns
 npm run task-facts    # level / Kappa fallback from known-good data
+npm run check-quests  # cross-check quest data against the wiki
+npm run setup-ocr     # stage OCR runtime into public/ocr (also done by dev/build)
+npm run og            # redraw the social preview card
+npm run typecheck     # TypeScript only (no bundle)
 npm run smoke         # open every map in a browser and check for errors
 npm run audit-graph   # structural audit of the built quest graph
 ```
