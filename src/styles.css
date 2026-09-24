@@ -1655,6 +1655,71 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
     color: var(--text);
   }
 
+  /* ------------------------------------------------------------ dialog */
+
+  .dialog-root {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    place-items: end center;
+  }
+
+  @media (min-width: 640px) {
+    .dialog-root {
+      place-items: center;
+      padding: 1rem;
+    }
+  }
+
+  .dialog-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .dialog-panel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 32rem;
+    max-height: calc(100dvh - 2rem);
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 0 1rem 1rem;
+    box-shadow: var(--shadow-lg);
+    outline: none;
+  }
+
+  .dialog-panel[data-wide] {
+    max-width: 40rem;
+  }
+
+  @media (max-width: 639px) {
+    .dialog-panel {
+      max-height: calc(100dvh - 1rem);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  /* The title and close button stay put while the body scrolls under them. */
+  .dialog-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 0 -1rem 0.75rem;
+    padding: 1rem 1rem 0.6rem;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line-soft);
+  }
+
   /* ------------------------------------------------------------- trackers */
 
   .tracker-grid {
@@ -2411,8 +2476,15 @@ h1[tabindex="-1"]:focus:not(:focus-visible) {
    * outgoing page out as well would need both mounted at once, for a frame of
    * motion nobody is looking at.
    */
+  /*
+   * `backwards`, not `both`: holding the end keyframe keeps a transform on this
+   * element after the slide finishes, and any transform makes it the box that
+   * `position: fixed` children are placed against. A sheet opened after a tab
+   * change then opened against the whole page — a screen or more below the
+   * fold. Sheets are portalled out now too (see Dialog in ui.tsx).
+   */
   .tab-body {
-    animation: tab-in 0.3s var(--ease) both;
+    animation: tab-in 0.3s var(--ease) backwards;
   }
 
   .tab-body[data-slide="fwd"] {

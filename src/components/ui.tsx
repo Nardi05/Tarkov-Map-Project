@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { glossary } from "../lib/glossary";
 import { href, onNavClick, TAB_ORDER, type TabId } from "../lib/router";
 
@@ -694,5 +695,63 @@ export function PageHeader({
       </div>
       {children ? <div className="page-header-actions">{children}</div> : null}
     </header>
+  );
+}
+
+/**
+ * A modal sheet: a bottom drawer on a phone, centred on anything wider.
+ *
+ * Rendered into <body> rather than where it is used. A `position: fixed`
+ * element is only fixed to the viewport while no ancestor has a transform,
+ * and the tab pages animate in with one — so a sheet opened inside a tab
+ * page was positioned against the whole scrolling page and could open a
+ * screen or more below the fold. Portalling makes that impossible whatever
+ * the page around it does.
+ *
+ * Height is capped to the visible viewport (`dvh`, so a phone's collapsing
+ * address bar is counted) and the content scrolls inside.
+ */
+export function Dialog({
+  label,
+  onClose,
+  children,
+  wide = false,
+}: {
+  label: string;
+  onClose: () => void;
+  children: ReactNode;
+  wide?: boolean;
+}) {
+  const panel = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  // Focus into the sheet so keyboard and screen-reader users land in it, and
+  // hand focus back to whatever opened it on close.
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    panel.current?.focus({ preventScroll: true });
+    return () => opener?.focus?.({ preventScroll: true });
+  }, []);
+
+  return createPortal(
+    <div className="dialog-root" role="dialog" aria-modal="true" aria-label={label}>
+      <button type="button" className="dialog-scrim" aria-label="Close" onClick={onClose} />
+      <div
+        ref={panel}
+        tabIndex={-1}
+        className="surface dialog-panel animate-sheet sm:animate-none"
+        data-wide={wide || undefined}
+      >
+        {children}
+      </div>
+    </div>,
+    document.body,
   );
 }
