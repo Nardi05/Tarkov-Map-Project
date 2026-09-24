@@ -7,6 +7,18 @@
 
 ---
 
+## Product north star (Luke)
+
+**Be the one-stop Tarkov companion** — same job as TarkovForge / TTracker (maps + quests + story + season + hideout + stash in one place), but **more modern, clearer, and easier** than those tools.
+
+That means:
+- **Do not cut pillars** to become a single-purpose map or tracker app.
+- **Do** win on first-hour UX: faster setup than Tracker, calmer maps than MapGenie, less chrome than Forge/TTracker kitchen-sink homes.
+- Pattern: **progressive disclosure** — full suite available, defaults and empty states show only the next useful action. Depth is one click away, not the landing surface.
+
+Competitors prove players will live in an all-in-one if it is fast between raids. They bounce when setup is long, markers are noisy, or every screen screams “configure me.”
+
+---
 ## Competitor snapshot (what wipe players actually praise / hate)
 
 | Tool | Praise | Complaints (2025–26) |
@@ -16,7 +28,7 @@
 | **tarkov.dev** | Fast lookup + API truth | Not a personal progress tool; players still open wiki for “where exactly” |
 | **Wiki** | Authoritative text / locations | Terrible as a live raid companion |
 
-**Implication for this app:** Win on **map-as-companion + progress in one place**. Lose if setup costs more than Tracker, or defaults look like MapGenie-on-steroids.
+**Implication for this app:** Own the **all-in-one** slot (Forge/TTracker), but beat them on **speed-to-useful, calm defaults, and modern clarity**. Lose if setup costs more than Tracker, or defaults look like MapGenie-on-steroids.
 
 ---
 
@@ -146,7 +158,7 @@ Stack stays **TS / React / Vite / Leaflet / Zustand**. Competitors win on speed-
 
 - No framework/stack rewrite
 - No merge to `main` from this workstream without an explicit follow-up
-- No feature parity chase with MapGenie PRO paywalls or full wiki prose
+- No MapGenie PRO paywall chase or pasting full wiki prose into the UI — depth stays structured, not encyclopedia pages
 - No new account system / cloud sync in this punch list
 - No visual redesign for its own sake — only density, defaults, setup cost, and broken chrome
 
