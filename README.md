@@ -77,7 +77,10 @@ Beyond the layers:
 
 - **Quick views** — one tap to switch the map between learning it, questing,
   a Scav run, or threat-spotting. Save your own layer combinations alongside
-  the built-in ones; re-saving under the same name updates it.
+  the built-in ones; re-saving under the same name updates it. Every map opens
+  on **Questing** (objectives, keys, extracts, transits — no spawn dots or boss
+  skulls) until you pick something else for it, and each map remembers its own
+  last view.
 - **Raid clock** — the two in-game times you can queue into, side by side, day
   and night. Tarkov time runs 7x real time and the two raids are always 12
   hours apart. Factory's clocks are fixed and Labs has no day/night, so both
